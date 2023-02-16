@@ -95,11 +95,16 @@ int main(int argc, char* argv[])
         int min_radius = 100;
 	 	int radius = 0;
 		int radius_array[10] = {0};
+		int circle_array[10];
+		int radius_avg = 0;
+		std::fill_n (circle_array, 10, 0);
+		vector<cv::Point> center_list;
+		double center_total = 0;
 		while(1)
 		{
 			int max_imgs0 = 50;   
 			int imgs_taken0 =0;
-			
+	
 			INodeMap& nodemap0 = camera0.GetNodeMap();
 
 			CEnumerationPtr(nodemap0.GetNode("ExposureMode"))->FromString("Timed"); 
@@ -205,10 +210,7 @@ int main(int argc, char* argv[])
 				//cout<<non_zero<<endl;
 				// make the distance of the centers of circles extremely large to make sure only one circle will be detected
 				HoughCircles(mask_grey, circles, HOUGH_GRADIENT,2, 1000,500,20,0,30);
-				int circle_array[10];
-				std::fill_n (circle_array, 10, cvRound(circles[0][2]));
-				for (int i=0; i<10; i++)
-				{cout<<circle_array[i]<<endl;}		
+				
 				//Draw all the circles found by HoughCircles
 				Mat circle_area = cv::Mat::zeros({mask_grey.size()},CV_8UC3);
 				if(non_zero != 0)
@@ -217,49 +219,51 @@ int main(int argc, char* argv[])
 					//for( size_t i = 0; i < circles.size(); i++ )
 					//{
 					Point center(cvRound(circles[i][0]), cvRound(circles[i][1]));
+					center_list.push_back(center);
+					center_total ++;
 					radius = cvRound(circles[i][2]);
-					
-
-					sleep(0.1);
-					cout<<"Circle center: "<<center<<" Circle radius: "<<radius<<endl;
-
-					// draw the circle center
-					circle( mask, center, 3, Scalar(0,255,0), -1, 8, 0 );
-					circle( circle_area, center, 3, Scalar(0,255,0), -1, 8, 0 );
-					// draw the circle outline
-					circle( mask, center, radius, Scalar(0,0,255), 2, 8, 0 );
-					circle( circle_area, center, radius, Scalar(0,0,255), 2, 8, 0 );
-					//}
+					if (center_total >=10)
+					{
+						Point sum  = std::accumulate(center_list.begin(), center_list.end(), Point(0,0));
+						Point center_avg = sum/center_total;
+						cout<<"Average center: "<< center_avg<<endl;
+						sleep(0.1);
+						
+						if (abs(center_avg.x-center.x) <= 4 && abs(center_avg.y-center.y) <= 4)
+						{
+							// draw the circle center
+							circle( mask, center, 3, Scalar(0,255,0), -1, 8, 0 );
+							circle( circle_area, center, 3, Scalar(0,255,0), -1, 8, 0 );
+							// draw the circle outline
+							circle( mask, center, radius, Scalar(0,0,255), 2, 8, 0 );
+							circle( circle_area, center, radius, Scalar(0,0,255), 2, 8, 0 );
+							cout<<"Circle center: "<<center<<" Circle radius: "<<radius<<endl;
+							for(int i=9; i>0; i--)
+							{
+								radius_array[i] = radius_array[i-1];
+							}
+							radius_array[0] = radius;
+							sleep(0.1);
+							int radius_sum = 0;
+							for(int i=0; i<10; i++)
+							{
+								radius_sum = radius_sum + radius_array[i];
+							}
+							radius_avg = radius_sum/10;
+							cout << "Average radius: " << radius_avg << endl;
+							if(radius_avg < min_radius && (min_radius-radius_avg <=2 || min_radius-radius > 50) && radius_array[9]>0)
+							{
+								min_radius = radius_avg;
+							}
+						}
+					}
 				}
-				
-				for(int i=9; i>0; i--)
-				{
-					radius_array[i] = radius_array[i-1];
-				}
-				radius_array[0] = radius;
 				sleep(0.1);
 
-				int radius_sum = 0;
-				for(int i=0; i<10; i++)
-				{
-					radius_sum = radius_sum + radius_array[i];
-				}
-				int radius_avg = radius_sum/10;
-				//cout << radius_avg << endl;
-
-				sleep(0.1);
-				if(radius_avg < min_radius && (min_radius-radius_avg <=2 || min_radius-radius > 50) && radius_array[9]>0)
-				{
-					min_radius = radius_avg;
-				}
-
-			 //----------Use minEnclosingCircle to detect area enclosed by a circle
-				/*std::vector<Point>points(canny_edge.begin<Point>(), canny_edge.end<Point>());
-				Point2f center;
-				float radius = 0;
-				minEnclosingCircle(circles[0], center, radius);
-				cout<< center << endl;
-				cout<< radius << endl;*/
+				// if(radius_avg < min_radius && (min_radius-radius_avg <=2 || min_radius-radius > 50) && radius_array[9]>0)
+				// {
+				// 	min_radius = radius_avg;
+				// }
 
 			 //----------Print radius of the circle on image	
 				std::string radius_print = "No value";
