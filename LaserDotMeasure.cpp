@@ -1,4 +1,4 @@
-/*
+/* 666
 	Assembly guidance tool
 	Help people achieve a more accurate result 
 	of laser focus, laser line alignment and camera focus.
@@ -82,7 +82,7 @@ int main(int argc, char* argv[])
 		camera0.Open();
 		
 		Point max_point;
-		Mat canny_edge, img_grey;
+		Mat canny_edge, canny_edge_blur, img_grey;
 
 		// If camera features file is used
 		//CFeaturePersistence::Load( Filename, &cameras[0].GetNodeMap(), true ); 
@@ -158,6 +158,7 @@ int main(int argc, char* argv[])
 				src = cam_frame_temp0.clone();
 
 				cvtColor(src, img_grey, COLOR_BGR2GRAY);
+				threshold(img_grey,img_grey,200,255,THRESH_OTSU||THRESH_TRIANGLE);
 				
 	         //----------Use minMaxLoc to find the pixel which has the highest value
 				/*GaussianBlur(src,src, Size(3, 3), 0, 0, BORDER_DEFAULT);
@@ -168,30 +169,18 @@ int main(int argc, char* argv[])
 				int x_max = minMaxLoc(src)[3][0];
 				int y_max = minMaxLoc(src)[3][1];
 				Draw a circle around the max point
-				circle( src, max_point,5, Scalar( 0, 0, 255 ),1,LINE_8 );*/
-
-	         //----------Sobel edges
-				/*Mat src_x, src_y;
-				Mat abs_src_x, abs_src_y;
-				Mat dst;
-				Sobel edges
-				Sobel(src, src_x, CV_64F, 2, 0, 5);
-				Sobel(src, src_y, CV_64F, 0, 2, 5);
-				convertScaleAbs(src_x, abs_src_x);
-				convertScaleAbs(src_y, abs_src_y);
-				addWeighted(abs_src_x, 0.5, abs_src_y, 0.5, 0, dst);*/			
+				circle( src, max_point,5, Scalar( 0, 0, 255 ),1,LINE_8 );*/		
 
 	         //----------Use Canny to find the Canny edges of objects in image
-				Canny(img_grey, canny_edge, 300, 320, 3, false);
+				//Canny(img_grey, canny_edge, 300, 320, 3, false);
+				Canny(img_grey, canny_edge, 100, 200, 5, false);
 				//GaussianBlur is very useful for finding contour
-				GaussianBlur( canny_edge, canny_edge, Size(5, 5), 2, 2 );
+				GaussianBlur( canny_edge, canny_edge_blur, Size(5, 5), 2, 2 );
 
 	         //----------Find all contours in an image
 				std::vector<std::vector<cv::Point>> contours; // vector of vector of points
 				std::vector<cv::Vec4i> hierarchy;
-				findContours(canny_edge,contours,hierarchy,cv::RETR_EXTERNAL,cv::CHAIN_APPROX_SIMPLE);
-				//findContours(canny_edge,contours,hierarchy,cv::RETR_EXTERNAL,cv::CHAIN_APPROX_SIMPLE);
-				//cout<<contours[0]<<endl;
+				findContours(canny_edge_blur,contours,hierarchy,cv::RETR_EXTERNAL,cv::CHAIN_APPROX_SIMPLE);
 
 			 //----------Draw contours on an empty image
 				Mat mask = cv::Mat::zeros({img_grey.size()},CV_8UC3); // Create an empty Mat
@@ -209,10 +198,11 @@ int main(int argc, char* argv[])
 				int non_zero = countNonZero(mask_grey);
 				//cout<<non_zero<<endl;
 				// make the distance of the centers of circles extremely large to make sure only one circle will be detected
-				HoughCircles(mask_grey, circles, HOUGH_GRADIENT,2, 1000,500,20,0,30);
+				HoughCircles(mask_grey, circles, HOUGH_GRADIENT,4, 1000,500,10,0,40);
+				sleep(0.1);
 				
 				//Draw all the circles found by HoughCircles
-				Mat circle_area = cv::Mat::zeros({mask_grey.size()},CV_8UC3);
+				//Mat circle_area = cv::Mat::zeros({mask_grey.size()},CV_8UC3);
 				if(non_zero != 0)
 				{
 					size_t i = 0;
@@ -225,7 +215,7 @@ int main(int argc, char* argv[])
 					if (center_total >=10)
 					{
 						Point sum  = std::accumulate(center_list.begin(), center_list.end(), Point(0,0));
-						Point center_avg = sum/center_total;
+						Point center_avg = sum*(1.0/center_total);
 						cout<<"Average center: "<< center_avg<<endl;
 						sleep(0.1);
 						
@@ -233,11 +223,12 @@ int main(int argc, char* argv[])
 						{
 							// draw the circle center
 							circle( mask, center, 3, Scalar(0,255,0), -1, 8, 0 );
-							circle( circle_area, center, 3, Scalar(0,255,0), -1, 8, 0 );
+							//circle( circle_area, center, 3, Scalar(0,255,0), -1, 8, 0 );
 							// draw the circle outline
 							circle( mask, center, radius, Scalar(0,0,255), 2, 8, 0 );
-							circle( circle_area, center, radius, Scalar(0,0,255), 2, 8, 0 );
+							//circle( circle_area, center, radius, Scalar(0,0,255), 2, 8, 0 );
 							cout<<"Circle center: "<<center<<" Circle radius: "<<radius<<endl;
+
 							for(int i=9; i>0; i--)
 							{
 								radius_array[i] = radius_array[i-1];
@@ -273,6 +264,13 @@ int main(int argc, char* argv[])
 					radius_print = std::to_string(radius_avg);
 					min_radius_print = std::to_string(min_radius);	
 				}
+				else
+				{
+				// when there is a empty image, reset the center list and radius array to let new value in
+					fill(center_list.begin(), center_list.end(), Point(0,0));
+					center_total = 0;
+					fill_n(radius_array,10,0);
+				}
 				putText(mask, "Laser focus tool", Point(10, 20), FONT_HERSHEY_SIMPLEX, 0.8, Scalar(255, 255, 255),2);
 				putText(mask, "Radius : "+radius_print, Point(10, 50), FONT_HERSHEY_SIMPLEX, 0.8, Scalar(255, 255, 255),2);
 				putText(mask, "Min Radius : "+min_radius_print, Point(10, 80), FONT_HERSHEY_SIMPLEX, 0.8, Scalar(255, 255, 255),2);
@@ -285,13 +283,15 @@ int main(int argc, char* argv[])
 				else
 				{
 					circle( mask, Point(120,110), 20, Scalar(0,0,255), -1, 8, 0 );
-				}			 //----------Show each image in specific window
+				}			 
+				//----------Show each image in specific window
 				imshow(window_name, src);
-				//imshow("Canny Edge", canny_edge);
+				imshow("Canny Edge", canny_edge);
+				//imshow("Canny Edge Blurred", canny_edge_blur);
 				imshow("Contours",mask);
 				//imshow("Circle Area",circle_area);
 				//imshow("Sobel Edge", dst);
-				waitKey( 10 );			
+				waitKey( 10 );		
 				sleep(0.1);  // Change the sleep to slower down the grab speed three more 
 					
 				// while(camera0.WaitForFrameTriggerReady(1000,TimeoutHandling_ThrowException)==0);			
