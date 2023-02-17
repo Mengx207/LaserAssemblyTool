@@ -201,10 +201,26 @@ int main(int argc, char* argv[])
 				// make the distance of the centers of circles extremely large to make sure only one circle will be detected
 				HoughCircles(mask_grey, circles, HOUGH_GRADIENT,4, 1000,500,10,0,40);
 				sleep(0.1);
+				//Measure the size of laser dor by counting pixel after threshold
+				Mat img_nominal;
+				img_grey.convertTo(img_nominal, CV_32F);
+				int count=0;
+				for(int i=0; i<img_nominal.rows; i++)
+				{
+					for(int j=0; j<img_nominal.cols; j++)
+					{
+						if(img_nominal.at<float>(i,j)<=0.0)
+						{count++;}
+						// {printf("%f\n", img_nominal.at<float>(i,j));}
+					}
+				}
+				cout<<"pixel count: "<<count<<endl;
+				imshow("nominal values", img_nominal);
 
-				Point2f center_test;
-				float radius_test = 0;
-				minEnclosingCircle(img_grey, center_test, radius_test);
+				// Point2f center_test;
+				// float radius_test = 0;
+				//minEnclosingCircle(img_nominal, center_test, radius_test);
+				
 
 				//Draw all the circles found by HoughCircles
 				//Mat circle_area = cv::Mat::zeros({mask_grey.size()},CV_8UC3);
@@ -301,9 +317,11 @@ int main(int argc, char* argv[])
 				else
 				{
 					circle( mask, Point(120,110), 20, Scalar(0,0,255), -1, 8, 0 );
-				}		 
+				}	
+
 				//----------Show each image in specific window
 				imshow(window_name, src);
+				//imshow("nominal", img_nominal);
 				imshow("Canny Edge", canny_edge);
 				//imshow("Canny Edge Blurred", canny_edge_blur);
 				imshow("Contours",mask);
@@ -311,11 +329,6 @@ int main(int argc, char* argv[])
 				//imshow("Sobel Edge", dst);
 				waitKey( 10 );		
 				sleep(0.1);  // Change the sleep to slower down the grab speed three more 
-					
-				// while(camera0.WaitForFrameTriggerReady(1000,TimeoutHandling_ThrowException)==0);			
-				// CCommandParameter(nodemap0, "TriggerSoftware").Execute();
-				
-				// test0 = camera0.RetrieveResult(1000, ptrGrabResult1, TimeoutHandling_ThrowException);	
 
 				imgs_taken0++;
 			
