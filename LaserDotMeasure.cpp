@@ -97,6 +97,7 @@ int main(int argc, char* argv[])
 		int radius_array[10] = {0};
 		int circle_array[10];
 		int radius_avg = 0;
+		int last_radius_avg;
 		std::fill_n (circle_array, 10, 0);
 		vector<cv::Point> center_list;
 		double center_total = 0;
@@ -200,7 +201,11 @@ int main(int argc, char* argv[])
 				// make the distance of the centers of circles extremely large to make sure only one circle will be detected
 				HoughCircles(mask_grey, circles, HOUGH_GRADIENT,4, 1000,500,10,0,40);
 				sleep(0.1);
-				
+
+				Point2f center_test;
+				float radius_test = 0;
+				minEnclosingCircle(img_grey, center_test, radius_test);
+
 				//Draw all the circles found by HoughCircles
 				//Mat circle_area = cv::Mat::zeros({mask_grey.size()},CV_8UC3);
 				if(non_zero != 0)
@@ -219,7 +224,7 @@ int main(int argc, char* argv[])
 						cout<<"Average center: "<< center_avg<<endl;
 						sleep(0.1);
 						
-						if (abs(center_avg.x-center.x) <= 4 && abs(center_avg.y-center.y) <= 4)
+						//if (abs(center_avg.x-center.x) <= 5 && abs(center_avg.y-center.y) <= 5)
 						{
 							// draw the circle center
 							circle( mask, center, 3, Scalar(0,255,0), -1, 8, 0 );
@@ -227,6 +232,8 @@ int main(int argc, char* argv[])
 							// draw the circle outline
 							circle( mask, center, radius, Scalar(0,0,255), 2, 8, 0 );
 							//circle( circle_area, center, radius, Scalar(0,0,255), 2, 8, 0 );
+
+							//circle(mask,center1,radius1, Scalar(255,0,0), 2, 8, 0 );
 							cout<<"Circle center: "<<center<<" Circle radius: "<<radius<<endl;
 
 							for(int i=9; i>0; i--)
@@ -267,23 +274,34 @@ int main(int argc, char* argv[])
 				else
 				{
 				// when there is a empty image, reset the center list and radius array to let new value in
+					last_radius_avg = radius_avg;
 					fill(center_list.begin(), center_list.end(), Point(0,0));
 					center_total = 0;
 					fill_n(radius_array,10,0);
+
 				}
 				putText(mask, "Laser focus tool", Point(10, 20), FONT_HERSHEY_SIMPLEX, 0.8, Scalar(255, 255, 255),2);
 				putText(mask, "Radius : "+radius_print, Point(10, 50), FONT_HERSHEY_SIMPLEX, 0.8, Scalar(255, 255, 255),2);
 				putText(mask, "Min Radius : "+min_radius_print, Point(10, 80), FONT_HERSHEY_SIMPLEX, 0.8, Scalar(255, 255, 255),2);
 				putText(mask, "Status : ", Point(10, 120), FONT_HERSHEY_SIMPLEX, 0.8, Scalar(255, 255, 255),2);
 				
-				if(radius_avg-min_radius <= 1)
+				// if(radius_avg-min_radius <= 1)
+				// {
+				// 	circle( mask, Point(120,110), 20, Scalar(0,255,0), -1, 8, 0 );
+				// }
+				// else
+				// {
+				// 	circle( mask, Point(120,110), 20, Scalar(0,0,255), -1, 8, 0 );
+				// }	
+
+				if(last_radius_avg-radius_avg > 0)
 				{
 					circle( mask, Point(120,110), 20, Scalar(0,255,0), -1, 8, 0 );
 				}
 				else
 				{
 					circle( mask, Point(120,110), 20, Scalar(0,0,255), -1, 8, 0 );
-				}			 
+				}		 
 				//----------Show each image in specific window
 				imshow(window_name, src);
 				imshow("Canny Edge", canny_edge);
