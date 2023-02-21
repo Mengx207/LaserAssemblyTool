@@ -60,39 +60,76 @@ CMAKE_SOURCE_DIR = /home/lingbo/Documents/GitHub/AssemblyGuidanceTool
 CMAKE_BINARY_DIR = /home/lingbo/Documents/GitHub/AssemblyGuidanceTool
 
 #=============================================================================
-# Target rules for target CMakeFiles/LaserDotMeasure.dir
+# Target rules for target CMakeFiles/LaserDotMeasure_Origin.dir
 
 # All Build rule for target.
-CMakeFiles/LaserDotMeasure.dir/all:
-	$(MAKE) -f CMakeFiles/LaserDotMeasure.dir/build.make CMakeFiles/LaserDotMeasure.dir/depend
-	$(MAKE) -f CMakeFiles/LaserDotMeasure.dir/build.make CMakeFiles/LaserDotMeasure.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/lingbo/Documents/GitHub/AssemblyGuidanceTool/CMakeFiles --progress-num=1,2 "Built target LaserDotMeasure"
-.PHONY : CMakeFiles/LaserDotMeasure.dir/all
+CMakeFiles/LaserDotMeasure_Origin.dir/all:
+	$(MAKE) -f CMakeFiles/LaserDotMeasure_Origin.dir/build.make CMakeFiles/LaserDotMeasure_Origin.dir/depend
+	$(MAKE) -f CMakeFiles/LaserDotMeasure_Origin.dir/build.make CMakeFiles/LaserDotMeasure_Origin.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/lingbo/Documents/GitHub/AssemblyGuidanceTool/CMakeFiles --progress-num=1,2 "Built target LaserDotMeasure_Origin"
+.PHONY : CMakeFiles/LaserDotMeasure_Origin.dir/all
 
 # Include target in all.
-all: CMakeFiles/LaserDotMeasure.dir/all
+all: CMakeFiles/LaserDotMeasure_Origin.dir/all
 
 .PHONY : all
 
 # Build rule for subdir invocation for target.
-CMakeFiles/LaserDotMeasure.dir/rule: cmake_check_build_system
+CMakeFiles/LaserDotMeasure_Origin.dir/rule: cmake_check_build_system
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/lingbo/Documents/GitHub/AssemblyGuidanceTool/CMakeFiles 2
-	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/LaserDotMeasure.dir/all
+	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/LaserDotMeasure_Origin.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/lingbo/Documents/GitHub/AssemblyGuidanceTool/CMakeFiles 0
-.PHONY : CMakeFiles/LaserDotMeasure.dir/rule
+.PHONY : CMakeFiles/LaserDotMeasure_Origin.dir/rule
 
 # Convenience name for target.
-LaserDotMeasure: CMakeFiles/LaserDotMeasure.dir/rule
+LaserDotMeasure_Origin: CMakeFiles/LaserDotMeasure_Origin.dir/rule
 
-.PHONY : LaserDotMeasure
-
-# clean rule for target.
-CMakeFiles/LaserDotMeasure.dir/clean:
-	$(MAKE) -f CMakeFiles/LaserDotMeasure.dir/build.make CMakeFiles/LaserDotMeasure.dir/clean
-.PHONY : CMakeFiles/LaserDotMeasure.dir/clean
+.PHONY : LaserDotMeasure_Origin
 
 # clean rule for target.
-clean: CMakeFiles/LaserDotMeasure.dir/clean
+CMakeFiles/LaserDotMeasure_Origin.dir/clean:
+	$(MAKE) -f CMakeFiles/LaserDotMeasure_Origin.dir/build.make CMakeFiles/LaserDotMeasure_Origin.dir/clean
+.PHONY : CMakeFiles/LaserDotMeasure_Origin.dir/clean
+
+# clean rule for target.
+clean: CMakeFiles/LaserDotMeasure_Origin.dir/clean
+
+.PHONY : clean
+
+#=============================================================================
+# Target rules for target CMakeFiles/LaserDotMeasure_Pixel.dir
+
+# All Build rule for target.
+CMakeFiles/LaserDotMeasure_Pixel.dir/all:
+	$(MAKE) -f CMakeFiles/LaserDotMeasure_Pixel.dir/build.make CMakeFiles/LaserDotMeasure_Pixel.dir/depend
+	$(MAKE) -f CMakeFiles/LaserDotMeasure_Pixel.dir/build.make CMakeFiles/LaserDotMeasure_Pixel.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/lingbo/Documents/GitHub/AssemblyGuidanceTool/CMakeFiles --progress-num=3,4 "Built target LaserDotMeasure_Pixel"
+.PHONY : CMakeFiles/LaserDotMeasure_Pixel.dir/all
+
+# Include target in all.
+all: CMakeFiles/LaserDotMeasure_Pixel.dir/all
+
+.PHONY : all
+
+# Build rule for subdir invocation for target.
+CMakeFiles/LaserDotMeasure_Pixel.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/lingbo/Documents/GitHub/AssemblyGuidanceTool/CMakeFiles 2
+	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/LaserDotMeasure_Pixel.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/lingbo/Documents/GitHub/AssemblyGuidanceTool/CMakeFiles 0
+.PHONY : CMakeFiles/LaserDotMeasure_Pixel.dir/rule
+
+# Convenience name for target.
+LaserDotMeasure_Pixel: CMakeFiles/LaserDotMeasure_Pixel.dir/rule
+
+.PHONY : LaserDotMeasure_Pixel
+
+# clean rule for target.
+CMakeFiles/LaserDotMeasure_Pixel.dir/clean:
+	$(MAKE) -f CMakeFiles/LaserDotMeasure_Pixel.dir/build.make CMakeFiles/LaserDotMeasure_Pixel.dir/clean
+.PHONY : CMakeFiles/LaserDotMeasure_Pixel.dir/clean
+
+# clean rule for target.
+clean: CMakeFiles/LaserDotMeasure_Pixel.dir/clean
 
 .PHONY : clean
 

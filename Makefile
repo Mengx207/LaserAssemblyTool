@@ -56,17 +56,6 @@ CMAKE_BINARY_DIR = /home/lingbo/Documents/GitHub/AssemblyGuidanceTool
 #=============================================================================
 # Targets provided globally by CMake.
 
-# Special rule for the target rebuild_cache
-rebuild_cache:
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running CMake to regenerate build system..."
-	/usr/bin/cmake -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
-.PHONY : rebuild_cache
-
-# Special rule for the target rebuild_cache
-rebuild_cache/fast: rebuild_cache
-
-.PHONY : rebuild_cache/fast
-
 # Special rule for the target edit_cache
 edit_cache:
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "No interactive CMake dialog available..."
@@ -77,6 +66,17 @@ edit_cache:
 edit_cache/fast: edit_cache
 
 .PHONY : edit_cache/fast
+
+# Special rule for the target rebuild_cache
+rebuild_cache:
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running CMake to regenerate build system..."
+	/usr/bin/cmake -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
+.PHONY : rebuild_cache
+
+# Special rule for the target rebuild_cache
+rebuild_cache/fast: rebuild_cache
+
+.PHONY : rebuild_cache/fast
 
 # The main all target
 all: cmake_check_build_system
@@ -111,44 +111,84 @@ depend:
 .PHONY : depend
 
 #=============================================================================
-# Target rules for targets named LaserDotMeasure
+# Target rules for targets named LaserDotMeasure_Origin
 
 # Build rule for target.
-LaserDotMeasure: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 LaserDotMeasure
-.PHONY : LaserDotMeasure
+LaserDotMeasure_Origin: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 LaserDotMeasure_Origin
+.PHONY : LaserDotMeasure_Origin
 
 # fast build rule for target.
-LaserDotMeasure/fast:
-	$(MAKE) -f CMakeFiles/LaserDotMeasure.dir/build.make CMakeFiles/LaserDotMeasure.dir/build
-.PHONY : LaserDotMeasure/fast
+LaserDotMeasure_Origin/fast:
+	$(MAKE) -f CMakeFiles/LaserDotMeasure_Origin.dir/build.make CMakeFiles/LaserDotMeasure_Origin.dir/build
+.PHONY : LaserDotMeasure_Origin/fast
 
-LaserDotMeasure.o: LaserDotMeasure.cpp.o
+#=============================================================================
+# Target rules for targets named LaserDotMeasure_Pixel
 
-.PHONY : LaserDotMeasure.o
+# Build rule for target.
+LaserDotMeasure_Pixel: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 LaserDotMeasure_Pixel
+.PHONY : LaserDotMeasure_Pixel
+
+# fast build rule for target.
+LaserDotMeasure_Pixel/fast:
+	$(MAKE) -f CMakeFiles/LaserDotMeasure_Pixel.dir/build.make CMakeFiles/LaserDotMeasure_Pixel.dir/build
+.PHONY : LaserDotMeasure_Pixel/fast
+
+LaserDotMeasure_Origin.o: LaserDotMeasure_Origin.cpp.o
+
+.PHONY : LaserDotMeasure_Origin.o
 
 # target to build an object file
-LaserDotMeasure.cpp.o:
-	$(MAKE) -f CMakeFiles/LaserDotMeasure.dir/build.make CMakeFiles/LaserDotMeasure.dir/LaserDotMeasure.cpp.o
-.PHONY : LaserDotMeasure.cpp.o
+LaserDotMeasure_Origin.cpp.o:
+	$(MAKE) -f CMakeFiles/LaserDotMeasure_Origin.dir/build.make CMakeFiles/LaserDotMeasure_Origin.dir/LaserDotMeasure_Origin.cpp.o
+.PHONY : LaserDotMeasure_Origin.cpp.o
 
-LaserDotMeasure.i: LaserDotMeasure.cpp.i
+LaserDotMeasure_Origin.i: LaserDotMeasure_Origin.cpp.i
 
-.PHONY : LaserDotMeasure.i
+.PHONY : LaserDotMeasure_Origin.i
 
 # target to preprocess a source file
-LaserDotMeasure.cpp.i:
-	$(MAKE) -f CMakeFiles/LaserDotMeasure.dir/build.make CMakeFiles/LaserDotMeasure.dir/LaserDotMeasure.cpp.i
-.PHONY : LaserDotMeasure.cpp.i
+LaserDotMeasure_Origin.cpp.i:
+	$(MAKE) -f CMakeFiles/LaserDotMeasure_Origin.dir/build.make CMakeFiles/LaserDotMeasure_Origin.dir/LaserDotMeasure_Origin.cpp.i
+.PHONY : LaserDotMeasure_Origin.cpp.i
 
-LaserDotMeasure.s: LaserDotMeasure.cpp.s
+LaserDotMeasure_Origin.s: LaserDotMeasure_Origin.cpp.s
 
-.PHONY : LaserDotMeasure.s
+.PHONY : LaserDotMeasure_Origin.s
 
 # target to generate assembly for a file
-LaserDotMeasure.cpp.s:
-	$(MAKE) -f CMakeFiles/LaserDotMeasure.dir/build.make CMakeFiles/LaserDotMeasure.dir/LaserDotMeasure.cpp.s
-.PHONY : LaserDotMeasure.cpp.s
+LaserDotMeasure_Origin.cpp.s:
+	$(MAKE) -f CMakeFiles/LaserDotMeasure_Origin.dir/build.make CMakeFiles/LaserDotMeasure_Origin.dir/LaserDotMeasure_Origin.cpp.s
+.PHONY : LaserDotMeasure_Origin.cpp.s
+
+LaserDotMeasure_Pixel.o: LaserDotMeasure_Pixel.cpp.o
+
+.PHONY : LaserDotMeasure_Pixel.o
+
+# target to build an object file
+LaserDotMeasure_Pixel.cpp.o:
+	$(MAKE) -f CMakeFiles/LaserDotMeasure_Pixel.dir/build.make CMakeFiles/LaserDotMeasure_Pixel.dir/LaserDotMeasure_Pixel.cpp.o
+.PHONY : LaserDotMeasure_Pixel.cpp.o
+
+LaserDotMeasure_Pixel.i: LaserDotMeasure_Pixel.cpp.i
+
+.PHONY : LaserDotMeasure_Pixel.i
+
+# target to preprocess a source file
+LaserDotMeasure_Pixel.cpp.i:
+	$(MAKE) -f CMakeFiles/LaserDotMeasure_Pixel.dir/build.make CMakeFiles/LaserDotMeasure_Pixel.dir/LaserDotMeasure_Pixel.cpp.i
+.PHONY : LaserDotMeasure_Pixel.cpp.i
+
+LaserDotMeasure_Pixel.s: LaserDotMeasure_Pixel.cpp.s
+
+.PHONY : LaserDotMeasure_Pixel.s
+
+# target to generate assembly for a file
+LaserDotMeasure_Pixel.cpp.s:
+	$(MAKE) -f CMakeFiles/LaserDotMeasure_Pixel.dir/build.make CMakeFiles/LaserDotMeasure_Pixel.dir/LaserDotMeasure_Pixel.cpp.s
+.PHONY : LaserDotMeasure_Pixel.cpp.s
 
 # Help Target
 help:
@@ -156,12 +196,16 @@ help:
 	@echo "... all (the default if no target is provided)"
 	@echo "... clean"
 	@echo "... depend"
-	@echo "... rebuild_cache"
-	@echo "... LaserDotMeasure"
 	@echo "... edit_cache"
-	@echo "... LaserDotMeasure.o"
-	@echo "... LaserDotMeasure.i"
-	@echo "... LaserDotMeasure.s"
+	@echo "... LaserDotMeasure_Origin"
+	@echo "... rebuild_cache"
+	@echo "... LaserDotMeasure_Pixel"
+	@echo "... LaserDotMeasure_Origin.o"
+	@echo "... LaserDotMeasure_Origin.i"
+	@echo "... LaserDotMeasure_Origin.s"
+	@echo "... LaserDotMeasure_Pixel.o"
+	@echo "... LaserDotMeasure_Pixel.i"
+	@echo "... LaserDotMeasure_Pixel.s"
 .PHONY : help
 
 
