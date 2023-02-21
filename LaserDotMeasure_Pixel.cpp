@@ -5,31 +5,11 @@
 
 */
 
-// Include files to use the pylon API.
-#include <iostream>
-#include <sstream>
-#include <string>
-#include <unistd.h>
-#include <pylon/InstantCamera.h>
-#include <pylon/PylonIncludes.h>
-#include <GenApi/IEnumeration.h>
-#include <pylon/EnumParameter.h>
-#include <Base/GCString.h>
-#include <opencv2/core/core.hpp>
-#include <opencv2/core/utility.hpp>
-#include "opencv2/imgproc/imgproc.hpp"
-#include <bits/stdc++.h>
-#include <vector>
-#include <opencv2/highgui/highgui.hpp>
-#include "softwaretriggerconfiguration.h"
-#include <time.h>
-#include <stdio.h>
-#include <ctime>
+#include "myHeader.h"
 
 #ifdef PYLON_WIN_BUILD
 #   include <pylon/PylonGUI.h>
 #endif
-
 
 // Namespace for using pylon objects.
 using namespace Pylon;
@@ -52,6 +32,12 @@ using namespace GENAPI_NAMESPACE;
 
 char window_name[] = "Laser Dot Finder";
 
+void MyLine( Mat img, Point start, Point end );
+void HMI(Mat img, int size, int min_size, int non_zero);
+void GreenLight(int avg_last, int avg);
+int NonZero (Mat img, int count);
+int PixelCounter(Mat img, int count);
+int SizeAverage (int count, int size_avg,int size_array[]);
 
 int main(int argc, char* argv[])
 {
@@ -59,7 +45,6 @@ int main(int argc, char* argv[])
      int exitCode = 0;
      // Before using any pylon methods, the pylon runtime must be initialized.
      PylonInitialize();
-
      const char *err;
    
 	try
@@ -78,7 +63,6 @@ int main(int argc, char* argv[])
 		CPylonImage pylonImage0, pylonImage1;
 
 		Mat src, lft1_img, rgt0_img, rgt1_img, cam_frame_temp0, cam_frame_temp1;
-		
 		camera0.Open();
 		
 		Point max_point;
@@ -92,15 +76,12 @@ int main(int argc, char* argv[])
 		CImageFormatConverter formatConverter;
 		formatConverter.OutputPixelFormat = PixelType_BGR8packed;
 
-        int min_radius = 100;
-	 	int radius = 0;
-		int radius_array[10] = {0};
-		int circle_array[10];
-		int radius_avg = 0;
-		int last_radius_avg;
-		std::fill_n (circle_array, 10, 0);
-		vector<cv::Point> center_list;
-		double center_total = 0;
+		int size_avg = 0;
+        int min_size = 10000;
+		int size_array[10] = {0};
+		int last_size_avg;
+		int last_min_size;
+
 		while(1)
 		{
 			int max_imgs0 = 50;   
@@ -158,178 +139,56 @@ int main(int argc, char* argv[])
 
 				src = cam_frame_temp0.clone();
 
+			 //----------raw image to greyscale, threshold filter
 				cvtColor(src, img_grey, COLOR_BGR2GRAY);
-				threshold(img_grey,img_grey,200,255,THRESH_OTSU||THRESH_TRIANGLE);
-				
-	         //----------Use minMaxLoc to find the pixel which has the highest value
-				/*GaussianBlur(src,src, Size(3, 3), 0, 0, BORDER_DEFAULT);
-				double max_value;
-				minMaxLoc(img_grey, 0, &max_value, 0, &max_point);
-				cout<<max_point<<endl;
-				cout<<max_value<<endl;
-				int x_max = minMaxLoc(src)[3][0];
-				int y_max = minMaxLoc(src)[3][1];
-				Draw a circle around the max point
-				circle( src, max_point,5, Scalar( 0, 0, 255 ),1,LINE_8 );*/		
+				Mat img_grey_filtered;
+				threshold(img_grey,img_grey_filtered,200,255,THRESH_OTSU||THRESH_TRIANGLE);	
 
-	         //----------Use Canny to find the Canny edges of objects in image
-				//Canny(img_grey, canny_edge, 300, 320, 3, false);
-				Canny(img_grey, canny_edge, 100, 200, 5, false);
-				//GaussianBlur is very useful for finding contour
-				GaussianBlur( canny_edge, canny_edge_blur, Size(5, 5), 2, 2 );
+				// Number of non_zero pixel
+				int non_zero = NonZero(img_grey_filtered, 0);
 
-	         //----------Find all contours in an image
-				std::vector<std::vector<cv::Point>> contours; // vector of vector of points
-				std::vector<cv::Vec4i> hierarchy;
-				findContours(canny_edge_blur,contours,hierarchy,cv::RETR_EXTERNAL,cv::CHAIN_APPROX_SIMPLE);
-
-			 //----------Draw contours on an empty image
-				Mat mask = cv::Mat::zeros({img_grey.size()},CV_8UC3); // Create an empty Mat
-				Mat mask_grey;
-				for (int i=0; i < contours.size(); i++)
-				{	
-					//if(contours[i].size() > 15)
-					{drawContours(mask,contours, i ,cv::Scalar(0,255,255),1);}
-				}
-			 //----------Find all circles on contours image, and output center and radious as feedback
-				vector<Vec3f> circles;
-				// Mat mask_canny = canny_edge.clone();
-				// cvtColor(mask_canny,mask_grey, COLOR_BGR2GRAY);
-				cvtColor(mask,mask_grey, COLOR_BGR2GRAY);
-				int non_zero = countNonZero(mask_grey);
-				//cout<<non_zero<<endl;
-				// make the distance of the centers of circles extremely large to make sure only one circle will be detected
-				HoughCircles(mask_grey, circles, HOUGH_GRADIENT,4, 1000,500,10,0,40);
-				sleep(0.1);
-				//Measure the size of laser dor by counting pixel after threshold
-				Mat img_nominal;
-				img_grey.convertTo(img_nominal, CV_32F);
-				int count=0;
-				for(int i=0; i<img_nominal.rows; i++)
-				{
-					for(int j=0; j<img_nominal.cols; j++)
-					{
-						if(img_nominal.at<float>(i,j)<=0.0)
-						{count++;}
-						// {printf("%f\n", img_nominal.at<float>(i,j));}
-					}
-				}
+				// Number of bright pixel
+				int count = PixelCounter(img_grey_filtered,0);
 				cout<<"pixel count: "<<count<<endl;
-				imshow("nominal values", img_nominal);
 
-				// Point2f center_test;
-				// float radius_test = 0;
-				//minEnclosingCircle(img_nominal, center_test, radius_test);
-				
+				size_avg = SizeAverage(count,0,size_array);
+				//cout<<"average size: "<< size_avg<<endl;
 
-				//Draw all the circles found by HoughCircles
-				//Mat circle_area = cv::Mat::zeros({mask_grey.size()},CV_8UC3);
-				if(non_zero != 0)
+				if(size_avg < min_size && (min_size-size_avg <=2 || min_size-size_array[0] > 50) && size_array[9]>0)
 				{
-					size_t i = 0;
-					//for( size_t i = 0; i < circles.size(); i++ )
-					//{
-					Point center(cvRound(circles[i][0]), cvRound(circles[i][1]));
-					center_list.push_back(center);
-					center_total ++;
-					radius = cvRound(circles[i][2]);
-					if (center_total >=10)
-					{
-						Point sum  = std::accumulate(center_list.begin(), center_list.end(), Point(0,0));
-						Point center_avg = sum*(1.0/center_total);
-						cout<<"Average center: "<< center_avg<<endl;
-						sleep(0.1);
-						
-						//if (abs(center_avg.x-center.x) <= 5 && abs(center_avg.y-center.y) <= 5)
-						{
-							// draw the circle center
-							circle( mask, center, 3, Scalar(0,255,0), -1, 8, 0 );
-							//circle( circle_area, center, 3, Scalar(0,255,0), -1, 8, 0 );
-							// draw the circle outline
-							circle( mask, center, radius, Scalar(0,0,255), 2, 8, 0 );
-							//circle( circle_area, center, radius, Scalar(0,0,255), 2, 8, 0 );
-
-							//circle(mask,center1,radius1, Scalar(255,0,0), 2, 8, 0 );
-							cout<<"Circle center: "<<center<<" Circle radius: "<<radius<<endl;
-
-							for(int i=9; i>0; i--)
-							{
-								radius_array[i] = radius_array[i-1];
-							}
-							radius_array[0] = radius;
-							sleep(0.1);
-							int radius_sum = 0;
-							for(int i=0; i<10; i++)
-							{
-								radius_sum = radius_sum + radius_array[i];
-							}
-							radius_avg = radius_sum/10;
-							cout << "Average radius: " << radius_avg << endl;
-							if(radius_avg < min_radius && (min_radius-radius_avg <=2 || min_radius-radius > 50) && radius_array[9]>0)
-							{
-								min_radius = radius_avg;
-							}
-						}
-					}
+					min_size = size_avg;
 				}
+
+			 //---------Draw circles based on collected points	
+				vector<Vec3f> circles;
+				HoughCircles(img_grey_filtered, circles, HOUGH_GRADIENT,4, 1000,500,10,0,100);
 				sleep(0.1);
-
-				// if(radius_avg < min_radius && (min_radius-radius_avg <=2 || min_radius-radius > 50) && radius_array[9]>0)
-				// {
-				// 	min_radius = radius_avg;
-				// }
-
-			 //----------Print radius of the circle on image	
-				std::string radius_print = "No value";
-				std::string min_radius_print = "No value";
-				if(non_zero != 0)		
-				{
-					radius_print = std::to_string(radius_avg);
-					min_radius_print = std::to_string(min_radius);	
-				}
-				else
-				{
-				// when there is a empty image, reset the center list and radius array to let new value in
-					last_radius_avg = radius_avg;
-					fill(center_list.begin(), center_list.end(), Point(0,0));
-					center_total = 0;
-					fill_n(radius_array,10,0);
-
-				}
-				putText(mask, "Laser focus tool", Point(10, 20), FONT_HERSHEY_SIMPLEX, 0.8, Scalar(255, 255, 255),2);
-				putText(mask, "Radius : "+radius_print, Point(10, 50), FONT_HERSHEY_SIMPLEX, 0.8, Scalar(255, 255, 255),2);
-				putText(mask, "Min Radius : "+min_radius_print, Point(10, 80), FONT_HERSHEY_SIMPLEX, 0.8, Scalar(255, 255, 255),2);
-				putText(mask, "Status : ", Point(10, 120), FONT_HERSHEY_SIMPLEX, 0.8, Scalar(255, 255, 255),2);
 				
-				// if(radius_avg-min_radius <= 1)
-				// {
-				// 	circle( mask, Point(120,110), 20, Scalar(0,255,0), -1, 8, 0 );
-				// }
-				// else
-				// {
-				// 	circle( mask, Point(120,110), 20, Scalar(0,0,255), -1, 8, 0 );
-				// }	
-
-				if(last_radius_avg-radius_avg > 0)
-				{
-					circle( mask, Point(120,110), 20, Scalar(0,255,0), -1, 8, 0 );
+				if(non_zero != 0)
+				{	
+					Point center(cvRound(circles[0][0]), cvRound(circles[0][1]));
+					//radius = cvRound(circles[0][2]);
+					circle( img_grey_filtered, center, 3, Scalar(255,0,0), -1, 8, 0 );
+					circle( src, center, 3, Scalar(255,100,0), -1, 8, 0 );
+					//cout<<"center: "<<center<<endl;
 				}
 				else
 				{
-					circle( mask, Point(120,110), 20, Scalar(0,0,255), -1, 8, 0 );
-				}	
+					last_min_size = min_size;
+					cout<<"last minum size: "<<last_min_size<<endl;
+					last_size_avg = size_avg;
+					fill_n(size_array,10,0);
+					//min_size = 10000;
+				}
 
-				//----------Show each image in specific window
-				imshow(window_name, src);
-				//imshow("nominal", img_nominal);
-				imshow("Canny Edge", canny_edge);
-				//imshow("Canny Edge Blurred", canny_edge_blur);
-				imshow("Contours",mask);
-				//imshow("Circle Area",circle_area);
-				//imshow("Sobel Edge", dst);
+				MyLine( src, Point( 300, 200 ), Point( 700, 900 ) );
+
+				HMI(src, size_avg, min_size, non_zero);
+
+				imshow("img_grey_filtered", img_grey_filtered);	
+				imshow("source window", src);							
 				waitKey( 10 );		
-				sleep(0.1);  // Change the sleep to slower down the grab speed three more 
-
+				sleep(0.1);
 				imgs_taken0++;
 			
 			}
@@ -349,4 +208,92 @@ int main(int argc, char* argv[])
 	PylonTerminate();
    	return exitCode;
    
+}
+
+//---------Draw the desired laser line
+void MyLine( Mat img, Point start, Point end )
+{
+  int thickness = 2;
+  int lineType = LINE_8;
+
+  line( img, start, end, Scalar( 0, 0, 255 ), thickness, lineType );
+}
+
+//----------Use Canny to find the Canny edges of objects in image
+//Canny edge is a good way to count non-zero pixel
+int NonZero(Mat img, int count)
+{
+	Mat canny_edge, canny_edge_blur;
+	Canny(img, canny_edge, 100, 200, 5, false);
+	GaussianBlur( canny_edge, canny_edge_blur, Size(5, 5), 2, 2 );
+	count = countNonZero(canny_edge_blur);
+	return count;
+}
+
+//-----------Measure the size of laser dor by counting pixel after threshold
+int PixelCounter(Mat img, int count)
+{
+	Mat img_nominal;
+	img.convertTo(img_nominal, CV_32F);
+	for(int i=0; i<img_nominal.rows; i++)
+	{
+		for(int j=0; j<img_nominal.cols; j++)
+		{
+			if(img_nominal.at<float>(i,j)<=0.0)
+			{
+				count++;
+				//cout<<img_nominal.at<float>(i,j)<<endl;
+				//cout<<i<<","<<j<<endl;
+			}
+		}
+	}
+	return count;
+}
+
+//----------Print information in window
+void HMI(Mat img, int size, int min_size, int non_zero)
+{
+	std::string size_print = "No value";
+	std::string min_size_print = "No value";
+	if(non_zero != 0)		
+	{
+		size_print = std::to_string(size);
+		min_size_print = std::to_string(min_size);
+	}
+	putText(img, "Laser focus tool", Point(10, 20), FONT_HERSHEY_SIMPLEX, 0.8, Scalar(255, 255, 255),2);
+	putText(img, "Laser dot size : "+size_print, Point(10, 50), FONT_HERSHEY_SIMPLEX, 0.8, Scalar(255, 255, 255),2);
+	putText(img, "Min size : "+min_size_print, Point(10, 80), FONT_HERSHEY_SIMPLEX, 0.8, Scalar(255, 255, 255),2);
+	putText(img, "Status : ", Point(10, 120), FONT_HERSHEY_SIMPLEX, 0.8, Scalar(255, 255, 255),2);
+}
+
+void GreenLight(Mat img, int avg_last, int avg)
+{
+	if(avg_last-avg > 0)
+	{
+		circle( img, Point(120,110), 20, Scalar(0,255,0), -1, 8, 0 );
+	}
+	else
+	{
+		circle( img, Point(120,110), 20, Scalar(0,0,255), -1, 8, 0 );
+	}
+}
+
+int SizeAverage (int count, int size_avg, int size_array[])
+{
+	for(int i=9; i>0; i--)
+	{
+		size_array[i] = size_array[i-1];
+	}
+	size_array[0] = count;
+
+	int size_sum = 0;
+	for(int i=0; i<10; i++)
+	{
+		size_sum = size_sum + size_array[i];
+	}
+	if(size_array[9]!=0)
+	{
+		size_avg = size_sum/10;
+		return size_avg;
+	}
 }

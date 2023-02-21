@@ -7,6 +7,12 @@
 #IncludeRegexTransform: 
 
 /home/lingbo/Documents/GitHub/AssemblyGuidanceTool/LaserDotMeasure_Pixel.cpp
+myHeader.h
+/home/lingbo/Documents/GitHub/AssemblyGuidanceTool/myHeader.h
+pylon/PylonGUI.h
+-
+
+/home/lingbo/Documents/GitHub/AssemblyGuidanceTool/myHeader.h
 iostream
 -
 sstream
@@ -44,8 +50,6 @@ time.h
 stdio.h
 -
 ctime
--
-pylon/PylonGUI.h
 -
 
 /home/lingbo/Documents/GitHub/AssemblyGuidanceTool/softwaretriggerconfiguration.h
