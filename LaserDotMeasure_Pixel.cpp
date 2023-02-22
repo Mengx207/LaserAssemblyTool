@@ -39,6 +39,7 @@ int NonZero (Mat img, int count);
 int PixelCounter(Mat img, int count);
 int SizeAverage (int count, int size_avg,int size_array[], int center_total);
 int ClearList(vector<cv::Point> center_list, int center_total, int size_array[], int min);
+int DotToLine(Mat img, Point start, Point end, Point center);
 
 int main(int argc, char* argv[])
 {
@@ -82,6 +83,7 @@ int main(int argc, char* argv[])
 		int size_array[10] = {0};
 		int last_size_avg;
 		int last_min_size=0;
+		Point center_avg;
 
 		vector<cv::Point> center_list;
 		double center_total = 0;
@@ -178,7 +180,7 @@ int main(int argc, char* argv[])
 					if (center_total >=10)
 					{
 						Point sum  = std::accumulate(center_list.begin(), center_list.end(), Point(0,0));
-						Point center_avg = sum*(1.0/center_total);
+						center_avg = sum*(1.0/center_total);
 						cout<<"Average center: "<< center_avg<<endl;
 						sleep(0.1);
 						circle( img_grey_filtered, center_avg, 3, Scalar(255,0,0), -1, 8, 0 );
@@ -196,6 +198,7 @@ int main(int argc, char* argv[])
 				}
 
 				MyLine( src, Point( 300, 200 ), Point( 700, 900 ) );
+				DotToLine(src,  Point( 300, 200 ), Point( 700, 900 ), center_avg);
 
 				HMI(src, size_avg, min_size, non_zero);
 				GreenLight(src, last_min_size, size_avg);
@@ -324,4 +327,12 @@ int ClearList(vector<cv::Point> center_list, int center_total, int size_array[],
 	return last_min;
 }
 
-//int DotToLine(Point center, )
+int DotToLine(Mat img, Point start, Point end, Point center)
+{
+	LineIterator line(img, start, end, 8);
+	vector<Vec3b> buf(line.count);
+	for(int i = 0; i < line.count; i++, ++line)
+	{
+		cout<<(line.pos());
+	}
+}
