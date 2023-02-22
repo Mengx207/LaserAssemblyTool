@@ -34,10 +34,11 @@ char window_name[] = "Laser Dot Finder";
 
 void MyLine( Mat img, Point start, Point end );
 void HMI(Mat img, int size, int min_size, int non_zero);
-void GreenLight(int avg_last, int avg);
+void GreenLight(Mat img, int last, int current);
 int NonZero (Mat img, int count);
 int PixelCounter(Mat img, int count);
-int SizeAverage (int count, int size_avg,int size_array[]);
+int SizeAverage (int count, int size_avg,int size_array[], int center_total);
+int ClearList(vector<cv::Point> center_list, int center_total, int size_array[], int min);
 
 int main(int argc, char* argv[])
 {
@@ -76,11 +77,14 @@ int main(int argc, char* argv[])
 		CImageFormatConverter formatConverter;
 		formatConverter.OutputPixelFormat = PixelType_BGR8packed;
 
-		int size_avg = 0;
-        int min_size = 10000;
+		int size_avg ;
+        int min_size = 1000;
 		int size_array[10] = {0};
 		int last_size_avg;
-		int last_min_size;
+		int last_min_size=0;
+
+		vector<cv::Point> center_list;
+		double center_total = 0;
 
 		while(1)
 		{
@@ -150,40 +154,51 @@ int main(int argc, char* argv[])
 				// Number of bright pixel
 				int count = PixelCounter(img_grey_filtered,0);
 				cout<<"pixel count: "<<count<<endl;
-
-				size_avg = SizeAverage(count,0,size_array);
-				//cout<<"average size: "<< size_avg<<endl;
-
-				if(size_avg < min_size && (min_size-size_avg <=2 || min_size-size_array[0] > 50) && size_array[9]>0)
+				// average size
+				size_avg = SizeAverage(count,0,size_array, center_total);
+				//-----------save min_size only when the value in size_array is stable and close to each other
+				if(size_avg < min_size && center_total > 30)
 				{
-					min_size = size_avg;
+					if(abs(size_array[0]-size_array[9]) <=3)
+					{
+						min_size = size_avg;
+					}
 				}
 
 			 //---------Draw circles based on collected points	
+			 //---------Clear center list and size array is capture an empty image
 				vector<Vec3f> circles;
-				HoughCircles(img_grey_filtered, circles, HOUGH_GRADIENT,4, 1000,500,10,0,100);
-				sleep(0.1);
-				
-				if(non_zero != 0)
+				if(non_zero > 20)
 				{	
+					HoughCircles(img_grey_filtered, circles, HOUGH_GRADIENT,4, 1000,500,10,0,100);
+					sleep(0.1);
 					Point center(cvRound(circles[0][0]), cvRound(circles[0][1]));
-					//radius = cvRound(circles[0][2]);
-					circle( img_grey_filtered, center, 3, Scalar(255,0,0), -1, 8, 0 );
-					circle( src, center, 3, Scalar(255,100,0), -1, 8, 0 );
-					//cout<<"center: "<<center<<endl;
+					center_list.push_back(center);
+					center_total ++;
+					if (center_total >=10)
+					{
+						Point sum  = std::accumulate(center_list.begin(), center_list.end(), Point(0,0));
+						Point center_avg = sum*(1.0/center_total);
+						cout<<"Average center: "<< center_avg<<endl;
+						sleep(0.1);
+						circle( img_grey_filtered, center_avg, 3, Scalar(255,0,0), -1, 8, 0 );
+						circle( src, center_avg, 3, Scalar(255,100,0), -1, 8, 0 );
+					}
 				}
 				else
 				{
+					cout<<min_size<<endl;
 					last_min_size = min_size;
 					cout<<"last minum size: "<<last_min_size<<endl;
-					last_size_avg = size_avg;
 					fill_n(size_array,10,0);
-					//min_size = 10000;
+					center_total = 0;
+					fill(center_list.begin(), center_list.end(), Point(0,0));
 				}
 
 				MyLine( src, Point( 300, 200 ), Point( 700, 900 ) );
 
 				HMI(src, size_avg, min_size, non_zero);
+				GreenLight(src, last_min_size, size_avg);
 
 				imshow("img_grey_filtered", img_grey_filtered);	
 				imshow("source window", src);							
@@ -255,30 +270,30 @@ void HMI(Mat img, int size, int min_size, int non_zero)
 {
 	std::string size_print = "No value";
 	std::string min_size_print = "No value";
-	if(non_zero != 0)		
+	if(non_zero >20)		
 	{
 		size_print = std::to_string(size);
 		min_size_print = std::to_string(min_size);
 	}
 	putText(img, "Laser focus tool", Point(10, 20), FONT_HERSHEY_SIMPLEX, 0.8, Scalar(255, 255, 255),2);
-	putText(img, "Laser dot size : "+size_print, Point(10, 50), FONT_HERSHEY_SIMPLEX, 0.8, Scalar(255, 255, 255),2);
-	putText(img, "Min size : "+min_size_print, Point(10, 80), FONT_HERSHEY_SIMPLEX, 0.8, Scalar(255, 255, 255),2);
-	putText(img, "Status : ", Point(10, 120), FONT_HERSHEY_SIMPLEX, 0.8, Scalar(255, 255, 255),2);
+	putText(img, "Laser dot size: "+size_print, Point(10, 50), FONT_HERSHEY_SIMPLEX, 0.8, Scalar(255, 255, 255),2);
+	putText(img, "Min size: "+min_size_print, Point(10, 80), FONT_HERSHEY_SIMPLEX, 0.8, Scalar(255, 255, 255),2);
+	putText(img, "Laser Focus Status: ", Point(10, 120), FONT_HERSHEY_SIMPLEX, 0.8, Scalar(255, 255, 255),2);
 }
 
-void GreenLight(Mat img, int avg_last, int avg)
+void GreenLight(Mat img, int last, int current)
 {
-	if(avg_last-avg > 0)
+	if(last-current > 0 || abs(last-current) < 5)
 	{
-		circle( img, Point(120,110), 20, Scalar(0,255,0), -1, 8, 0 );
+		circle( img, Point(300,110), 20, Scalar(0,255,0), -1, 8, 0 );
 	}
 	else
 	{
-		circle( img, Point(120,110), 20, Scalar(0,0,255), -1, 8, 0 );
+		circle( img, Point(300,110), 20, Scalar(0,0,255), -1, 8, 0 );
 	}
 }
 
-int SizeAverage (int count, int size_avg, int size_array[])
+int SizeAverage (int count, int size_avg, int size_array[], int center_total)
 {
 	for(int i=9; i>0; i--)
 	{
@@ -291,9 +306,22 @@ int SizeAverage (int count, int size_avg, int size_array[])
 	{
 		size_sum = size_sum + size_array[i];
 	}
-	if(size_array[9]!=0)
+
+	if(size_array[9]!=0 && center_total > 50)
 	{
 		size_avg = size_sum/10;
 		return size_avg;
 	}
 }
+
+int ClearList(vector<cv::Point> center_list, int center_total, int size_array[], int min)
+{
+	int last_min = min;
+	cout<<"last minum size: "<<last_min<<endl;
+	fill_n(size_array,10,0);
+	center_total = 0;
+	fill(center_list.begin(), center_list.end(), Point(0,0));
+	return last_min;
+}
+
+//int DotToLine(Point center, )
