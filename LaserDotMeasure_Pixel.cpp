@@ -155,7 +155,7 @@ int main(int argc, char* argv[])
 
 				// Number of bright pixel
 				int count = PixelCounter(img_grey_filtered,0);
-				cout<<"pixel count: "<<count<<endl;
+				//cout<<"pixel count: "<<count<<endl;
 				// average size
 				size_avg = SizeAverage(count,0,size_array, center_total);
 				//-----------save min_size only when the value in size_array is stable and close to each other
@@ -177,7 +177,7 @@ int main(int argc, char* argv[])
 					Point center(cvRound(circles[0][0]), cvRound(circles[0][1]));
 					center_list.push_back(center);
 					center_total ++;
-					if (center_total >=10)
+					if (center_total >= 10)
 					{
 						Point sum  = std::accumulate(center_list.begin(), center_list.end(), Point(0,0));
 						center_avg = sum*(1.0/center_total);
@@ -199,7 +199,6 @@ int main(int argc, char* argv[])
 
 				MyLine( src, Point( 300, 200 ), Point( 700, 900 ) );
 				DotToLine(src,  Point( 300, 200 ), Point( 700, 900 ), center_avg);
-
 				HMI(src, size_avg, min_size, non_zero);
 				GreenLight(src, last_min_size, size_avg);
 
@@ -329,10 +328,24 @@ int ClearList(vector<cv::Point> center_list, int center_total, int size_array[],
 
 int DotToLine(Mat img, Point start, Point end, Point center)
 {
-	LineIterator line(img, start, end, 8);
-	vector<Vec3b> buf(line.count);
-	for(int i = 0; i < line.count; i++, ++line)
+	LineIterator laserline(img, start, end, 8);
+	vector<Vec3b> buf(laserline.count);
+	vector<double> distance_list;
+	vector<cv::Point> point_list;
+	for(int i = 0; i < laserline.count; i++, ++laserline)
 	{
-		cout<<(line.pos());
+		point_list.push_back(laserline.pos());
+		double distance = norm(center-laserline.pos());
+		distance_list.push_back(distance);
 	}
+	double min_distance = *min_element(distance_list.begin(), distance_list.end());
+	vector<double>::iterator result = min_element(distance_list.begin(), distance_list.end());
+	int num = distance(distance_list.begin(), result);
+
+	line( img, center, point_list[num], Scalar( 255, 255, 0 ), 1, 8 );
+
+	cout << "min point at: " << point_list[num] <<endl;
+	cout<<"center of line: "<<point_list[(laserline.count)/2]<<endl;
+	cout<<"nominal_distance: "<<min_distance<<endl;
+	cout<<"distance from line center: "<<norm(point_list[num]-point_list[(laserline.count)/2])<<endl;
 }
