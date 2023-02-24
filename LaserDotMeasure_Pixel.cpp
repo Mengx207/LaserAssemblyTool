@@ -198,7 +198,7 @@ int main(int argc, char* argv[])
 				HMI(src, size_avg, min_size, non_zero, dotLine.nom_distance, dotLine.center_distance);
 				GreenLight(src, last_min_size, size_avg, dotLine.nom_distance, dotLine.center_distance);
 
-				//imshow("img_grey_filtered", img_grey_filtered);	
+				imshow("img_grey_filtered", img_grey_filtered);	
 				imshow("source window", src);							
 				waitKey( 10 );		
 				sleep(0.1);
