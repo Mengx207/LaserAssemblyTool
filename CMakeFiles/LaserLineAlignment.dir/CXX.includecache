@@ -6,7 +6,7 @@
 
 #IncludeRegexTransform: 
 
-/home/lingbo/Documents/GitHub/AssemblyGuidanceTool/LaserDotMeasure_Origin.cpp
+/home/lingbo/Documents/GitHub/AssemblyGuidanceTool/LaserLineAlignment.cpp
 myHeader.h
 /home/lingbo/Documents/GitHub/AssemblyGuidanceTool/myHeader.h
 pylon/PylonGUI.h

@@ -49,6 +49,6 @@ set(CMAKE_MAKEFILE_PRODUCTS
 
 # Dependency information for all targets:
 set(CMAKE_DEPEND_INFO_FILES
-  "CMakeFiles/LaserDotMeasure_Origin.dir/DependInfo.cmake"
   "CMakeFiles/LaserDotMeasure_Pixel.dir/DependInfo.cmake"
+  "CMakeFiles/LaserLineAlignment.dir/DependInfo.cmake"
   )

@@ -111,19 +111,6 @@ depend:
 .PHONY : depend
 
 #=============================================================================
-# Target rules for targets named LaserDotMeasure_Origin
-
-# Build rule for target.
-LaserDotMeasure_Origin: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 LaserDotMeasure_Origin
-.PHONY : LaserDotMeasure_Origin
-
-# fast build rule for target.
-LaserDotMeasure_Origin/fast:
-	$(MAKE) -f CMakeFiles/LaserDotMeasure_Origin.dir/build.make CMakeFiles/LaserDotMeasure_Origin.dir/build
-.PHONY : LaserDotMeasure_Origin/fast
-
-#=============================================================================
 # Target rules for targets named LaserDotMeasure_Pixel
 
 # Build rule for target.
@@ -136,32 +123,18 @@ LaserDotMeasure_Pixel/fast:
 	$(MAKE) -f CMakeFiles/LaserDotMeasure_Pixel.dir/build.make CMakeFiles/LaserDotMeasure_Pixel.dir/build
 .PHONY : LaserDotMeasure_Pixel/fast
 
-LaserDotMeasure_Origin.o: LaserDotMeasure_Origin.cpp.o
+#=============================================================================
+# Target rules for targets named LaserLineAlignment
 
-.PHONY : LaserDotMeasure_Origin.o
+# Build rule for target.
+LaserLineAlignment: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 LaserLineAlignment
+.PHONY : LaserLineAlignment
 
-# target to build an object file
-LaserDotMeasure_Origin.cpp.o:
-	$(MAKE) -f CMakeFiles/LaserDotMeasure_Origin.dir/build.make CMakeFiles/LaserDotMeasure_Origin.dir/LaserDotMeasure_Origin.cpp.o
-.PHONY : LaserDotMeasure_Origin.cpp.o
-
-LaserDotMeasure_Origin.i: LaserDotMeasure_Origin.cpp.i
-
-.PHONY : LaserDotMeasure_Origin.i
-
-# target to preprocess a source file
-LaserDotMeasure_Origin.cpp.i:
-	$(MAKE) -f CMakeFiles/LaserDotMeasure_Origin.dir/build.make CMakeFiles/LaserDotMeasure_Origin.dir/LaserDotMeasure_Origin.cpp.i
-.PHONY : LaserDotMeasure_Origin.cpp.i
-
-LaserDotMeasure_Origin.s: LaserDotMeasure_Origin.cpp.s
-
-.PHONY : LaserDotMeasure_Origin.s
-
-# target to generate assembly for a file
-LaserDotMeasure_Origin.cpp.s:
-	$(MAKE) -f CMakeFiles/LaserDotMeasure_Origin.dir/build.make CMakeFiles/LaserDotMeasure_Origin.dir/LaserDotMeasure_Origin.cpp.s
-.PHONY : LaserDotMeasure_Origin.cpp.s
+# fast build rule for target.
+LaserLineAlignment/fast:
+	$(MAKE) -f CMakeFiles/LaserLineAlignment.dir/build.make CMakeFiles/LaserLineAlignment.dir/build
+.PHONY : LaserLineAlignment/fast
 
 LaserDotMeasure_Pixel.o: LaserDotMeasure_Pixel.cpp.o
 
@@ -190,6 +163,33 @@ LaserDotMeasure_Pixel.cpp.s:
 	$(MAKE) -f CMakeFiles/LaserDotMeasure_Pixel.dir/build.make CMakeFiles/LaserDotMeasure_Pixel.dir/LaserDotMeasure_Pixel.cpp.s
 .PHONY : LaserDotMeasure_Pixel.cpp.s
 
+LaserLineAlignment.o: LaserLineAlignment.cpp.o
+
+.PHONY : LaserLineAlignment.o
+
+# target to build an object file
+LaserLineAlignment.cpp.o:
+	$(MAKE) -f CMakeFiles/LaserLineAlignment.dir/build.make CMakeFiles/LaserLineAlignment.dir/LaserLineAlignment.cpp.o
+.PHONY : LaserLineAlignment.cpp.o
+
+LaserLineAlignment.i: LaserLineAlignment.cpp.i
+
+.PHONY : LaserLineAlignment.i
+
+# target to preprocess a source file
+LaserLineAlignment.cpp.i:
+	$(MAKE) -f CMakeFiles/LaserLineAlignment.dir/build.make CMakeFiles/LaserLineAlignment.dir/LaserLineAlignment.cpp.i
+.PHONY : LaserLineAlignment.cpp.i
+
+LaserLineAlignment.s: LaserLineAlignment.cpp.s
+
+.PHONY : LaserLineAlignment.s
+
+# target to generate assembly for a file
+LaserLineAlignment.cpp.s:
+	$(MAKE) -f CMakeFiles/LaserLineAlignment.dir/build.make CMakeFiles/LaserLineAlignment.dir/LaserLineAlignment.cpp.s
+.PHONY : LaserLineAlignment.cpp.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -197,15 +197,15 @@ help:
 	@echo "... clean"
 	@echo "... depend"
 	@echo "... edit_cache"
-	@echo "... LaserDotMeasure_Origin"
 	@echo "... rebuild_cache"
 	@echo "... LaserDotMeasure_Pixel"
-	@echo "... LaserDotMeasure_Origin.o"
-	@echo "... LaserDotMeasure_Origin.i"
-	@echo "... LaserDotMeasure_Origin.s"
+	@echo "... LaserLineAlignment"
 	@echo "... LaserDotMeasure_Pixel.o"
 	@echo "... LaserDotMeasure_Pixel.i"
 	@echo "... LaserDotMeasure_Pixel.s"
+	@echo "... LaserLineAlignment.o"
+	@echo "... LaserLineAlignment.i"
+	@echo "... LaserLineAlignment.s"
 .PHONY : help
 
 

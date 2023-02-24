@@ -1,10 +1,6 @@
 /* 
-	Assembly guidance tool - Laser dot alignment
-	Help user achieve an accurate result of laser focus and laser location
-
-	Measure laser dot's size for focusing 
-	Measure nomal distance between laser dot and calculated laser line
-	Meausre distance from the center of laser line to the laser dot along the line
+	Assembly guidance tool - Laser line alignment
+	Help user achieve an accurate result of laser line location, orientation and quality
 */
 
 #include "myHeader.h"
@@ -83,6 +79,7 @@ int main(int argc, char* argv[])
 
 		vector<cv::Point> center_list;
 		double center_total = 0;
+		long valid_num = 0;
 
 		while(1)
 		{
@@ -93,9 +90,6 @@ int main(int argc, char* argv[])
 
 			CEnumerationPtr(nodemap0.GetNode("ExposureMode"))->FromString("Timed"); 
 			CFloatPtr(nodemap0.GetNode("ExposureTime"))->SetValue(200.0);
-						
-			//double d = CFloatParameter(nodemap0, "SensorReadoutTime").GetValue();
-			//cout << "readout   "  << d <<endl;
 
 			CEnumParameter(nodemap0, "LineSelector").SetValue("Line3");
 			CEnumParameter(nodemap0, "LineMode").SetValue("Output");
@@ -116,7 +110,7 @@ int main(int argc, char* argv[])
 			
 			camera0.StartGrabbing(max_imgs0*1);
 
-			while (imgs_taken0< max_imgs0) 
+			while (imgs_taken0 < max_imgs0) 
 			{	
 
 				CGrabResultPtr ptrGrabResult0;
@@ -151,9 +145,9 @@ int main(int argc, char* argv[])
 
 				// Number of bright pixel
 				int count = PixelCounter(img_grey_filtered,0);
-				//cout<<"pixel count: "<<count<<endl;
+
 				// average size
-				size_avg = SizeAverage(count,0,size_array, center_total);
+				size_avg = SizeAverage(count,0,size_array, valid_num);
 				//-----------save min_size only when the value in size_array is stable and close to each other
 				if(size_avg < min_size && center_total > 30)
 				{
@@ -168,38 +162,24 @@ int main(int argc, char* argv[])
 				vector<Vec3f> circles;
 				if(non_zero > 20)
 				{	
-					HoughCircles(img_grey_filtered, circles, HOUGH_GRADIENT,2, 2000,500,10,0,100);
-					sleep(0.1);
-					Point center(cvRound(circles[0][0]), cvRound(circles[0][1]));
-					center_list.push_back(center);
-					center_total ++;
-					if (center_total >= 10)
-					{
-						Point sum  = std::accumulate(center_list.begin(), center_list.end(), Point(0,0));
-						center_avg = sum*(1.0/center_total);
-						cout<<"Average center: "<< center_avg<<endl;
-						sleep(0.1);
-						circle( img_grey_filtered, center_avg, 3, Scalar(255,0,0), -1, 8, 0 );
-						circle( src, center_avg, 3, Scalar(255,100,0), -1, 8, 0 );
-					}
+					valid_num ++;
 				}
 				else
 				{
-					cout<<min_size<<endl;
+					valid_num = 0;
 					last_min_size = min_size;
 					cout<<"last minum size: "<<last_min_size<<endl;
 					fill_n(size_array,10,0);
-					center_total = 0;
-					fill(center_list.begin(), center_list.end(), Point(0,0));
 				}
 
 				MyLine( src, Point( 300, 200 ), Point( 700, 900 ) );
-				DotToLine(src,  Point( 300, 200 ), Point( 700, 900 ), center_avg, dotLine.nom_distance, dotLine.center_distance);
-				HMI(src, size_avg, min_size, non_zero, dotLine.nom_distance, dotLine.center_distance);
-				GreenLight(src, last_min_size, size_avg, dotLine.nom_distance, dotLine.center_distance);
+				//DotToLine(src,  Point( 300, 200 ), Point( 700, 900 ), center_avg, dotLine.nom_distance, dotLine.center_distance);
+				//HMI(src, size_avg, min_size, non_zero, dotLine.nom_distance, dotLine.center_distance);
+				//GreenLight(src, last_min_size, size_avg, dotLine.nom_distance, dotLine.center_distance);
 
 				//imshow("img_grey_filtered", img_grey_filtered);	
-				imshow("source window", src);							
+				imshow("source window", src);
+				imshow("filtered", img_grey_filtered);					
 				waitKey( 10 );		
 				sleep(0.1);
 				imgs_taken0++;

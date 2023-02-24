@@ -11,18 +11,26 @@ include_directories( include
 		     ${Pylon_INCLUDE_DIRS}
 	             ${pylon_camera_INCLUDE_DIRS}
  )
-add_executable( LaserDotMeasure_Origin LaserDotMeasure_Origin.cpp )
-target_link_libraries( LaserDotMeasure_Origin
-		       ${OpenCV_LIBS}
-	               ${Pylon_LIBRARIES}
-                       ${pylon_camera_INCLUDE_DIRS}
-                      
- )
+
+#add_executable( LaserDotMeasure_Origin LaserDotMeasure_Origin.cpp )
+#target_link_libraries( LaserDotMeasure_Origin
+#		       ${OpenCV_LIBS}
+#	               ${Pylon_LIBRARIES}
+#                      ${pylon_camera_INCLUDE_DIRS}                     
+# )
 
 add_executable( LaserDotMeasure_Pixel LaserDotMeasure_Pixel.cpp )
 target_link_libraries( LaserDotMeasure_Pixel
 		       ${OpenCV_LIBS}
 	               ${Pylon_LIBRARIES}
                        ${pylon_camera_INCLUDE_DIRS}
+)
+
+add_executable( LaserLineAlignment LaserLineAlignment.cpp )
+target_link_libraries( LaserLineAlignment
+		       ${OpenCV_LIBS}
+	               ${Pylon_LIBRARIES}
+                       ${pylon_camera_INCLUDE_DIRS}
                       
- )
+)
+

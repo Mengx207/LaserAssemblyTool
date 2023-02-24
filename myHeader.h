@@ -20,3 +20,11 @@
 
 using namespace std;
 
+// Namespace for using pylon objects.
+using namespace Pylon;
+
+// Namespace for using cout.
+using namespace std;
+
+// Namespace for CV objects
+using namespace cv;

@@ -6,39 +6,11 @@
 */
 
 // Include files to use the pylon API.
-#include <iostream>
-#include <sstream>
-#include <string>
-#include <unistd.h>
-#include <pylon/InstantCamera.h>
-#include <pylon/PylonIncludes.h>
-#include <GenApi/IEnumeration.h>
-#include <pylon/EnumParameter.h>
-#include <Base/GCString.h>
-#include <opencv2/core/core.hpp>
-#include <opencv2/core/utility.hpp>
-#include "opencv2/imgproc/imgproc.hpp"
-#include <bits/stdc++.h>
-#include <vector>
-#include <opencv2/highgui/highgui.hpp>
-#include "softwaretriggerconfiguration.h"
-#include <time.h>
-#include <stdio.h>
-#include <ctime>
+#include "myHeader.h"
 
 #ifdef PYLON_WIN_BUILD
 #   include <pylon/PylonGUI.h>
 #endif
-
-
-// Namespace for using pylon objects.
-using namespace Pylon;
-
-// Namespace for using cout.
-using namespace std;
-
-// Namespace for CV objects
-using namespace cv;
 
 // Number of images to be grabbed.
 static const uint32_t c_countOfImagesToGrab = 10;
