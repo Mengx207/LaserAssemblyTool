@@ -60,7 +60,7 @@ int main(int argc, char* argv[])
 		camera0.Open();
 		
 		Point max_point;
-		Mat canny_edge, canny_edge_blur, img_grey;
+		Mat canny_edge, canny_edge_blur, img_grey, img_grey_blur;
 
 		// If camera features file is used
 		//CFeaturePersistence::Load( Filename, &cameras[0].GetNodeMap(), true ); 
@@ -157,9 +157,19 @@ int main(int argc, char* argv[])
 					}
 				}
 
-			 //---------Draw circles based on collected points	
+				// Standard Hough Line Transform
+				Mat houghline = cv::Mat::zeros({img_grey_filtered.size()},CV_8UC3);
+				GaussianBlur(img_grey_filtered,img_grey_blur, Size(5, 5), 0, 0, BORDER_DEFAULT);
+			    vector<Vec4i> linesP; // will hold the results of the detection
+				HoughLinesP(img_grey_blur, linesP, 1, CV_PI/180, 50, 500, 1 ); // runs the actual detection
+				// Draw the lines
+				for( size_t i = 0; i < linesP.size(); i++ )
+				{
+					Vec4i l = linesP[i];
+					line( houghline, Point(l[0], l[1]), Point(l[2], l[3]), Scalar(255,255,255), 3, LINE_AA);
+				}
+
 			 //---------Clear center list and size array is capture an empty image
-				vector<Vec3f> circles;
 				if(non_zero > 20)
 				{	
 					valid_num ++;
@@ -171,6 +181,7 @@ int main(int argc, char* argv[])
 					cout<<"last minum size: "<<last_min_size<<endl;
 					fill_n(size_array,10,0);
 				}
+				//cout<<valid_num<<endl;
 
 				MyLine( src, Point( 300, 200 ), Point( 700, 900 ) );
 				//DotToLine(src,  Point( 300, 200 ), Point( 700, 900 ), center_avg, dotLine.nom_distance, dotLine.center_distance);
@@ -179,7 +190,9 @@ int main(int argc, char* argv[])
 
 				//imshow("img_grey_filtered", img_grey_filtered);	
 				imshow("source window", src);
-				imshow("filtered", img_grey_filtered);					
+				imshow("filtered", img_grey_filtered);		
+				imshow("filtered blurred", img_grey_blur);		
+				imshow("houghline", houghline);			
 				waitKey( 10 );		
 				sleep(0.1);
 				imgs_taken0++;
@@ -201,6 +214,18 @@ int main(int argc, char* argv[])
    	return exitCode;
    
 }
+
+
+
+
+
+
+
+
+
+
+
+
 
 //---------Draw the desired laser line
 void MyLine( Mat img, Point start, Point end )
