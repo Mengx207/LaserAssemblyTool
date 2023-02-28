@@ -18,8 +18,6 @@
 #include <stdio.h>
 #include <ctime>
 
-using namespace std;
-
 // Namespace for using pylon objects.
 using namespace Pylon;
 

@@ -10,7 +10,6 @@
 #include <vector>
 #include <opencv2/highgui/highgui.hpp>
 #include <ctime>
-#define n 3
  
 using namespace std; 
 
@@ -19,6 +18,7 @@ void crossProduct(int vect_A[], int vect_B[], int cross_P[]);
  
 int main()
 {
+	// intersection::intersectionLine({ 10,8,3 }, { 2,6,5 }, { 10,5,5 }, {2,2,2});
 	//Known normal vectors for two planes
     int N1[] = { 10,8,3 }; 
     int N2[] = { 2,6,5 };
@@ -33,7 +33,7 @@ int main()
 	a2 = N2[0];
 	b2 = N2[1];
 	c2 = N2[2];	
-    int cross_P[n];
+    int cross_P[3];
 	//find the plane equations
 	double x,y,z;
 	//a1*(x-point1[0])+b1*(y-point1[0])+c1*(z-point1[0]) = 0;
@@ -77,7 +77,7 @@ int main()
 int dotProduct(int vect_A[], int vect_B[])
 {
     int product = 0;
-    for (int i = 0; i < n; i++)
+    for (int i = 0; i < 3; i++)
 	{
         product = product + vect_A[i] * vect_B[i];
 	}

@@ -13,7 +13,7 @@
 #   include <pylon/PylonGUI.h>
 #endif
 
-// Number of images to be grabbed.
+// Number of images to be grabbed.s
 static const uint32_t c_countOfImagesToGrab = 10;
 
 // Limits the amount of cameras used for grabbing.
@@ -22,17 +22,6 @@ static const size_t c_maxCamerasToUse = 2;
 //If camera features file is used
 //const char Filename[] = "acA2440-75um_23663771.pfs";
 using namespace GENAPI_NAMESPACE;
-
-// void MyLine( Mat img, Point start, Point end );
-// void HMI(Mat img, int size, int min_size, int non_zero, int nom_distance, int center_distance);
-// void GreenLight(Mat img, int last, int current, int nom_distance, int center_distance);
-// int NonZero (Mat img, int count);
-// int ClearList(vector<cv::Point> center_list, int center_total, int size_array[], int min);
-// void DotToLine(Mat img, Point start, Point end, Point center, double nom_distance, double center_distance);
-
-// struct {
-// 	double nom_distance, center_distance;
-// } dotLine;
 
 int main(int argc, char* argv[])
 {
@@ -122,7 +111,6 @@ int main(int argc, char* argv[])
 				CBooleanParameter(nodemap0, "LineInverter").SetValue(true);
 				CEnumParameter(nodemap0, "LineSelector").SetValue("Line4");			
 				CBooleanParameter(nodemap0, "LineInverter").SetValue(true);
-					
 				sleep(0.1);
 
 				while(camera0.WaitForFrameTriggerReady(1000,TimeoutHandling_ThrowException)==0);			
@@ -131,11 +119,19 @@ int main(int argc, char* argv[])
 				bool test0 = camera0.RetrieveResult(1000, ptrGrabResult0, TimeoutHandling_ThrowException);
 
 				formatConverter.Convert(pylonImage0, ptrGrabResult0);
-				
+//-----------------------Main------Functionalities------Start------From------Here-----------------------------------------------------------------------------				
 				cam_frame_temp0 = Mat(ptrGrabResult0->GetHeight(), ptrGrabResult0->GetWidth(), CV_8UC3, (uint8_t *) pylonImage0.GetBuffer());
 
 				src = cam_frame_temp0.clone();
-				MyLine( src, Point( 300, 200 ), Point( 700, 900 ) );
+				
+				int N1[3] = {1,1,1};
+				int N2[3] = {2,2,2};
+				int point1[3] = {1,1,1};
+				int point2[3] = {2,2,2};
+    			intersection::intersectionLine(N1, N2, point1, point2);
+
+
+				laserdot::CalculatedLine( src, Point( 300, 200 ), Point( 700, 900 ) );
 
 			 //----------raw image to greyscale, threshold filter
 				cvtColor(src, img_grey, COLOR_BGR2GRAY);
@@ -216,110 +212,3 @@ int main(int argc, char* argv[])
    	return exitCode;
    
 }
-
-// //---------Draw the desired laser line
-// void MyLine( Mat img, Point start, Point end )
-// {
-//   int thickness = 2;
-//   int lineType = LINE_8;
-
-//   line( img, start, end, Scalar( 0, 0, 255 ), thickness, lineType );
-// }
-
-// //----------Use Canny to find the Canny edges of objects in image
-// //Canny edge is a good way to count non-zero pixel
-// int NonZero(Mat img, int count)
-// {
-// 	Mat canny_edge, canny_edge_blur;
-// 	Canny(img, canny_edge, 100, 200, 5, false);
-// 	GaussianBlur( canny_edge, canny_edge_blur, Size(5, 5), 2, 2 );
-// 	count = countNonZero(canny_edge_blur);
-// 	return count;
-// }
-
-// //----------Print information in window
-// void HMI(Mat img, int size, int min_size, int non_zero, int nom_distance, int center_distance)
-// {
-// 	std::string size_print = "No value";
-// 	std::string min_size_print = "No value";
-// 	std::string nom_distance_print = "No value";
-// 	std::string center_distance_print = "No value";
-// 	if(non_zero >20)		
-// 	{
-// 		size_print = std::to_string(size);
-// 		min_size_print = std::to_string(min_size);
-// 		nom_distance_print = std::to_string(nom_distance);
-// 		center_distance_print = std::to_string(center_distance);
-// 	}
-// 	putText(img, "Laser Focus:", Point(10, 20), FONT_HERSHEY_SIMPLEX, 0.8, Scalar(255, 255, 255),2);
-// 	putText(img, "Laser Dot Size: "+size_print, Point(10, 50), FONT_HERSHEY_SIMPLEX, 0.8, Scalar(255, 255, 255),2);
-// 	putText(img, "Last Dot Size: "+min_size_print, Point(10, 80), FONT_HERSHEY_SIMPLEX, 0.8, Scalar(255, 255, 255),2);
-// 	putText(img, "Laser Focus Status: ", Point(10, 120), FONT_HERSHEY_SIMPLEX, 0.8, Scalar(255, 255, 255),2);
-
-// 	putText(img, "Laser Dot Location:", Point(500, 20), FONT_HERSHEY_SIMPLEX, 0.8, Scalar(255, 255, 255),2);
-// 	putText(img, "Nominal Distance: "+nom_distance_print, Point(500, 50), FONT_HERSHEY_SIMPLEX, 0.8, Scalar(255, 255, 255),2);
-// 	putText(img, "Distance from Center: "+center_distance_print, Point(500, 80), FONT_HERSHEY_SIMPLEX, 0.8, Scalar(255, 255, 255),2);
-// 	putText(img, "Dot Location Status: ", Point(500, 120), FONT_HERSHEY_SIMPLEX, 0.8, Scalar(255, 255, 255),2);
-
-// }
-
-// void GreenLight(Mat img, int last, int current, int nom_distance, int center_distance)
-// {
-// 	if(last-current > 0 || abs(last-current) < 5)
-// 	{
-// 		circle( img, Point(300,110), 20, Scalar(0,255,0), -1, 8, 0 );
-// 	}
-// 	else
-// 	{
-// 		circle( img, Point(300,110), 20, Scalar(0,0,255), -1, 8, 0 );
-// 	}
-
-// 	if(nom_distance < 50 && center_distance < 50)
-// 	{
-// 		circle( img, Point(800,110), 20, Scalar(0,255,0), -1, 8, 0 );
-// 	}
-// 	else
-// 	{
-// 		circle( img, Point(800,110), 20, Scalar(0,0,255), -1, 8, 0 );
-// 	}
-// }
-
-// int ClearList(vector<cv::Point> center_list, int center_total, int size_array[], int min)
-// {
-// 	int last_min = min;
-// 	cout<<"last min size: "<<last_min<<endl;
-// 	fill_n(size_array,10,0);
-// 	center_total = 0;
-// 	fill(center_list.begin(), center_list.end(), Point(0,0));
-// 	return last_min;
-// }
-
-// void DotToLine(Mat img, Point start, Point end, Point center, double nom_distance, double center_distance)
-// {
-// 	LineIterator laserline(img, start, end, 8);
-// 	vector<Vec3b> buf(laserline.count);
-// 	vector<double> distance_list;
-// 	vector<cv::Point> point_list;
-// 	for(int i = 0; i < laserline.count; i++, ++laserline)
-// 	{
-// 		point_list.push_back(laserline.pos());
-// 		double distance = norm(center-laserline.pos());
-// 		distance_list.push_back(distance);
-// 	}
-// 	double min_distance = *min_element(distance_list.begin(), distance_list.end());
-// 	vector<double>::iterator result = min_element(distance_list.begin(), distance_list.end());
-// 	int num = distance(distance_list.begin(), result);
-
-// 	line( img, center, point_list[num], Scalar( 255, 255, 0 ), 1, 8 );
-// 	// std::pair<int,int>dist(n1,n2) ;
-// 	dotLine.nom_distance = min_distance;
-// 	dotLine.center_distance = norm(point_list[num]-point_list[(laserline.count)/2]);
-// 	// std::pair<int,int>dist(min_distance,) ;
-// 	Point laserline_center = point_list[(laserline.count)/2];
-// 	circle( img, laserline_center, 5, Scalar(0,0,255), -1, 8, 0 );
-
-// 	// cout << "min point at: " << point_list[num] <<endl;
-// 	// cout<<"center of line: "<<laserline_center<<endl;
-// 	// cout<<"nominal_distance: "<<nom_distance<<endl;
-// 	// cout<<"distance from line center: "<<center_distance<<endl;
-// }
