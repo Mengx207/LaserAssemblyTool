@@ -93,9 +93,6 @@ int main(int argc, char* argv[])
 
 			CEnumerationPtr(nodemap0.GetNode("ExposureMode"))->FromString("Timed"); 
 			CFloatPtr(nodemap0.GetNode("ExposureTime"))->SetValue(200.0);
-						
-			//double d = CFloatParameter(nodemap0, "SensorReadoutTime").GetValue();
-			//cout << "readout   "  << d <<endl;
 
 			CEnumParameter(nodemap0, "LineSelector").SetValue("Line3");
 			CEnumParameter(nodemap0, "LineMode").SetValue("Output");
@@ -140,6 +137,7 @@ int main(int argc, char* argv[])
 				cam_frame_temp0 = Mat(ptrGrabResult0->GetHeight(), ptrGrabResult0->GetWidth(), CV_8UC3, (uint8_t *) pylonImage0.GetBuffer());
 
 				src = cam_frame_temp0.clone();
+				MyLine( src, Point( 300, 200 ), Point( 700, 900 ) );
 
 			 //----------raw image to greyscale, threshold filter
 				cvtColor(src, img_grey, COLOR_BGR2GRAY);
@@ -151,7 +149,6 @@ int main(int argc, char* argv[])
 
 				// Number of bright pixel
 				int count = PixelCounter(img_grey_filtered,0);
-				//cout<<"pixel count: "<<count<<endl;
 				// average size
 				size_avg = SizeAverage(count,0,size_array, center_total);
 				//-----------save min_size only when the value in size_array is stable and close to each other
@@ -164,6 +161,7 @@ int main(int argc, char* argv[])
 				}
 
 			 //---------Draw circles based on collected points	
+			 //---------Process when captured images are not empty
 			 //---------Clear center list and size array is capture an empty image
 				vector<Vec3f> circles;
 				if(non_zero > 20)
@@ -182,19 +180,16 @@ int main(int argc, char* argv[])
 						circle( img_grey_filtered, center_avg, 3, Scalar(255,0,0), -1, 8, 0 );
 						circle( src, center_avg, 3, Scalar(255,100,0), -1, 8, 0 );
 					}
+					DotToLine(src,  Point( 300, 200 ), Point( 700, 900 ), center_avg, dotLine.nom_distance, dotLine.center_distance);
 				}
 				else
 				{
-					cout<<min_size<<endl;
 					last_min_size = min_size;
-					cout<<"last minum size: "<<last_min_size<<endl;
+					cout<<"last min size: "<<last_min_size<<endl;
 					fill_n(size_array,10,0);
 					center_total = 0;
 					fill(center_list.begin(), center_list.end(), Point(0,0));
 				}
-
-				MyLine( src, Point( 300, 200 ), Point( 700, 900 ) );
-				DotToLine(src,  Point( 300, 200 ), Point( 700, 900 ), center_avg, dotLine.nom_distance, dotLine.center_distance);
 				HMI(src, size_avg, min_size, non_zero, dotLine.nom_distance, dotLine.center_distance);
 				GreenLight(src, last_min_size, size_avg, dotLine.nom_distance, dotLine.center_distance);
 
@@ -255,7 +250,6 @@ int PixelCounter(Mat img, int count)
 			{
 				count++;
 				//cout<<img_nominal.at<float>(i,j)<<endl;
-				//cout<<i<<","<<j<<endl;
 			}
 		}
 	}
@@ -333,7 +327,7 @@ int SizeAverage (int count, int size_avg, int size_array[], int center_total)
 int ClearList(vector<cv::Point> center_list, int center_total, int size_array[], int min)
 {
 	int last_min = min;
-	cout<<"last minum size: "<<last_min<<endl;
+	cout<<"last min size: "<<last_min<<endl;
 	fill_n(size_array,10,0);
 	center_total = 0;
 	fill(center_list.begin(), center_list.end(), Point(0,0));
@@ -362,8 +356,8 @@ void DotToLine(Mat img, Point start, Point end, Point center, double nom_distanc
 	Point laserline_center = point_list[(laserline.count)/2];
 	circle( img, laserline_center, 5, Scalar(0,0,255), -1, 8, 0 );
 
-	cout << "min point at: " << point_list[num] <<endl;
-	cout<<"center of line: "<<laserline_center<<endl;
-	cout<<"nominal_distance: "<<nom_distance<<endl;
-	cout<<"distance from line center: "<<center_distance<<endl;
+	// cout << "min point at: " << point_list[num] <<endl;
+	// cout<<"center of line: "<<laserline_center<<endl;
+	// cout<<"nominal_distance: "<<nom_distance<<endl;
+	// cout<<"distance from line center: "<<center_distance<<endl;
 }
