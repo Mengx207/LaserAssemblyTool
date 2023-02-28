@@ -4,6 +4,7 @@
 CMakeFiles/LaserDotMeasure_Pixel.dir/LaserDotMeasure_Pixel.cpp.o: LaserDotMeasure_Pixel.cpp
 CMakeFiles/LaserDotMeasure_Pixel.dir/LaserDotMeasure_Pixel.cpp.o: myHeader.h
 CMakeFiles/LaserDotMeasure_Pixel.dir/LaserDotMeasure_Pixel.cpp.o: softwaretriggerconfiguration.h
+CMakeFiles/LaserDotMeasure_Pixel.dir/LaserDotMeasure_Pixel.cpp.o: utility/include/utility.h
 CMakeFiles/LaserDotMeasure_Pixel.dir/LaserDotMeasure_Pixel.cpp.o: /opt/pylon/include/Base/GCArray.h
 CMakeFiles/LaserDotMeasure_Pixel.dir/LaserDotMeasure_Pixel.cpp.o: /opt/pylon/include/Base/GCBase.h
 CMakeFiles/LaserDotMeasure_Pixel.dir/LaserDotMeasure_Pixel.cpp.o: /opt/pylon/include/Base/GCException.h

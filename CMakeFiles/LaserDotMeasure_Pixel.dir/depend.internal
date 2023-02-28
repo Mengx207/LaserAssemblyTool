@@ -5,6 +5,7 @@ CMakeFiles/LaserDotMeasure_Pixel.dir/LaserDotMeasure_Pixel.cpp.o
  /home/lingbo/Documents/GitHub/AssemblyGuidanceTool/LaserDotMeasure_Pixel.cpp
  /home/lingbo/Documents/GitHub/AssemblyGuidanceTool/myHeader.h
  /home/lingbo/Documents/GitHub/AssemblyGuidanceTool/softwaretriggerconfiguration.h
+ /home/lingbo/Documents/GitHub/AssemblyGuidanceTool/utility/include/utility.h
  /opt/pylon/include/Base/GCArray.h
  /opt/pylon/include/Base/GCBase.h
  /opt/pylon/include/Base/GCException.h

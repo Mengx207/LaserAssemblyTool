@@ -19,9 +19,13 @@ void crossProduct(int vect_A[], int vect_B[], int cross_P[]);
  
 int main()
 {
-	//arbitrary normal vectors for two planes
+	//Known normal vectors for two planes
     int N1[] = { 10,8,3 }; 
     int N2[] = { 2,6,5 };
+	//Known one point on each plane
+	int point1[] = { 10,5,5 };
+	int point2[] = { 2,2,2 };
+
 	double a1,b1,c1,a2,b2,c2;
 	a1 = N1[0];
 	b1 = N1[1];
@@ -30,10 +34,6 @@ int main()
 	b2 = N2[1];
 	c2 = N2[2];	
     int cross_P[n];
-	//point on each plane
-	int point1[] = { 10,5,5 };
-	int point2[] = { 2,2,2 };
-
 	//find the plane equations
 	double x,y,z;
 	//a1*(x-point1[0])+b1*(y-point1[0])+c1*(z-point1[0]) = 0;
@@ -46,12 +46,8 @@ int main()
     cout << "Dot product:";
     cout << dotProduct(N1, N2) << endl;
     // crossProduct function call
-    cout << "Cross product:";
     crossProduct(N1, N2, cross_P);
-    for (int i = 0; i < n; i++)
-	{
-		cout << cross_P[i] << " ";
-	}
+	cout<<"Nomal vector cross product: v=("<<cross_P[0]<<","<<cross_P[1]<<","<<cross_P[2]<<")";
 	// To find a point on intersection line, use two plane equations and set z=0
 	// a1*x+b1*y = (a1*point1[0]+b1*point1[0]+c1*point1[0]);
 	// a2*x+b2*y = (a2*point2[0]+b2*point2[0]+c2*point2[0]);
@@ -59,7 +55,22 @@ int main()
 	c2 = a2*point2[0]+b2*point2[0]+c2*point2[0];
 	x = (c1*b2-b1*c2)/(a1*b2-b1*a2);
 	y = (a1*c2-c1*a2)/(a1*b2-b1*a2);
-	cout<<"One point on intersection line: ("<<x<<","<<y<<")"<<endl;
+	cout<<endl<<"One point on intersection line: r0 = ("<<x<<","<<y<<",0)"<<endl;
+	
+	// Plug v and r0 into vector equation
+	// r = (x*i + y*j + 0*k) + t*(cross_P[0]*i+cross_P[1]*j+cross_P[2]*k)
+	// r = (x+t*cross_P[0])*i + (y+t*cross_P[1])*j + (t*cross_P[2])*k
+	double a,b,c;
+	char t;
+	a = x+t*cross_P[0];
+	b = y+t*cross_P[1];
+	c = t*cross_P[2];
+	cout<<"Intersection line(vector equation) of two planes:"<<endl<<"r= a*i+b*j+c*k"<<endl;
+	cout<<"a="<<x<<"+t*"<<cross_P[0]<<endl;
+	cout<<"b="<<y<<"+t*"<<cross_P[1]<<endl;
+	cout<<"c=t*"<<cross_P[2]<<endl;
+	cout<<"r=("<<x<<"+t*"<<cross_P[0]<<")*i+("<<y<<"+t*"<<cross_P[1]<<")*j+("<<cross_P[2]<<")*k"<<endl;
+	
 	return 0;
 }
 

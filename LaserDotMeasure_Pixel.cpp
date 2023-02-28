@@ -8,7 +8,7 @@
 */
 
 #include "myHeader.h"
-
+#include "utility/include/utility.h"
 #ifdef PYLON_WIN_BUILD
 #   include <pylon/PylonGUI.h>
 #endif
@@ -27,8 +27,8 @@ void MyLine( Mat img, Point start, Point end );
 void HMI(Mat img, int size, int min_size, int non_zero, int nom_distance, int center_distance);
 void GreenLight(Mat img, int last, int current, int nom_distance, int center_distance);
 int NonZero (Mat img, int count);
-int PixelCounter(Mat img, int count);
-int SizeAverage (int count, int size_avg,int size_array[], int center_total);
+//int PixelCounter(Mat img, int count);
+// int SizeAverage (int count, int size_avg,int size_array[], int center_total);
 int ClearList(vector<cv::Point> center_list, int center_total, int size_array[], int min);
 void DotToLine(Mat img, Point start, Point end, Point center, double nom_distance, double center_distance);
 
@@ -148,9 +148,9 @@ int main(int argc, char* argv[])
 				int non_zero = NonZero(img_grey_filtered, 0);
 
 				// Number of bright pixel
-				int count = PixelCounter(img_grey_filtered,0);
+				int count = laserdot::PixelCounter(img_grey_filtered,0);
 				// average size
-				size_avg = SizeAverage(count,0,size_array, center_total);
+				size_avg = laserdot::SizeAverage(count,0,size_array, center_total);
 				//-----------save min_size only when the value in size_array is stable and close to each other
 				if(size_avg < min_size && center_total > 30)
 				{
@@ -181,6 +181,7 @@ int main(int argc, char* argv[])
 						circle( src, center_avg, 3, Scalar(255,100,0), -1, 8, 0 );
 					}
 					DotToLine(src,  Point( 300, 200 ), Point( 700, 900 ), center_avg, dotLine.nom_distance, dotLine.center_distance);
+					int x1,x2 = dist.first,dist.second;
 				}
 				else
 				{
@@ -238,23 +239,23 @@ int NonZero(Mat img, int count)
 }
 
 //-----------Measure the size of laser dor by counting pixel after threshold
-int PixelCounter(Mat img, int count)
-{
-	Mat img_nominal;
-	img.convertTo(img_nominal, CV_32F);
-	for(int i=0; i<img_nominal.rows; i++)
-	{
-		for(int j=0; j<img_nominal.cols; j++)
-		{
-			if(img_nominal.at<float>(i,j)<=0.0)
-			{
-				count++;
-				//cout<<img_nominal.at<float>(i,j)<<endl;
-			}
-		}
-	}
-	return count;
-}
+// int PixelCounter(Mat img, int count)
+// {
+// 	Mat img_nominal;
+// 	img.convertTo(img_nominal, CV_32F);
+// 	for(int i=0; i<img_nominal.rows; i++)
+// 	{
+// 		for(int j=0; j<img_nominal.cols; j++)
+// 		{
+// 			if(img_nominal.at<float>(i,j)<=0.0)
+// 			{
+// 				count++;
+// 				//cout<<img_nominal.at<float>(i,j)<<endl;
+// 			}
+// 		}
+// 	}
+// 	return count;
+// }
 
 //----------Print information in window
 void HMI(Mat img, int size, int min_size, int non_zero, int nom_distance, int center_distance)
@@ -303,26 +304,26 @@ void GreenLight(Mat img, int last, int current, int nom_distance, int center_dis
 	}
 }
 
-int SizeAverage (int count, int size_avg, int size_array[], int center_total)
-{
-	for(int i=9; i>0; i--)
-	{
-		size_array[i] = size_array[i-1];
-	}
-	size_array[0] = count;
+// int SizeAverage (int count, int size_avg, int size_array[], int center_total)
+// {
+// 	for(int i=9; i>0; i--)
+// 	{
+// 		size_array[i] = size_array[i-1];
+// 	}
+// 	size_array[0] = count;
 
-	int size_sum = 0;
-	for(int i=0; i<10; i++)
-	{
-		size_sum = size_sum + size_array[i];
-	}
+// 	int size_sum = 0;
+// 	for(int i=0; i<10; i++)
+// 	{
+// 		size_sum = size_sum + size_array[i];
+// 	}
 
-	if(size_array[9]!=0 && center_total > 50)
-	{
-		size_avg = size_sum/10;
-		return size_avg;
-	}
-}
+// 	if(size_array[9]!=0 && center_total > 50)
+// 	{
+// 		size_avg = size_sum/10;
+// 		return size_avg;
+// 	}
+// }
 
 int ClearList(vector<cv::Point> center_list, int center_total, int size_array[], int min)
 {
@@ -351,8 +352,10 @@ void DotToLine(Mat img, Point start, Point end, Point center, double nom_distanc
 	int num = distance(distance_list.begin(), result);
 
 	line( img, center, point_list[num], Scalar( 255, 255, 0 ), 1, 8 );
+	// std::pair<int,int>dist(n1,n2) ;
 	dotLine.nom_distance = min_distance;
 	dotLine.center_distance = norm(point_list[num]-point_list[(laserline.count)/2]);
+	// std::pair<int,int>dist(min_distance,) ;
 	Point laserline_center = point_list[(laserline.count)/2];
 	circle( img, laserline_center, 5, Scalar(0,0,255), -1, 8, 0 );
 
