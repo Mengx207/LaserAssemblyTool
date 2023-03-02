@@ -7,14 +7,6 @@
 #IncludeRegexTransform: 
 
 /home/lingbo/Documents/GitHub/AssemblyGuidanceTool/LaserDotMeasure_Pixel.cpp
-lib/myHeader.h
-/home/lingbo/Documents/GitHub/AssemblyGuidanceTool/lib/myHeader.h
-utility/include/utility.h
-/home/lingbo/Documents/GitHub/AssemblyGuidanceTool/utility/include/utility.h
-pylon/PylonGUI.h
--
-
-/home/lingbo/Documents/GitHub/AssemblyGuidanceTool/lib/myHeader.h
 iostream
 -
 sstream
@@ -38,20 +30,24 @@ opencv2/core/core.hpp
 opencv2/core/utility.hpp
 -
 opencv2/imgproc/imgproc.hpp
-/home/lingbo/Documents/GitHub/AssemblyGuidanceTool/lib/opencv2/imgproc/imgproc.hpp
+/home/lingbo/Documents/GitHub/AssemblyGuidanceTool/opencv2/imgproc/imgproc.hpp
 bits/stdc++.h
 -
 vector
 -
 opencv2/highgui/highgui.hpp
 -
-softwaretriggerconfiguration.h
+lib/softwaretriggerconfiguration.h
 /home/lingbo/Documents/GitHub/AssemblyGuidanceTool/lib/softwaretriggerconfiguration.h
 time.h
 -
 stdio.h
 -
 ctime
+-
+utility/include/utility.h
+/home/lingbo/Documents/GitHub/AssemblyGuidanceTool/utility/include/utility.h
+pylon/PylonGUI.h
 -
 
 /home/lingbo/Documents/GitHub/AssemblyGuidanceTool/lib/softwaretriggerconfiguration.h

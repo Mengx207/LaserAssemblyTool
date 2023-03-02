@@ -17,12 +17,17 @@
 #include <stdio.h>
 #include <ctime>
 
+using namespace std;
+
+//using namespace cv;
+
+
 namespace laserdot
 {
     //Count bright pixel
-    int PixelCounter(Mat img, int count)
+    int PixelCounter(cv::Mat img, int count)
     {
-        Mat img_nominal;
+       cv::Mat img_nominal;
         img.convertTo(img_nominal, CV_32F);
         for(int i=0; i<img_nominal.rows; i++)
         {
@@ -60,26 +65,26 @@ namespace laserdot
     }
 
     //---------Draw the calculated laser line
-    void CalculatedLine(Mat img, Point start, Point end)
+    void CalculatedLine(cv::Mat img, cv::Point start, cv::Point end)
     {
         int thickness = 2;
-        int lineType = LINE_8;
-        line( img, start, end, Scalar( 0, 0, 255 ), thickness, lineType );
+        int lineType = cv::LINE_8;
+        line( img, start, end, cv::Scalar( 0, 0, 255 ), thickness, lineType );
     }
 
     //----------Use Canny to find the Canny edges of objects in image
     //Canny edge is a good way to count non-zero pixel
-    int NonZero(Mat img, int count)
+    int NonZero(cv::Mat img, int count)
     {
-        Mat canny_edge, canny_edge_blur;
-        Canny(img, canny_edge, 100, 200, 5, false);
-        GaussianBlur( canny_edge, canny_edge_blur, Size(5, 5), 2, 2 );
-        count = countNonZero(canny_edge_blur);
+        cv::Mat canny_edge, canny_edge_blur;
+        cv::Canny(img, canny_edge, 100, 200, 5, false);
+        cv::GaussianBlur( canny_edge, canny_edge_blur, cv::Size(5, 5), 2, 2 );
+        count = cv::countNonZero(canny_edge_blur);
         return count;
     }
 
     //----------Print information in window
-    void HMI(Mat img, int size, int min_size, int non_zero, int nom_distance, int center_distance)
+    void HMI(cv::Mat img, int size, int min_size, int non_zero, int nom_distance, int center_distance)
     {
         std::string size_print = "No value";
         std::string min_size_print = "No value";
@@ -92,36 +97,36 @@ namespace laserdot
             nom_distance_print = std::to_string(nom_distance);
             center_distance_print = std::to_string(center_distance);
         }
-        putText(img, "Laser Focus:", Point(10, 20), FONT_HERSHEY_SIMPLEX, 0.8, Scalar(255, 255, 255),2);
-        putText(img, "Laser Dot Size: "+size_print, Point(10, 50), FONT_HERSHEY_SIMPLEX, 0.8, Scalar(255, 255, 255),2);
-        putText(img, "Last Dot Size: "+min_size_print, Point(10, 80), FONT_HERSHEY_SIMPLEX, 0.8, Scalar(255, 255, 255),2);
-        putText(img, "Laser Focus Status: ", Point(10, 120), FONT_HERSHEY_SIMPLEX, 0.8, Scalar(255, 255, 255),2);
+        cv::putText(img, "Laser Focus:", cv::Point(10, 20), cv::FONT_HERSHEY_SIMPLEX, 0.8, cv::Scalar(255, 255, 255),2);
+        cv::putText(img, "Laser Dot Size: "+size_print, cv::Point(10, 50), cv::FONT_HERSHEY_SIMPLEX, 0.8, cv::Scalar(255, 255, 255),2);
+        cv::putText(img, "Last Dot Size: "+min_size_print, cv::Point(10, 80), cv::FONT_HERSHEY_SIMPLEX, 0.8, cv::Scalar(255, 255, 255),2);
+        cv::putText(img, "Laser Focus Status: ", cv::Point(10, 120), cv::FONT_HERSHEY_SIMPLEX, 0.8, cv::Scalar(255, 255, 255),2);
 
-        putText(img, "Laser Dot Location:", Point(500, 20), FONT_HERSHEY_SIMPLEX, 0.8, Scalar(255, 255, 255),2);
-        putText(img, "Nominal Distance: "+nom_distance_print, Point(500, 50), FONT_HERSHEY_SIMPLEX, 0.8, Scalar(255, 255, 255),2);
-        putText(img, "Distance from Center: "+center_distance_print, Point(500, 80), FONT_HERSHEY_SIMPLEX, 0.8, Scalar(255, 255, 255),2);
-        putText(img, "Dot Location Status: ", Point(500, 120), FONT_HERSHEY_SIMPLEX, 0.8, Scalar(255, 255, 255),2);
+        cv::putText(img, "Laser Dot Location:", cv::Point(500, 20), cv::FONT_HERSHEY_SIMPLEX, 0.8, cv::Scalar(255, 255, 255),2);
+        cv::putText(img, "Nominal Distance: "+nom_distance_print, cv::Point(500, 50), cv::FONT_HERSHEY_SIMPLEX, 0.8, cv::Scalar(255, 255, 255),2);
+        cv::putText(img, "Distance from Center: "+center_distance_print, cv::Point(500, 80), cv::FONT_HERSHEY_SIMPLEX, 0.8, cv::Scalar(255, 255, 255),2);
+        cv::putText(img, "Dot Location Status: ", cv::Point(500, 120), cv::FONT_HERSHEY_SIMPLEX, 0.8, cv::Scalar(255, 255, 255),2);
 
     }
 
-    void GreenLight(Mat img, int last, int current, int nom_distance, int center_distance)
+    void GreenLight(cv::Mat img, int last, int current, int nom_distance, int center_distance)
     {
         if(last-current > 0 || abs(last-current) < 5)
         {
-            circle( img, Point(300,110), 20, Scalar(0,255,0), -1, 8, 0 );
+            cv::circle( img, cv::Point(300,110), 20, cv::Scalar(0,255,0), -1, 8, 0 );
         }
         else
         {
-            circle( img, Point(300,110), 20, Scalar(0,0,255), -1, 8, 0 );
+            cv::circle( img, cv::Point(300,110), 20, cv::Scalar(0,0,255), -1, 8, 0 );
         }
 
         if(nom_distance < 50 && center_distance < 50)
         {
-            circle( img, Point(800,110), 20, Scalar(0,255,0), -1, 8, 0 );
+            cv::circle( img, cv::Point(800,110), 20, cv::Scalar(0,255,0), -1, 8, 0 );
         }
         else
         {
-            circle( img, Point(800,110), 20, Scalar(0,0,255), -1, 8, 0 );
+            cv::circle( img, cv::Point(800,110), 20, cv::Scalar(0,0,255), -1, 8, 0 );
         }
     }
 
@@ -131,14 +136,14 @@ namespace laserdot
         cout<<"last min size: "<<last_min<<endl;
         fill_n(size_array,10,0);
         center_total = 0;
-        fill(center_list.begin(), center_list.end(), Point(0,0));
+        fill(center_list.begin(), center_list.end(), cv::Point(0,0));
         return last_min;
     }
 
-    std::pair<double,double> DotToLine(Mat img, Point start, Point end, Point center)
+    std::pair<double,double> DotToLine(cv::Mat img, cv::Point start, cv::Point end, cv::Point center)
     {
-        LineIterator laserline(img, start, end, 8);
-        vector<Vec3b> buf(laserline.count);
+        cv::LineIterator laserline(img, start, end, 8);
+        vector<cv::Vec3b> buf(laserline.count);
         vector<double> distance_list;
         vector<cv::Point> point_list;
         for(int i = 0; i < laserline.count; i++, ++laserline)
@@ -151,12 +156,12 @@ namespace laserdot
         vector<double>::iterator result = min_element(distance_list.begin(), distance_list.end());
         int num = distance(distance_list.begin(), result);
 
-        line( img, center, point_list[num], Scalar( 255, 255, 0 ), 1, 8 );
+        cv::line( img, center, point_list[num], cv::Scalar( 255, 255, 0 ), 1, 8 );
         // dotLine.nom_distance = min_distance;
         // dotLine.center_distance = norm(point_list[num]-point_list[(laserline.count)/2]);
         std::pair<double,double>dist(min_distance,norm(point_list[num]-point_list[(laserline.count)/2])) ;
-        Point laserline_center = point_list[(laserline.count)/2];
-        circle( img, laserline_center, 5, Scalar(0,0,255), -1, 8, 0 );
+        cv::Point laserline_center = point_list[(laserline.count)/2];
+        cv::circle( img, laserline_center, 5, cv::Scalar(0,0,255), -1, 8, 0 );
         return dist;
 
         // cout << "min point at: " << point_list[num] <<endl;

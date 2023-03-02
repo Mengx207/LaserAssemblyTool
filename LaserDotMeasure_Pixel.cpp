@@ -6,22 +6,36 @@
 	Measure nomal distance between laser dot and calculated laser line
 	Meausre distance from the center of laser line to the laser dot along the line
 */
+#include <iostream>
+#include <sstream>
+#include <string>
+#include <unistd.h>
+#include <pylon/InstantCamera.h>
+#include <pylon/PylonIncludes.h>
+#include <GenApi/IEnumeration.h>
+#include <pylon/EnumParameter.h>
+#include <Base/GCString.h>
+#include <opencv2/core/core.hpp>
+#include <opencv2/core/utility.hpp>
+#include "opencv2/imgproc/imgproc.hpp"
+#include <bits/stdc++.h>
+#include <vector>
+#include <opencv2/highgui/highgui.hpp>
+#include "lib/softwaretriggerconfiguration.h"
+#include <time.h>
+#include <stdio.h>
+#include <ctime>
 
-#include "lib/myHeader.h"
 #include "utility/include/utility.h"
+
+using namespace Pylon;
+using namespace std;
+using namespace GENAPI_NAMESPACE;
+
 #ifdef PYLON_WIN_BUILD
 #   include <pylon/PylonGUI.h>
 #endif
 
-// Number of images to be grabbed.s
-static const uint32_t c_countOfImagesToGrab = 10;
-
-// Limits the amount of cameras used for grabbing.
-static const size_t c_maxCamerasToUse = 2;
-
-//If camera features file is used
-//const char Filename[] = "acA2440-75um_23663771.pfs";
-using namespace GENAPI_NAMESPACE;
 
 int main(int argc, char* argv[])
 {
@@ -44,19 +58,13 @@ int main(int argc, char* argv[])
 		camera0.RegisterConfiguration(new CSoftwareTriggerConfiguration,RegistrationMode_ReplaceAll, Cleanup_Delete);
 
 		//Create a pylon image that will be used to create an opencv image
-		CPylonImage pylonImage0, pylonImage1;
-
-		//Mat src, lft1_img, rgt0_img, rgt1_img, cam_frame_temp0, cam_frame_temp1;
-		Mat src, cam_frame_temp0;
+		CPylonImage pylonImage0;
+		cv::Mat src, cam_frame_temp0;
 		camera0.Open();
 		
-		Point max_point;
-		Mat canny_edge, canny_edge_blur, img_grey;
+		cv::Point max_point;
+		cv::Mat canny_edge, canny_edge_blur, img_grey;
 
-		// If camera features file is used
-		//CFeaturePersistence::Load( Filename, &cameras[0].GetNodeMap(), true ); 
-
-		
 		// These allow us to convert from GrabResultPtr_t to cv::Mat
 		CImageFormatConverter formatConverter;
 		formatConverter.OutputPixelFormat = PixelType_BGR8packed;
@@ -66,7 +74,7 @@ int main(int argc, char* argv[])
 		int size_array[10] = {0};
 		int last_size_avg;
 		int last_min_size=0;
-		Point center_avg;
+		cv::Point center_avg;
 
 		vector<cv::Point> center_list;
 		double center_total = 0;
@@ -120,7 +128,7 @@ int main(int argc, char* argv[])
 
 				formatConverter.Convert(pylonImage0, ptrGrabResult0);
 //-----------------------Main------Functionalities------Start------From------Here-----------------------------------------------------------------------------				
-				cam_frame_temp0 = Mat(ptrGrabResult0->GetHeight(), ptrGrabResult0->GetWidth(), CV_8UC3, (uint8_t *) pylonImage0.GetBuffer());
+				cam_frame_temp0 = cv::Mat(ptrGrabResult0->GetHeight(), ptrGrabResult0->GetWidth(), CV_8UC3, (uint8_t *) pylonImage0.GetBuffer());
 
 				src = cam_frame_temp0.clone();
 				//Test intersection function
@@ -130,13 +138,12 @@ int main(int argc, char* argv[])
 				int point2[3] = {2,2,2};
     			//intersection::intersectionLine(N1, N2, point1, point2);
 
-
-				laserdot::CalculatedLine( src, Point( 300, 200 ), Point( 700, 900 ) );
+				laserdot::CalculatedLine( src, cv::Point( 300, 200 ), cv::Point( 700, 900 ) );
 
 			 //----------raw image to greyscale, threshold filter
-				cvtColor(src, img_grey, COLOR_BGR2GRAY);
-				Mat img_grey_filtered;
-				threshold(img_grey,img_grey_filtered,250,255,THRESH_OTSU||THRESH_TRIANGLE);	
+				cv::cvtColor(src, img_grey, cv::COLOR_BGR2GRAY);
+				cv::Mat img_grey_filtered;
+				cv::threshold(img_grey,img_grey_filtered,250,255,cv::THRESH_OTSU||cv::THRESH_TRIANGLE);	
 
 				// Number of non_zero pixel
 				int non_zero = laserdot::NonZero(img_grey_filtered, 0);
@@ -158,24 +165,24 @@ int main(int argc, char* argv[])
 			 //---------Process when captured images are not empty
 			 //---------Clear center list and size array is capture an empty image
 			 	double nom_distance,center_distance;
-				vector<Vec3f> circles;
+				vector<cv::Vec3f> circles;
 				if(non_zero > 20)
 				{	
-					HoughCircles(img_grey_filtered, circles, HOUGH_GRADIENT,2, 2000,500,10,0,100);
+					HoughCircles(img_grey_filtered, circles, cv::HOUGH_GRADIENT,2, 2000,500,10,0,100);
 					sleep(0.1);
-					Point center(cvRound(circles[0][0]), cvRound(circles[0][1]));
+					cv::Point center(cvRound(circles[0][0]), cvRound(circles[0][1]));
 					center_list.push_back(center);
 					center_total ++;
 					if (center_total >= 10)
 					{
-						Point sum  = std::accumulate(center_list.begin(), center_list.end(), Point(0,0));
+						cv::Point sum  = std::accumulate(center_list.begin(), center_list.end(), cv::Point(0,0));
 						center_avg = sum*(1.0/center_total);
 						cout<<"Average center: "<< center_avg<<endl;
 						sleep(0.1);
-						circle( img_grey_filtered, center_avg, 3, Scalar(255,0,0), -1, 8, 0 );
-						circle( src, center_avg, 3, Scalar(255,100,0), -1, 8, 0 );
+						cv::circle( img_grey_filtered, center_avg, 3, cv::Scalar(255,0,0), -1, 8, 0 );
+						cv::circle( src, center_avg, 3, cv::Scalar(255,100,0), -1, 8, 0 );
 					}
-					std::pair<double,double>dist = laserdot::DotToLine(src,  Point( 300, 200 ), Point( 700, 900 ), center_avg);
+					std::pair<double,double>dist = laserdot::DotToLine(src, cv::Point( 300, 200 ), cv::Point( 700, 900 ), center_avg);
 					nom_distance,center_distance = dist.first,dist.second;
 				}
 				else
@@ -184,14 +191,14 @@ int main(int argc, char* argv[])
 					cout<<"last min size: "<<last_min_size<<endl;
 					fill_n(size_array,10,0);
 					center_total = 0;
-					fill(center_list.begin(), center_list.end(), Point(0,0));
+					fill(center_list.begin(), center_list.end(), cv::Point(0,0));
 				}
 				laserdot::HMI(src, size_avg, min_size, non_zero, nom_distance, center_distance);
 				laserdot::GreenLight(src, last_min_size, size_avg, nom_distance, center_distance);
 
-				imshow("img_grey_filtered", img_grey_filtered);	
-				imshow("source window", src);							
-				waitKey( 10 );		
+				cv::imshow("img_grey_filtered", img_grey_filtered);	
+				cv::imshow("source window", src);							
+				cv::waitKey( 10 );		
 				sleep(0.1);
 				imgs_taken0++;
 			}
