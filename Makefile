@@ -56,17 +56,6 @@ CMAKE_BINARY_DIR = /home/lingbo/Documents/GitHub/AssemblyGuidanceTool
 #=============================================================================
 # Targets provided globally by CMake.
 
-# Special rule for the target edit_cache
-edit_cache:
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "No interactive CMake dialog available..."
-	/usr/bin/cmake -E echo No\ interactive\ CMake\ dialog\ available.
-.PHONY : edit_cache
-
-# Special rule for the target edit_cache
-edit_cache/fast: edit_cache
-
-.PHONY : edit_cache/fast
-
 # Special rule for the target rebuild_cache
 rebuild_cache:
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running CMake to regenerate build system..."
@@ -77,6 +66,17 @@ rebuild_cache:
 rebuild_cache/fast: rebuild_cache
 
 .PHONY : rebuild_cache/fast
+
+# Special rule for the target edit_cache
+edit_cache:
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "No interactive CMake dialog available..."
+	/usr/bin/cmake -E echo No\ interactive\ CMake\ dialog\ available.
+.PHONY : edit_cache
+
+# Special rule for the target edit_cache
+edit_cache/fast: edit_cache
+
+.PHONY : edit_cache/fast
 
 # The main all target
 all: cmake_check_build_system
@@ -111,30 +111,17 @@ depend:
 .PHONY : depend
 
 #=============================================================================
-# Target rules for targets named LaserDotMeasure_Pixel
+# Target rules for targets named LaserDotMeasure
 
 # Build rule for target.
-LaserDotMeasure_Pixel: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 LaserDotMeasure_Pixel
-.PHONY : LaserDotMeasure_Pixel
+LaserDotMeasure: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 LaserDotMeasure
+.PHONY : LaserDotMeasure
 
 # fast build rule for target.
-LaserDotMeasure_Pixel/fast:
-	$(MAKE) -f CMakeFiles/LaserDotMeasure_Pixel.dir/build.make CMakeFiles/LaserDotMeasure_Pixel.dir/build
-.PHONY : LaserDotMeasure_Pixel/fast
-
-#=============================================================================
-# Target rules for targets named LaserLineAlignment
-
-# Build rule for target.
-LaserLineAlignment: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 LaserLineAlignment
-.PHONY : LaserLineAlignment
-
-# fast build rule for target.
-LaserLineAlignment/fast:
-	$(MAKE) -f CMakeFiles/LaserLineAlignment.dir/build.make CMakeFiles/LaserLineAlignment.dir/build
-.PHONY : LaserLineAlignment/fast
+LaserDotMeasure/fast:
+	$(MAKE) -f CMakeFiles/LaserDotMeasure.dir/build.make CMakeFiles/LaserDotMeasure.dir/build
+.PHONY : LaserDotMeasure/fast
 
 LaserDotMeasure_Pixel.o: LaserDotMeasure_Pixel.cpp.o
 
@@ -142,7 +129,7 @@ LaserDotMeasure_Pixel.o: LaserDotMeasure_Pixel.cpp.o
 
 # target to build an object file
 LaserDotMeasure_Pixel.cpp.o:
-	$(MAKE) -f CMakeFiles/LaserDotMeasure_Pixel.dir/build.make CMakeFiles/LaserDotMeasure_Pixel.dir/LaserDotMeasure_Pixel.cpp.o
+	$(MAKE) -f CMakeFiles/LaserDotMeasure.dir/build.make CMakeFiles/LaserDotMeasure.dir/LaserDotMeasure_Pixel.cpp.o
 .PHONY : LaserDotMeasure_Pixel.cpp.o
 
 LaserDotMeasure_Pixel.i: LaserDotMeasure_Pixel.cpp.i
@@ -151,7 +138,7 @@ LaserDotMeasure_Pixel.i: LaserDotMeasure_Pixel.cpp.i
 
 # target to preprocess a source file
 LaserDotMeasure_Pixel.cpp.i:
-	$(MAKE) -f CMakeFiles/LaserDotMeasure_Pixel.dir/build.make CMakeFiles/LaserDotMeasure_Pixel.dir/LaserDotMeasure_Pixel.cpp.i
+	$(MAKE) -f CMakeFiles/LaserDotMeasure.dir/build.make CMakeFiles/LaserDotMeasure.dir/LaserDotMeasure_Pixel.cpp.i
 .PHONY : LaserDotMeasure_Pixel.cpp.i
 
 LaserDotMeasure_Pixel.s: LaserDotMeasure_Pixel.cpp.s
@@ -160,35 +147,8 @@ LaserDotMeasure_Pixel.s: LaserDotMeasure_Pixel.cpp.s
 
 # target to generate assembly for a file
 LaserDotMeasure_Pixel.cpp.s:
-	$(MAKE) -f CMakeFiles/LaserDotMeasure_Pixel.dir/build.make CMakeFiles/LaserDotMeasure_Pixel.dir/LaserDotMeasure_Pixel.cpp.s
+	$(MAKE) -f CMakeFiles/LaserDotMeasure.dir/build.make CMakeFiles/LaserDotMeasure.dir/LaserDotMeasure_Pixel.cpp.s
 .PHONY : LaserDotMeasure_Pixel.cpp.s
-
-LaserLineAlignment.o: LaserLineAlignment.cpp.o
-
-.PHONY : LaserLineAlignment.o
-
-# target to build an object file
-LaserLineAlignment.cpp.o:
-	$(MAKE) -f CMakeFiles/LaserLineAlignment.dir/build.make CMakeFiles/LaserLineAlignment.dir/LaserLineAlignment.cpp.o
-.PHONY : LaserLineAlignment.cpp.o
-
-LaserLineAlignment.i: LaserLineAlignment.cpp.i
-
-.PHONY : LaserLineAlignment.i
-
-# target to preprocess a source file
-LaserLineAlignment.cpp.i:
-	$(MAKE) -f CMakeFiles/LaserLineAlignment.dir/build.make CMakeFiles/LaserLineAlignment.dir/LaserLineAlignment.cpp.i
-.PHONY : LaserLineAlignment.cpp.i
-
-LaserLineAlignment.s: LaserLineAlignment.cpp.s
-
-.PHONY : LaserLineAlignment.s
-
-# target to generate assembly for a file
-LaserLineAlignment.cpp.s:
-	$(MAKE) -f CMakeFiles/LaserLineAlignment.dir/build.make CMakeFiles/LaserLineAlignment.dir/LaserLineAlignment.cpp.s
-.PHONY : LaserLineAlignment.cpp.s
 
 # Help Target
 help:
@@ -196,16 +156,12 @@ help:
 	@echo "... all (the default if no target is provided)"
 	@echo "... clean"
 	@echo "... depend"
-	@echo "... edit_cache"
 	@echo "... rebuild_cache"
-	@echo "... LaserDotMeasure_Pixel"
-	@echo "... LaserLineAlignment"
+	@echo "... LaserDotMeasure"
+	@echo "... edit_cache"
 	@echo "... LaserDotMeasure_Pixel.o"
 	@echo "... LaserDotMeasure_Pixel.i"
 	@echo "... LaserDotMeasure_Pixel.s"
-	@echo "... LaserLineAlignment.o"
-	@echo "... LaserLineAlignment.i"
-	@echo "... LaserLineAlignment.s"
 .PHONY : help
 
 

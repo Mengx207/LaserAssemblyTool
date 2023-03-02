@@ -4,7 +4,7 @@ set(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_CXX
-  "/home/lingbo/Documents/GitHub/AssemblyGuidanceTool/LaserDotMeasure_Pixel.cpp" "/home/lingbo/Documents/GitHub/AssemblyGuidanceTool/CMakeFiles/LaserDotMeasure_Pixel.dir/LaserDotMeasure_Pixel.cpp.o"
+  "/home/lingbo/Documents/GitHub/AssemblyGuidanceTool/cpp/LaserDotMeasure_Pixel.cpp" "/home/lingbo/Documents/GitHub/AssemblyGuidanceTool/CMakeFiles/LaserDotMeasure_Pixel.dir/cpp/LaserDotMeasure_Pixel.cpp.o"
   )
 set(CMAKE_CXX_COMPILER_ID "GNU")
 

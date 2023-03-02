@@ -7,12 +7,12 @@
 #IncludeRegexTransform: 
 
 /home/lingbo/Documents/GitHub/AssemblyGuidanceTool/LaserLineAlignment.cpp
-myHeader.h
-/home/lingbo/Documents/GitHub/AssemblyGuidanceTool/myHeader.h
+library/myHeader.h
+/home/lingbo/Documents/GitHub/AssemblyGuidanceTool/library/myHeader.h
 pylon/PylonGUI.h
 -
 
-/home/lingbo/Documents/GitHub/AssemblyGuidanceTool/myHeader.h
+/home/lingbo/Documents/GitHub/AssemblyGuidanceTool/library/myHeader.h
 iostream
 -
 sstream
@@ -36,7 +36,7 @@ opencv2/core/core.hpp
 opencv2/core/utility.hpp
 -
 opencv2/imgproc/imgproc.hpp
-/home/lingbo/Documents/GitHub/AssemblyGuidanceTool/opencv2/imgproc/imgproc.hpp
+/home/lingbo/Documents/GitHub/AssemblyGuidanceTool/library/opencv2/imgproc/imgproc.hpp
 bits/stdc++.h
 -
 vector
@@ -44,7 +44,7 @@ vector
 opencv2/highgui/highgui.hpp
 -
 softwaretriggerconfiguration.h
-/home/lingbo/Documents/GitHub/AssemblyGuidanceTool/softwaretriggerconfiguration.h
+/home/lingbo/Documents/GitHub/AssemblyGuidanceTool/library/softwaretriggerconfiguration.h
 time.h
 -
 stdio.h
@@ -52,7 +52,7 @@ stdio.h
 ctime
 -
 
-/home/lingbo/Documents/GitHub/AssemblyGuidanceTool/softwaretriggerconfiguration.h
+/home/lingbo/Documents/GitHub/AssemblyGuidanceTool/library/softwaretriggerconfiguration.h
 pylon/Platform.h
 -
 pylon/InstantCamera.h

@@ -1,4 +1,3 @@
-/home/lingbo/Documents/GitHub/AssemblyGuidanceTool/CMakeFiles/edit_cache.dir
 /home/lingbo/Documents/GitHub/AssemblyGuidanceTool/CMakeFiles/rebuild_cache.dir
-/home/lingbo/Documents/GitHub/AssemblyGuidanceTool/CMakeFiles/LaserDotMeasure_Pixel.dir
-/home/lingbo/Documents/GitHub/AssemblyGuidanceTool/CMakeFiles/LaserLineAlignment.dir
+/home/lingbo/Documents/GitHub/AssemblyGuidanceTool/CMakeFiles/LaserDotMeasure.dir
+/home/lingbo/Documents/GitHub/AssemblyGuidanceTool/CMakeFiles/edit_cache.dir

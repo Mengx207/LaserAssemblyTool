@@ -7,7 +7,7 @@
 	Meausre distance from the center of laser line to the laser dot along the line
 */
 
-#include "myHeader.h"
+#include "lib/myHeader.h"
 #include "utility/include/utility.h"
 #ifdef PYLON_WIN_BUILD
 #   include <pylon/PylonGUI.h>
@@ -128,7 +128,7 @@ int main(int argc, char* argv[])
 				int N2[3] = {2,6,5};
 				int point1[3] = {10,5,5};
 				int point2[3] = {2,2,2};
-    			intersection::intersectionLine(N1, N2, point1, point2);
+    			//intersection::intersectionLine(N1, N2, point1, point2);
 
 
 				laserdot::CalculatedLine( src, Point( 300, 200 ), Point( 700, 900 ) );

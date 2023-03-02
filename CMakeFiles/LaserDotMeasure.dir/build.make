@@ -57,38 +57,38 @@ include CMakeFiles/LaserDotMeasure.dir/progress.make
 # Include the compile flags for this target's objects.
 include CMakeFiles/LaserDotMeasure.dir/flags.make
 
-CMakeFiles/LaserDotMeasure.dir/LaserDotMeasure.cpp.o: CMakeFiles/LaserDotMeasure.dir/flags.make
-CMakeFiles/LaserDotMeasure.dir/LaserDotMeasure.cpp.o: LaserDotMeasure.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/lingbo/Documents/GitHub/AssemblyGuidanceTool/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/LaserDotMeasure.dir/LaserDotMeasure.cpp.o"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/LaserDotMeasure.dir/LaserDotMeasure.cpp.o -c /home/lingbo/Documents/GitHub/AssemblyGuidanceTool/LaserDotMeasure.cpp
+CMakeFiles/LaserDotMeasure.dir/LaserDotMeasure_Pixel.cpp.o: CMakeFiles/LaserDotMeasure.dir/flags.make
+CMakeFiles/LaserDotMeasure.dir/LaserDotMeasure_Pixel.cpp.o: LaserDotMeasure_Pixel.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/lingbo/Documents/GitHub/AssemblyGuidanceTool/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/LaserDotMeasure.dir/LaserDotMeasure_Pixel.cpp.o"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/LaserDotMeasure.dir/LaserDotMeasure_Pixel.cpp.o -c /home/lingbo/Documents/GitHub/AssemblyGuidanceTool/LaserDotMeasure_Pixel.cpp
 
-CMakeFiles/LaserDotMeasure.dir/LaserDotMeasure.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/LaserDotMeasure.dir/LaserDotMeasure.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/lingbo/Documents/GitHub/AssemblyGuidanceTool/LaserDotMeasure.cpp > CMakeFiles/LaserDotMeasure.dir/LaserDotMeasure.cpp.i
+CMakeFiles/LaserDotMeasure.dir/LaserDotMeasure_Pixel.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/LaserDotMeasure.dir/LaserDotMeasure_Pixel.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/lingbo/Documents/GitHub/AssemblyGuidanceTool/LaserDotMeasure_Pixel.cpp > CMakeFiles/LaserDotMeasure.dir/LaserDotMeasure_Pixel.cpp.i
 
-CMakeFiles/LaserDotMeasure.dir/LaserDotMeasure.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/LaserDotMeasure.dir/LaserDotMeasure.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/lingbo/Documents/GitHub/AssemblyGuidanceTool/LaserDotMeasure.cpp -o CMakeFiles/LaserDotMeasure.dir/LaserDotMeasure.cpp.s
+CMakeFiles/LaserDotMeasure.dir/LaserDotMeasure_Pixel.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/LaserDotMeasure.dir/LaserDotMeasure_Pixel.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/lingbo/Documents/GitHub/AssemblyGuidanceTool/LaserDotMeasure_Pixel.cpp -o CMakeFiles/LaserDotMeasure.dir/LaserDotMeasure_Pixel.cpp.s
 
-CMakeFiles/LaserDotMeasure.dir/LaserDotMeasure.cpp.o.requires:
+CMakeFiles/LaserDotMeasure.dir/LaserDotMeasure_Pixel.cpp.o.requires:
 
-.PHONY : CMakeFiles/LaserDotMeasure.dir/LaserDotMeasure.cpp.o.requires
+.PHONY : CMakeFiles/LaserDotMeasure.dir/LaserDotMeasure_Pixel.cpp.o.requires
 
-CMakeFiles/LaserDotMeasure.dir/LaserDotMeasure.cpp.o.provides: CMakeFiles/LaserDotMeasure.dir/LaserDotMeasure.cpp.o.requires
-	$(MAKE) -f CMakeFiles/LaserDotMeasure.dir/build.make CMakeFiles/LaserDotMeasure.dir/LaserDotMeasure.cpp.o.provides.build
-.PHONY : CMakeFiles/LaserDotMeasure.dir/LaserDotMeasure.cpp.o.provides
+CMakeFiles/LaserDotMeasure.dir/LaserDotMeasure_Pixel.cpp.o.provides: CMakeFiles/LaserDotMeasure.dir/LaserDotMeasure_Pixel.cpp.o.requires
+	$(MAKE) -f CMakeFiles/LaserDotMeasure.dir/build.make CMakeFiles/LaserDotMeasure.dir/LaserDotMeasure_Pixel.cpp.o.provides.build
+.PHONY : CMakeFiles/LaserDotMeasure.dir/LaserDotMeasure_Pixel.cpp.o.provides
 
-CMakeFiles/LaserDotMeasure.dir/LaserDotMeasure.cpp.o.provides.build: CMakeFiles/LaserDotMeasure.dir/LaserDotMeasure.cpp.o
+CMakeFiles/LaserDotMeasure.dir/LaserDotMeasure_Pixel.cpp.o.provides.build: CMakeFiles/LaserDotMeasure.dir/LaserDotMeasure_Pixel.cpp.o
 
 
 # Object files for target LaserDotMeasure
 LaserDotMeasure_OBJECTS = \
-"CMakeFiles/LaserDotMeasure.dir/LaserDotMeasure.cpp.o"
+"CMakeFiles/LaserDotMeasure.dir/LaserDotMeasure_Pixel.cpp.o"
 
 # External object files for target LaserDotMeasure
 LaserDotMeasure_EXTERNAL_OBJECTS =
 
-LaserDotMeasure: CMakeFiles/LaserDotMeasure.dir/LaserDotMeasure.cpp.o
+LaserDotMeasure: CMakeFiles/LaserDotMeasure.dir/LaserDotMeasure_Pixel.cpp.o
 LaserDotMeasure: CMakeFiles/LaserDotMeasure.dir/build.make
 LaserDotMeasure: /usr/local/lib/libopencv_gapi.so.4.7.0
 LaserDotMeasure: /usr/local/lib/libopencv_highgui.so.4.7.0
@@ -114,7 +114,7 @@ CMakeFiles/LaserDotMeasure.dir/build: LaserDotMeasure
 
 .PHONY : CMakeFiles/LaserDotMeasure.dir/build
 
-CMakeFiles/LaserDotMeasure.dir/requires: CMakeFiles/LaserDotMeasure.dir/LaserDotMeasure.cpp.o.requires
+CMakeFiles/LaserDotMeasure.dir/requires: CMakeFiles/LaserDotMeasure.dir/LaserDotMeasure_Pixel.cpp.o.requires
 
 .PHONY : CMakeFiles/LaserDotMeasure.dir/requires
 

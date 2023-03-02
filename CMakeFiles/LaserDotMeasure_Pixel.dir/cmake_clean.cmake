@@ -1,5 +1,5 @@
 file(REMOVE_RECURSE
-  "CMakeFiles/LaserDotMeasure_Pixel.dir/LaserDotMeasure_Pixel.cpp.o"
+  "CMakeFiles/LaserDotMeasure_Pixel.dir/cpp/LaserDotMeasure_Pixel.cpp.o"
   "LaserDotMeasure_Pixel.pdb"
   "LaserDotMeasure_Pixel"
 )

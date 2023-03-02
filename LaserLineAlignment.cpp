@@ -3,7 +3,7 @@
 	Help user achieve an accurate result of laser line location, orientation and quality
 */
 
-#include "myHeader.h"
+#include "library/myHeader.h"
 
 #ifdef PYLON_WIN_BUILD
 #   include <pylon/PylonGUI.h>
