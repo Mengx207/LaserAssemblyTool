@@ -97,7 +97,6 @@ int main(int argc, char* argv[])
 
 		CEnumParameter(nodemap0, "LineSelector").SetValue("Line4");			
 		CBooleanParameter(nodemap0, "LineInverter").SetValue(false);
-		
 		CEnumParameter(nodemap0, "LineSelector").SetValue("Line2");
 		CEnumParameter(nodemap0, "LineSource").SetValue("ExposureActive");
 
@@ -136,7 +135,7 @@ int main(int argc, char* argv[])
 				int N2[3] = {2,6,5};
 				int point1[3] = {10,5,5};
 				int point2[3] = {2,2,2};
-    			intersection::intersectionLine(N1, N2, point1, point2);
+    			//intersection::intersectionLine(N1, N2, point1, point2);
 
 				cv::Point lineStart(400,100);
 				cv::Point lineEnd(800,1000);
@@ -146,12 +145,11 @@ int main(int argc, char* argv[])
 				cv::cvtColor(src, img_grey, cv::COLOR_BGR2GRAY);
 				cv::Mat img_grey_filtered;
 				cv::threshold(img_grey,img_grey_filtered,250,255,cv::THRESH_OTSU||cv::THRESH_TRIANGLE);	
-
 				// Number of non_zero pixel
-				int non_zero = laserdot::NonZero(img_grey_filtered, 0);
+				int non_zero = laserdot::NonZero(img_grey_filtered);
 
 				// Number of bright pixel
-				int count = laserdot::PixelCounter(img_grey_filtered,0);
+				int count = laserdot::PixelCounter(img_grey_filtered);
 				// average size
 				size_avg = laserdot::SizeAverage(count,0,size_array, center_total);
 				//-----------save min_size only when the value in size_array is stable and close to each other
@@ -168,13 +166,17 @@ int main(int argc, char* argv[])
 			 //---------Clear center list and size array is capture an empty image
 			 	double nom_distance,center_distance;
 				vector<cv::Vec3f> circles;
-				if(non_zero > 20)
+				if(non_zero > 50)
 				{	
+					cv::Point center;
 					HoughCircles(img_grey_filtered, circles, cv::HOUGH_GRADIENT,2, 2000,500,10,0,100);
-					sleep(0.1);
-					cv::Point center(cvRound(circles[0][0]), cvRound(circles[0][1]));
-					center_list.push_back(center);
-					center_total ++;
+					if(!circles.empty())
+					{
+						center.x = cvRound(circles[0][0]);
+						center.y = cvRound(circles[0][1]);
+						center_list.push_back(center);
+						center_total ++;
+					}
 					if (center_total > 30)
 					{
 						center_list.erase(center_list.begin());
@@ -190,10 +192,12 @@ int main(int argc, char* argv[])
 						sleep(0.1);
 						cv::circle( img_grey_filtered, center_avg, 3, cv::Scalar(255,0,0), -1, 8, 0 );
 						cv::circle( src, center_avg, 3, cv::Scalar(255,100,0), -1, 8, 0 );
+						std::pair<double,double>dist = laserdot::DotToLine(src, lineStart, lineEnd, center_avg);
+						nom_distance,center_distance = dist.first,dist.second;
 					}
 					
-					std::pair<double,double>dist = laserdot::DotToLine(src, lineStart, lineEnd, center_avg);
-					nom_distance,center_distance = dist.first,dist.second;
+					// std::pair<double,double>dist = laserdot::DotToLine(src, lineStart, lineEnd, center_avg);
+					// nom_distance,center_distance = dist.first,dist.second;
 				}
 				else
 				{
@@ -213,7 +217,7 @@ int main(int argc, char* argv[])
 				sleep(0.1);
 				imgs_taken0++;
 			}
-			//camera0.StopGrabbing();
+			camera0.StopGrabbing();
 		}
 
 	}

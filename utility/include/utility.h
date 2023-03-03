@@ -25,9 +25,10 @@ using namespace std;
 namespace laserdot
 {
     //Count bright pixel
-    int PixelCounter(cv::Mat img, int count)
+    int PixelCounter(cv::Mat img)
     {
        cv::Mat img_nominal;
+       int count=0;
         img.convertTo(img_nominal, CV_32F);
         for(int i=0; i<img_nominal.rows; i++)
         {
@@ -74,12 +75,12 @@ namespace laserdot
 
     //----------Use Canny to find the Canny edges of objects in image
     //Canny edge is a good way to count non-zero pixel
-    int NonZero(cv::Mat img, int count)
+    int NonZero(cv::Mat img)
     {
         cv::Mat canny_edge, canny_edge_blur;
         cv::Canny(img, canny_edge, 100, 200, 5, false);
         cv::GaussianBlur( canny_edge, canny_edge_blur, cv::Size(5, 5), 2, 2 );
-        count = cv::countNonZero(canny_edge_blur);
+        int count = cv::countNonZero(canny_edge_blur);
         return count;
     }
 
