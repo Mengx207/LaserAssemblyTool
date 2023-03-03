@@ -57,7 +57,7 @@ namespace laserdot
             size_sum = size_sum + size_array[i];
         }
 
-        if(size_array[9]!=0 && center_total > 50)
+        if(size_array[9]!=0 && center_total > 20)
         {
             size_avg = size_sum/10;
             return size_avg;

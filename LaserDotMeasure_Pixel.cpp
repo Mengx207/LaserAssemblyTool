@@ -78,47 +78,47 @@ int main(int argc, char* argv[])
 
 		vector<cv::Point> center_list;
 		double center_total = 0;
+			
+		INodeMap& nodemap0 = camera0.GetNodeMap();
+
+		CEnumerationPtr(nodemap0.GetNode("ExposureMode"))->FromString("Timed"); 
+		CFloatPtr(nodemap0.GetNode("ExposureTime"))->SetValue(200.0);
+
+		CEnumParameter(nodemap0, "LineSelector").SetValue("Line3");
+		CEnumParameter(nodemap0, "LineMode").SetValue("Output");
+		CEnumParameter(nodemap0, "LineSource").SetValue("UserOutput2");
+
+		CEnumParameter(nodemap0, "LineSelector").SetValue("Line4");
+		CEnumParameter(nodemap0, "LineMode").SetValue("Output");
+		CEnumParameter(nodemap0, "LineSource").SetValue("UserOutput3");
+
+		CEnumParameter(nodemap0, "LineSelector").SetValue("Line3");
+		CBooleanParameter(nodemap0, "LineInverter").SetValue(false);
+
+		CEnumParameter(nodemap0, "LineSelector").SetValue("Line4");			
+		CBooleanParameter(nodemap0, "LineInverter").SetValue(false);
+		
+		CEnumParameter(nodemap0, "LineSelector").SetValue("Line2");
+		CEnumParameter(nodemap0, "LineSource").SetValue("ExposureActive");
+
+		CEnumParameter(nodemap0, "LineSelector").SetValue("Line3");			
+		CBooleanParameter(nodemap0, "LineInverter").SetValue(true);
+		CEnumParameter(nodemap0, "LineSelector").SetValue("Line4");			
+		CBooleanParameter(nodemap0, "LineInverter").SetValue(true);
 
 		while(1)
 		{
 			int max_imgs0 = 50;   
 			int imgs_taken0 =0;
-	
-			INodeMap& nodemap0 = camera0.GetNodeMap();
 
-			CEnumerationPtr(nodemap0.GetNode("ExposureMode"))->FromString("Timed"); 
-			CFloatPtr(nodemap0.GetNode("ExposureTime"))->SetValue(200.0);
-
-			CEnumParameter(nodemap0, "LineSelector").SetValue("Line3");
-			CEnumParameter(nodemap0, "LineMode").SetValue("Output");
-			CEnumParameter(nodemap0, "LineSource").SetValue("UserOutput2");
-
-			CEnumParameter(nodemap0, "LineSelector").SetValue("Line4");
-			CEnumParameter(nodemap0, "LineMode").SetValue("Output");
-			CEnumParameter(nodemap0, "LineSource").SetValue("UserOutput3");
-
-			CEnumParameter(nodemap0, "LineSelector").SetValue("Line3");
-			CBooleanParameter(nodemap0, "LineInverter").SetValue(false);
-
-			CEnumParameter(nodemap0, "LineSelector").SetValue("Line4");			
-			CBooleanParameter(nodemap0, "LineInverter").SetValue(false);
-			
-			CEnumParameter(nodemap0, "LineSelector").SetValue("Line2");
-			CEnumParameter(nodemap0, "LineSource").SetValue("ExposureActive");
-			
 			camera0.StartGrabbing(max_imgs0*1);
 
-			while (imgs_taken0< max_imgs0) 
+			while (imgs_taken0 < max_imgs0) 
 			{	
 
 				CGrabResultPtr ptrGrabResult0;
 				CGrabResultPtr ptrGrabResult1;
-		
-	         //----------Triggering laser and capturing image continously-----------------------------------------
-				CEnumParameter(nodemap0, "LineSelector").SetValue("Line3");			
-				CBooleanParameter(nodemap0, "LineInverter").SetValue(true);
-				CEnumParameter(nodemap0, "LineSelector").SetValue("Line4");			
-				CBooleanParameter(nodemap0, "LineInverter").SetValue(true);
+
 				sleep(0.1);
 
 				while(camera0.WaitForFrameTriggerReady(1000,TimeoutHandling_ThrowException)==0);			
@@ -136,9 +136,11 @@ int main(int argc, char* argv[])
 				int N2[3] = {2,6,5};
 				int point1[3] = {10,5,5};
 				int point2[3] = {2,2,2};
-    			//intersection::intersectionLine(N1, N2, point1, point2);
+    			intersection::intersectionLine(N1, N2, point1, point2);
 
-				laserdot::CalculatedLine( src, cv::Point( 300, 200 ), cv::Point( 700, 900 ) );
+				cv::Point lineStart(400,100);
+				cv::Point lineEnd(800,1000);
+				laserdot::CalculatedLine( src, lineStart, lineEnd );
 
 			 //----------raw image to greyscale, threshold filter
 				cv::cvtColor(src, img_grey, cv::COLOR_BGR2GRAY);
@@ -153,7 +155,7 @@ int main(int argc, char* argv[])
 				// average size
 				size_avg = laserdot::SizeAverage(count,0,size_array, center_total);
 				//-----------save min_size only when the value in size_array is stable and close to each other
-				if(size_avg < min_size && center_total > 30)
+				if(size_avg < min_size && center_total > 20)
 				{
 					if(abs(size_array[0]-size_array[9]) <=3)
 					{
@@ -173,16 +175,24 @@ int main(int argc, char* argv[])
 					cv::Point center(cvRound(circles[0][0]), cvRound(circles[0][1]));
 					center_list.push_back(center);
 					center_total ++;
+					if (center_total > 30)
+					{
+						center_list.erase(center_list.begin());
+						center_total --;
+					}
+					
 					if (center_total >= 10)
 					{
 						cv::Point sum  = std::accumulate(center_list.begin(), center_list.end(), cv::Point(0,0));
 						center_avg = sum*(1.0/center_total);
+						//center_avg = sum*(1.0/200);
 						cout<<"Average center: "<< center_avg<<endl;
 						sleep(0.1);
 						cv::circle( img_grey_filtered, center_avg, 3, cv::Scalar(255,0,0), -1, 8, 0 );
 						cv::circle( src, center_avg, 3, cv::Scalar(255,100,0), -1, 8, 0 );
 					}
-					std::pair<double,double>dist = laserdot::DotToLine(src, cv::Point( 300, 200 ), cv::Point( 700, 900 ), center_avg);
+					
+					std::pair<double,double>dist = laserdot::DotToLine(src, lineStart, lineEnd, center_avg);
 					nom_distance,center_distance = dist.first,dist.second;
 				}
 				else
@@ -191,7 +201,8 @@ int main(int argc, char* argv[])
 					cout<<"last min size: "<<last_min_size<<endl;
 					fill_n(size_array,10,0);
 					center_total = 0;
-					fill(center_list.begin(), center_list.end(), cv::Point(0,0));
+					center_list.clear();
+					//fill(center_list.begin(), center_list.end(), cv::Point(0,0));
 				}
 				laserdot::HMI(src, size_avg, min_size, non_zero, nom_distance, center_distance);
 				laserdot::GreenLight(src, last_min_size, size_avg, nom_distance, center_distance);
@@ -202,6 +213,7 @@ int main(int argc, char* argv[])
 				sleep(0.1);
 				imgs_taken0++;
 			}
+			//camera0.StopGrabbing();
 		}
 
 	}
