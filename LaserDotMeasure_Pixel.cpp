@@ -193,7 +193,8 @@ int main(int argc, char* argv[])
 						cv::circle( img_grey_filtered, center_avg, 3, cv::Scalar(255,0,0), -1, 8, 0 );
 						cv::circle( src, center_avg, 3, cv::Scalar(255,100,0), -1, 8, 0 );
 						std::pair<double,double>dist = laserdot::DotToLine(src, lineStart, lineEnd, center_avg);
-						nom_distance,center_distance = dist.first,dist.second;
+						nom_distance = dist.first;
+						center_distance = dist.second;
 					}
 					
 					// std::pair<double,double>dist = laserdot::DotToLine(src, lineStart, lineEnd, center_avg);
