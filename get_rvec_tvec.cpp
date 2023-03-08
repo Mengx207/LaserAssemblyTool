@@ -59,21 +59,35 @@ int main(int argc, char ** argv)
     Mat rmatrix;
     Rodrigues(rvec,rmatrix);
     cout<<endl<<"rmatrix: "<<endl<<rmatrix<<endl<<endl;
-    // Target board's normal vector and one point on board in camera frame
-    // Nomal vector from board's origin in board frame: (0,0,1)
-    // One point on the board (X_b Y_b plane): (1,1,0)
-    vector<double> N_B {
+    /* Target board's normal vector and one point on board
+    Nomal vector from board's origin (0,0,0) to (0,0,1) in board frame
+    One point on the target board plane (X_board Y_board plane): (1,1,0)
+    Convert them to camera frame*/
+    vector<double> p_000 {
+        tvec.at<double>(0), 
+        tvec.at<double>(1),
+        tvec.at<double>(2)
+    };
+    vector<double> p_001 {
         rmatrix.at<double>(2)+tvec.at<double>(0), 
         rmatrix.at<double>(5)+tvec.at<double>(1),
         rmatrix.at<double>(8)+tvec.at<double>(2)
     };
-    vector<double> p_B {
+    //Normal vector of the target board in camera frame
+    vector<double> N_B = {
+        p_001[0] - p_000[0],
+        p_001[1] - p_000[1],
+        p_001[2] - p_000[2]
+    };
+    //One point on the target board in camera frame
+    vector<double> p_110 {
         rmatrix.at<double>(0)+rmatrix.at<double>(1)+tvec.at<double>(0),
         rmatrix.at<double>(3)+rmatrix.at<double>(4)+tvec.at<double>(1),
         rmatrix.at<double>(6)+rmatrix.at<double>(7)+tvec.at<double>(2)
     };
+    //Convert vector to Mat
     Mat NormalV_B = Mat(1,3,CV_64FC1,N_B.data());
-    Mat point_B = Mat(1,3,CV_64FC1,p_B.data());
+    Mat point_B = Mat(1,3,CV_64FC1,p_110.data());
 
     cout<<"normal vector of the target board: "<<endl<<NormalV_B<<endl<<endl;
     cout<<"one point on the target board: "<<endl<<point_B<<endl;
@@ -114,5 +128,4 @@ vector<Point3f> createBoardPoints(Size2i board_shape, double diagonal_spacing)
         centered_board_points[n].z = 0.0;
     } 
     return centered_board_points;
-
 }
