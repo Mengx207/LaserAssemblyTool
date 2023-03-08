@@ -10,7 +10,7 @@ vector<Point3f> createBoardPoints(Size2i board_shape, double diagonal_spacing);
 
 int main(int argc, char ** argv)
 {
-    Mat image_dot = imread( "image_captured2.png", IMREAD_GRAYSCALE);
+    Mat image_dot = imread( "images/image_captured2.png", IMREAD_GRAYSCALE);
     // Mat gray = imread( "symmetric_dots.png", IMREAD_GRAYSCALE);
     Mat image_dot_center(image_dot.rows, image_dot.cols, IMREAD_GRAYSCALE);
     Mat board_points(1000, 1000, IMREAD_GRAYSCALE);
@@ -49,12 +49,34 @@ int main(int argc, char ** argv)
 
     Mat cameraMatrix = Mat(3, 3, CV_64FC1, cameraMatrix_values.data());
     Mat distCoeffs = Mat(5, 1, CV_64FC1, distCoeffs_values.data());
-
+    // Get rvec, tvec by solvePnP()
     Mat rvec, tvec;
     solvePnP(boardPoints, centers, cameraMatrix, distCoeffs, rvec, tvec);
     cout<<"rvec:"<<endl<<rvec<<endl<<endl<<"tvec:"<<endl<<tvec<<endl;
     double distance = sqrt(tvec.at<double>(0)*tvec.at<double>(0)+tvec.at<double>(1)*tvec.at<double>(1)+tvec.at<double>(2)*tvec.at<double>(2));
     cout<<"distance between target board and camera: "<<distance<<"mm"<<endl;
+    // Convert rvec to rmatrix
+    Mat rmatrix;
+    Rodrigues(rvec,rmatrix);
+    cout<<endl<<"rmatrix: "<<endl<<rmatrix<<endl<<endl;
+    // Target board's normal vector and one point on board in camera frame
+    // Nomal vector from board's origin in board frame: (0,0,1)
+    // One point on the board (X_b Y_b plane): (1,1,0)
+    vector<double> N_B {
+        rmatrix.at<double>(2)+tvec.at<double>(0), 
+        rmatrix.at<double>(5)+tvec.at<double>(1),
+        rmatrix.at<double>(8)+tvec.at<double>(2)
+    };
+    vector<double> p_B {
+        rmatrix.at<double>(0)+rmatrix.at<double>(1)+tvec.at<double>(0),
+        rmatrix.at<double>(3)+rmatrix.at<double>(4)+tvec.at<double>(1),
+        rmatrix.at<double>(6)+rmatrix.at<double>(7)+tvec.at<double>(2)
+    };
+    Mat NormalV_B = Mat(1,3,CV_64FC1,N_B.data());
+    Mat point_B = Mat(1,3,CV_64FC1,p_B.data());
+
+    cout<<"normal vector of the target board: "<<endl<<NormalV_B<<endl<<endl;
+    cout<<"one point on the target board: "<<endl<<point_B<<endl;
 
     imshow("Captured Image", image_dot);    // Show the result
     imshow("Captured Image Centers", image_dot_center);
