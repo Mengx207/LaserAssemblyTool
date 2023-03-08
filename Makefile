@@ -111,44 +111,84 @@ depend:
 .PHONY : depend
 
 #=============================================================================
-# Target rules for targets named LaserDotMeasure
+# Target rules for targets named laser_dot
 
 # Build rule for target.
-LaserDotMeasure: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 LaserDotMeasure
-.PHONY : LaserDotMeasure
+laser_dot: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 laser_dot
+.PHONY : laser_dot
 
 # fast build rule for target.
-LaserDotMeasure/fast:
-	$(MAKE) -f CMakeFiles/LaserDotMeasure.dir/build.make CMakeFiles/LaserDotMeasure.dir/build
-.PHONY : LaserDotMeasure/fast
+laser_dot/fast:
+	$(MAKE) -f CMakeFiles/laser_dot.dir/build.make CMakeFiles/laser_dot.dir/build
+.PHONY : laser_dot/fast
 
-LaserDotMeasure_Pixel.o: LaserDotMeasure_Pixel.cpp.o
+#=============================================================================
+# Target rules for targets named get_rvec_tvec
 
-.PHONY : LaserDotMeasure_Pixel.o
+# Build rule for target.
+get_rvec_tvec: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 get_rvec_tvec
+.PHONY : get_rvec_tvec
+
+# fast build rule for target.
+get_rvec_tvec/fast:
+	$(MAKE) -f CMakeFiles/get_rvec_tvec.dir/build.make CMakeFiles/get_rvec_tvec.dir/build
+.PHONY : get_rvec_tvec/fast
+
+get_rvec_tvec.o: get_rvec_tvec.cpp.o
+
+.PHONY : get_rvec_tvec.o
 
 # target to build an object file
-LaserDotMeasure_Pixel.cpp.o:
-	$(MAKE) -f CMakeFiles/LaserDotMeasure.dir/build.make CMakeFiles/LaserDotMeasure.dir/LaserDotMeasure_Pixel.cpp.o
-.PHONY : LaserDotMeasure_Pixel.cpp.o
+get_rvec_tvec.cpp.o:
+	$(MAKE) -f CMakeFiles/get_rvec_tvec.dir/build.make CMakeFiles/get_rvec_tvec.dir/get_rvec_tvec.cpp.o
+.PHONY : get_rvec_tvec.cpp.o
 
-LaserDotMeasure_Pixel.i: LaserDotMeasure_Pixel.cpp.i
+get_rvec_tvec.i: get_rvec_tvec.cpp.i
 
-.PHONY : LaserDotMeasure_Pixel.i
+.PHONY : get_rvec_tvec.i
 
 # target to preprocess a source file
-LaserDotMeasure_Pixel.cpp.i:
-	$(MAKE) -f CMakeFiles/LaserDotMeasure.dir/build.make CMakeFiles/LaserDotMeasure.dir/LaserDotMeasure_Pixel.cpp.i
-.PHONY : LaserDotMeasure_Pixel.cpp.i
+get_rvec_tvec.cpp.i:
+	$(MAKE) -f CMakeFiles/get_rvec_tvec.dir/build.make CMakeFiles/get_rvec_tvec.dir/get_rvec_tvec.cpp.i
+.PHONY : get_rvec_tvec.cpp.i
 
-LaserDotMeasure_Pixel.s: LaserDotMeasure_Pixel.cpp.s
+get_rvec_tvec.s: get_rvec_tvec.cpp.s
 
-.PHONY : LaserDotMeasure_Pixel.s
+.PHONY : get_rvec_tvec.s
 
 # target to generate assembly for a file
-LaserDotMeasure_Pixel.cpp.s:
-	$(MAKE) -f CMakeFiles/LaserDotMeasure.dir/build.make CMakeFiles/LaserDotMeasure.dir/LaserDotMeasure_Pixel.cpp.s
-.PHONY : LaserDotMeasure_Pixel.cpp.s
+get_rvec_tvec.cpp.s:
+	$(MAKE) -f CMakeFiles/get_rvec_tvec.dir/build.make CMakeFiles/get_rvec_tvec.dir/get_rvec_tvec.cpp.s
+.PHONY : get_rvec_tvec.cpp.s
+
+laser_dot.o: laser_dot.cpp.o
+
+.PHONY : laser_dot.o
+
+# target to build an object file
+laser_dot.cpp.o:
+	$(MAKE) -f CMakeFiles/laser_dot.dir/build.make CMakeFiles/laser_dot.dir/laser_dot.cpp.o
+.PHONY : laser_dot.cpp.o
+
+laser_dot.i: laser_dot.cpp.i
+
+.PHONY : laser_dot.i
+
+# target to preprocess a source file
+laser_dot.cpp.i:
+	$(MAKE) -f CMakeFiles/laser_dot.dir/build.make CMakeFiles/laser_dot.dir/laser_dot.cpp.i
+.PHONY : laser_dot.cpp.i
+
+laser_dot.s: laser_dot.cpp.s
+
+.PHONY : laser_dot.s
+
+# target to generate assembly for a file
+laser_dot.cpp.s:
+	$(MAKE) -f CMakeFiles/laser_dot.dir/build.make CMakeFiles/laser_dot.dir/laser_dot.cpp.s
+.PHONY : laser_dot.cpp.s
 
 # Help Target
 help:
@@ -157,11 +197,15 @@ help:
 	@echo "... clean"
 	@echo "... depend"
 	@echo "... rebuild_cache"
-	@echo "... LaserDotMeasure"
+	@echo "... laser_dot"
 	@echo "... edit_cache"
-	@echo "... LaserDotMeasure_Pixel.o"
-	@echo "... LaserDotMeasure_Pixel.i"
-	@echo "... LaserDotMeasure_Pixel.s"
+	@echo "... get_rvec_tvec"
+	@echo "... get_rvec_tvec.o"
+	@echo "... get_rvec_tvec.i"
+	@echo "... get_rvec_tvec.s"
+	@echo "... laser_dot.o"
+	@echo "... laser_dot.i"
+	@echo "... laser_dot.s"
 .PHONY : help
 
 
