@@ -60,6 +60,43 @@ CMAKE_SOURCE_DIR = /home/lingbo/Documents/GitHub/AssemblyGuidanceTool
 CMAKE_BINARY_DIR = /home/lingbo/Documents/GitHub/AssemblyGuidanceTool
 
 #=============================================================================
+# Target rules for target CMakeFiles/planes_intersection.dir
+
+# All Build rule for target.
+CMakeFiles/planes_intersection.dir/all:
+	$(MAKE) -f CMakeFiles/planes_intersection.dir/build.make CMakeFiles/planes_intersection.dir/depend
+	$(MAKE) -f CMakeFiles/planes_intersection.dir/build.make CMakeFiles/planes_intersection.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/lingbo/Documents/GitHub/AssemblyGuidanceTool/CMakeFiles --progress-num=5,6 "Built target planes_intersection"
+.PHONY : CMakeFiles/planes_intersection.dir/all
+
+# Include target in all.
+all: CMakeFiles/planes_intersection.dir/all
+
+.PHONY : all
+
+# Build rule for subdir invocation for target.
+CMakeFiles/planes_intersection.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/lingbo/Documents/GitHub/AssemblyGuidanceTool/CMakeFiles 2
+	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/planes_intersection.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/lingbo/Documents/GitHub/AssemblyGuidanceTool/CMakeFiles 0
+.PHONY : CMakeFiles/planes_intersection.dir/rule
+
+# Convenience name for target.
+planes_intersection: CMakeFiles/planes_intersection.dir/rule
+
+.PHONY : planes_intersection
+
+# clean rule for target.
+CMakeFiles/planes_intersection.dir/clean:
+	$(MAKE) -f CMakeFiles/planes_intersection.dir/build.make CMakeFiles/planes_intersection.dir/clean
+.PHONY : CMakeFiles/planes_intersection.dir/clean
+
+# clean rule for target.
+clean: CMakeFiles/planes_intersection.dir/clean
+
+.PHONY : clean
+
+#=============================================================================
 # Target rules for target CMakeFiles/laser_dot.dir
 
 # All Build rule for target.

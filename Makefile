@@ -111,6 +111,19 @@ depend:
 .PHONY : depend
 
 #=============================================================================
+# Target rules for targets named planes_intersection
+
+# Build rule for target.
+planes_intersection: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 planes_intersection
+.PHONY : planes_intersection
+
+# fast build rule for target.
+planes_intersection/fast:
+	$(MAKE) -f CMakeFiles/planes_intersection.dir/build.make CMakeFiles/planes_intersection.dir/build
+.PHONY : planes_intersection/fast
+
+#=============================================================================
 # Target rules for targets named laser_dot
 
 # Build rule for target.
@@ -190,6 +203,33 @@ laser_dot.cpp.s:
 	$(MAKE) -f CMakeFiles/laser_dot.dir/build.make CMakeFiles/laser_dot.dir/laser_dot.cpp.s
 .PHONY : laser_dot.cpp.s
 
+planes_intersection.o: planes_intersection.cpp.o
+
+.PHONY : planes_intersection.o
+
+# target to build an object file
+planes_intersection.cpp.o:
+	$(MAKE) -f CMakeFiles/planes_intersection.dir/build.make CMakeFiles/planes_intersection.dir/planes_intersection.cpp.o
+.PHONY : planes_intersection.cpp.o
+
+planes_intersection.i: planes_intersection.cpp.i
+
+.PHONY : planes_intersection.i
+
+# target to preprocess a source file
+planes_intersection.cpp.i:
+	$(MAKE) -f CMakeFiles/planes_intersection.dir/build.make CMakeFiles/planes_intersection.dir/planes_intersection.cpp.i
+.PHONY : planes_intersection.cpp.i
+
+planes_intersection.s: planes_intersection.cpp.s
+
+.PHONY : planes_intersection.s
+
+# target to generate assembly for a file
+planes_intersection.cpp.s:
+	$(MAKE) -f CMakeFiles/planes_intersection.dir/build.make CMakeFiles/planes_intersection.dir/planes_intersection.cpp.s
+.PHONY : planes_intersection.cpp.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -197,6 +237,7 @@ help:
 	@echo "... clean"
 	@echo "... depend"
 	@echo "... rebuild_cache"
+	@echo "... planes_intersection"
 	@echo "... laser_dot"
 	@echo "... edit_cache"
 	@echo "... get_rvec_tvec"
@@ -206,6 +247,9 @@ help:
 	@echo "... laser_dot.o"
 	@echo "... laser_dot.i"
 	@echo "... laser_dot.s"
+	@echo "... planes_intersection.o"
+	@echo "... planes_intersection.i"
+	@echo "... planes_intersection.s"
 .PHONY : help
 
 

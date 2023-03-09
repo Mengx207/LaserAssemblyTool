@@ -28,3 +28,10 @@ target_link_libraries( get_rvec_tvec
                       
 )
 
+add_executable( planes_intersection planes_intersection.cpp )
+target_link_libraries( planes_intersection
+		       ${OpenCV_LIBS}
+	               ${Pylon_LIBRARIES}
+                       ${pylon_camera_INCLUDE_DIRS}
+
+)
