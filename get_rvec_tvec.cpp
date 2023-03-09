@@ -59,6 +59,8 @@ int main(int argc, char ** argv)
     Mat rmatrix;
     Rodrigues(rvec,rmatrix);
     cout<<endl<<"rmatrix: "<<endl<<rmatrix<<endl<<endl;
+
+
     /* Target board's normal vector and one point on board
     Nomal vector from board's origin (0,0,0) to (0,0,1) in board frame
     One point on the target board plane (X_board Y_board plane): (1,1,0)
@@ -89,8 +91,50 @@ int main(int argc, char ** argv)
     Mat NormalV_B = Mat(1,3,CV_64FC1,N_B.data());
     Mat point_B = Mat(1,3,CV_64FC1,p_110.data());
 
-    cout<<"normal vector of the target board: "<<endl<<NormalV_B<<endl<<endl;
-    cout<<"one point on the target board: "<<endl<<point_B<<endl;
+    cout<<"normal vector of the target board: "<<endl<<NormalV_B<<endl;
+    cout<<"one point on the target board: "<<endl<<point_B<<endl<<endl;
+
+
+   /* Locate laser plane*/
+   vector<double> rmatrix_L_values = {
+    -9.54694166520905E-12,-0.500000000000731,0.866025403784017,
+    -0.173648177666924,0.852868531952858,0.492403876505388,
+    -0.984807753012209,-0.150383733175655,-8.68240888417309E-02
+   };
+   vector<double> tvec_L_values = {
+    -1.32492787807391E-10, 66.0767121304625, 2.07983966640096
+   };
+   Mat rmatrix_L = Mat(3, 3, CV_64FC1, rmatrix_L_values.data());
+   Mat tvec_L = Mat(3,1, CV_64FC1, tvec_L_values.data());
+
+    vector<double> p_000_L {
+        tvec_L.at<double>(0), 
+        tvec_L.at<double>(1),
+        tvec_L.at<double>(2)
+    };
+    vector<double> p_001_L {
+        rmatrix_L.at<double>(2)+tvec_L.at<double>(0), 
+        rmatrix_L.at<double>(5)+tvec_L.at<double>(1),
+        rmatrix_L.at<double>(8)+tvec_L.at<double>(2)
+    };
+    //Normal vector of the target board in camera frame
+    vector<double> N_L = {
+        p_001_L[0] - p_000_L[0],
+        p_001_L[1] - p_000_L[1],
+        p_001_L[2] - p_000_L[2]
+    };
+    //One point on the target board in camera frame
+    vector<double> p_110_L {
+        rmatrix_L.at<double>(0)+rmatrix_L.at<double>(1)+tvec_L.at<double>(0),
+        rmatrix_L.at<double>(3)+rmatrix_L.at<double>(4)+tvec_L.at<double>(1),
+        rmatrix_L.at<double>(6)+rmatrix_L.at<double>(7)+tvec_L.at<double>(2)
+    };
+    //Convert vector to Mat
+    Mat NormalV_L = Mat(1,3,CV_64FC1,N_L.data());
+    Mat point_L = Mat(1,3,CV_64FC1,p_110_L.data());
+
+    cout<<"normal vector of the laser plane: "<<endl<<NormalV_L<<endl;
+    cout<<"one point on the laser plane: "<<endl<<point_L<<endl;
 
     imshow("Captured Image", image_dot);    // Show the result
     imshow("Captured Image Centers", image_dot_center);
