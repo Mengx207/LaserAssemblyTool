@@ -1,3 +1,9 @@
+/*Get rvec and tvec from the target board to camera from 
+camera matix, distortion coefficient and one captured image 
+of the target board feature points.
+Find the target board plane's normal vector and one point on the plane 
+in camera frame*/
+
 #include "opencv2/core.hpp"
 #include "opencv2/imgproc.hpp"
 #include "opencv2/imgcodecs.hpp"

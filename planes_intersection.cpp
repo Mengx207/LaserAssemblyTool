@@ -1,4 +1,7 @@
 
+/*Caluculate the intersection line between the target board plane
+and the laser plane in 3D space*/
+
 #include <iostream>
 #include <sstream>
 #include <string>
