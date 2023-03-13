@@ -21,13 +21,12 @@ void crossProduct(double vect_A[], double vect_B[], double cross_P[]);
  
 int main()
 {
-	// intersection::intersectionLine({ 10,8,3 }, { 2,6,5 }, { 10,5,5 }, {2,2,2});
-	//Known normal vectors for two planes
+	//Known normal vectors for two planes in cam frame
     double N_B[] = { 0.2637276079076689, -0.005626030393045767, -0.9645807880158941 }; 
-    double N_L[] = { 2,6,5 };
-	//Known one point on each plane
+    double N_L[] = { 0.866025403784017, 0.4924038765053922, -0.08682408884173087 };
+	//Known one point on each plane in cam frame
 	double point_B[] = { 4.107592997816358, -46.97230636497275, 366.4460475618435 };
-	double point_L[] = { 2,2,2 };
+	double point_L[] = { -0.5000000001427707, 66.75593248474843, 0.9446481802130959 };
 
 	double a1,b1,c1,a2,b2,c2;
 	a1 = N_B[0];
@@ -93,6 +92,6 @@ void crossProduct(double vect_A[], double vect_B[], double cross_P[])
 {
  
     cross_P[0] = vect_A[1] * vect_B[2] - vect_A[2] * vect_B[1];
-    cross_P[1] = vect_A[2] * vect_B[0] - vect_A[0] * vect_B[2];
+    cross_P[1] = - (vect_A[0] * vect_B[2] - vect_A[2] * vect_B[0]);
     cross_P[2] = vect_A[0] * vect_B[1] - vect_A[1] * vect_B[0];
 }

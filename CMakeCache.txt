@@ -193,6 +193,12 @@ OpenCV_DIR:PATH=/usr/local/lib/cmake/opencv4
 //The directory containing a CMake configuration file for Pylon.
 Pylon_DIR:PATH=Pylon_DIR-NOTFOUND
 
+//Dependencies for target
+plane.h_LIB_DEPENDS:STATIC=
+
+//Dependencies for target
+plane_LIB_DEPENDS:STATIC=
+
 
 ########################
 # INTERNAL cache entries
