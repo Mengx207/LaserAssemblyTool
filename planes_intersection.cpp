@@ -1,6 +1,12 @@
 
-/*Caluculate the intersection line between the target board plane
-and the laser plane in 3D space*/
+/*Caluculate the intersection line between the target board plane and the laser plane in 3D space
+
+	Input:
+	target board's normal vector and origin
+	Laser plane's normal vector and origin
+	Output:
+	intersection line in 3D space
+*/
 
 #include <iostream>
 #include <sstream>
@@ -22,11 +28,11 @@ void crossProduct(double vect_A[], double vect_B[], double cross_P[]);
 int main()
 {
 	//Known normal vectors for two planes in cam frame
-    double N_B[] = { 0.2637276079076689, -0.005626030393045767, -0.9645807880158941 }; 
-    double N_L[] = { 0.866025403784017, 0.4924038765053922, -0.08682408884173087 };
 	//Known one point on each plane in cam frame
-	double point_B[] = { 4.107592997816358, -46.97230636497275, 366.4460475618435 };
-	double point_L[] = { -0.5000000001427707, 66.75593248474843, 0.9446481802130959 };
+    double N_B[] = { -0.01531555032221732, 0.1766416995019302, 0.9841560566878798 }; 
+	double point_B[] = { -19.69935923386508, -13.38825180013012, 370.1884978966525 };
+	double N_L[] = { 0.866025403784017, 0.4924038765053922, -0.08682408884173087 };
+	double point_L[] = { -1.32492787807391e-10, 66.0767121304625, 2.07983966640096 };
 
 	double a1,b1,c1,a2,b2,c2;
 	a1 = N_B[0];

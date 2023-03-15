@@ -19,6 +19,8 @@ opencv2/calib3d.hpp
 /home/lingbo/Documents/GitHub/AssemblyGuidanceTool/opencv2/calib3d.hpp
 iostream
 -
+fstream
+-
 
 /usr/local/include/opencv4/opencv2/./imgproc/segmentation.hpp
 opencv2/imgproc.hpp

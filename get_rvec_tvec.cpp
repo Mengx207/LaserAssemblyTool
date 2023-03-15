@@ -1,8 +1,17 @@
-/*Get rvec and tvec from the target board to camera from
-camera matix, distortion coefficient and one captured image
-of the target board feature points.
-Find the target board plane's normal vector and one point on the plane
-in camera frame*/
+/*
+Input: 
+camera matrix, distortion coefficient
+One captured image
+rmatrix, tvec from laser plane to cam
+Output: 
+rvec, tvec from target board to cam
+target board's normal vector and origin
+target board's normal vector and origin
+
+Get rvec and tvec from the target board to camera from camera matix, distortion coefficient.
+Find the target board plane's normal vector and one point on the plane in camera frame
+
+*/
 
 #include "opencv2/core.hpp"
 #include "opencv2/imgproc.hpp"
@@ -10,14 +19,16 @@ in camera frame*/
 #include "opencv2/highgui.hpp"
 #include "opencv2/calib3d.hpp"
 #include <iostream>
+#include<fstream> 
 using namespace cv;
 using namespace std;
 vector<Point3f> createBoardPoints(Size2i board_shape, double diagonal_spacing);
+vector<Point3f> createChessBoardCorners(Size2i board_shape, double squareSize);
 
 int main(int argc, char **argv)
 {
-    Mat image_dot = imread("images/image_captured2.png", IMREAD_GRAYSCALE);
-    // Mat gray = imread( "symmetric_dots.png", IMREAD_GRAYSCALE);
+    // Mat image_dot = imread("images/image_captured2.png", IMREAD_GRAYSCALE);
+    Mat image_dot = imread("images/image_captured.png", IMREAD_GRAYSCALE);
     Mat image_dot_center(image_dot.rows, image_dot.cols, IMREAD_GRAYSCALE);
     Mat board_points(1000, 1000, IMREAD_GRAYSCALE);
 
@@ -26,52 +37,66 @@ int main(int argc, char **argv)
         cout << "Error opening image" << endl;
         return EXIT_FAILURE;
     }
-    Size patternsize(5, 11); // how to define the size of asymmetric pattern?
+    Size patternsize(5, 3); // how to define the size of asymmetric pattern?
     vector<Point2f> centers; // center of feature dots
     SimpleBlobDetector::Params params;
     params.maxArea = 10e4;
     // Ptr<FeatureDetector> blobDetector = new SimpleBlobDetector(params);
     Ptr<FeatureDetector> blobDetector = SimpleBlobDetector::create(params);
-    bool patternfound = findCirclesGrid(image_dot, patternsize, centers, CALIB_CB_ASYMMETRIC_GRID, blobDetector);
-    // cout << "image points: " << endl
-    //      << centers << endl
-    //      << endl;
+    // bool patternfound = findCirclesGrid(image_dot, patternsize, centers, CALIB_CB_ASYMMETRIC_GRID, blobDetector);
+    bool patternfound = findChessboardCorners(image_dot, patternsize, centers, CALIB_CB_ASYMMETRIC_GRID);
+    cout << "image points: " << endl
+         << centers << endl
+         << endl;
     drawChessboardCorners(image_dot_center, patternsize, Mat(centers), patternfound);
 
-    Size2i board_shape(5, 11);
-    double diagonal_spacing = 9;
-    vector<Point3f> boardPoints = createBoardPoints(board_shape, diagonal_spacing);
+    // Size2i board_shape(5, 11);
+    // double diagonal_spacing = 9;
+    // vector<Point3f> boardPoints = createBoardPoints(board_shape, diagonal_spacing);
+    Size2i board_shape(5, 3); // 5X3 corners
+    double squareSize = 4.5; // 10% square size
+    vector<Point3f> boardPoints = createChessBoardCorners(board_shape, squareSize);
     vector<Point2f> boardPoints_2D;
     for (int n = 0; n < boardPoints.size(); n++)
     {
         boardPoints_2D.push_back(Point2f(10 * boardPoints[n].x + 400, -(10 * boardPoints[n].y) + 200)); // to show the target board feature dot, reverse y axis, zoom and shift to center of image
     }
     drawChessboardCorners(board_points, board_shape, Mat(boardPoints_2D), patternfound);
-    // cout << "target board points: " << endl
-    //      << boardPoints << endl
-    //      << "size of board: " << boardPoints.size() << endl
-    //      << endl;
+    cout << "target board points: " << endl
+         << boardPoints << endl
+         << "size of board: " << boardPoints.size() << endl
+         << endl;
 
-    vector<double> cameraMatrix_values{3.4714076499814091e+03, 0., 7.5181741352412894e+02,
-                                       0., 3.4711767048332676e+03, 5.4514783904300646e+02,
-                                       0., 0., 1.};
-    vector<double> distCoeffs_values{-1.8430923287702131e-01, -4.2906853550556068e-02, -2.1393762247926785e-04, 2.9790668148119045e-04, 5.9981578839159733e+00};
+    // import camera matrix and distortion coefficients from txt file
+    ifstream intrin("values/intrinsic.txt");
+    vector<double> cameraMatrix_values;
+    double val;
+    while (intrin >> val)
+    {
+        cameraMatrix_values.push_back(val);
+    }
+    ifstream dist("values/distortion.txt");
+    vector<double> distCoeffs_values;
+    while (dist >> val)
+    {
+        distCoeffs_values.push_back(val);
+    }
 
     Mat cameraMatrix = Mat(3, 3, CV_64FC1, cameraMatrix_values.data());
     Mat distCoeffs = Mat(5, 1, CV_64FC1, distCoeffs_values.data());
     // Get rvec, tvec by solvePnP()
     Mat rvec, tvec;
     solvePnP(boardPoints, centers, cameraMatrix, distCoeffs, rvec, tvec);
-    cout << "rvec:" << endl
+    cout << "rvec from board to cam:" << endl
          << rvec << endl << endl;
-    cout << "tvec:" << endl
+    cout << "tvec from board to cam:" << endl
          << tvec << endl;
     double distance = sqrt(tvec.at<double>(0) * tvec.at<double>(0) + tvec.at<double>(1) * tvec.at<double>(1) + tvec.at<double>(2) * tvec.at<double>(2));
-    //cout << "distance between target board and camera: " << distance << "mm" << endl;
+    cout << "distance between target board and camera: " << distance << "mm" << endl;
     // Convert rvec to rmatrix
     Mat rmatrix;
     Rodrigues(rvec, rmatrix);
-    cout << endl << "rmatrix: " << endl << rmatrix << endl << endl;
+    cout << endl << "rmatrix from board to cam: " << endl << rmatrix << endl << endl;
 
     /* Target board's normal vector and one point on board
     Nomal vector from board's origin (0,0,0) to (0,0,1) in board frame
@@ -121,14 +146,20 @@ int main(int argc, char **argv)
     cout << "(normal vector) * (vector on plane):         " << N_B[0] * P_B[0] + N_B[1] * P_B[1] + N_B[2] * P_B[2] <<endl<<endl;
 
     /* Locate laser plane*/
-    vector<double> rmatrix_L_values = {
-        -9.54694166520905E-12, -0.500000000000731, 0.866025403784017,
-        -0.173648177666924, 0.852868531952858, 0.492403876505388,
-        -0.984807753012209, -0.150383733175655, -8.68240888417309E-02};
-    vector<double> tvec_L_values = {
-        -1.32492787807391E-10, 66.0767121304625, 2.07983966640096};
-    Mat rmatrix_L = Mat(3, 3, CV_64FC1, rmatrix_L_values.data());
-    Mat tvec_L = Mat(3, 1, CV_64FC1, tvec_L_values.data());
+    ifstream rmatrixL("values/rmatrix_laser.txt");
+    vector<double> rmatrix_laser_values;
+    while (rmatrixL >> val)
+    {
+        rmatrix_laser_values.push_back(val);
+    }
+    ifstream tvecL("values/tvec_laser.txt");
+    vector<double> tvec_laser_values;
+    while (tvecL >> val)
+    {
+        tvec_laser_values.push_back(val);
+    }
+    Mat rmatrix_L = Mat(3, 3, CV_64FC1, rmatrix_laser_values.data());
+    Mat tvec_L = Mat(3, 1, CV_64FC1, tvec_laser_values.data());
 
     vector<double> p_000_L {
         tvec_L.at<double>(0),
@@ -206,4 +237,18 @@ vector<Point3f> createBoardPoints(Size2i board_shape, double diagonal_spacing)
         centered_board_points[n].z = 0.0;
     }
     return centered_board_points;
+}
+
+vector<Point3f> createChessBoardCorners(Size2i board_shape, double squareSize)
+{
+    vector<Point3f> centered_board_corners;
+    int count;
+    for( int i = 0; i < board_shape.height; i++ )
+    {
+        for( int j = 0; j < board_shape.width; j++ )
+        {
+            centered_board_corners.push_back(Point3f((j*squareSize), (i*squareSize), 0.0));
+        }
+    }
+    return centered_board_corners;
 }

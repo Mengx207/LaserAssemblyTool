@@ -21,12 +21,12 @@
 #include <bits/stdc++.h>
 #include <vector>
 #include <opencv2/highgui/highgui.hpp>
-#include "lib/softwaretriggerconfiguration.h"
+#include "include/softwaretriggerconfiguration.h"
 #include <time.h>
 #include <stdio.h>
 #include <ctime>
 
-#include "utility/include/utility.h"
+#include "include/utility.h"
 
 using namespace Pylon;
 using namespace std;
