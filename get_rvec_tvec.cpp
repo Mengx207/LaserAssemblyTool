@@ -19,7 +19,7 @@ Find the target board plane's normal vector and one point on the plane in camera
 #include "opencv2/highgui.hpp"
 #include "opencv2/calib3d.hpp"
 #include <iostream>
-#include<fstream> 
+#include <fstream> 
 using namespace cv;
 using namespace std;
 vector<Point3f> createBoardPoints(Size2i board_shape, double diagonal_spacing);

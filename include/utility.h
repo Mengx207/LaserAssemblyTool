@@ -16,10 +16,14 @@
 #include <time.h>
 #include <stdio.h>
 #include <ctime>
-
+#include "opencv2/core.hpp"
+#include "opencv2/imgproc.hpp"
+#include "opencv2/imgcodecs.hpp"
+#include "opencv2/highgui.hpp"
+#include "opencv2/calib3d.hpp"
+#include <fstream> 
+using namespace cv;
 using namespace std;
-
-//using namespace cv;
 
 
 namespace laserdot
@@ -172,11 +176,25 @@ namespace laserdot
     }
 }
 
-namespace intersection
+namespace laserline
 {
-    int dotProduct(int vect_A[], int vect_B[])
+    vector<Point3f> createChessBoardCorners(Size2i board_shape, double squareSize)
     {
-        int product = 0;
+        vector<Point3f> centered_board_corners;
+        int count;
+        for( int i = 0; i < board_shape.height; i++ )
+        {
+            for( int j = 0; j < board_shape.width; j++ )
+            {
+                centered_board_corners.push_back(Point3f((j*squareSize), (i*squareSize), 0.0));
+            }
+        }
+        return centered_board_corners;
+    }
+
+    int dotProduct(double vect_A[], double vect_B[])
+    {
+        double product = 0;
         for (int i = 0; i < 3; i++)
         {
             product = product + vect_A[i] * vect_B[i];
@@ -185,7 +203,7 @@ namespace intersection
     }
  
     // cross product of two vector array.
-    void crossProduct(int vect_A[], int vect_B[], int cross_P[])
+    void crossProduct(double vect_A[], double vect_B[], double cross_P[])
     
     {
         cross_P[0] = vect_A[1] * vect_B[2] - vect_A[2] * vect_B[1];
@@ -193,49 +211,33 @@ namespace intersection
         cross_P[2] = vect_A[0] * vect_B[1] - vect_A[1] * vect_B[0];
     }
 
-    void intersectionLine(int N1[3], int N2[3], int point1[3], int point2[3])
+    void intersectionLine(double N_B[3], double N_L[3], double point_B[3], double point_L[3])
     {
-    //     //Known normal vectors for two planes
-    //     N1[3] = { 10,8,3 }; 
-    //     N2[3] = { 2,6,5 };
-    //     //Known one point on each plane
-    //     point1[3] = { 10,5,5 };
-    //     point2[3] = { 2,2,2 };
-
         double a1,b1,c1,a2,b2,c2;
-        a1 = N1[0];
-        b1 = N1[1];
-        c1 = N1[2];
-        a2 = N2[0];
-        b2 = N2[1];
-        c2 = N2[2];	
-        int cross_P[3];
+        a1 = N_B[0];
+        b1 = N_B[1];
+        c1 = N_B[2];
+        a2 = N_L[0];
+        b2 = N_L[1];
+        c2 = N_L[2];	
+        double cross_P[3];
         //find the plane equations
         double x,y,z;
-        //a1*(x-point1[0])+b1*(y-point1[0])+c1*(z-point1[0]) = 0;
-        //a2*(x-point2[0])+b2*(y-point2[0])+c2*(z-point2[0]) = 0;
-        //a1*x+b1*y+c1*z = (a1*point1[0]+b1*point1[0]+c1*point1[0]);
-        //a2*x+b2*y+c2*z = (a2*point2[0]+b2*point2[0]+c2*point2[0]);	
-        cout<<"Plane1 equation: "<<a1<<"(x-"<<point1[0]<<")+"<<b1<<"*(y-"<<point1[1]<<")+"<<c1<<"*(z-"<<point1[2]<<") = 0"<<endl;
-        cout<<"Plane2 equation: "<<a2<<"(x-"<<point2[0]<<")+"<<b2<<"*(y-"<<point2[1]<<")+"<<c2<<"*(z-"<<point2[2]<<") = 0"<<endl;
+        cout<<"Plane1 equation: "<<a1<<"(x-"<<point_B[0]<<")+"<<b1<<"*(y-"<<point_B[1]<<")+"<<c1<<"*(z-"<<point_B[2]<<") = 0"<<endl;
+        cout<<"Plane2 equation: "<<a2<<"(x-"<<point_L[0]<<")+"<<b2<<"*(y-"<<point_L[1]<<")+"<<c2<<"*(z-"<<point_L[2]<<") = 0"<<endl;
         // dotProduct function call
-        // cout << "Dot product:";
-        // cout << dotProduct(N1, N2) << endl;
+        cout << "Dot product:";
+        cout << dotProduct(N_B, N_L) << endl;
         // crossProduct function call
-        crossProduct(N1, N2, cross_P);
+        crossProduct(N_B, N_L, cross_P);
         cout<<"Nomal vector cross product: v=("<<cross_P[0]<<","<<cross_P[1]<<","<<cross_P[2]<<")";
         // To find a point on intersection line, use two plane equations and set z=0
-        // a1*x+b1*y = (a1*point1[0]+b1*point1[0]+c1*point1[0]);
-        // a2*x+b2*y = (a2*point2[0]+b2*point2[0]+c2*point2[0]);
-        c1 = a1*point1[0]+b1*point1[0]+c1*point1[0];
-        c2 = a2*point2[0]+b2*point2[0]+c2*point2[0];
+        c1 = a1*point_B[0]+b1*point_B[0]+c1*point_B[0];
+        c2 = a2*point_L[0]+b2*point_L[0]+c2*point_L[0];
         x = (c1*b2-b1*c2)/(a1*b2-b1*a2);
         y = (a1*c2-c1*a2)/(a1*b2-b1*a2);
         cout<<endl<<"One point on intersection line: r0 = ("<<x<<","<<y<<",0)"<<endl;
-        
-        // Plug v and r0 into vector equation
-        // r = (x*i + y*j + 0*k) + t*(cross_P[0]*i+cross_P[1]*j+cross_P[2]*k)
-        // r = (x+t*cross_P[0])*i + (y+t*cross_P[1])*j + (t*cross_P[2])*k
+
         double a,b,c;
         char t;
         a = x+t*cross_P[0];
@@ -247,5 +249,165 @@ namespace intersection
         cout<<"c=t*"<<cross_P[2]<<endl;
         cout<<"r=("<<x<<"+t*"<<cross_P[0]<<")*i+("<<y<<"+t*"<<cross_P[1]<<")*j+("<<cross_P[2]<<")*k"<<endl;
 
+    }
+
+
+    std::pair<Mat,Mat> getRvecTvec()
+    {
+        Size patternsize(5, 3); // how to define the size of asymmetric pattern?
+        vector<Point2f> centers; // center of feature dots
+        SimpleBlobDetector::Params params;
+        params.maxArea = 10e4;
+        Ptr<FeatureDetector> blobDetector = SimpleBlobDetector::create(params);
+        bool patternfound = findChessboardCorners(image_dot, patternsize, centers, CALIB_CB_ASYMMETRIC_GRID);
+        // cout << "image points: " << endl
+        //     << centers << endl
+        //     << endl;
+        drawChessboardCorners(image_dot_center, patternsize, Mat(centers), patternfound);
+
+        Size2i board_shape(5, 3); // 5X3 corners
+        double squareSize = 4.5; // 10% square size
+        vector<Point3f> boardPoints = createChessBoardCorners(board_shape, squareSize);
+        vector<Point2f> boardPoints_2D;
+        for (int n = 0; n < boardPoints.size(); n++)
+        {
+            boardPoints_2D.push_back(Point2f(10 * boardPoints[n].x + 400, -(10 * boardPoints[n].y) + 200)); // to show the target board feature dot, reverse y axis, zoom and shift to center of image
+        }
+        drawChessboardCorners(board_points, board_shape, Mat(boardPoints_2D), patternfound);
+        // cout << "target board points: " << endl
+        //     << boardPoints << endl
+        //     << "size of board: " << boardPoints.size() << endl
+        //     << endl;
+
+        // import camera matrix and distortion coefficients from txt file
+        ifstream intrin("values/intrinsic.txt");
+        vector<double> cameraMatrix_values;
+        double val;
+        while (intrin >> val)
+        {
+            cameraMatrix_values.push_back(val);
+        }
+        ifstream dist("values/distortion.txt");
+        vector<double> distCoeffs_values;
+        while (dist >> val)
+        {
+            distCoeffs_values.push_back(val);
+        }
+
+        Mat cameraMatrix = Mat(3, 3, CV_64FC1, cameraMatrix_values.data());
+        Mat distCoeffs = Mat(5, 1, CV_64FC1, distCoeffs_values.data());
+        // Get rvec, tvec by solvePnP()
+        Mat rvec, tvec;
+        solvePnP(boardPoints, centers, cameraMatrix, distCoeffs, rvec, tvec);
+        cout << "rvec from board to cam:" << endl
+            << rvec << endl << endl;
+        cout << "tvec from board to cam:" << endl
+            << tvec << endl;
+        double distance = sqrt(tvec.at<double>(0) * tvec.at<double>(0) + tvec.at<double>(1) * tvec.at<double>(1) + tvec.at<double>(2) * tvec.at<double>(2));
+        // cout << "distance between target board and camera: " << distance << "mm" << endl;
+        // Convert rvec to rmatrix
+        Mat rmatrix;
+        Rodrigues(rvec, rmatrix);
+        cout << endl << "rmatrix from board to cam: " << endl << rmatrix << endl << endl;
+        std::pair<Mat,Mat>vec(rmatrix,tvec) ;
+        return vec;
+    }
+
+    std::pair<Mat,Mat> targetBoardPlane(Mat rmatrix, Mat tvec)
+    {
+        vector<double> p_000 
+        { tvec.at<double>(0), tvec.at<double>(1), tvec.at<double>(2) };
+        vector<double> p_001 
+        { rmatrix.at<double>(2)+tvec.at<double>(0), rmatrix.at<double>(5)+tvec.at<double>(1), rmatrix.at<double>(8)+tvec.at<double>(2) };
+        //One point on the target board in camera frame
+        vector<double> p_110 
+        { rmatrix.at<double>(0)+rmatrix.at<double>(1)+tvec.at<double>(0), rmatrix.at<double>(3)+rmatrix.at<double>(4)+tvec.at<double>(1), rmatrix.at<double>(6)+rmatrix.at<double>(7)+tvec.at<double>(2) };
+        //Normal vector of the target board in camera frame
+        vector<double> N_B = {
+            p_001[0] - p_000[0],
+            p_001[1] - p_000[1],
+            p_001[2] - p_000[2]
+        };
+        //A vector on the plane
+        vector<double> P_B = {
+            p_110[0] - p_000[0],
+            p_110[1] - p_000[1],
+            p_110[2] - p_000[2]
+        };
+
+        // Convert vector to Mat
+        Mat NormalV_B = Mat(1, 3, CV_64FC1, N_B.data());
+        Mat point_B = Mat(1, 3, CV_64FC1, p_110.data());
+        Mat point_B_O = Mat(1, 3, CV_64FC1, p_000.data());
+        std::pair<Mat,Mat>target_board_values(NormalV_B,point_B_O);
+
+        cout << "The Target Board: " << endl;
+        cout << "origin point: " << endl
+            << point_B_O << endl;
+        cout << "normal vector: " << endl
+            << NormalV_B << endl;
+        cout << "one point on plane: " << endl
+            << point_B << endl;
+        // cout << "(normal vector) * (vector on plane):         " << N_B[0] * P_B[0] + N_B[1] * P_B[1] + N_B[2] * P_B[2] <<endl<<endl;
+        return target_board_values;
+    }
+
+    std::pair<Mat,Mat> laserPlane()
+    {
+        double val;
+        ifstream rmatrix("values/rmatrix_laser.txt");
+        vector<double> rmatrix_laser_values;
+        while (rmatrix >> val)
+        {
+            rmatrix_laser_values.push_back(val);
+        }
+        ifstream tvecL("values/tvec_laser.txt");
+        vector<double> tvec_laser_values;
+        while (tvecL >> val)
+        {
+            tvec_laser_values.push_back(val);
+        }
+        Mat rmatrix_L = Mat(3, 3, CV_64FC1, rmatrix_laser_values.data());
+        Mat tvec_L = Mat(3, 1, CV_64FC1, tvec_laser_values.data());
+
+        vector<double> p_000_L {
+            tvec_L.at<double>(0),
+            tvec_L.at<double>(1),
+            tvec_L.at<double>(2)
+        };
+        vector<double> p_001_L {
+            rmatrix_L.at<double>(2)+tvec_L.at<double>(0),
+            rmatrix_L.at<double>(5)+tvec_L.at<double>(1),
+            rmatrix_L.at<double>(8)+tvec_L.at<double>(2)
+        };
+        //One point on the target board in camera frame
+        vector<double> p_110_L {
+            rmatrix_L.at<double>(0)+rmatrix_L.at<double>(1)+tvec_L.at<double>(0),
+            rmatrix_L.at<double>(3)+rmatrix_L.at<double>(4)+tvec_L.at<double>(1),
+            rmatrix_L.at<double>(6)+rmatrix_L.at<double>(7)+tvec_L.at<double>(2)
+        };
+        //Normal vector of the target board in camera frame
+        vector<double> N_L = {
+            p_001_L[0] - p_000_L[0],
+            p_001_L[1] - p_000_L[1],
+            p_001_L[2] - p_000_L[2]
+        };   
+        vector<double> P_L = {
+            p_110_L[0] - p_000_L[0],
+            p_110_L[1] - p_000_L[1],
+            p_110_L[2] - p_000_L[2]
+        }; 
+        // Convert vector to Mat
+        Mat NormalV_L = Mat(1, 3, CV_64FC1, N_L.data());
+        Mat point_L = Mat(1, 3, CV_64FC1, p_110_L.data());
+        Mat point_L_O = Mat(1, 3, CV_64FC1, p_000_L.data());
+        cout << "The Laser Plane: " << endl;
+        cout << "origin of laser plane: " << endl
+            << point_L_O << endl;
+        cout << "normal vector of the laser plane: " << endl
+            << NormalV_L << endl;
+        cout << "one point on the laser plane: " << endl
+            << point_L << endl;
+        // cout << "(normal vector) * (vector on plane):          " << N_L[0] * P_L[0] + N_L[1] * P_L[1] + N_L[2] * P_L[2] << endl;
     }
 }

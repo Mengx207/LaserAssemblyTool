@@ -130,11 +130,12 @@ int main(int argc, char* argv[])
 				cam_frame_temp0 = cv::Mat(ptrGrabResult0->GetHeight(), ptrGrabResult0->GetWidth(), CV_8UC3, (uint8_t *) pylonImage0.GetBuffer());
 
 				src = cam_frame_temp0.clone();
+
 				//Test intersection function
-				int N1[3] = {10,8,3};
-				int N2[3] = {2,6,5};
-				int point1[3] = {10,5,5};
-				int point2[3] = {2,2,2};
+				double N1[3] = {10,8,3};
+				double N2[3] = {2,6,5};
+				double point1[3] = {10,5,5};
+				double point2[3] = {2,2,2};
     			//intersection::intersectionLine(N1, N2, point1, point2);
 
 				cv::Point lineStart(400,100);
