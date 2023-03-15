@@ -62,8 +62,10 @@ opencv2/calib3d.hpp
 fstream
 -
 
-/home/lingbo/Documents/GitHub/AssemblyGuidanceTool/laser_dot.cpp
+/home/lingbo/Documents/GitHub/AssemblyGuidanceTool/linkfunctions.cpp
 iostream
+-
+utility
 -
 sstream
 -
@@ -103,8 +105,6 @@ ctime
 -
 include/utility.h
 /home/lingbo/Documents/GitHub/AssemblyGuidanceTool/include/utility.h
-pylon/PylonGUI.h
--
 
 /opt/pylon/include/Base/GCArray.h
 Base/GCTypes.h

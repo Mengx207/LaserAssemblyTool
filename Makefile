@@ -137,6 +137,19 @@ laser_dot/fast:
 .PHONY : laser_dot/fast
 
 #=============================================================================
+# Target rules for targets named linkfunctions
+
+# Build rule for target.
+linkfunctions: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 linkfunctions
+.PHONY : linkfunctions
+
+# fast build rule for target.
+linkfunctions/fast:
+	$(MAKE) -f CMakeFiles/linkfunctions.dir/build.make CMakeFiles/linkfunctions.dir/build
+.PHONY : linkfunctions/fast
+
+#=============================================================================
 # Target rules for targets named get_rvec_tvec
 
 # Build rule for target.
@@ -203,6 +216,33 @@ laser_dot.cpp.s:
 	$(MAKE) -f CMakeFiles/laser_dot.dir/build.make CMakeFiles/laser_dot.dir/laser_dot.cpp.s
 .PHONY : laser_dot.cpp.s
 
+linkfunctions.o: linkfunctions.cpp.o
+
+.PHONY : linkfunctions.o
+
+# target to build an object file
+linkfunctions.cpp.o:
+	$(MAKE) -f CMakeFiles/linkfunctions.dir/build.make CMakeFiles/linkfunctions.dir/linkfunctions.cpp.o
+.PHONY : linkfunctions.cpp.o
+
+linkfunctions.i: linkfunctions.cpp.i
+
+.PHONY : linkfunctions.i
+
+# target to preprocess a source file
+linkfunctions.cpp.i:
+	$(MAKE) -f CMakeFiles/linkfunctions.dir/build.make CMakeFiles/linkfunctions.dir/linkfunctions.cpp.i
+.PHONY : linkfunctions.cpp.i
+
+linkfunctions.s: linkfunctions.cpp.s
+
+.PHONY : linkfunctions.s
+
+# target to generate assembly for a file
+linkfunctions.cpp.s:
+	$(MAKE) -f CMakeFiles/linkfunctions.dir/build.make CMakeFiles/linkfunctions.dir/linkfunctions.cpp.s
+.PHONY : linkfunctions.cpp.s
+
 planes_intersection.o: planes_intersection.cpp.o
 
 .PHONY : planes_intersection.o
@@ -240,6 +280,7 @@ help:
 	@echo "... planes_intersection"
 	@echo "... laser_dot"
 	@echo "... edit_cache"
+	@echo "... linkfunctions"
 	@echo "... get_rvec_tvec"
 	@echo "... get_rvec_tvec.o"
 	@echo "... get_rvec_tvec.i"
@@ -247,6 +288,9 @@ help:
 	@echo "... laser_dot.o"
 	@echo "... laser_dot.i"
 	@echo "... laser_dot.s"
+	@echo "... linkfunctions.o"
+	@echo "... linkfunctions.i"
+	@echo "... linkfunctions.s"
 	@echo "... planes_intersection.o"
 	@echo "... planes_intersection.i"
 	@echo "... planes_intersection.s"

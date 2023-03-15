@@ -254,6 +254,14 @@ namespace laserline
 
     std::pair<Mat,Mat> getRvecTvec()
     {
+        Mat image_dot = imread("images/image_captured.png", IMREAD_GRAYSCALE);
+        Mat image_dot_center(image_dot.rows, image_dot.cols, IMREAD_GRAYSCALE);
+        Mat board_points(1000, 1000, IMREAD_GRAYSCALE);
+
+        if (image_dot.empty())
+        {
+            cout << "Error opening image" << endl;
+        }
         Size patternsize(5, 3); // how to define the size of asymmetric pattern?
         vector<Point2f> centers; // center of feature dots
         SimpleBlobDetector::Params params;
@@ -309,11 +317,11 @@ namespace laserline
         Mat rmatrix;
         Rodrigues(rvec, rmatrix);
         cout << endl << "rmatrix from board to cam: " << endl << rmatrix << endl << endl;
-        std::pair<Mat,Mat>vec(rmatrix,tvec) ;
+        pair<Mat,Mat>vec(rmatrix,tvec) ;
         return vec;
     }
 
-    std::pair<Mat,Mat> targetBoardPlane(Mat rmatrix, Mat tvec)
+    pair<Mat,Mat> targetBoardPlane(Mat rmatrix, Mat tvec)
     {
         vector<double> p_000 
         { tvec.at<double>(0), tvec.at<double>(1), tvec.at<double>(2) };
@@ -322,6 +330,7 @@ namespace laserline
         //One point on the target board in camera frame
         vector<double> p_110 
         { rmatrix.at<double>(0)+rmatrix.at<double>(1)+tvec.at<double>(0), rmatrix.at<double>(3)+rmatrix.at<double>(4)+tvec.at<double>(1), rmatrix.at<double>(6)+rmatrix.at<double>(7)+tvec.at<double>(2) };
+        
         //Normal vector of the target board in camera frame
         vector<double> N_B = {
             p_001[0] - p_000[0],
@@ -339,20 +348,21 @@ namespace laserline
         Mat NormalV_B = Mat(1, 3, CV_64FC1, N_B.data());
         Mat point_B = Mat(1, 3, CV_64FC1, p_110.data());
         Mat point_B_O = Mat(1, 3, CV_64FC1, p_000.data());
-        std::pair<Mat,Mat>target_board_values(NormalV_B,point_B_O);
+        pair<Mat,Mat>target(NormalV_B, point_B_O);
 
-        cout << "The Target Board: " << endl;
-        cout << "origin point: " << endl
-            << point_B_O << endl;
+        cout <<endl<< "The Target Board: " << endl;
         cout << "normal vector: " << endl
             << NormalV_B << endl;
-        cout << "one point on plane: " << endl
-            << point_B << endl;
+        cout << "origin point: " << endl
+            << point_B_O << endl;
+        // cout << "one point on plane: " << endl
+        //     << point_B << endl;
         // cout << "(normal vector) * (vector on plane):         " << N_B[0] * P_B[0] + N_B[1] * P_B[1] + N_B[2] * P_B[2] <<endl<<endl;
-        return target_board_values;
+        cout<<endl<<target.first<<endl<<target.second<<endl;
+        return target;
     }
 
-    std::pair<Mat,Mat> laserPlane()
+    pair<Mat,Mat> laserPlane()
     {
         double val;
         ifstream rmatrix("values/rmatrix_laser.txt");
@@ -402,12 +412,15 @@ namespace laserline
         Mat point_L = Mat(1, 3, CV_64FC1, p_110_L.data());
         Mat point_L_O = Mat(1, 3, CV_64FC1, p_000_L.data());
         cout << "The Laser Plane: " << endl;
-        cout << "origin of laser plane: " << endl
-            << point_L_O << endl;
-        cout << "normal vector of the laser plane: " << endl
+        cout << "normal vector: " << endl
             << NormalV_L << endl;
-        cout << "one point on the laser plane: " << endl
-            << point_L << endl;
+        cout << "origin point: " << endl
+            << point_L_O << endl;
+        // cout << "one point on the laser plane: " << endl
+        //     << point_L << endl;
         // cout << "(normal vector) * (vector on plane):          " << N_L[0] * P_L[0] + N_L[1] * P_L[1] + N_L[2] * P_L[2] << endl;
+        pair<Mat,Mat>laser(NormalV_L, point_L_O);
+        cout<<endl<<laser.first<<endl<<laser.second<<endl;
+        return laser;
     }
 }

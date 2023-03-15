@@ -35,3 +35,11 @@ target_link_libraries( planes_intersection
                        ${pylon_camera_INCLUDE_DIRS}
 
 )
+
+add_executable( linkfunctions linkfunctions.cpp )
+target_link_libraries( linkfunctions
+		       ${OpenCV_LIBS}
+	               ${Pylon_LIBRARIES}
+                       ${pylon_camera_INCLUDE_DIRS}
+
+)

@@ -51,5 +51,6 @@ set(CMAKE_MAKEFILE_PRODUCTS
 set(CMAKE_DEPEND_INFO_FILES
   "CMakeFiles/planes_intersection.dir/DependInfo.cmake"
   "CMakeFiles/laser_dot.dir/DependInfo.cmake"
+  "CMakeFiles/linkfunctions.dir/DependInfo.cmake"
   "CMakeFiles/get_rvec_tvec.dir/DependInfo.cmake"
   )

@@ -139,7 +139,9 @@ CMakeFiles/laser_dot.dir/laser_dot.cpp.o: /opt/pylon/include/pylon/_VideoWriterP
 CMakeFiles/laser_dot.dir/laser_dot.cpp.o: /opt/pylon/include/pylon/api_autoconf.h
 CMakeFiles/laser_dot.dir/laser_dot.cpp.o: /opt/pylon/include/pylon/stdinclude.h
 CMakeFiles/laser_dot.dir/laser_dot.cpp.o: /usr/local/include/opencv4/opencv2/./imgproc/segmentation.hpp
+CMakeFiles/laser_dot.dir/laser_dot.cpp.o: /usr/local/include/opencv4/opencv2/calib3d.hpp
 CMakeFiles/laser_dot.dir/laser_dot.cpp.o: /usr/local/include/opencv4/opencv2/core.hpp
+CMakeFiles/laser_dot.dir/laser_dot.cpp.o: /usr/local/include/opencv4/opencv2/core/affine.hpp
 CMakeFiles/laser_dot.dir/laser_dot.cpp.o: /usr/local/include/opencv4/opencv2/core/base.hpp
 CMakeFiles/laser_dot.dir/laser_dot.cpp.o: /usr/local/include/opencv4/opencv2/core/bufferpool.hpp
 CMakeFiles/laser_dot.dir/laser_dot.cpp.o: /usr/local/include/opencv4/opencv2/core/check.hpp
@@ -169,6 +171,10 @@ CMakeFiles/laser_dot.dir/laser_dot.cpp.o: /usr/local/include/opencv4/opencv2/cor
 CMakeFiles/laser_dot.dir/laser_dot.cpp.o: /usr/local/include/opencv4/opencv2/core/utils/tls.hpp
 CMakeFiles/laser_dot.dir/laser_dot.cpp.o: /usr/local/include/opencv4/opencv2/core/version.hpp
 CMakeFiles/laser_dot.dir/laser_dot.cpp.o: /usr/local/include/opencv4/opencv2/core/vsx_utils.hpp
+CMakeFiles/laser_dot.dir/laser_dot.cpp.o: /usr/local/include/opencv4/opencv2/features2d.hpp
+CMakeFiles/laser_dot.dir/laser_dot.cpp.o: /usr/local/include/opencv4/opencv2/flann/config.h
+CMakeFiles/laser_dot.dir/laser_dot.cpp.o: /usr/local/include/opencv4/opencv2/flann/defines.h
+CMakeFiles/laser_dot.dir/laser_dot.cpp.o: /usr/local/include/opencv4/opencv2/flann/miniflann.hpp
 CMakeFiles/laser_dot.dir/laser_dot.cpp.o: /usr/local/include/opencv4/opencv2/highgui.hpp
 CMakeFiles/laser_dot.dir/laser_dot.cpp.o: /usr/local/include/opencv4/opencv2/highgui/highgui.hpp
 CMakeFiles/laser_dot.dir/laser_dot.cpp.o: /usr/local/include/opencv4/opencv2/imgcodecs.hpp
