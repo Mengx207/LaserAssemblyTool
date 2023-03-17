@@ -34,21 +34,103 @@ using namespace std;
 using namespace cv;
 using namespace GENAPI_NAMESPACE;
 
+// typedef struct laser Struct;
 
 int main(int argc, char **argv)
 {
-    // Find planes
+    // gain rmatrix and tvec from target board to cam
     pair<Mat,Mat>vec = laserline::getRvecTvec();
-    cout<<vec.first<<endl<<vec.second<<endl;
-    
-    pair<Mat,Mat>laser = laserline::laserPlane();
-    cout<<laser.first<<endl<<laser.second<<endl;
+    // find laser plane in cam frame
+    double val;
+    // read laser 1
+    ifstream rmatrix_1("values/rmatrix_laser_1.txt");
+    vector<double> rmatrix_laser_1_values;
+    while (rmatrix_1 >> val)
+    {
+        rmatrix_laser_1_values.push_back(val);
+    }
+    ifstream tvecL_1("values/tvec_laser_1.txt");
+    vector<double> tvec_laser_1_values;
+    while (tvecL_1 >> val)
+    {
+        tvec_laser_1_values.push_back(val);
+    }
+    // read laser 2
+    ifstream rmatrix_2("values/rmatrix_laser_2.txt");
+    vector<double> rmatrix_laser_2_values;
+    while (rmatrix_2 >> val)
+    {
+        rmatrix_laser_2_values.push_back(val);
+    }
+    ifstream tvecL_2("values/tvec_laser_2.txt");
+    vector<double> tvec_laser_2_values;
+    while (tvecL_2 >> val)
+    {
+        tvec_laser_2_values.push_back(val);
+    }
+    // read laser 3
+    ifstream rmatrix_3("values/rmatrix_laser_3.txt");
+    vector<double> rmatrix_laser_3_values;
+    while (rmatrix_3 >> val)
+    {
+        rmatrix_laser_3_values.push_back(val);
+    }
+    ifstream tvecL_3("values/tvec_laser_3.txt");
+    vector<double> tvec_laser_3_values;
+    while (tvecL_3 >> val)
+    {
+        tvec_laser_3_values.push_back(val);
+    }
+    pair<vector<double>,vector<double>>laser_1 = laserline::laserPlane(rmatrix_laser_1_values, tvec_laser_1_values);
+    pair<vector<double>,vector<double>>laser_2 = laserline::laserPlane(rmatrix_laser_2_values, tvec_laser_2_values);
+    pair<vector<double>,vector<double>>laser_3 = laserline::laserPlane(rmatrix_laser_3_values, tvec_laser_3_values);
 
-    pair<Mat,Mat>target = laserline::targetBoardPlane(vec.first, vec.second);
-    cout<<target.first<<endl<<target.second<<endl;
+    // find target board plane in cam frame
+    pair<vector<double>,vector<double>>target = laserline::targetBoardPlane(vec.first, vec.second);
+    // find intersection line between target board plane and laser plane in cam frame
+    laserline::intersectionLine(target.first, laser_1.first, target.second, laser_1.second);
+    laserline::intersectionLine(target.first, laser_2.first, target.second, laser_2.second);
+    laserline::intersectionLine(target.first, laser_3.first, target.second, laser_3.second);
 
-    Mat N_B = target.first;
-    Mat O_B = target.second;
+    Mat img (1000,1000, CV_8UC3);
+    std::vector<cv::Point2d> laserPoints_1, laserPoints_2, laserPoints_3;
 
+    for(int t=-2000; t<2000;)
+    {
+        t = t+40;
+        Point2d points((69.2212+(-0.499939)*t)+500, -(-121.744+0.850974*t)+500);
+        // Point2d points(37.6648+t*-0.499939+500, -((-66.2438+t*0.850974))+500);
+        // cout<<"point: "<<points<<endl;
+        laserPoints_1.push_back(points);
+    }
+
+    for(int t=-2000; t<2000;)
+    {
+        t = t+40;
+        Point2d points((801.688+t*-0.999878)+500, -(1.20428e-09+t*-0.00265952)+500);
+        laserPoints_2.push_back(points);
+    }
+
+    for(int t=-2000; t<2000;)
+    {
+        t = t+40;
+        Point2d points((-1.87643e-10+t*-1.68641e-12)+500, -(-69.5095+t*0.984156)+500);
+        laserPoints_3.push_back(points);
+    }
+
+    // draw circles on each points
+    for (int n=0; n<100;)
+    {
+        cv::circle(img,laserPoints_1[n],5,cv::Scalar(0,0,255),-1,8,0);
+        n = n+10;
+    }
+    // draw a line through points
+    int thickness = 2;
+    int lineType = cv::LINE_8;
+    line( img, laserPoints_1[0], laserPoints_1[90], cv::Scalar( 0, 0, 255 ), thickness, lineType );
+    line( img, laserPoints_2[0], laserPoints_2[90], cv::Scalar( 0, 0, 255 ), thickness, lineType );
+    line( img, laserPoints_3[0], laserPoints_3[90], cv::Scalar( 0, 0, 255 ), thickness, lineType );
+    cv::imshow("Image",img);
+    waitKey();
     return EXIT_SUCCESS;
 }
