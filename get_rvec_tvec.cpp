@@ -56,10 +56,11 @@ int main(int argc, char **argv)
     Size2i board_shape(5, 3); // 5X3 corners
     double squareSize = 4.5; // 10% square size
     vector<Point3f> boardPoints = createChessBoardCorners(board_shape, squareSize);
+
     vector<Point2f> boardPoints_2D;
     for (int n = 0; n < boardPoints.size(); n++)
     {
-        boardPoints_2D.push_back(Point2f(10 * boardPoints[n].x + 400, -(10 * boardPoints[n].y) + 200)); // to show the target board feature dot, reverse y axis, zoom and shift to center of image
+        boardPoints_2D.push_back(Point2f( 10*(boardPoints[n].x + 2*squareSize), 10*(boardPoints[n].y + squareSize) )); // to show the target board feature dot, reverse y axis, zoom and shift to center of image
     }
     drawChessboardCorners(board_points, board_shape, Mat(boardPoints_2D), patternfound);
     cout << "target board points: " << endl
@@ -247,7 +248,7 @@ vector<Point3f> createChessBoardCorners(Size2i board_shape, double squareSize)
     {
         for( int j = 0; j < board_shape.width; j++ )
         {
-            centered_board_corners.push_back(Point3f((j*squareSize), (i*squareSize), 0.0));
+            centered_board_corners.push_back(Point3f((j*squareSize)-2*squareSize, (i*squareSize)-squareSize, 0.0));
         }
     }
     return centered_board_corners;

@@ -25,7 +25,6 @@
 using namespace cv;
 using namespace std;
 
-
 namespace laserdot
 {
     //Count bright pixel
@@ -186,71 +185,11 @@ namespace laserline
         {
             for( int j = 0; j < board_shape.width; j++ )
             {
-                centered_board_corners.push_back(Point3f((j*squareSize), (i*squareSize), 0.0));
+                centered_board_corners.push_back(Point3f((j*squareSize)-2*squareSize, (i*squareSize)-squareSize, 0.0));
             }
         }
         return centered_board_corners;
     }
-
-    int dotProduct(double vect_A[], double vect_B[])
-    {
-        double product = 0;
-        for (int i = 0; i < 3; i++)
-        {
-            product = product + vect_A[i] * vect_B[i];
-        }
-        return product;
-    }
- 
-    // cross product of two vector array.
-    void crossProduct(double vect_A[], double vect_B[], double cross_P[])
-    
-    {
-        cross_P[0] = vect_A[1] * vect_B[2] - vect_A[2] * vect_B[1];
-        cross_P[1] = vect_A[2] * vect_B[0] - vect_A[0] * vect_B[2];
-        cross_P[2] = vect_A[0] * vect_B[1] - vect_A[1] * vect_B[0];
-    }
-
-    void intersectionLine(double N_B[3], double N_L[3], double point_B[3], double point_L[3])
-    {
-        double a1,b1,c1,a2,b2,c2;
-        a1 = N_B[0];
-        b1 = N_B[1];
-        c1 = N_B[2];
-        a2 = N_L[0];
-        b2 = N_L[1];
-        c2 = N_L[2];	
-        double cross_P[3];
-        //find the plane equations
-        double x,y,z;
-        cout<<"Plane1 equation: "<<a1<<"(x-"<<point_B[0]<<")+"<<b1<<"*(y-"<<point_B[1]<<")+"<<c1<<"*(z-"<<point_B[2]<<") = 0"<<endl;
-        cout<<"Plane2 equation: "<<a2<<"(x-"<<point_L[0]<<")+"<<b2<<"*(y-"<<point_L[1]<<")+"<<c2<<"*(z-"<<point_L[2]<<") = 0"<<endl;
-        // dotProduct function call
-        cout << "Dot product:";
-        cout << dotProduct(N_B, N_L) << endl;
-        // crossProduct function call
-        crossProduct(N_B, N_L, cross_P);
-        cout<<"Nomal vector cross product: v=("<<cross_P[0]<<","<<cross_P[1]<<","<<cross_P[2]<<")";
-        // To find a point on intersection line, use two plane equations and set z=0
-        c1 = a1*point_B[0]+b1*point_B[0]+c1*point_B[0];
-        c2 = a2*point_L[0]+b2*point_L[0]+c2*point_L[0];
-        x = (c1*b2-b1*c2)/(a1*b2-b1*a2);
-        y = (a1*c2-c1*a2)/(a1*b2-b1*a2);
-        cout<<endl<<"One point on intersection line: r0 = ("<<x<<","<<y<<",0)"<<endl;
-
-        double a,b,c;
-        char t;
-        a = x+t*cross_P[0];
-        b = y+t*cross_P[1];
-        c = t*cross_P[2];
-        cout<<"Intersection line(vector equation) of two planes:"<<endl<<"r= a*i+b*j+c*k"<<endl;
-        cout<<"a="<<x<<"+t*"<<cross_P[0]<<endl;
-        cout<<"b="<<y<<"+t*"<<cross_P[1]<<endl;
-        cout<<"c=t*"<<cross_P[2]<<endl;
-        cout<<"r=("<<x<<"+t*"<<cross_P[0]<<")*i+("<<y<<"+t*"<<cross_P[1]<<")*j+("<<cross_P[2]<<")*k"<<endl;
-
-    }
-
 
     std::pair<Mat,Mat> getRvecTvec()
     {
@@ -321,7 +260,7 @@ namespace laserline
         return vec;
     }
 
-    pair<Mat,Mat> targetBoardPlane(Mat rmatrix, Mat tvec)
+    std::pair<vector<double>,vector<double>> targetBoardPlane(Mat rmatrix, Mat tvec)
     {
         vector<double> p_000 
         { tvec.at<double>(0), tvec.at<double>(1), tvec.at<double>(2) };
@@ -358,25 +297,12 @@ namespace laserline
         // cout << "one point on plane: " << endl
         //     << point_B << endl;
         // cout << "(normal vector) * (vector on plane):         " << N_B[0] * P_B[0] + N_B[1] * P_B[1] + N_B[2] * P_B[2] <<endl<<endl;
-        cout<<endl<<target.first<<endl<<target.second<<endl;
-        return target;
+        pair<vector<double>,vector<double>> target_board_values(N_B,p_000);
+        return target_board_values;
     }
 
-    pair<Mat,Mat> laserPlane()
+    pair<vector<double>,vector<double>> laserPlane(vector<double> rmatrix_laser_values, vector<double> tvec_laser_values)
     {
-        double val;
-        ifstream rmatrix("values/rmatrix_laser.txt");
-        vector<double> rmatrix_laser_values;
-        while (rmatrix >> val)
-        {
-            rmatrix_laser_values.push_back(val);
-        }
-        ifstream tvecL("values/tvec_laser.txt");
-        vector<double> tvec_laser_values;
-        while (tvecL >> val)
-        {
-            tvec_laser_values.push_back(val);
-        }
         Mat rmatrix_L = Mat(3, 3, CV_64FC1, rmatrix_laser_values.data());
         Mat tvec_L = Mat(3, 1, CV_64FC1, tvec_laser_values.data());
 
@@ -420,7 +346,69 @@ namespace laserline
         //     << point_L << endl;
         // cout << "(normal vector) * (vector on plane):          " << N_L[0] * P_L[0] + N_L[1] * P_L[1] + N_L[2] * P_L[2] << endl;
         pair<Mat,Mat>laser(NormalV_L, point_L_O);
-        cout<<endl<<laser.first<<endl<<laser.second<<endl;
-        return laser;
+        // cout<<endl<<laser.first<<endl<<laser.second<<endl;
+        pair<vector<double>,vector<double>> laser_plane_values(N_L,p_000_L);
+
+        return laser_plane_values;
     }
+
+    int dotProduct(double vect_A[], double vect_B[])
+    {
+        double product = 0;
+        for (int i = 0; i < 3; i++)
+        {
+            product = product + vect_A[i] * vect_B[i];
+        }
+        return product;
+    }
+ 
+    // cross product of two vector array.
+    vector<double> crossProduct(vector<double> vect_A, vector<double> vect_B)
+    
+    {
+        vector<double> cross_P;
+        cross_P.push_back(vect_A[1] * vect_B[2] - vect_A[2] * vect_B[1]);
+        cross_P.push_back(vect_A[2] * vect_B[0] - vect_A[0] * vect_B[2]);
+        cross_P.push_back(vect_A[0] * vect_B[1] - vect_A[1] * vect_B[0]);
+        return cross_P;
+    }
+
+    // void intersectionLine(double N_B[3], double N_L[3], double point_B[3], double point_L[3])
+    void intersectionLine(vector<double> N_B, vector<double> N_L, vector<double> point_B, vector<double> point_L)
+    {
+        double a1,b1,c1,a2,b2,c2;
+        a1 = N_B[0];
+        b1 = N_B[1];
+        c1 = N_B[2];
+        a2 = N_L[0];
+        b2 = N_L[1];
+        c2 = N_L[2];	
+        vector<double> cross_P;
+        //find the plane equations
+        double x,y,z;
+        cout<<endl<<"Target board plane equation: "<<a1<<"(x-"<<point_B[0]<<")+"<<b1<<"*(y-"<<point_B[1]<<")+"<<c1<<"*(z-"<<point_B[2]<<") = 0"<<endl;
+        cout<<"Laser plane equation: "<<a2<<"(x-"<<point_L[0]<<")+"<<b2<<"*(y-"<<point_L[1]<<")+"<<c2<<"*(z-"<<point_L[2]<<") = 0"<<endl;
+        // cout << dotProduct(N_B, N_L) << endl;
+        cross_P = crossProduct(N_B, N_L);
+        cout<<"Nomal vector cross product: v=("<<cross_P[0]<<","<<cross_P[1]<<","<<cross_P[2]<<")";
+        // To find a point on intersection line, use two plane equations and set z=0
+        c1 = a1*point_B[0]+b1*point_B[0]+c1*point_B[0];
+        c2 = a2*point_L[0]+b2*point_L[0]+c2*point_L[0];
+        x = (c1*b2-b1*c2)/(a1*b2-b1*a2);
+        y = (a1*c2-c1*a2)/(a1*b2-b1*a2);
+        cout<<endl<<"One point on intersection line: r0 = ("<<x<<","<<y<<",0)"<<endl;
+
+        double a,b,c;
+        char t;
+        a = x+t*cross_P[0];
+        b = y+t*cross_P[1];
+        c = t*cross_P[2];
+        cout<<"Intersection line(vector equation) of two planes:"<<endl<<"r= a*i+b*j+c*k"<<endl;
+        cout<<"a="<<x<<"+t*"<<cross_P[0]<<endl;
+        cout<<"b="<<y<<"+t*"<<cross_P[1]<<endl;
+        cout<<"c=t*"<<cross_P[2]<<endl;
+        cout<<"r=("<<x<<"+t*"<<cross_P[0]<<")*i+("<<y<<"+t*"<<cross_P[1]<<")*j+("<<cross_P[2]<<"*t)*k"<<endl;
+
+    }
+
 }
