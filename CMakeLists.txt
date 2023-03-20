@@ -36,8 +36,16 @@ target_link_libraries( planes_intersection
 
 )
 
-add_executable( linkfunctions linkfunctions.cpp )
-target_link_libraries( linkfunctions
+add_executable( calculated_laser_line calculated_laser_line.cpp )
+target_link_libraries( calculated_laser_line
+		       ${OpenCV_LIBS}
+	               ${Pylon_LIBRARIES}
+                       ${pylon_camera_INCLUDE_DIRS}
+
+)
+
+add_executable( AG_DEMO AG_DEMO.cpp )
+target_link_libraries( AG_DEMO
 		       ${OpenCV_LIBS}
 	               ${Pylon_LIBRARIES}
                        ${pylon_camera_INCLUDE_DIRS}

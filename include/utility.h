@@ -373,8 +373,12 @@ namespace laserline
         return cross_P;
     }
 
-    // void intersectionLine(double N_B[3], double N_L[3], double point_B[3], double point_L[3])
-    void intersectionLine(vector<double> N_B, vector<double> N_L, vector<double> point_B, vector<double> point_L)
+    
+    struct intersection{
+        double x,y;
+        double a,b,c;
+    };
+    intersection intersectionLine(vector<double> N_B, vector<double> N_L, vector<double> point_B, vector<double> point_L)
     {
         double a1,b1,c1,a2,b2,c2;
         a1 = N_B[0];
@@ -408,6 +412,15 @@ namespace laserline
         cout<<"b="<<y<<"+t*"<<cross_P[1]<<endl;
         cout<<"c=t*"<<cross_P[2]<<endl;
         cout<<"r=("<<x<<"+t*"<<cross_P[0]<<")*i+("<<y<<"+t*"<<cross_P[1]<<")*j+("<<cross_P[2]<<"*t)*k"<<endl;
+        intersection line;
+        line.x = x;
+        line.a = cross_P[0];
+        line.y = y;
+        line.b = cross_P[1];
+        line.c = cross_P[2];
+        return line;
+
+        // return x, cross_P[0], y, cross_P[1], cross_P[2];
 
     }
 

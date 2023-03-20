@@ -33,14 +33,16 @@ using namespace Pylon;
 using namespace std;
 using namespace cv;
 using namespace GENAPI_NAMESPACE;
-
+// struct intersection{
+//     double x,y;
+//     double a,b,c;
+// };
 // typedef struct laser Struct;
 
 int main(int argc, char **argv)
 {
     // gain rmatrix and tvec from target board to cam
     pair<Mat,Mat>vec = laserline::getRvecTvec();
-    cin>>"pick one laser: ">>;
     string path_rmatrix = "values/rmatrix_laser_1.txt";
     string path_tvec = "values/tvec_laser_1.txt";
 
@@ -92,10 +94,12 @@ int main(int argc, char **argv)
 
     // find target board plane in cam frame
     pair<vector<double>,vector<double>>target = laserline::targetBoardPlane(vec.first, vec.second);
+
     // find intersection line between target board plane and laser plane in cam frame
-    laserline::intersectionLine(target.first, laser_1.first, target.second, laser_1.second);
-    laserline::intersectionLine(target.first, laser_2.first, target.second, laser_2.second);
-    laserline::intersectionLine(target.first, laser_3.first, target.second, laser_3.second);
+    laserline::intersection line1, line2, line3;
+    line1 = laserline::intersectionLine(target.first, laser_1.first, target.second, laser_1.second);
+    line2 = laserline::intersectionLine(target.first, laser_2.first, target.second, laser_2.second);
+    line3 = laserline::intersectionLine(target.first, laser_3.first, target.second, laser_3.second);
 
     Mat img (1000,1000, CV_8UC3);
     std::vector<cv::Point2d> laserPoints_1, laserPoints_2, laserPoints_3;
@@ -103,8 +107,8 @@ int main(int argc, char **argv)
     for(int t=-2000; t<2000;)
     {
         t = t+40;
-        Point2d points((69.2212+(-0.499939)*t)+500, -(-121.744+0.850974*t)+500);
-        // Point2d points(37.6648+t*-0.499939+500, -((-66.2438+t*0.850974))+500);
+        // Point2d points((69.2212+(-0.499939)*t)+500, -(-121.744+0.850974*t)+500);
+        Point2d points((line1.x+line1.a*t)+500, -(line1.y+line1.b*t)+500);
         // cout<<"point: "<<points<<endl;
         laserPoints_1.push_back(points);
     }
@@ -112,14 +116,14 @@ int main(int argc, char **argv)
     for(int t=-2000; t<2000;)
     {
         t = t+40;
-        Point2d points((801.688+t*-0.999878)+500, -(1.20428e-09+t*-0.00265952)+500);
+        Point2d points((line2.x+line2.a*t)+500, -(line2.y+line2.b*t)+500);
         laserPoints_2.push_back(points);
     }
 
     for(int t=-2000; t<2000;)
     {
         t = t+40;
-        Point2d points((-1.87643e-10+t*-1.68641e-12)+500, -(-69.5095+t*0.984156)+500);
+        Point2d points((line3.x+line3.a*t)+500, -(line3.y+line3.b*t)+500);
         laserPoints_3.push_back(points);
     }
 

@@ -111,6 +111,19 @@ depend:
 .PHONY : depend
 
 #=============================================================================
+# Target rules for targets named get_rvec_tvec
+
+# Build rule for target.
+get_rvec_tvec: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 get_rvec_tvec
+.PHONY : get_rvec_tvec
+
+# fast build rule for target.
+get_rvec_tvec/fast:
+	$(MAKE) -f CMakeFiles/get_rvec_tvec.dir/build.make CMakeFiles/get_rvec_tvec.dir/build
+.PHONY : get_rvec_tvec/fast
+
+#=============================================================================
 # Target rules for targets named planes_intersection
 
 # Build rule for target.
@@ -137,30 +150,84 @@ laser_dot/fast:
 .PHONY : laser_dot/fast
 
 #=============================================================================
-# Target rules for targets named linkfunctions
+# Target rules for targets named AG_DEMO
 
 # Build rule for target.
-linkfunctions: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 linkfunctions
-.PHONY : linkfunctions
+AG_DEMO: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 AG_DEMO
+.PHONY : AG_DEMO
 
 # fast build rule for target.
-linkfunctions/fast:
-	$(MAKE) -f CMakeFiles/linkfunctions.dir/build.make CMakeFiles/linkfunctions.dir/build
-.PHONY : linkfunctions/fast
+AG_DEMO/fast:
+	$(MAKE) -f CMakeFiles/AG_DEMO.dir/build.make CMakeFiles/AG_DEMO.dir/build
+.PHONY : AG_DEMO/fast
 
 #=============================================================================
-# Target rules for targets named get_rvec_tvec
+# Target rules for targets named calculated_laser_line
 
 # Build rule for target.
-get_rvec_tvec: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 get_rvec_tvec
-.PHONY : get_rvec_tvec
+calculated_laser_line: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 calculated_laser_line
+.PHONY : calculated_laser_line
 
 # fast build rule for target.
-get_rvec_tvec/fast:
-	$(MAKE) -f CMakeFiles/get_rvec_tvec.dir/build.make CMakeFiles/get_rvec_tvec.dir/build
-.PHONY : get_rvec_tvec/fast
+calculated_laser_line/fast:
+	$(MAKE) -f CMakeFiles/calculated_laser_line.dir/build.make CMakeFiles/calculated_laser_line.dir/build
+.PHONY : calculated_laser_line/fast
+
+AG_DEMO.o: AG_DEMO.cpp.o
+
+.PHONY : AG_DEMO.o
+
+# target to build an object file
+AG_DEMO.cpp.o:
+	$(MAKE) -f CMakeFiles/AG_DEMO.dir/build.make CMakeFiles/AG_DEMO.dir/AG_DEMO.cpp.o
+.PHONY : AG_DEMO.cpp.o
+
+AG_DEMO.i: AG_DEMO.cpp.i
+
+.PHONY : AG_DEMO.i
+
+# target to preprocess a source file
+AG_DEMO.cpp.i:
+	$(MAKE) -f CMakeFiles/AG_DEMO.dir/build.make CMakeFiles/AG_DEMO.dir/AG_DEMO.cpp.i
+.PHONY : AG_DEMO.cpp.i
+
+AG_DEMO.s: AG_DEMO.cpp.s
+
+.PHONY : AG_DEMO.s
+
+# target to generate assembly for a file
+AG_DEMO.cpp.s:
+	$(MAKE) -f CMakeFiles/AG_DEMO.dir/build.make CMakeFiles/AG_DEMO.dir/AG_DEMO.cpp.s
+.PHONY : AG_DEMO.cpp.s
+
+calculated_laser_line.o: calculated_laser_line.cpp.o
+
+.PHONY : calculated_laser_line.o
+
+# target to build an object file
+calculated_laser_line.cpp.o:
+	$(MAKE) -f CMakeFiles/calculated_laser_line.dir/build.make CMakeFiles/calculated_laser_line.dir/calculated_laser_line.cpp.o
+.PHONY : calculated_laser_line.cpp.o
+
+calculated_laser_line.i: calculated_laser_line.cpp.i
+
+.PHONY : calculated_laser_line.i
+
+# target to preprocess a source file
+calculated_laser_line.cpp.i:
+	$(MAKE) -f CMakeFiles/calculated_laser_line.dir/build.make CMakeFiles/calculated_laser_line.dir/calculated_laser_line.cpp.i
+.PHONY : calculated_laser_line.cpp.i
+
+calculated_laser_line.s: calculated_laser_line.cpp.s
+
+.PHONY : calculated_laser_line.s
+
+# target to generate assembly for a file
+calculated_laser_line.cpp.s:
+	$(MAKE) -f CMakeFiles/calculated_laser_line.dir/build.make CMakeFiles/calculated_laser_line.dir/calculated_laser_line.cpp.s
+.PHONY : calculated_laser_line.cpp.s
 
 get_rvec_tvec.o: get_rvec_tvec.cpp.o
 
@@ -216,33 +283,6 @@ laser_dot.cpp.s:
 	$(MAKE) -f CMakeFiles/laser_dot.dir/build.make CMakeFiles/laser_dot.dir/laser_dot.cpp.s
 .PHONY : laser_dot.cpp.s
 
-linkfunctions.o: linkfunctions.cpp.o
-
-.PHONY : linkfunctions.o
-
-# target to build an object file
-linkfunctions.cpp.o:
-	$(MAKE) -f CMakeFiles/linkfunctions.dir/build.make CMakeFiles/linkfunctions.dir/linkfunctions.cpp.o
-.PHONY : linkfunctions.cpp.o
-
-linkfunctions.i: linkfunctions.cpp.i
-
-.PHONY : linkfunctions.i
-
-# target to preprocess a source file
-linkfunctions.cpp.i:
-	$(MAKE) -f CMakeFiles/linkfunctions.dir/build.make CMakeFiles/linkfunctions.dir/linkfunctions.cpp.i
-.PHONY : linkfunctions.cpp.i
-
-linkfunctions.s: linkfunctions.cpp.s
-
-.PHONY : linkfunctions.s
-
-# target to generate assembly for a file
-linkfunctions.cpp.s:
-	$(MAKE) -f CMakeFiles/linkfunctions.dir/build.make CMakeFiles/linkfunctions.dir/linkfunctions.cpp.s
-.PHONY : linkfunctions.cpp.s
-
 planes_intersection.o: planes_intersection.cpp.o
 
 .PHONY : planes_intersection.o
@@ -277,20 +317,24 @@ help:
 	@echo "... clean"
 	@echo "... depend"
 	@echo "... rebuild_cache"
+	@echo "... get_rvec_tvec"
+	@echo "... edit_cache"
 	@echo "... planes_intersection"
 	@echo "... laser_dot"
-	@echo "... edit_cache"
-	@echo "... linkfunctions"
-	@echo "... get_rvec_tvec"
+	@echo "... AG_DEMO"
+	@echo "... calculated_laser_line"
+	@echo "... AG_DEMO.o"
+	@echo "... AG_DEMO.i"
+	@echo "... AG_DEMO.s"
+	@echo "... calculated_laser_line.o"
+	@echo "... calculated_laser_line.i"
+	@echo "... calculated_laser_line.s"
 	@echo "... get_rvec_tvec.o"
 	@echo "... get_rvec_tvec.i"
 	@echo "... get_rvec_tvec.s"
 	@echo "... laser_dot.o"
 	@echo "... laser_dot.i"
 	@echo "... laser_dot.s"
-	@echo "... linkfunctions.o"
-	@echo "... linkfunctions.i"
-	@echo "... linkfunctions.s"
 	@echo "... planes_intersection.o"
 	@echo "... planes_intersection.i"
 	@echo "... planes_intersection.s"
