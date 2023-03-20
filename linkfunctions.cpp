@@ -40,10 +40,15 @@ int main(int argc, char **argv)
 {
     // gain rmatrix and tvec from target board to cam
     pair<Mat,Mat>vec = laserline::getRvecTvec();
+    cin>>"pick one laser: ">>;
+    string path_rmatrix = "values/rmatrix_laser_1.txt";
+    string path_tvec = "values/tvec_laser_1.txt";
+
     // find laser plane in cam frame
     double val;
     // read laser 1
-    ifstream rmatrix_1("values/rmatrix_laser_1.txt");
+    // ifstream rmatrix_1("values/rmatrix_laser_1.txt");
+    ifstream rmatrix_1(path_rmatrix);
     vector<double> rmatrix_laser_1_values;
     while (rmatrix_1 >> val)
     {
