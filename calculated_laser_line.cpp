@@ -63,26 +63,26 @@ int main(int argc, char **argv)
         tvec_laser_1_values.push_back(val);
     }
     // read laser 2
-    ifstream rmatrix_2("values/rmatrix_laser_4.txt");
+    ifstream rmatrix_2("values/rmatrix_laser_2.txt");
     vector<double> rmatrix_laser_2_values;
     while (rmatrix_2 >> val)
     {
         rmatrix_laser_2_values.push_back(val);
     }
-    ifstream tvecL_2("values/tvec_laser_4.txt");
+    ifstream tvecL_2("values/tvec_laser_2.txt");
     vector<double> tvec_laser_2_values;
     while (tvecL_2 >> val)
     {
         tvec_laser_2_values.push_back(val);
     }
     // read laser 3
-    ifstream rmatrix_3("values/rmatrix_laser_5.txt");
+    ifstream rmatrix_3("values/rmatrix_laser_3.txt");
     vector<double> rmatrix_laser_3_values;
     while (rmatrix_3 >> val)
     {
         rmatrix_laser_3_values.push_back(val);
     }
-    ifstream tvecL_3("values/tvec_laser_5.txt");
+    ifstream tvecL_3("values/tvec_laser_3.txt");
     vector<double> tvec_laser_3_values;
     while (tvecL_3 >> val)
     {
@@ -150,8 +150,10 @@ int main(int argc, char **argv)
     interPoint1 = laserline::intersectionPoint(laser_1.P0, laser_1.C_L, target.first, target.second);
 	interPoint2 = laserline::intersectionPoint(laser_2.P0, laser_2.C_L, target.first, target.second);
 	interPoint3 = laserline::intersectionPoint(laser_3.P0, laser_3.C_L, target.first, target.second);
-	// cv::circle( img, Point2d(interPoint1.x+720, -interPoint1.y+540), 5, cv::Scalar(0,0,255), -1, 8, 0 );
-	// cv::circle( img, Point2d(interPoint2.x+720, -interPoint2.y+540), 5, cv::Scalar(0,0,255), -1, 8, 0 );
+	cv::circle( img, Point2d(interPoint1.x+720, -interPoint1.y+540), 5, cv::Scalar(255,0,255), -1, 8, 0 );
+	cv::circle( img, Point2d(interPoint2.x+720, -interPoint2.y+540), 5, cv::Scalar(0,255,0), -1, 8, 0 );
+    // cv::circle( img, Point2d(interPoint3.x+720, -interPoint3.y+540), 5, cv::Scalar(0,255,0), -1, 8, 0 );
+    cout<<endl<<"intersection point: "<< Point2d(interPoint1.x+720, -interPoint1.y+540) << endl<<endl;
 	cv::circle( img, Point2d(720, 540), 5, cv::Scalar(0,0,255), -1, 8, 0 );
     cv::imshow("Image",img);
     waitKey();

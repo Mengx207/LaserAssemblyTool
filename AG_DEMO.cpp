@@ -196,9 +196,8 @@ int main(int argc, char* argv[])
 			// laserdot::CalculatedLine( src, lineStart, lineEnd );
 			Point3f interPoint1, interPoint2, interPoint3;
 			interPoint1 = laserline::intersectionPoint(laser_1.P0, laser_1.C_L, target.first, target.second);
-			cout<<endl<<interPoint1<<endl;
+			//cout<<endl<<interPoint1<<endl;
 			// cv::circle( src, Point2d(interPoint1.x+720,-interPoint1.y+540), 5, cv::Scalar(0,0,255), -1, 8, 0 );
-			cv::circle( src, Point2d(720,540), 5, cv::Scalar(0,0,255), -1, 8, 0 );
 			
 		//=========================================================================================================================================================================
 
@@ -206,7 +205,7 @@ int main(int argc, char* argv[])
 						cv::cvtColor(src, img_grey, cv::COLOR_BGR2GRAY);
 						cv::Mat img_grey_filtered;
 						cv::threshold(img_grey,img_grey_filtered,250,255,cv::THRESH_OTSU||cv::THRESH_TRIANGLE);	
-
+						cv::circle( src, Point2d(720,540), 5, cv::Scalar(0,0,255), -1, 8, 0 );
 						laserdot::CalculatedLine( src, line_1_Start, line_1_End );
 						// Number of non_zero pixel
 						int non_zero = laserdot::NonZero(img_grey_filtered);
@@ -251,9 +250,9 @@ int main(int argc, char* argv[])
 						cv::Point sum  = std::accumulate(center_list.begin(), center_list.end(), cv::Point(0,0));
 						center_avg = sum*(1.0/center_total);
 						//center_avg = sum*(1.0/200);
-						cout<<"Average center: "<< center_avg<<endl;
+						// cout<<"Average center: "<< center_avg<<endl;
 						sleep(0.1);
-						cv::circle( img_grey_filtered, center_avg, 3, cv::Scalar(255,0,0), -1, 8, 0 );
+						// cv::circle( img_grey_filtered, center_avg, 3, cv::Scalar(255,0,0), -1, 8, 0 );
 						cv::circle( src, center_avg, 3, cv::Scalar(255,100,0), -1, 8, 0 );
 
 						// std::pair<double,double>dist = laserdot::DotToLine(src, line_1_Start, line_1_End, center_avg, Point2d(interPoint1.x+720,-interPoint1.y+540));
@@ -268,14 +267,14 @@ int main(int argc, char* argv[])
 				else
 				{
 					last_min_size = min_size;
-					cout<<"last min size: "<<last_min_size<<endl;
+					//cout<<"last min size: "<<last_min_size<<endl;
 					fill_n(size_array,10,0);
 					center_total = 0;
 					center_list.clear();
 					//fill(center_list.begin(), center_list.end(), cv::Point(0,0));
 				}
 				laserdot::HMI(src, size_avg, min_size, non_zero, nom_distance, center_distance);
-				laserdot::GreenLight(src, last_min_size, size_avg, nom_distance, center_distance);
+				//laserdot::GreenLight(src, last_min_size, size_avg, nom_distance, center_distance);
 
 				cv::imshow("img_grey_filtered", img_grey_filtered);	
 				cv::imshow("source window", src);							

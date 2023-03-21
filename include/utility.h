@@ -104,12 +104,12 @@ namespace laserdot
         cv::putText(img, "Laser Focus:", cv::Point(10, 20), cv::FONT_HERSHEY_SIMPLEX, 0.8, cv::Scalar(255, 255, 255),2);
         cv::putText(img, "Laser Dot Size: "+size_print, cv::Point(10, 50), cv::FONT_HERSHEY_SIMPLEX, 0.8, cv::Scalar(255, 255, 255),2);
         cv::putText(img, "Last Dot Size: "+min_size_print, cv::Point(10, 80), cv::FONT_HERSHEY_SIMPLEX, 0.8, cv::Scalar(255, 255, 255),2);
-        cv::putText(img, "Laser Focus Status: ", cv::Point(10, 120), cv::FONT_HERSHEY_SIMPLEX, 0.8, cv::Scalar(255, 255, 255),2);
+        //cv::putText(img, "Laser Focus Status: ", cv::Point(10, 120), cv::FONT_HERSHEY_SIMPLEX, 0.8, cv::Scalar(255, 255, 255),2);
 
         cv::putText(img, "Laser Dot Location:", cv::Point(500, 20), cv::FONT_HERSHEY_SIMPLEX, 0.8, cv::Scalar(255, 255, 255),2);
         cv::putText(img, "Nominal Distance: "+nom_distance_print, cv::Point(500, 50), cv::FONT_HERSHEY_SIMPLEX, 0.8, cv::Scalar(255, 255, 255),2);
         cv::putText(img, "Distance from Center: "+center_distance_print, cv::Point(500, 80), cv::FONT_HERSHEY_SIMPLEX, 0.8, cv::Scalar(255, 255, 255),2);
-        cv::putText(img, "Dot Location Status: ", cv::Point(500, 120), cv::FONT_HERSHEY_SIMPLEX, 0.8, cv::Scalar(255, 255, 255),2);
+        //cv::putText(img, "Dot Location Status: ", cv::Point(500, 120), cv::FONT_HERSHEY_SIMPLEX, 0.8, cv::Scalar(255, 255, 255),2);
 
     }
 
@@ -137,7 +137,7 @@ namespace laserdot
     int ClearList(vector<cv::Point> center_list, int center_total, int size_array[], int min)
     {
         int last_min = min;
-        cout<<"last min size: "<<last_min<<endl;
+        //cout<<"last min size: "<<last_min<<endl;
         fill_n(size_array,10,0);
         center_total = 0;
         fill(center_list.begin(), center_list.end(), cv::Point(0,0));
@@ -247,8 +247,7 @@ namespace laserline
         // Get rvec, tvec by solvePnP()
         Mat rvec, tvec;
         solvePnP(boardPoints, centers, cameraMatrix, distCoeffs, rvec, tvec);
-        cout << "rvec from board to cam:" << endl
-            << rvec << endl << endl;
+        //cout << "rvec from board to cam:" << endl << rvec << endl << endl;
         cout << "tvec from board to cam:" << endl
             << tvec << endl;
         double distance = sqrt(tvec.at<double>(0) * tvec.at<double>(0) + tvec.at<double>(1) * tvec.at<double>(1) + tvec.at<double>(2) * tvec.at<double>(2));
@@ -343,8 +342,8 @@ namespace laserline
         // x = p_000_L[0] + C_L[0]*t
         // y = p_000_L[1] + C_L[1]*t
         // z = p_000_L[2] + C_L[2]*t
-        cout<<endl<<"laser center beam equation: "<<endl<<"x="<<p_000_L[0]<<"+("<<C_L[0]<<")*t"<<endl<<
-        "y="<<p_000_L[1]<<"+("<<C_L[1]<<")*t"<<endl<<"z="<<p_000_L[2]<<"+("<<C_L[2]<<")*t"<<endl<<endl;
+        //cout<<endl<<"laser center beam equation: "<<endl<<"x="<<p_000_L[0]<<"+("<<C_L[0]<<")*t"<<endl<<
+        //"y="<<p_000_L[1]<<"+("<<C_L[1]<<")*t"<<endl<<"z="<<p_000_L[2]<<"+("<<C_L[2]<<")*t"<<endl<<endl;
 
         //Normal vector of the target board in camera frame
         vector<double> N_L = {
@@ -420,28 +419,28 @@ namespace laserline
         vector<double> cross_P;
         //find the plane equations
         double x,y,z;
-        cout<<endl<<"Target board plane equation: "<<a1<<"(x-"<<point_B[0]<<")+"<<b1<<"*(y-"<<point_B[1]<<")+"<<c1<<"*(z-"<<point_B[2]<<") = 0"<<endl;
-        cout<<"Laser plane equation: "<<a2<<"(x-"<<point_L[0]<<")+"<<b2<<"*(y-"<<point_L[1]<<")+"<<c2<<"*(z-"<<point_L[2]<<") = 0"<<endl;
+        //cout<<endl<<"Target board plane equation: "<<a1<<"(x-"<<point_B[0]<<")+"<<b1<<"*(y-"<<point_B[1]<<")+"<<c1<<"*(z-"<<point_B[2]<<") = 0"<<endl;
+        //cout<<"Laser plane equation: "<<a2<<"(x-"<<point_L[0]<<")+"<<b2<<"*(y-"<<point_L[1]<<")+"<<c2<<"*(z-"<<point_L[2]<<") = 0"<<endl;
         // cout << dotProduct(N_B, N_L) << endl;
         cross_P = crossProduct(N_B, N_L);
-        cout<<"Nomal vector cross product: v=("<<cross_P[0]<<","<<cross_P[1]<<","<<cross_P[2]<<")";
+        //cout<<"Nomal vector cross product: v=("<<cross_P[0]<<","<<cross_P[1]<<","<<cross_P[2]<<")";
         // To find a point on intersection line, use two plane equations and set z=0
         c1 = a1*point_B[0]+b1*point_B[0]+c1*point_B[0];
         c2 = a2*point_L[0]+b2*point_L[0]+c2*point_L[0];
         x = (c1*b2-b1*c2)/(a1*b2-b1*a2);
         y = (a1*c2-c1*a2)/(a1*b2-b1*a2);
-        cout<<endl<<"One point on intersection line: r0 = ("<<x<<","<<y<<",0)"<<endl;
+        //cout<<endl<<"One point on intersection line: r0 = ("<<x<<","<<y<<",0)"<<endl;
 
         double a,b,c;
         char t;
         a = x+t*cross_P[0];
         b = y+t*cross_P[1];
         c = t*cross_P[2];
-        cout<<"Intersection line(vector equation) of two planes:"<<endl<<"r= a*i+b*j+c*k"<<endl;
-        cout<<"a="<<x<<"+t*"<<cross_P[0]<<endl;
-        cout<<"b="<<y<<"+t*"<<cross_P[1]<<endl;
-        cout<<"c=t*"<<cross_P[2]<<endl;
-        cout<<"r=("<<x<<"+t*"<<cross_P[0]<<")*i+("<<y<<"+t*"<<cross_P[1]<<")*j+("<<cross_P[2]<<"*t)*k"<<endl;
+        //cout<<"Intersection line(vector equation) of two planes:"<<endl<<"r= a*i+b*j+c*k"<<endl;
+        //cout<<"a="<<x<<"+t*"<<cross_P[0]<<endl;
+        //cout<<"b="<<y<<"+t*"<<cross_P[1]<<endl;
+        //cout<<"c=t*"<<cross_P[2]<<endl;
+        cout<<endl<<"Intersection line of two planes:"<<endl<<"r=("<<x<<"+t*"<<cross_P[0]<<")*i+("<<y<<"+t*"<<cross_P[1]<<")*j+("<<cross_P[2]<<"*t)*k"<<endl;
         intersection line;
         line.x = x;
         line.a = cross_P[0];
@@ -463,10 +462,10 @@ namespace laserline
         // N_B[0]*P0[0] + N_B[0]*C_L[0]*t - N_B[0]*point_B[0] + N_B[1]*P0[1] + N_B[1]*C_L[1]*t - N_B[1]*point_B[1] + N_B[2]*P0[2] + N_B[2]*C_L[2]*t - N_B[2]*point_B[2] = 0;
         // t*(N_B[0]*C_L[0]+N_B[1]*C_L[1]+N_B[2]*C_L[2]) = N_B[0]*point_B[0] + N_B[1]*point_B[1] + N_B[2]*point_B[2] - N_B[0]*P0[0] - N_B[1]*P0[1] - N_B[2]*P0[2];
         double t = (N_B[0]*point_B[0] + N_B[1]*point_B[1] + N_B[2]*point_B[2] - N_B[0]*P0[0] - N_B[1]*P0[1] - N_B[2]*P0[2]) / (N_B[0]*C_L[0]+N_B[1]*C_L[1]+N_B[2]*C_L[2]);
-        cout<<endl<<"t = "<<t<<endl;
+        //cout<<endl<<"t = "<<t<<endl;
         // Point2d interPoint (P0[0]+C_L[0]*t, P0[1]+C_L[1]*t);
         Point3f linecenter (P0[0]+C_L[0]*t, P0[1]+C_L[1]*t, P0[2]+C_L[2]*t);
-        cout<<endl<<"line center: "<< linecenter<<endl;
+        //cout<<endl<<"line center: "<< linecenter<<endl;
         return linecenter;
     }
 
