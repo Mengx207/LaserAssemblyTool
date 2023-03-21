@@ -56,89 +56,103 @@ int main(int argc, char **argv)
     {
         rmatrix_laser_1_values.push_back(val);
     }
-    ifstream tvecL_1("values/tvec_laser_1.txt");
+    ifstream tvecL_1(path_tvec);
     vector<double> tvec_laser_1_values;
     while (tvecL_1 >> val)
     {
         tvec_laser_1_values.push_back(val);
     }
     // read laser 2
-    ifstream rmatrix_2("values/rmatrix_laser_2.txt");
+    ifstream rmatrix_2("values/rmatrix_laser_4.txt");
     vector<double> rmatrix_laser_2_values;
     while (rmatrix_2 >> val)
     {
         rmatrix_laser_2_values.push_back(val);
     }
-    ifstream tvecL_2("values/tvec_laser_2.txt");
+    ifstream tvecL_2("values/tvec_laser_4.txt");
     vector<double> tvec_laser_2_values;
     while (tvecL_2 >> val)
     {
         tvec_laser_2_values.push_back(val);
     }
     // read laser 3
-    ifstream rmatrix_3("values/rmatrix_laser_3.txt");
+    ifstream rmatrix_3("values/rmatrix_laser_5.txt");
     vector<double> rmatrix_laser_3_values;
     while (rmatrix_3 >> val)
     {
         rmatrix_laser_3_values.push_back(val);
     }
-    ifstream tvecL_3("values/tvec_laser_3.txt");
+    ifstream tvecL_3("values/tvec_laser_5.txt");
     vector<double> tvec_laser_3_values;
     while (tvecL_3 >> val)
     {
         tvec_laser_3_values.push_back(val);
     }
-    pair<vector<double>,vector<double>>laser_1 = laserline::laserPlane(rmatrix_laser_1_values, tvec_laser_1_values);
-    pair<vector<double>,vector<double>>laser_2 = laserline::laserPlane(rmatrix_laser_2_values, tvec_laser_2_values);
-    pair<vector<double>,vector<double>>laser_3 = laserline::laserPlane(rmatrix_laser_3_values, tvec_laser_3_values);
+    laserline::laser_plane laser_1, laser_2, laser_3;
+    // pair<vector<double>,vector<double>>laser_1 = laserline::laserPlane(rmatrix_laser_1_values, tvec_laser_1_values);
+    // pair<vector<double>,vector<double>>laser_2 = laserline::laserPlane(rmatrix_laser_2_values, tvec_laser_2_values);
+    // pair<vector<double>,vector<double>>laser_3 = laserline::laserPlane(rmatrix_laser_3_values, tvec_laser_3_values);
+    laser_1 = laserline::laserPlane(rmatrix_laser_1_values, tvec_laser_1_values);
+    laser_2 = laserline::laserPlane(rmatrix_laser_2_values, tvec_laser_2_values);
+    laser_3 = laserline::laserPlane(rmatrix_laser_3_values, tvec_laser_3_values);
 
     // find target board plane in cam frame
     pair<vector<double>,vector<double>>target = laserline::targetBoardPlane(vec.first, vec.second);
 
     // find intersection line between target board plane and laser plane in cam frame
     laserline::intersection line1, line2, line3;
-    line1 = laserline::intersectionLine(target.first, laser_1.first, target.second, laser_1.second);
-    line2 = laserline::intersectionLine(target.first, laser_2.first, target.second, laser_2.second);
-    line3 = laserline::intersectionLine(target.first, laser_3.first, target.second, laser_3.second);
+    line1 = laserline::intersectionLine(target.first, laser_1.N_L, target.second, laser_1.V_L);
+    line2 = laserline::intersectionLine(target.first, laser_2.N_L, target.second, laser_2.V_L);
+    line3 = laserline::intersectionLine(target.first, laser_3.N_L, target.second, laser_3.V_L);
 
-    Mat img (1000,1000, CV_8UC3);
+    Mat img (1080,1440, CV_8UC3);
     std::vector<cv::Point2d> laserPoints_1, laserPoints_2, laserPoints_3;
 
-    for(int t=-2000; t<2000;)
+    for(int t=-2000; t<=2000;)
     {
-        t = t+40;
         // Point2d points((69.2212+(-0.499939)*t)+500, -(-121.744+0.850974*t)+500);
-        Point2d points((line1.x+line1.a*t)+500, -(line1.y+line1.b*t)+500);
-        // cout<<"point: "<<points<<endl;
+        Point2d points((line1.x+line1.a*t)+720, -(line1.y+line1.b*t)+540);
+        t = t+100;
+        cout<<"point1: "<<points<<endl;
         laserPoints_1.push_back(points);
     }
 
-    for(int t=-2000; t<2000;)
+    for(int t=-2000; t<=2000;)
     {
-        t = t+40;
-        Point2d points((line2.x+line2.a*t)+500, -(line2.y+line2.b*t)+500);
+        Point2d points((line2.x+line2.a*t)+720, -(line2.y+line2.b*t)+540);
+        t = t+100;
+        cout<<"point2: "<<points<<endl;
         laserPoints_2.push_back(points);
     }
 
-    for(int t=-2000; t<2000;)
+    for(int t=-2000; t<=2000;)
     {
-        t = t+40;
-        Point2d points((line3.x+line3.a*t)+500, -(line3.y+line3.b*t)+500);
+        Point2d points((line3.x+line3.a*t)+720, -(line3.y+line3.b*t)+540);
+        t = t+100;
+        cout<<"point3: "<<points<<endl;
         laserPoints_3.push_back(points);
     }
 
     // draw circles on each points
-    for (int n=0; n<100;)
-    {
-        cv::circle(img,laserPoints_1[n],5,cv::Scalar(0,0,255),-1,8,0);
-        n = n+10;
-    }
+    // for (int n=0; n<100;)
+    // {
+    //     cv::circle(img,laserPoints_1[n],5,cv::Scalar(0,0,255),-1,8,0);
+    //     n = n+10;
+    // }
     // draw a line through points
     int thickness = 2;
     int lineType = cv::LINE_8;
-    line( img, laserPoints_1[0], laserPoints_1[90], cv::Scalar( 0, 0, 255 ), thickness, lineType );
-    line( img, laserPoints_2[0], laserPoints_2[90], cv::Scalar( 0, 0, 255 ), thickness, lineType );
-    line( img, laserPoints_3[0], laserPoints_3[90], cv::Scalar( 0, 0, 255 ), thickness, lineType );
+    line( img, laserPoints_1[0], laserPoints_1[40], cv::Scalar( 0, 0, 255 ), thickness, lineType );
+    line( img, laserPoints_2[0], laserPoints_2[40], cv::Scalar( 0, 0, 255 ), thickness, lineType );
+    line( img, laserPoints_3[0], laserPoints_3[40], cv::Scalar( 0, 0, 255 ), thickness, lineType );
+
+    Point3f interPoint1, interPoint2, interPoint3;
+    interPoint1 = laserline::intersectionPoint(laser_1.P0, laser_1.C_L, target.first, target.second);
+	interPoint2 = laserline::intersectionPoint(laser_2.P0, laser_2.C_L, target.first, target.second);
+	interPoint3 = laserline::intersectionPoint(laser_3.P0, laser_3.C_L, target.first, target.second);
+	// cv::circle( img, Point2d(interPoint1.x+720, -interPoint1.y+540), 5, cv::Scalar(0,0,255), -1, 8, 0 );
+	// cv::circle( img, Point2d(interPoint2.x+720, -interPoint2.y+540), 5, cv::Scalar(0,0,255), -1, 8, 0 );
+	cv::circle( img, Point2d(720, 540), 5, cv::Scalar(0,0,255), -1, 8, 0 );
     cv::imshow("Image",img);
     waitKey();
     return EXIT_SUCCESS;
