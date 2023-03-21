@@ -144,7 +144,7 @@ namespace laserdot
         return last_min;
     }
 
-    std::pair<double,double> DotToLine(cv::Mat img, cv::Point start, cv::Point end, cv::Point center)
+    std::pair<double,double> DotToLine(cv::Mat img, cv::Point start, cv::Point end, cv::Point center, cv::Point interPoint)
     {
         cv::LineIterator laserline(img, start, end, 8);
         vector<cv::Vec3b> buf(laserline.count);
@@ -163,9 +163,10 @@ namespace laserdot
         cv::line( img, center, point_list[num], cv::Scalar( 255, 255, 0 ), 1, 8 );
         // dotLine.nom_distance = min_distance;
         // dotLine.center_distance = norm(point_list[num]-point_list[(laserline.count)/2]);
-        std::pair<double,double>dist(min_distance,norm(point_list[num]-point_list[(laserline.count)/2])) ;
-        cv::Point laserline_center = point_list[(laserline.count)/2];
-        cv::circle( img, laserline_center, 5, cv::Scalar(0,0,255), -1, 8, 0 );
+        // std::pair<double,double>dist(min_distance,norm(point_list[num]-point_list[(laserline.count)/2])) ;
+        std::pair<double,double>dist(min_distance,norm(point_list[num]-interPoint)) ;
+        // cv::Point laserline_center = point_list[(laserline.count)/2];
+        // cv::circle( img, laserline_center, 5, cv::Scalar(0,0,255), -1, 8, 0 );
         return dist;
 
         // cout << "min point at: " << point_list[num] <<endl;
@@ -301,12 +302,18 @@ namespace laserline
         return target_board_values;
     }
 
-    pair<vector<double>,vector<double>> laserPlane(vector<double> rmatrix_laser_values, vector<double> tvec_laser_values)
+    struct laser_plane{
+    vector<double> N_L;
+    vector<double> V_L;
+    vector<double> P0;
+    vector<double> C_L;
+    };
+    laser_plane laserPlane(vector<double> rmatrix_laser_values, vector<double> tvec_laser_values)
     {
         Mat rmatrix_L = Mat(3, 3, CV_64FC1, rmatrix_laser_values.data());
         Mat tvec_L = Mat(3, 1, CV_64FC1, tvec_laser_values.data());
 
-        vector<double> p_000_L {
+        vector<double>p_000_L = {
             tvec_L.at<double>(0),
             tvec_L.at<double>(1),
             tvec_L.at<double>(2)
@@ -322,13 +329,30 @@ namespace laserline
             rmatrix_L.at<double>(3)+rmatrix_L.at<double>(4)+tvec_L.at<double>(1),
             rmatrix_L.at<double>(6)+rmatrix_L.at<double>(7)+tvec_L.at<double>(2)
         };
+        vector<double> p_100_L {
+            rmatrix_L.at<double>(0)+tvec_L.at<double>(0),
+            rmatrix_L.at<double>(3)+tvec_L.at<double>(1),
+            rmatrix_L.at<double>(6)+tvec_L.at<double>(2)
+        };
+        vector<double> C_L = {
+            p_100_L[0] - p_000_L[0],
+            p_100_L[1] - p_000_L[1],
+            p_100_L[2] - p_000_L[2]
+        };
+        // laser plane center line equation in camera frame: x=a1+b1*t, y=a2+b2*t, z=a3+b3*t
+        // x = p_000_L[0] + C_L[0]*t
+        // y = p_000_L[1] + C_L[1]*t
+        // z = p_000_L[2] + C_L[2]*t
+        cout<<endl<<"laser center beam equation: "<<endl<<"x="<<p_000_L[0]<<"+("<<C_L[0]<<")*t"<<endl<<
+        "y="<<p_000_L[1]<<"+("<<C_L[1]<<")*t"<<endl<<"z="<<p_000_L[2]<<"+("<<C_L[2]<<")*t"<<endl<<endl;
+
         //Normal vector of the target board in camera frame
         vector<double> N_L = {
             p_001_L[0] - p_000_L[0],
             p_001_L[1] - p_000_L[1],
             p_001_L[2] - p_000_L[2]
         };   
-        vector<double> P_L = {
+        vector<double> V_L = {
             p_110_L[0] - p_000_L[0],
             p_110_L[1] - p_000_L[1],
             p_110_L[2] - p_000_L[2]
@@ -345,11 +369,17 @@ namespace laserline
         // cout << "one point on the laser plane: " << endl
         //     << point_L << endl;
         // cout << "(normal vector) * (vector on plane):          " << N_L[0] * P_L[0] + N_L[1] * P_L[1] + N_L[2] * P_L[2] << endl;
-        pair<Mat,Mat>laser(NormalV_L, point_L_O);
+        laser_plane laser_values;
+        laser_values.N_L = N_L;
+        laser_values.V_L = V_L;
+        laser_values.P0 = p_000_L;
+        laser_values.C_L = C_L;
+        
+        // pair<Mat,Mat>laser(NormalV_L, point_L_O);
         // cout<<endl<<laser.first<<endl<<laser.second<<endl;
-        pair<vector<double>,vector<double>> laser_plane_values(N_L,p_000_L);
+        // pair<vector<double>,vector<double>> laser_plane_values(N_L,p_000_L);
 
-        return laser_plane_values;
+        return laser_values;
     }
 
     int dotProduct(double vect_A[], double vect_B[])
@@ -419,9 +449,25 @@ namespace laserline
         line.b = cross_P[1];
         line.c = cross_P[2];
         return line;
+    }
+    
+    Point3f intersectionPoint(vector<double>P0, vector<double>C_L, vector<double>N_B, vector<double>point_B)
+    {
+        // target plane equation: N_B[0]*(x-point_B[0])+N_B[1]*(y-point_B[1])+N_B[2]*(z-point_B[2]) = 0;
+        // laser beam center line equation:
+        // x = P0[0] + C_L[0]*t
+        // y = P0[1] + C_L[1]*t
+        // z = P0[2] + C_L[2]*t
 
-        // return x, cross_P[0], y, cross_P[1], cross_P[2];
-
+        // N_B[0]*((P0[0]+C_L[0]*t)-point_B[0]) + N_B[1]*((P0[1]+C_L[1]*t)-point_B[1]) + N_B[2]*((P0[2]+C_L[2]*t)-point_B[2]) = 0;
+        // N_B[0]*P0[0] + N_B[0]*C_L[0]*t - N_B[0]*point_B[0] + N_B[1]*P0[1] + N_B[1]*C_L[1]*t - N_B[1]*point_B[1] + N_B[2]*P0[2] + N_B[2]*C_L[2]*t - N_B[2]*point_B[2] = 0;
+        // t*(N_B[0]*C_L[0]+N_B[1]*C_L[1]+N_B[2]*C_L[2]) = N_B[0]*point_B[0] + N_B[1]*point_B[1] + N_B[2]*point_B[2] - N_B[0]*P0[0] - N_B[1]*P0[1] - N_B[2]*P0[2];
+        double t = (N_B[0]*point_B[0] + N_B[1]*point_B[1] + N_B[2]*point_B[2] - N_B[0]*P0[0] - N_B[1]*P0[1] - N_B[2]*P0[2]) / (N_B[0]*C_L[0]+N_B[1]*C_L[1]+N_B[2]*C_L[2]);
+        cout<<endl<<"t = "<<t<<endl;
+        // Point2d interPoint (P0[0]+C_L[0]*t, P0[1]+C_L[1]*t);
+        Point3f linecenter (P0[0]+C_L[0]*t, P0[1]+C_L[1]*t, P0[2]+C_L[2]*t);
+        cout<<endl<<"line center: "<< linecenter<<endl;
+        return linecenter;
     }
 
 }

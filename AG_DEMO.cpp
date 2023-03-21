@@ -132,99 +132,97 @@ int main(int argc, char* argv[])
 				src = cam_frame_temp0.clone();
 
 //=========================================================================================================================================================================
-	// gain rmatrix and tvec from target board to cam
-    pair<Mat,Mat>vec = laserline::getRvecTvec();
-    string path_rmatrix = "values/rmatrix_laser_1.txt";
-    string path_tvec = "values/tvec_laser_1.txt";
+			// gain rmatrix and tvec from target board to cam
+			double val;
+			string path_rmatrix = "values/rmatrix_laser_1.txt";
+			string path_tvec = "values/tvec_laser_1.txt";
 
-    // find laser plane in cam frame
-    double val;
-    // read laser 1
-    ifstream rmatrix_1(path_rmatrix);
-    vector<double> rmatrix_laser_1_values;
-    while (rmatrix_1 >> val)
-    {
-        rmatrix_laser_1_values.push_back(val);
-    }
-    ifstream tvecL_1(path_tvec);
-    vector<double> tvec_laser_1_values;
-    while (tvecL_1 >> val)
-    {
-        tvec_laser_1_values.push_back(val);
-    }
-	
-    // read laser 2
-    ifstream rmatrix_2("values/rmatrix_laser_2.txt");
-    vector<double> rmatrix_laser_2_values;
-    while (rmatrix_2 >> val)
-    {
-        rmatrix_laser_2_values.push_back(val);
-    }
-    ifstream tvecL_2("values/tvec_laser_2.txt");
-    vector<double> tvec_laser_2_values;
-    while (tvecL_2 >> val)
-    {
-        tvec_laser_2_values.push_back(val);
-    }
-    // read laser 3
-    ifstream rmatrix_3("values/rmatrix_laser_3.txt");
-    vector<double> rmatrix_laser_3_values;
-    while (rmatrix_3 >> val)
-    {
-        rmatrix_laser_3_values.push_back(val);
-    }
-    ifstream tvecL_3("values/tvec_laser_3.txt");
-    vector<double> tvec_laser_3_values;
-    while (tvecL_3 >> val)
-    {
-        tvec_laser_3_values.push_back(val);
-    }
-    pair<vector<double>,vector<double>>laser_1 = laserline::laserPlane(rmatrix_laser_1_values, tvec_laser_1_values);
-    pair<vector<double>,vector<double>>laser_2 = laserline::laserPlane(rmatrix_laser_2_values, tvec_laser_2_values);
-    pair<vector<double>,vector<double>>laser_3 = laserline::laserPlane(rmatrix_laser_3_values, tvec_laser_3_values);
+			if(argv[1] == string("1")) // 30 degree to vertical CCW
+			{
+				path_rmatrix = "values/rmatrix_laser_1.txt";
+				path_tvec = "values/tvec_laser_1.txt";
+			}
+			if(argv[1] == string("2")) // vertical
+			{
+				path_rmatrix = "values/rmatrix_laser_2.txt";
+				path_tvec = "values/tvec_laser_2.txt";
+			}
+			if(argv[1] == string("3")) // horizontal
+			{
+				path_rmatrix = "values/rmatrix_laser_3.txt";
+				path_tvec = "values/tvec_laser_3.txt";
+			}
+			if(argv[1] == string("4")) // 30 degree to vertical CW
+			{
+				path_rmatrix = "values/rmatrix_laser_4.txt";
+				path_tvec = "values/tvec_laser_4.txt";
+			}
+			pair<Mat,Mat>vec = laserline::getRvecTvec();
 
-    // find target board plane in cam frame
-    pair<vector<double>,vector<double>>target = laserline::targetBoardPlane(vec.first, vec.second);
-    
-	// find intersection line between target board plane and laser plane in cam frame
-    std::vector<cv::Point2d> laserPoints_1;
-	laserline::intersection line1;
-    line1 = laserline::intersectionLine(target.first, laser_1.first, target.second, laser_1.second);
-  	for(int t=-2000; t<2000;)
-    {
-        t = t+40;
-        // Point2d points((69.2212+(-0.499939)*t)+500, -(-121.744+0.850974*t)+500);
-        Point2d points((line1.x+line1.a*t)+720, -(line1.y+line1.b*t)+540);
-        // cout<<"point: "<<points<<endl;
-        laserPoints_1.push_back(points);
-    }
-	cv::Point lineStart = laserPoints_1[0];
-	cv::Point lineEnd = laserPoints_1[90];
-	// laserdot::CalculatedLine( src, lineStart, lineEnd );
+			// read laser 1
+			ifstream rmatrixL(path_rmatrix);
+			vector<double> rmatrix_laser_values;
+			while (rmatrixL >> val)
+			{
+				rmatrix_laser_values.push_back(val);
+			}
+			ifstream tvecL(path_tvec);
+			vector<double> tvec_laser_values;
+			while (tvecL >> val)
+			{
+				tvec_laser_values.push_back(val);
+			}
 
-//=========================================================================================================================================================================
+			laserline::laser_plane laser_1, laser_2, laser_3;
+			laser_1 = laserline::laserPlane(rmatrix_laser_values, tvec_laser_values);
+			
+			// find target board plane in cam frame
+			pair<vector<double>,vector<double>>target = laserline::targetBoardPlane(vec.first, vec.second);
+			
+			// find intersection line between target board plane and laser plane in cam frame
+			std::vector<cv::Point2d> laserPoints_1, laserPoints_2, laserPoints_3;
+			laserline::intersection line1, line2, line3;
+			line1 = laserline::intersectionLine(target.first, laser_1.N_L, target.second, laser_1.P0);
 
-			 //----------raw image to greyscale, threshold filter
-				cv::cvtColor(src, img_grey, cv::COLOR_BGR2GRAY);
-				cv::Mat img_grey_filtered;
-				cv::threshold(img_grey,img_grey_filtered,250,255,cv::THRESH_OTSU||cv::THRESH_TRIANGLE);	
+			for(int t=-2000; t<2000;)
+			{
+				t = t+40;
+				Point2d points1((line1.x+line1.a*t)+720, -(line1.y+line1.b*t)+540);
+				// cout<<"point: "<<points<<endl;
+				laserPoints_1.push_back(points1);
+			}
+			cv::Point line_1_Start = laserPoints_1[0];
+			cv::Point line_1_End = laserPoints_1[90];
+			// laserdot::CalculatedLine( src, lineStart, lineEnd );
+			Point3f interPoint1, interPoint2, interPoint3;
+			interPoint1 = laserline::intersectionPoint(laser_1.P0, laser_1.C_L, target.first, target.second);
+			cout<<endl<<interPoint1<<endl;
+			// cv::circle( src, Point2d(interPoint1.x+720,-interPoint1.y+540), 5, cv::Scalar(0,0,255), -1, 8, 0 );
+			cv::circle( src, Point2d(720,540), 5, cv::Scalar(0,0,255), -1, 8, 0 );
+			
+		//=========================================================================================================================================================================
 
-				laserdot::CalculatedLine( src, lineStart, lineEnd );
-				// Number of non_zero pixel
-				int non_zero = laserdot::NonZero(img_grey_filtered);
+					//----------raw image to greyscale, threshold filter
+						cv::cvtColor(src, img_grey, cv::COLOR_BGR2GRAY);
+						cv::Mat img_grey_filtered;
+						cv::threshold(img_grey,img_grey_filtered,250,255,cv::THRESH_OTSU||cv::THRESH_TRIANGLE);	
 
-				// Number of bright pixel
-				int count = laserdot::PixelCounter(img_grey_filtered);
-				// average size
-				size_avg = laserdot::SizeAverage(count,0,size_array, center_total);
-				//-----------save min_size only when the value in size_array is stable and close to each other
-				if(size_avg < min_size && center_total > 20)
-				{
-					if(abs(size_array[0]-size_array[9]) <=3)
-					{
-						min_size = size_avg;
-					}
-				}
+						laserdot::CalculatedLine( src, line_1_Start, line_1_End );
+						// Number of non_zero pixel
+						int non_zero = laserdot::NonZero(img_grey_filtered);
+
+						// Number of bright pixel
+						int count = laserdot::PixelCounter(img_grey_filtered);
+						// average size
+						size_avg = laserdot::SizeAverage(count,0,size_array, center_total);
+						//-----------save min_size only when the value in size_array is stable and close to each other
+						if(size_avg < min_size && center_total > 20)
+						{
+							if(abs(size_array[0]-size_array[9]) <=3)
+							{
+								min_size = size_avg;
+							}
+						}
 
 			 //---------Draw circles based on collected points	
 			 //---------Process when captured images are not empty
@@ -257,7 +255,9 @@ int main(int argc, char* argv[])
 						sleep(0.1);
 						cv::circle( img_grey_filtered, center_avg, 3, cv::Scalar(255,0,0), -1, 8, 0 );
 						cv::circle( src, center_avg, 3, cv::Scalar(255,100,0), -1, 8, 0 );
-						std::pair<double,double>dist = laserdot::DotToLine(src, lineStart, lineEnd, center_avg);
+
+						// std::pair<double,double>dist = laserdot::DotToLine(src, line_1_Start, line_1_End, center_avg, Point2d(interPoint1.x+720,-interPoint1.y+540));
+						std::pair<double,double>dist = laserdot::DotToLine(src, line_1_Start, line_1_End, center_avg, Point2d(720,540));
 						nom_distance = dist.first;
 						center_distance = dist.second;
 					}

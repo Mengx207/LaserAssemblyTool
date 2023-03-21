@@ -56,17 +56,6 @@ CMAKE_BINARY_DIR = /home/lingbo/Documents/GitHub/AssemblyGuidanceTool
 #=============================================================================
 # Targets provided globally by CMake.
 
-# Special rule for the target rebuild_cache
-rebuild_cache:
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running CMake to regenerate build system..."
-	/usr/bin/cmake -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
-.PHONY : rebuild_cache
-
-# Special rule for the target rebuild_cache
-rebuild_cache/fast: rebuild_cache
-
-.PHONY : rebuild_cache/fast
-
 # Special rule for the target edit_cache
 edit_cache:
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "No interactive CMake dialog available..."
@@ -77,6 +66,17 @@ edit_cache:
 edit_cache/fast: edit_cache
 
 .PHONY : edit_cache/fast
+
+# Special rule for the target rebuild_cache
+rebuild_cache:
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running CMake to regenerate build system..."
+	/usr/bin/cmake -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
+.PHONY : rebuild_cache
+
+# Special rule for the target rebuild_cache
+rebuild_cache/fast: rebuild_cache
+
+.PHONY : rebuild_cache/fast
 
 # The main all target
 all: cmake_check_build_system
@@ -111,6 +111,19 @@ depend:
 .PHONY : depend
 
 #=============================================================================
+# Target rules for targets named calculated_laser_line
+
+# Build rule for target.
+calculated_laser_line: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 calculated_laser_line
+.PHONY : calculated_laser_line
+
+# fast build rule for target.
+calculated_laser_line/fast:
+	$(MAKE) -f CMakeFiles/calculated_laser_line.dir/build.make CMakeFiles/calculated_laser_line.dir/build
+.PHONY : calculated_laser_line/fast
+
+#=============================================================================
 # Target rules for targets named get_rvec_tvec
 
 # Build rule for target.
@@ -122,32 +135,6 @@ get_rvec_tvec: cmake_check_build_system
 get_rvec_tvec/fast:
 	$(MAKE) -f CMakeFiles/get_rvec_tvec.dir/build.make CMakeFiles/get_rvec_tvec.dir/build
 .PHONY : get_rvec_tvec/fast
-
-#=============================================================================
-# Target rules for targets named planes_intersection
-
-# Build rule for target.
-planes_intersection: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 planes_intersection
-.PHONY : planes_intersection
-
-# fast build rule for target.
-planes_intersection/fast:
-	$(MAKE) -f CMakeFiles/planes_intersection.dir/build.make CMakeFiles/planes_intersection.dir/build
-.PHONY : planes_intersection/fast
-
-#=============================================================================
-# Target rules for targets named laser_dot
-
-# Build rule for target.
-laser_dot: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 laser_dot
-.PHONY : laser_dot
-
-# fast build rule for target.
-laser_dot/fast:
-	$(MAKE) -f CMakeFiles/laser_dot.dir/build.make CMakeFiles/laser_dot.dir/build
-.PHONY : laser_dot/fast
 
 #=============================================================================
 # Target rules for targets named AG_DEMO
@@ -163,17 +150,17 @@ AG_DEMO/fast:
 .PHONY : AG_DEMO/fast
 
 #=============================================================================
-# Target rules for targets named calculated_laser_line
+# Target rules for targets named planes_intersection
 
 # Build rule for target.
-calculated_laser_line: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 calculated_laser_line
-.PHONY : calculated_laser_line
+planes_intersection: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 planes_intersection
+.PHONY : planes_intersection
 
 # fast build rule for target.
-calculated_laser_line/fast:
-	$(MAKE) -f CMakeFiles/calculated_laser_line.dir/build.make CMakeFiles/calculated_laser_line.dir/build
-.PHONY : calculated_laser_line/fast
+planes_intersection/fast:
+	$(MAKE) -f CMakeFiles/planes_intersection.dir/build.make CMakeFiles/planes_intersection.dir/build
+.PHONY : planes_intersection/fast
 
 AG_DEMO.o: AG_DEMO.cpp.o
 
@@ -256,33 +243,6 @@ get_rvec_tvec.cpp.s:
 	$(MAKE) -f CMakeFiles/get_rvec_tvec.dir/build.make CMakeFiles/get_rvec_tvec.dir/get_rvec_tvec.cpp.s
 .PHONY : get_rvec_tvec.cpp.s
 
-laser_dot.o: laser_dot.cpp.o
-
-.PHONY : laser_dot.o
-
-# target to build an object file
-laser_dot.cpp.o:
-	$(MAKE) -f CMakeFiles/laser_dot.dir/build.make CMakeFiles/laser_dot.dir/laser_dot.cpp.o
-.PHONY : laser_dot.cpp.o
-
-laser_dot.i: laser_dot.cpp.i
-
-.PHONY : laser_dot.i
-
-# target to preprocess a source file
-laser_dot.cpp.i:
-	$(MAKE) -f CMakeFiles/laser_dot.dir/build.make CMakeFiles/laser_dot.dir/laser_dot.cpp.i
-.PHONY : laser_dot.cpp.i
-
-laser_dot.s: laser_dot.cpp.s
-
-.PHONY : laser_dot.s
-
-# target to generate assembly for a file
-laser_dot.cpp.s:
-	$(MAKE) -f CMakeFiles/laser_dot.dir/build.make CMakeFiles/laser_dot.dir/laser_dot.cpp.s
-.PHONY : laser_dot.cpp.s
-
 planes_intersection.o: planes_intersection.cpp.o
 
 .PHONY : planes_intersection.o
@@ -316,13 +276,12 @@ help:
 	@echo "... all (the default if no target is provided)"
 	@echo "... clean"
 	@echo "... depend"
-	@echo "... rebuild_cache"
-	@echo "... get_rvec_tvec"
-	@echo "... edit_cache"
-	@echo "... planes_intersection"
-	@echo "... laser_dot"
-	@echo "... AG_DEMO"
 	@echo "... calculated_laser_line"
+	@echo "... edit_cache"
+	@echo "... get_rvec_tvec"
+	@echo "... rebuild_cache"
+	@echo "... AG_DEMO"
+	@echo "... planes_intersection"
 	@echo "... AG_DEMO.o"
 	@echo "... AG_DEMO.i"
 	@echo "... AG_DEMO.s"
@@ -332,9 +291,6 @@ help:
 	@echo "... get_rvec_tvec.o"
 	@echo "... get_rvec_tvec.i"
 	@echo "... get_rvec_tvec.s"
-	@echo "... laser_dot.o"
-	@echo "... laser_dot.i"
-	@echo "... laser_dot.s"
 	@echo "... planes_intersection.o"
 	@echo "... planes_intersection.i"
 	@echo "... planes_intersection.s"
