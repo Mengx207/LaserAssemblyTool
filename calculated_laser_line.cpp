@@ -101,9 +101,9 @@ int main(int argc, char **argv)
 
     // find intersection line between target board plane and laser plane in cam frame
     laserline::intersection line1, line2, line3;
-    line1 = laserline::intersectionLine(target.first, laser_1.N_L, target.second, laser_1.V_L);
-    line2 = laserline::intersectionLine(target.first, laser_2.N_L, target.second, laser_2.V_L);
-    line3 = laserline::intersectionLine(target.first, laser_3.N_L, target.second, laser_3.V_L);
+    line1 = laserline::intersectionLine(target.first, laser_1.N_L, target.second, laser_1.P1);
+    line2 = laserline::intersectionLine(target.first, laser_2.N_L, target.second, laser_2.P1);
+    line3 = laserline::intersectionLine(target.first, laser_3.N_L, target.second, laser_3.P1);
 
     Mat img (1080,1440, CV_8UC3);
     std::vector<cv::Point2d> laserPoints_1, laserPoints_2, laserPoints_3;

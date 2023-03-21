@@ -222,8 +222,8 @@ namespace laserline
             boardPoints_2D.push_back(Point2f(10 * boardPoints[n].x + 400, -(10 * boardPoints[n].y) + 200)); // to show the target board feature dot, reverse y axis, zoom and shift to center of image
         }
         drawChessboardCorners(board_points, board_shape, Mat(boardPoints_2D), patternfound);
-        // cout << "target board points: " << endl
-        //     << boardPoints << endl
+        cout << "target board points: " << endl
+            << boardPoints << endl;
         //     << "size of board: " << boardPoints.size() << endl
         //     << endl;
 
@@ -305,6 +305,7 @@ namespace laserline
     vector<double> N_L;
     vector<double> V_L;
     vector<double> P0;
+    vector<double> P1;
     vector<double> C_L;
     };
     laser_plane laserPlane(vector<double> rmatrix_laser_values, vector<double> tvec_laser_values)
@@ -372,6 +373,7 @@ namespace laserline
         laser_values.N_L = N_L;
         laser_values.V_L = V_L;
         laser_values.P0 = p_000_L;
+        laser_values.P1 = p_110_L;
         laser_values.C_L = C_L;
         
         // pair<Mat,Mat>laser(NormalV_L, point_L_O);
