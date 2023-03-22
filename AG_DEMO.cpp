@@ -53,9 +53,8 @@ int main(int argc, char* argv[])
 		
 
 	    CInstantCamera camera0( CTlFactory::GetInstance().CreateDevice(info0));	
-
-			
-		camera0.RegisterConfiguration(new CSoftwareTriggerConfiguration,RegistrationMode_ReplaceAll, Cleanup_Delete);
+		// camera0.RegisterConfiguration(new CSoftwareTriggerConfiguration,RegistrationMode_ReplaceAll, Cleanup_Delete);	
+		camera0.RegisterConfiguration(new CSoftwareTriggerConfiguration1,RegistrationMode_ReplaceAll, Cleanup_Delete);
 
 		//Create a pylon image that will be used to create an opencv image
 		CPylonImage pylonImage0;
@@ -274,7 +273,7 @@ int main(int argc, char* argv[])
 					//fill(center_list.begin(), center_list.end(), cv::Point(0,0));
 				}
 				laserdot::HMI(src, size_avg, min_size, non_zero, nom_distance, center_distance);
-				//laserdot::GreenLight(src, last_min_size, size_avg, nom_distance, center_distance);
+				laserdot::GreenLight(src, last_min_size, size_avg, nom_distance, center_distance);
 
 				cv::imshow("img_grey_filtered", img_grey_filtered);	
 				cv::imshow("source window", src);							
