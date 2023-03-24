@@ -178,54 +178,46 @@ namespace laserdot
 
 namespace laserline
 {
-    vector<Point3f> createChessBoardCorners(Size2i board_shape, double squareSize)
+    vector<Point3f> createChessBoardCorners(Size2i patternsize, double squareSize)
     {
         vector<Point3f> centered_board_corners;
         int count;
-        for( int i = 0; i < board_shape.height; i++ )
+        for( int i = 0; i < patternsize.height; i++ )
         {
-            for( int j = 0; j < board_shape.width; j++ )
+            for( int j = 0; j < patternsize.width; j++ )
             {
                 centered_board_corners.push_back(Point3f((j*squareSize)-2*squareSize, (i*squareSize)-squareSize, 0.0));
             }
         }
+
         return centered_board_corners;
     }
 
     std::pair<Mat,Mat> getRvecTvec()
     {
-        Mat image_dot = imread("images/image_captured.png", IMREAD_GRAYSCALE);
-        Mat image_dot_center(image_dot.rows, image_dot.cols, IMREAD_GRAYSCALE);
-        Mat board_points(1000, 1000, IMREAD_GRAYSCALE);
+        // load one captured image whose content is the chessboard pattern
+        Mat image_captured = imread("images/image_captured.png", IMREAD_GRAYSCALE);
+        Mat image_corners(image_captured.rows, image_captured.cols, IMREAD_GRAYSCALE);
 
-        if (image_dot.empty())
+        if (image_captured.empty())
         {
             cout << "Error opening image" << endl;
         }
-        Size patternsize(5, 3); // how to define the size of asymmetric pattern?
-        vector<Point2f> centers; // center of feature dots
+        Size patternsize(5, 3);
+        vector<Point2f> corners_found; 
         SimpleBlobDetector::Params params;
         params.maxArea = 10e4;
         Ptr<FeatureDetector> blobDetector = SimpleBlobDetector::create(params);
-        bool patternfound = findChessboardCorners(image_dot, patternsize, centers, CALIB_CB_ASYMMETRIC_GRID);
-        // cout << "image points: " << endl
-        //     << centers << endl
-        //     << endl;
-        drawChessboardCorners(image_dot_center, patternsize, Mat(centers), patternfound);
-
-        Size2i board_shape(5, 3); // 5X3 corners
-        double squareSize = 4.5; // 10% square size
-        vector<Point3f> boardPoints = createChessBoardCorners(board_shape, squareSize);
-        vector<Point2f> boardPoints_2D;
-        for (int n = 0; n < boardPoints.size(); n++)
-        {
-            boardPoints_2D.push_back(Point2f(10 * boardPoints[n].x + 400, -(10 * boardPoints[n].y) + 200)); // to show the target board feature dot, reverse y axis, zoom and shift to center of image
-        }
-        drawChessboardCorners(board_points, board_shape, Mat(boardPoints_2D), patternfound);
-        cout << "target board points: " << endl
-            << boardPoints << endl;
-        //     << "size of board: " << boardPoints.size() << endl
-        //     << endl;
+        bool patternfound = findChessboardCorners(image_captured, patternsize, corners_found, CALIB_CB_ASYMMETRIC_GRID);
+        cout <<endl<<endl<< "Corners found: " << endl
+            << corners_found << endl << endl;
+        drawChessboardCorners(image_corners, patternsize, Mat(corners_found), patternfound);
+        
+        // create chessboard pattern
+        double squareSize = 4.5; // 10% square size in mm
+        vector<Point3f> corners_created = createChessBoardCorners(patternsize, squareSize);
+        cout << "created pattern corners in mm: " << endl
+            << corners_created << endl;
 
         // import camera matrix and distortion coefficients from txt file
         ifstream intrin("values/intrinsic.txt");
@@ -241,22 +233,22 @@ namespace laserline
         {
             distCoeffs_values.push_back(val);
         }
-
         Mat cameraMatrix = Mat(3, 3, CV_64FC1, cameraMatrix_values.data());
         Mat distCoeffs = Mat(5, 1, CV_64FC1, distCoeffs_values.data());
+
         // Get rvec, tvec by solvePnP()
         Mat rvec, tvec;
-        solvePnP(boardPoints, centers, cameraMatrix, distCoeffs, rvec, tvec);
-        //cout << "rvec from board to cam:" << endl << rvec << endl << endl;
-        cout << "tvec from board to cam:" << endl
-            << tvec << endl;
+        // corners_created:created pattern corners in mm    /corners_found: corners found on the loaded image in image coordinates system
+        solvePnP(corners_created, corners_found, cameraMatrix, distCoeffs, rvec, tvec);
+        cout << "tvec from the target board to cam:" << endl << tvec << endl;
+        cout << "rvec from the target board to cam:" << endl << rvec << endl;
         double distance = sqrt(tvec.at<double>(0) * tvec.at<double>(0) + tvec.at<double>(1) * tvec.at<double>(1) + tvec.at<double>(2) * tvec.at<double>(2));
         // cout << "distance between target board and camera: " << distance << "mm" << endl;
         // Convert rvec to rmatrix
         Mat rmatrix;
         Rodrigues(rvec, rmatrix);
-        cout << endl << "rmatrix from board to cam: " << endl << rmatrix << endl << endl;
-        pair<Mat,Mat>vec(rmatrix,tvec) ;
+        cout << "rmatrix from the target board to cam: " << endl << rmatrix << endl << endl;
+        pair<Mat,Mat>vec(rmatrix,tvec) ; // rmatrix = vec.first tvec = vec.second
         return vec;
     }
 
@@ -293,7 +285,7 @@ namespace laserline
         cout << "normal vector: " << endl
             << NormalV_B << endl;
         cout << "origin point: " << endl
-            << point_B_O << endl;
+            << point_B_O << endl << endl;
         // cout << "one point on plane: " << endl
         //     << point_B << endl;
         // cout << "(normal vector) * (vector on plane):         " << N_B[0] * P_B[0] + N_B[1] * P_B[1] + N_B[2] * P_B[2] <<endl<<endl;
@@ -366,6 +358,8 @@ namespace laserline
             << NormalV_L << endl;
         cout << "origin point: " << endl
             << point_L_O << endl;
+        cout<< "equation of laser plane:" <<endl
+        << N_L[0] <<"(x-"<<p_000_L[0]<<")+"<<N_L[1]<<"(y-"<<p_000_L[1]<<")+"<<N_L[2]<<"(z-"<<p_000_L[2]<<") = 0"<<endl<<endl;
         // cout << "one point on the laser plane: " << endl
         //     << point_L << endl;
         // cout << "(normal vector) * (vector on plane):          " << N_L[0] * P_L[0] + N_L[1] * P_L[1] + N_L[2] * P_L[2] << endl;

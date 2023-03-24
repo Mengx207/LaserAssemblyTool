@@ -33,6 +33,8 @@ opencv2/core/utility.hpp
 -
 opencv2/imgproc/imgproc.hpp
 /home/lingbo/Documents/GitHub/AssemblyGuidanceTool/opencv2/imgproc/imgproc.hpp
+opencv2/calib3d.hpp
+-
 bits/stdc++.h
 -
 vector

@@ -45,3 +45,5 @@ target_link_libraries( AG_DEMO
                        ${pylon_camera_INCLUDE_DIRS}
 
 )
+
+
