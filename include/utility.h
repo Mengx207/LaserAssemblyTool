@@ -209,15 +209,14 @@ namespace laserline
         params.maxArea = 10e4;
         Ptr<FeatureDetector> blobDetector = SimpleBlobDetector::create(params);
         bool patternfound = findChessboardCorners(image_captured, patternsize, corners_found, CALIB_CB_ASYMMETRIC_GRID);
-        cout <<endl<<endl<< "Corners found: " << endl
-            << corners_found << endl << endl;
+        // cout <<endl<<endl<< "Corners found: " << endl << corners_found << endl << endl;
+
         drawChessboardCorners(image_corners, patternsize, Mat(corners_found), patternfound);
         
         // create chessboard pattern
         double squareSize = 4.5; // 10% square size in mm
         vector<Point3f> corners_created = createChessBoardCorners(patternsize, squareSize);
-        cout << "created pattern corners in mm: " << endl
-            << corners_created << endl;
+        // cout << "created pattern corners in mm: " << endl << corners_created << endl;
 
         // import camera matrix and distortion coefficients from txt file
         ifstream intrin("values/intrinsic.txt");
@@ -240,14 +239,14 @@ namespace laserline
         Mat rvec, tvec;
         // corners_created:created pattern corners in mm    /corners_found: corners found on the loaded image in image coordinates system
         solvePnP(corners_created, corners_found, cameraMatrix, distCoeffs, rvec, tvec);
-        cout << "tvec from the target board to cam:" << endl << tvec << endl;
-        cout << "rvec from the target board to cam:" << endl << rvec << endl;
+        // cout << "tvec from the target board to cam:" << endl << tvec << endl;
+        // cout << "rvec from the target board to cam:" << endl << rvec << endl;
         double distance = sqrt(tvec.at<double>(0) * tvec.at<double>(0) + tvec.at<double>(1) * tvec.at<double>(1) + tvec.at<double>(2) * tvec.at<double>(2));
         // cout << "distance between target board and camera: " << distance << "mm" << endl;
         // Convert rvec to rmatrix
         Mat rmatrix;
         Rodrigues(rvec, rmatrix);
-        cout << "rmatrix from the target board to cam: " << endl << rmatrix << endl << endl;
+        // cout << "rmatrix from the target board to cam: " << endl << rmatrix << endl << endl;
         pair<Mat,Mat>vec(rmatrix,tvec) ; // rmatrix = vec.first tvec = vec.second
         return vec;
     }
@@ -294,11 +293,11 @@ namespace laserline
     }
 
     struct laser_plane{
-    vector<double> N_L;
+    vector<double> normalvector;
     vector<double> V_L;
     vector<double> P0;
     vector<double> P1;
-    vector<double> C_L;
+    vector<double> laserbeam;
     };
     laser_plane laserPlane(vector<double> rmatrix_laser_values, vector<double> tvec_laser_values)
     {
@@ -326,7 +325,7 @@ namespace laserline
             rmatrix_L.at<double>(3)+tvec_L.at<double>(1),
             rmatrix_L.at<double>(6)+tvec_L.at<double>(2)
         };
-        vector<double> C_L = {
+        vector<double> laserbeam = {
             p_100_L[0] - p_000_L[0],
             p_100_L[1] - p_000_L[1],
             p_100_L[2] - p_000_L[2]
@@ -339,7 +338,7 @@ namespace laserline
         //"y="<<p_000_L[1]<<"+("<<C_L[1]<<")*t"<<endl<<"z="<<p_000_L[2]<<"+("<<C_L[2]<<")*t"<<endl<<endl;
 
         //Normal vector of the target board in camera frame
-        vector<double> N_L = {
+        vector<double> normalvector = {
             p_001_L[0] - p_000_L[0],
             p_001_L[1] - p_000_L[1],
             p_001_L[2] - p_000_L[2]
@@ -350,25 +349,24 @@ namespace laserline
             p_110_L[2] - p_000_L[2]
         }; 
         // Convert vector to Mat
-        Mat NormalV_L = Mat(1, 3, CV_64FC1, N_L.data());
+        Mat NormalV_L = Mat(1, 3, CV_64FC1, normalvector.data());
         Mat point_L = Mat(1, 3, CV_64FC1, p_110_L.data());
         Mat point_L_O = Mat(1, 3, CV_64FC1, p_000_L.data());
-        cout << "The Laser Plane: " << endl;
-        cout << "normal vector: " << endl
-            << NormalV_L << endl;
-        cout << "origin point: " << endl
-            << point_L_O << endl;
-        cout<< "equation of laser plane:" <<endl
-        << N_L[0] <<"(x-"<<p_000_L[0]<<")+"<<N_L[1]<<"(y-"<<p_000_L[1]<<")+"<<N_L[2]<<"(z-"<<p_000_L[2]<<") = 0"<<endl<<endl;
+        // cout << "The Laser Plane: " << endl;
+        // cout << "normal vector: " << endl
+        //     << NormalV_L << endl;
+        // cout << "origin point: " << endl
+        //     << point_L_O << endl;
+        // cout<< "equation of laser plane:" <<endl
+        // << normalvector[0] <<"*(x-"<<p_000_L[0]<<")+"<<normalvector[1]<<"*(y-"<<p_000_L[1]<<")+"<<normalvector[2]<<"*(z-"<<p_000_L[2]<<") = 0"<<endl<<endl;
         // cout << "one point on the laser plane: " << endl
         //     << point_L << endl;
-        // cout << "(normal vector) * (vector on plane):          " << N_L[0] * P_L[0] + N_L[1] * P_L[1] + N_L[2] * P_L[2] << endl;
         laser_plane laser_values;
-        laser_values.N_L = N_L;
+        laser_values.normalvector = normalvector;
         laser_values.V_L = V_L;
         laser_values.P0 = p_000_L;
         laser_values.P1 = p_110_L;
-        laser_values.C_L = C_L;
+        laser_values.laserbeam = laserbeam;
         
         // pair<Mat,Mat>laser(NormalV_L, point_L_O);
         // cout<<endl<<laser.first<<endl<<laser.second<<endl;
@@ -400,7 +398,7 @@ namespace laserline
 
     
     struct intersection{
-        double x,y;
+        double x0,y0,z0;
         double a,b,c;
     };
     intersection intersectionLine(vector<double> N_B, vector<double> N_L, vector<double> point_B, vector<double> point_L)
@@ -414,34 +412,29 @@ namespace laserline
         c2 = N_L[2];	
         vector<double> cross_P;
         //find the plane equations
-        double x,y,z;
-        //cout<<endl<<"Target board plane equation: "<<a1<<"(x-"<<point_B[0]<<")+"<<b1<<"*(y-"<<point_B[1]<<")+"<<c1<<"*(z-"<<point_B[2]<<") = 0"<<endl;
-        //cout<<"Laser plane equation: "<<a2<<"(x-"<<point_L[0]<<")+"<<b2<<"*(y-"<<point_L[1]<<")+"<<c2<<"*(z-"<<point_L[2]<<") = 0"<<endl;
-        // cout << dotProduct(N_B, N_L) << endl;
+        cout<<endl<<"Target board plane equation: "<<a1<<"*(x-"<<point_B[0]<<")+"<<b1<<"*(y-"<<point_B[1]<<")+"<<c1<<"*(z-"<<point_B[2]<<") = 0"<<endl;
+        cout<<"Laser plane equation: "<<a2<<"(x-"<<point_L[0]<<")+"<<b2<<"*(y-"<<point_L[1]<<")+"<<c2<<"*(z-"<<point_L[2]<<") = 0"<<endl;
         cross_P = crossProduct(N_B, N_L);
-        //cout<<"Nomal vector cross product: v=("<<cross_P[0]<<","<<cross_P[1]<<","<<cross_P[2]<<")";
-        // To find a point on intersection line, use two plane equations and set z=0
-        c1 = a1*point_B[0]+b1*point_B[0]+c1*point_B[0];
-        c2 = a2*point_L[0]+b2*point_L[0]+c2*point_L[0];
-        x = (c1*b2-b1*c2)/(a1*b2-b1*a2);
-        y = (a1*c2-c1*a2)/(a1*b2-b1*a2);
+        // cout<<"Nomal vector cross product: v=("<<cross_P[0]<<","<<cross_P[1]<<","<<cross_P[2]<<")"<<endl<<endl;
+        double x0,y0,z0;
+        x0 = point_L[0];
+        y0 = point_L[1];
+        z0 = point_L[2];
+        cout<<"Intersection line of two planes__:"<<"r=("<<x0<<"+t*"<<cross_P[0]<<")*i+("<<y0<<"+t*"<<cross_P[1]<<")*j+("<<z0<<"+"<<cross_P[2]<<"*t)*k"<<endl;
         //cout<<endl<<"One point on intersection line: r0 = ("<<x<<","<<y<<",0)"<<endl;
 
-        double a,b,c;
-        char t;
-        a = x+t*cross_P[0];
-        b = y+t*cross_P[1];
-        c = t*cross_P[2];
-        //cout<<"Intersection line(vector equation) of two planes:"<<endl<<"r= a*i+b*j+c*k"<<endl;
-        //cout<<"a="<<x<<"+t*"<<cross_P[0]<<endl;
-        //cout<<"b="<<y<<"+t*"<<cross_P[1]<<endl;
-        //cout<<"c=t*"<<cross_P[2]<<endl;
-        cout<<endl<<"Intersection line of two planes:"<<endl<<"r=("<<x<<"+t*"<<cross_P[0]<<")*i+("<<y<<"+t*"<<cross_P[1]<<")*j+("<<cross_P[2]<<"*t)*k"<<endl;
+        // double a,b,c;
+        // char t;
+        // a = x+t*cross_P[0];
+        // b = y+t*cross_P[1];
+        // c = t*cross_P[2];
+        // cout<<"Intersection line of two planes:"<<endl<<"r=("<<x<<"+t*"<<cross_P[0]<<")*i+("<<y<<"+t*"<<cross_P[1]<<")*j+("<<cross_P[2]<<"*t)*k"<<endl;
         intersection line;
-        line.x = x;
+        line.x0 = x0;
         line.a = cross_P[0];
-        line.y = y;
+        line.y0 = y0;
         line.b = cross_P[1];
+        line.z0 = z0;
         line.c = cross_P[2];
         return line;
     }

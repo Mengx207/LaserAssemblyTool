@@ -60,80 +60,6 @@ CMAKE_SOURCE_DIR = /home/lingbo/Documents/GitHub/AssemblyGuidanceTool
 CMAKE_BINARY_DIR = /home/lingbo/Documents/GitHub/AssemblyGuidanceTool
 
 #=============================================================================
-# Target rules for target CMakeFiles/calculated_laser_line.dir
-
-# All Build rule for target.
-CMakeFiles/calculated_laser_line.dir/all:
-	$(MAKE) -f CMakeFiles/calculated_laser_line.dir/build.make CMakeFiles/calculated_laser_line.dir/depend
-	$(MAKE) -f CMakeFiles/calculated_laser_line.dir/build.make CMakeFiles/calculated_laser_line.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/lingbo/Documents/GitHub/AssemblyGuidanceTool/CMakeFiles --progress-num=3,4 "Built target calculated_laser_line"
-.PHONY : CMakeFiles/calculated_laser_line.dir/all
-
-# Include target in all.
-all: CMakeFiles/calculated_laser_line.dir/all
-
-.PHONY : all
-
-# Build rule for subdir invocation for target.
-CMakeFiles/calculated_laser_line.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/lingbo/Documents/GitHub/AssemblyGuidanceTool/CMakeFiles 2
-	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/calculated_laser_line.dir/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/lingbo/Documents/GitHub/AssemblyGuidanceTool/CMakeFiles 0
-.PHONY : CMakeFiles/calculated_laser_line.dir/rule
-
-# Convenience name for target.
-calculated_laser_line: CMakeFiles/calculated_laser_line.dir/rule
-
-.PHONY : calculated_laser_line
-
-# clean rule for target.
-CMakeFiles/calculated_laser_line.dir/clean:
-	$(MAKE) -f CMakeFiles/calculated_laser_line.dir/build.make CMakeFiles/calculated_laser_line.dir/clean
-.PHONY : CMakeFiles/calculated_laser_line.dir/clean
-
-# clean rule for target.
-clean: CMakeFiles/calculated_laser_line.dir/clean
-
-.PHONY : clean
-
-#=============================================================================
-# Target rules for target CMakeFiles/get_rvec_tvec.dir
-
-# All Build rule for target.
-CMakeFiles/get_rvec_tvec.dir/all:
-	$(MAKE) -f CMakeFiles/get_rvec_tvec.dir/build.make CMakeFiles/get_rvec_tvec.dir/depend
-	$(MAKE) -f CMakeFiles/get_rvec_tvec.dir/build.make CMakeFiles/get_rvec_tvec.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/lingbo/Documents/GitHub/AssemblyGuidanceTool/CMakeFiles --progress-num=5,6 "Built target get_rvec_tvec"
-.PHONY : CMakeFiles/get_rvec_tvec.dir/all
-
-# Include target in all.
-all: CMakeFiles/get_rvec_tvec.dir/all
-
-.PHONY : all
-
-# Build rule for subdir invocation for target.
-CMakeFiles/get_rvec_tvec.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/lingbo/Documents/GitHub/AssemblyGuidanceTool/CMakeFiles 2
-	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/get_rvec_tvec.dir/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/lingbo/Documents/GitHub/AssemblyGuidanceTool/CMakeFiles 0
-.PHONY : CMakeFiles/get_rvec_tvec.dir/rule
-
-# Convenience name for target.
-get_rvec_tvec: CMakeFiles/get_rvec_tvec.dir/rule
-
-.PHONY : get_rvec_tvec
-
-# clean rule for target.
-CMakeFiles/get_rvec_tvec.dir/clean:
-	$(MAKE) -f CMakeFiles/get_rvec_tvec.dir/build.make CMakeFiles/get_rvec_tvec.dir/clean
-.PHONY : CMakeFiles/get_rvec_tvec.dir/clean
-
-# clean rule for target.
-clean: CMakeFiles/get_rvec_tvec.dir/clean
-
-.PHONY : clean
-
-#=============================================================================
 # Target rules for target CMakeFiles/AG_DEMO.dir
 
 # All Build rule for target.
@@ -177,7 +103,7 @@ clean: CMakeFiles/AG_DEMO.dir/clean
 CMakeFiles/planes_intersection.dir/all:
 	$(MAKE) -f CMakeFiles/planes_intersection.dir/build.make CMakeFiles/planes_intersection.dir/depend
 	$(MAKE) -f CMakeFiles/planes_intersection.dir/build.make CMakeFiles/planes_intersection.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/lingbo/Documents/GitHub/AssemblyGuidanceTool/CMakeFiles --progress-num=7,8 "Built target planes_intersection"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/lingbo/Documents/GitHub/AssemblyGuidanceTool/CMakeFiles --progress-num=5,6 "Built target planes_intersection"
 .PHONY : CMakeFiles/planes_intersection.dir/all
 
 # Include target in all.
@@ -204,6 +130,43 @@ CMakeFiles/planes_intersection.dir/clean:
 
 # clean rule for target.
 clean: CMakeFiles/planes_intersection.dir/clean
+
+.PHONY : clean
+
+#=============================================================================
+# Target rules for target CMakeFiles/calculated_laser_line.dir
+
+# All Build rule for target.
+CMakeFiles/calculated_laser_line.dir/all:
+	$(MAKE) -f CMakeFiles/calculated_laser_line.dir/build.make CMakeFiles/calculated_laser_line.dir/depend
+	$(MAKE) -f CMakeFiles/calculated_laser_line.dir/build.make CMakeFiles/calculated_laser_line.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/lingbo/Documents/GitHub/AssemblyGuidanceTool/CMakeFiles --progress-num=3,4 "Built target calculated_laser_line"
+.PHONY : CMakeFiles/calculated_laser_line.dir/all
+
+# Include target in all.
+all: CMakeFiles/calculated_laser_line.dir/all
+
+.PHONY : all
+
+# Build rule for subdir invocation for target.
+CMakeFiles/calculated_laser_line.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/lingbo/Documents/GitHub/AssemblyGuidanceTool/CMakeFiles 2
+	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/calculated_laser_line.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/lingbo/Documents/GitHub/AssemblyGuidanceTool/CMakeFiles 0
+.PHONY : CMakeFiles/calculated_laser_line.dir/rule
+
+# Convenience name for target.
+calculated_laser_line: CMakeFiles/calculated_laser_line.dir/rule
+
+.PHONY : calculated_laser_line
+
+# clean rule for target.
+CMakeFiles/calculated_laser_line.dir/clean:
+	$(MAKE) -f CMakeFiles/calculated_laser_line.dir/build.make CMakeFiles/calculated_laser_line.dir/clean
+.PHONY : CMakeFiles/calculated_laser_line.dir/clean
+
+# clean rule for target.
+clean: CMakeFiles/calculated_laser_line.dir/clean
 
 .PHONY : clean
 
