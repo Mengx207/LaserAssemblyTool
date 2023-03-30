@@ -352,26 +352,13 @@ namespace laserline
         Mat NormalV_L = Mat(1, 3, CV_64FC1, normalvector.data());
         Mat point_L = Mat(1, 3, CV_64FC1, p_110_L.data());
         Mat point_L_O = Mat(1, 3, CV_64FC1, p_000_L.data());
-        // cout << "The Laser Plane: " << endl;
-        // cout << "normal vector: " << endl
-        //     << NormalV_L << endl;
-        // cout << "origin point: " << endl
-        //     << point_L_O << endl;
-        // cout<< "equation of laser plane:" <<endl
-        // << normalvector[0] <<"*(x-"<<p_000_L[0]<<")+"<<normalvector[1]<<"*(y-"<<p_000_L[1]<<")+"<<normalvector[2]<<"*(z-"<<p_000_L[2]<<") = 0"<<endl<<endl;
-        // cout << "one point on the laser plane: " << endl
-        //     << point_L << endl;
+
         laser_plane laser_values;
         laser_values.normalvector = normalvector;
         laser_values.V_L = V_L;
         laser_values.P0 = p_000_L;
         laser_values.P1 = p_110_L;
         laser_values.laserbeam = laserbeam;
-        
-        // pair<Mat,Mat>laser(NormalV_L, point_L_O);
-        // cout<<endl<<laser.first<<endl<<laser.second<<endl;
-        // pair<vector<double>,vector<double>> laser_plane_values(N_L,p_000_L);
-
         return laser_values;
     }
 
@@ -423,11 +410,6 @@ namespace laserline
         cout<<"Intersection line of two planes__:"<<"r=("<<x0<<"+t*"<<cross_P[0]<<")*i+("<<y0<<"+t*"<<cross_P[1]<<")*j+("<<z0<<"+"<<cross_P[2]<<"*t)*k"<<endl;
         //cout<<endl<<"One point on intersection line: r0 = ("<<x<<","<<y<<",0)"<<endl;
 
-        // double a,b,c;
-        // char t;
-        // a = x+t*cross_P[0];
-        // b = y+t*cross_P[1];
-        // c = t*cross_P[2];
         // cout<<"Intersection line of two planes:"<<endl<<"r=("<<x<<"+t*"<<cross_P[0]<<")*i+("<<y<<"+t*"<<cross_P[1]<<")*j+("<<cross_P[2]<<"*t)*k"<<endl;
         intersection line;
         line.x0 = x0;

@@ -125,8 +125,10 @@ int main(int argc, char **argv)
 	interPoint2 = laserline::intersectionPoint(laser_2.P0, laser_2.laserbeam, target.first, target.second);
 	interPoint3 = laserline::intersectionPoint(laser_3.P0, laser_3.laserbeam, target.first, target.second);
 
-    cout<<endl<<"Intersection point between laser beam and target board: "<< Point3d(interPoint1.x, interPoint1.y, interPoint1.z) << endl;
-
+    cout<<endl<<"Intersection point between laser beam 1 and target board: "<< Point3d(interPoint1.x, interPoint1.y, interPoint1.z) << endl;
+    cout<<endl<<"Intersection point between laser beam 2 and target board: "<< Point3d(interPoint2.x, interPoint2.y, interPoint2.z) << endl;
+    cout<<endl<<"Intersection point between laser beam 3 and target board: "<< Point3d(interPoint3.x, interPoint3.y, interPoint3.z) << endl;
+    
     // find intersection line between the target board plane and the laser plane in camera frame
     laserline::intersection line1, line2, line3;
     line1 = laserline::intersectionLine(target.first, laser_1.normalvector, target.second, vector<double>{interPoint1.x, interPoint1.y, interPoint1.z});
@@ -137,15 +139,22 @@ int main(int argc, char **argv)
 
     for(double t=-100; t<=100;)
     {
-        Point3d points((line1.x0+line1.a*t), (line1.y0+line1.b*t), (line1.z0+line1.c*t));
+        Point3d points_1((line1.x0+line1.a*t), (line1.y0+line1.b*t), (line1.z0+line1.c*t));
+        Point3d points_2((line2.x0+line2.a*t), (line2.y0+line2.b*t), (line2.z0+line2.c*t));
+        Point3d points_3((line3.x0+line3.a*t), (line3.y0+line3.b*t), (line3.z0+line3.c*t));
         t = t+10;
         //cout<<"point1: "<<points<<endl;
-        laserline_points_1.push_back(points);
+        laserline_points_1.push_back(points_1);
+        laserline_points_2.push_back(points_2);
+        laserline_points_3.push_back(points_3);
     }
 
     // cout<<endl<<"laser line points in 3D space in camera frame:"<<endl<<laserline_points_1_<<endl;
     vector<Point2d> projectedlaserline_1,projectedlaserline_2,projectedlaserline_3;
     projectPoints(laserline_points_1, Mat::zeros(3,1,CV_64FC1), Mat::zeros(3,1,CV_64FC1),cameraMatrix,distCoeffs, projectedlaserline_1);
+    projectPoints(laserline_points_2, Mat::zeros(3,1,CV_64FC1), Mat::zeros(3,1,CV_64FC1),cameraMatrix,distCoeffs, projectedlaserline_2);
+    projectPoints(laserline_points_3, Mat::zeros(3,1,CV_64FC1), Mat::zeros(3,1,CV_64FC1),cameraMatrix,distCoeffs, projectedlaserline_3);
+    
     cout<<endl<<"points on laser line:"<<endl<<projectedlaserline_1<<endl;
 
 
@@ -153,7 +162,10 @@ int main(int argc, char **argv)
     int thickness = 2;
     int lineType = cv::LINE_8;
     line( img, projectedlaserline_1[0], projectedlaserline_1[19], cv::Scalar( 0, 0, 255 ), thickness, lineType );
-
+    line( img, projectedlaserline_2[0], projectedlaserline_2[19], cv::Scalar( 0, 255, 0 ), thickness, lineType );
+    line( img, projectedlaserline_3[0], projectedlaserline_3[19], cv::Scalar( 255, 0, 0 ), thickness, lineType );
+    
+    // draw the intersection point between laser beam and target board
     vector<Point3d> interPointArray;
     vector<Point2d> projectedInterPoints;
     interPointArray.push_back(interPoint1);
@@ -162,7 +174,9 @@ int main(int argc, char **argv)
     projectPoints(interPointArray, Mat::zeros(3,1,CV_64FC1), Mat::zeros(3,1,CV_64FC1),cameraMatrix,distCoeffs,projectedInterPoints);
 
     cout<<endl<<"Intersection between laser beam and target board on camera image: "<<endl<<projectedInterPoints<<endl;
-    cv::circle( img, projectedInterPoints[0], 5, cv::Scalar(0,0,255), -1, 8, 0 );
+    cv::circle( img, projectedInterPoints[0], 3, cv::Scalar(0,0,255), -1, 8, 0 );
+    cv::circle( img, projectedInterPoints[1], 5, cv::Scalar(0,255,0), 2, 8, 0 );
+    cv::circle( img, projectedInterPoints[2], 7, cv::Scalar(255,0,0), 2, 8, 0 );
 
 	//cv::circle( img, Point2d(720, 540), 5, cv::Scalar(0,0,255), -1, 8, 0 );
     cv::imshow("Image",img);

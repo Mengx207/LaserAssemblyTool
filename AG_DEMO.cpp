@@ -113,22 +113,17 @@ int main(int argc, char* argv[])
 
 			while (imgs_taken0 < max_imgs0) 
 			{	
-
 				CGrabResultPtr ptrGrabResult0;
 				CGrabResultPtr ptrGrabResult1;
-
 				sleep(0.1);
-
 				while(camera0.WaitForFrameTriggerReady(1000,TimeoutHandling_ThrowException)==0);			
-				CCommandParameter(nodemap0, "TriggerSoftware").Execute();
-				
+				CCommandParameter(nodemap0, "TriggerSoftware").Execute();	
 				bool test0 = camera0.RetrieveResult(1000, ptrGrabResult0, TimeoutHandling_ThrowException);
-
 				formatConverter.Convert(pylonImage0, ptrGrabResult0);
-//-----------------------Main------Functionalities------Start------From------Here-----------------------------------------------------------------------------				
+		
 				cam_frame_temp0 = cv::Mat(ptrGrabResult0->GetHeight(), ptrGrabResult0->GetWidth(), CV_8UC3, (uint8_t *) pylonImage0.GetBuffer());
-
 				src = cam_frame_temp0.clone();
+
 			    // gain rmatrix and tvec from target board to cam
 				ifstream intrin("values/intrinsic.txt");
 				vector<double> cameraMatrix_values;
@@ -143,99 +138,109 @@ int main(int argc, char* argv[])
 				{
 					distCoeffs_values.push_back(val);
 				}
-
 				Mat cameraMatrix = Mat(3, 3, CV_64FC1, cameraMatrix_values.data());
-				// Mat distCoeffs = Mat(5, 1, CV_64FC1, distCoeffs_values.data());
 				Mat distCoeffs = Mat(5, 1, CV_64FC1, distCoeffs_values.data());
 
-//=========================================================================================================================================================================
-			// gain rmatrix and tvec from target board to cam
-			string path_rmatrix = "values/rmatrix_laser_1.txt";
-			string path_tvec = "values/tvec_laser_1.txt";
-
-			if(argv[1] == string("1")) // 30 degree to vertical CCW
-			{
-				path_rmatrix = "values/rmatrix_laser_1.txt";
-				path_tvec = "values/tvec_laser_1.txt";
-			}
-			if(argv[1] == string("2")) // vertical
-			{
-				path_rmatrix = "values/rmatrix_laser_2.txt";
-				path_tvec = "values/tvec_laser_2.txt";
-			}
-			if(argv[1] == string("3")) // horizontal
-			{
-				path_rmatrix = "values/rmatrix_laser_3.txt";
-				path_tvec = "values/tvec_laser_3.txt";
-			}
-			if(argv[1] == string("4")) // 30 degree to vertical CW
-			{
-				path_rmatrix = "values/rmatrix_laser_4.txt";
-				path_tvec = "values/tvec_laser_4.txt";
-			}
-			pair<Mat,Mat>vec = laserline::getRvecTvec();
-
-			// read laser 1
-			ifstream rmatrixL(path_rmatrix);
-			vector<double> rmatrix_laser_values;
-			while (rmatrixL >> val)
-			{
-				rmatrix_laser_values.push_back(val);
-			}
-			ifstream tvecL(path_tvec);
-			vector<double> tvec_laser_values;
-			while (tvecL >> val)
-			{
-				tvec_laser_values.push_back(val);
-			}
-			// find target board plane in cam frame
-			pair<vector<double>,vector<double>>target = laserline::targetBoardPlane(vec.first, vec.second);
-
-			laserline::laser_plane laser_1, laser_2, laser_3;
-			laser_1 = laserline::laserPlane(rmatrix_laser_values, tvec_laser_values);
-			
-			Point3f interPoint1, interPoint2, interPoint3;
-			interPoint1 = laserline::intersectionPoint(laser_1.P0, laser_1.laserbeam, target.first, target.second);
-			
-			// find intersection line between target board plane and laser plane in cam frame
-			std::vector<cv::Point3d> laserline_points_1, laserline_points_2, laserline_points_3;
-			laserline::intersection line1, line2, line3;
-			line1 = laserline::intersectionLine(target.first, laser_1.normalvector, target.second, vector<double>{interPoint1.x, interPoint1.y, interPoint1.z});
-
-			for(int t=-100; t<100;)
-			{
-				t = t+10;
-				Point3d points((line1.x0+line1.a*t), (line1.y0+line1.b*t), (line1.z0+line1.c*t));
-				// cout<<"point: "<<points<<endl;
-				laserline_points_1.push_back(points);
-			}
-			vector<Point2d> projectedlaserline_1,projectedlaserline_2,projectedlaserline_3;
-    		projectPoints(laserline_points_1, Mat::zeros(3,1,CV_64FC1), Mat::zeros(3,1,CV_64FC1),cameraMatrix,distCoeffs, projectedlaserline_1);
-		//=========================================================================================================================================================================
-
-		//----------raw image to greyscale, threshold filter
-			cv::cvtColor(src, img_grey, cv::COLOR_BGR2GRAY);
-			cv::Mat img_grey_filtered;
-			cv::threshold(img_grey,img_grey_filtered,250,255,cv::THRESH_OTSU||cv::THRESH_TRIANGLE);	
-			cv::circle( src, Point2d(720,540), 5, cv::Scalar(0,0,255), -1, 8, 0 );
-			laserdot::CalculatedLine( src, projectedlaserline_1[0], projectedlaserline_1[19] );
-			// Number of non_zero pixel
-			int non_zero = laserdot::NonZero(img_grey_filtered);
-
-			// Number of bright pixel
-			int count = laserdot::PixelCounter(img_grey_filtered);
-			// average size
-			size_avg = laserdot::SizeAverage(count,0,size_array, center_total);
-			//-----------save min_size only when the value in size_array is stable and close to each other
-			if(size_avg < min_size && center_total > 20)
-			{
-				if(abs(size_array[0]-size_array[9]) <=3)
+				// gain rmatrix and tvec from target board to cam
+				string path_rmatrix = "values/rmatrix_laser_1.txt";
+				string path_tvec = "values/tvec_laser_1.txt";
+				if(argv[1] == string("1")) 
 				{
-					min_size = size_avg;
+					path_rmatrix = "values/rmatrix_laser_1.txt";
+					path_tvec = "values/tvec_laser_1.txt";
 				}
-			}
+				if(argv[1] == string("2")) 
+				{
+					path_rmatrix = "values/rmatrix_laser_2.txt";
+					path_tvec = "values/tvec_laser_2.txt";
+				}
+				if(argv[1] == string("3")) 
+				{
+					path_rmatrix = "values/rmatrix_laser_3.txt";
+					path_tvec = "values/tvec_laser_3.txt";
+				}
+				if(argv[1] == string("4"))
+				{
+					path_rmatrix = "values/rmatrix_laser_4.txt";
+					path_tvec = "values/tvec_laser_4.txt";
+				}
 
-			 //---------Draw circles based on collected points	
+				// Calculate rotation vector and translation vector by a captured image of a pattern
+				pair<Mat,Mat>vec = laserline::getRvecTvec();
+
+				// read laser 1
+				ifstream rmatrixL(path_rmatrix);
+				vector<double> rmatrix_laser_values;
+				while (rmatrixL >> val)
+				{
+					rmatrix_laser_values.push_back(val);
+				}
+				ifstream tvecL(path_tvec);
+				vector<double> tvec_laser_values;
+				while (tvecL >> val)
+				{
+					tvec_laser_values.push_back(val);
+				}
+				// find target board plane in cam frame
+				pair<vector<double>,vector<double>>target = laserline::targetBoardPlane(vec.first, vec.second);
+
+				laserline::laser_plane laser_1, laser_2, laser_3;
+				laser_1 = laserline::laserPlane(rmatrix_laser_values, tvec_laser_values);
+				
+				Point3f interPoint1, interPoint2, interPoint3;
+				interPoint1 = laserline::intersectionPoint(laser_1.P0, laser_1.laserbeam, target.first, target.second);
+				
+				// find intersection line between target board plane and laser plane in cam frame
+				std::vector<cv::Point3d> laserline_points_1, laserline_points_2, laserline_points_3;
+				laserline::intersection line1, line2, line3;
+				line1 = laserline::intersectionLine(target.first, laser_1.normalvector, target.second, vector<double>{interPoint1.x, interPoint1.y, interPoint1.z});
+
+				for(int t=-100; t<100;)
+				{
+					t = t+10;
+					Point3d points((line1.x0+line1.a*t), (line1.y0+line1.b*t), (line1.z0+line1.c*t));
+					// cout<<"point: "<<points<<endl;
+					laserline_points_1.push_back(points);
+				}
+				vector<Point2d> projectedlaserline_1,projectedlaserline_2,projectedlaserline_3;
+				projectPoints(laserline_points_1, Mat::zeros(3,1,CV_64FC1), Mat::zeros(3,1,CV_64FC1),cameraMatrix,distCoeffs, projectedlaserline_1);
+
+			//----------raw image to greyscale, threshold filter
+				cv::cvtColor(src, img_grey, cv::COLOR_BGR2GRAY);
+				Mat dot_img = src.clone();
+				Mat line_img = src.clone();
+
+				cv::Mat img_grey_filtered_dot, img_grey_filtered_line;
+				cv::threshold(img_grey,img_grey_filtered_dot,250,255,cv::THRESH_OTSU||cv::THRESH_TRIANGLE);	
+				cv::threshold(img_grey,img_grey_filtered_line,50,255,cv::THRESH_OTSU||cv::THRESH_TRIANGLE);	
+				cv::circle( dot_img, projectedlaserline_1[0], 5, cv::Scalar(0,0,255), -1, 8, 0 );
+				laserdot::CalculatedLine( dot_img, projectedlaserline_1[0], projectedlaserline_1[19] );
+				laserdot::CalculatedLine( line_img, projectedlaserline_1[0], projectedlaserline_1[19] );
+
+				vector<Point3d> interPointArray;
+				vector<Point2d> projectedInterPoints;
+				interPointArray.push_back(interPoint1);
+				projectPoints(interPointArray, Mat::zeros(3,1,CV_64FC1), Mat::zeros(3,1,CV_64FC1),cameraMatrix,distCoeffs,projectedInterPoints);
+				cout<<endl<<"Intersection between laser beam and target board on camera image: "<<endl<<projectedInterPoints<<endl;
+				cv::circle( dot_img, projectedInterPoints[0], 5, cv::Scalar(0,0,255), -1, 8, 0 );
+
+
+				// Number of non_zero pixel
+				int non_zero = laserdot::NonZero(img_grey_filtered_dot);
+
+				// Number of bright pixel
+				int count = laserdot::PixelCounter(img_grey_filtered_dot);
+				// average size
+				size_avg = laserdot::SizeAverage(count,0,size_array, center_total);
+				//-----------save min_size only when the value in size_array is stable and close to each other
+				if(size_avg < min_size && center_total > 20)
+				{
+					if(abs(size_array[0]-size_array[9]) <=3)
+					{
+						min_size = size_avg;
+					}
+				}
+	
 			 //---------Process when captured images are not empty
 			 //---------Clear center list and size array is capture an empty image
 			 	double nom_distance,center_distance;
@@ -243,7 +248,7 @@ int main(int argc, char* argv[])
 				if(non_zero > 50)
 				{	
 					cv::Point center;
-					HoughCircles(img_grey_filtered, circles, cv::HOUGH_GRADIENT,2, 2000,500,10,0,100);
+					HoughCircles(img_grey_filtered_dot, circles, cv::HOUGH_GRADIENT,2, 2000,500,10,0,100);
 					if(!circles.empty())
 					{
 						center.x = cvRound(circles[0][0]);
@@ -261,35 +266,37 @@ int main(int argc, char* argv[])
 					{
 						cv::Point sum  = std::accumulate(center_list.begin(), center_list.end(), cv::Point(0,0));
 						center_avg = sum*(1.0/center_total);
-						//center_avg = sum*(1.0/200);
-						// cout<<"Average center: "<< center_avg<<endl;
+
 						sleep(0.1);
-						// cv::circle( img_grey_filtered, center_avg, 3, cv::Scalar(255,0,0), -1, 8, 0 );
-						cv::circle( src, center_avg, 3, cv::Scalar(255,100,0), -1, 8, 0 );
+
+						cv::circle( dot_img, center_avg, 3, cv::Scalar(255,100,0), -1, 8, 0 );
 
 						// std::pair<double,double>dist = laserdot::DotToLine(src, line_1_Start, line_1_End, center_avg, Point2d(interPoint1.x+720,-interPoint1.y+540));
-						std::pair<double,double>dist = laserdot::DotToLine(src, projectedlaserline_1[0], projectedlaserline_1[19], center_avg, Point2d(720,540));
+						std::pair<double,double>dist = laserdot::DotToLine(dot_img, projectedlaserline_1[0], projectedlaserline_1[19], center_avg, Point2d(720,540));
 						nom_distance = dist.first;
 						center_distance = dist.second;
 					}
-					
-					// std::pair<double,double>dist = laserdot::DotToLine(src, lineStart, lineEnd, center_avg);
-					// nom_distance,center_distance = dist.first,dist.second;
+;
 				}
 				else
 				{
 					last_min_size = min_size;
-					//cout<<"last min size: "<<last_min_size<<endl;
 					fill_n(size_array,10,0);
 					center_total = 0;
 					center_list.clear();
 					//fill(center_list.begin(), center_list.end(), cv::Point(0,0));
 				}
-				laserdot::HMI(src, size_avg, min_size, non_zero, nom_distance, center_distance);
-				laserdot::GreenLight(src, last_min_size, size_avg, nom_distance, center_distance);
+				laserdot::HMI(dot_img, size_avg, min_size, non_zero, nom_distance, center_distance);
+				laserdot::GreenLight(dot_img, last_min_size, size_avg, nom_distance, center_distance);
+				vector<Vec2f> lines;
+				cv::HoughLines(img_grey_filtered_line, lines, 1, CV_PI/180, 50, 0, 0);
 
-				cv::imshow("img_grey_filtered", img_grey_filtered);	
-				cv::imshow("source window", src);							
+				cout<<endl<<"hough lines: "<<lines[0]<<lines[1]<<lines[2]<<endl;
+
+				cv::imshow("img_grey_filtered_dot", img_grey_filtered_dot);	
+				cv::imshow("img_grey_filtered_line", img_grey_filtered_line);	
+				cv::imshow("Laser Beam Alignment Window", dot_img);		
+				cv::imshow("Laser Plane Alignment Window", line_img);						
 				cv::waitKey( 10 );		
 				sleep(0.1);
 				imgs_taken0++;
