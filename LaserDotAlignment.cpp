@@ -288,15 +288,11 @@ int main(int argc, char* argv[])
 				}
 				laserdot::HMI(dot_img, size_avg, min_size, non_zero, nom_distance, center_distance);
 				laserdot::GreenLight(dot_img, last_min_size, size_avg, nom_distance, center_distance);
-				vector<Vec2f> lines;
-				cv::HoughLines(img_grey_filtered_line, lines, 1, CV_PI/180, 50, 0, 0);
-
-				cout<<endl<<"hough lines: "<<lines[0]<<lines[1]<<lines[2]<<endl;
-
-				cv::imshow("img_grey_filtered_dot", img_grey_filtered_dot);	
-				cv::imshow("img_grey_filtered_line", img_grey_filtered_line);	
+				
+				// cv::imshow("img_grey_filtered_dot", img_grey_filtered_dot);	
+				// cv::imshow("img_grey_filtered_line", img_grey_filtered_line);
 				cv::imshow("Laser Beam Alignment Window", dot_img);		
-				cv::imshow("Laser Plane Alignment Window", line_img);						
+				// cv::imshow("Laser Plane Alignment Window", line_img);					
 				cv::waitKey( 10 );		
 				sleep(0.1);
 				imgs_taken0++;

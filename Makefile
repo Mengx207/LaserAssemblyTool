@@ -56,17 +56,6 @@ CMAKE_BINARY_DIR = /home/lingbo/Documents/GitHub/AssemblyGuidanceTool
 #=============================================================================
 # Targets provided globally by CMake.
 
-# Special rule for the target edit_cache
-edit_cache:
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "No interactive CMake dialog available..."
-	/usr/bin/cmake -E echo No\ interactive\ CMake\ dialog\ available.
-.PHONY : edit_cache
-
-# Special rule for the target edit_cache
-edit_cache/fast: edit_cache
-
-.PHONY : edit_cache/fast
-
 # Special rule for the target rebuild_cache
 rebuild_cache:
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running CMake to regenerate build system..."
@@ -77,6 +66,17 @@ rebuild_cache:
 rebuild_cache/fast: rebuild_cache
 
 .PHONY : rebuild_cache/fast
+
+# Special rule for the target edit_cache
+edit_cache:
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "No interactive CMake dialog available..."
+	/usr/bin/cmake -E echo No\ interactive\ CMake\ dialog\ available.
+.PHONY : edit_cache
+
+# Special rule for the target edit_cache
+edit_cache/fast: edit_cache
+
+.PHONY : edit_cache/fast
 
 # The main all target
 all: cmake_check_build_system
@@ -111,30 +111,17 @@ depend:
 .PHONY : depend
 
 #=============================================================================
-# Target rules for targets named AG_DEMO
+# Target rules for targets named LaserLineAlignment
 
 # Build rule for target.
-AG_DEMO: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 AG_DEMO
-.PHONY : AG_DEMO
+LaserLineAlignment: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 LaserLineAlignment
+.PHONY : LaserLineAlignment
 
 # fast build rule for target.
-AG_DEMO/fast:
-	$(MAKE) -f CMakeFiles/AG_DEMO.dir/build.make CMakeFiles/AG_DEMO.dir/build
-.PHONY : AG_DEMO/fast
-
-#=============================================================================
-# Target rules for targets named planes_intersection
-
-# Build rule for target.
-planes_intersection: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 planes_intersection
-.PHONY : planes_intersection
-
-# fast build rule for target.
-planes_intersection/fast:
-	$(MAKE) -f CMakeFiles/planes_intersection.dir/build.make CMakeFiles/planes_intersection.dir/build
-.PHONY : planes_intersection/fast
+LaserLineAlignment/fast:
+	$(MAKE) -f CMakeFiles/LaserLineAlignment.dir/build.make CMakeFiles/LaserLineAlignment.dir/build
+.PHONY : LaserLineAlignment/fast
 
 #=============================================================================
 # Target rules for targets named calculated_laser_line
@@ -149,32 +136,72 @@ calculated_laser_line/fast:
 	$(MAKE) -f CMakeFiles/calculated_laser_line.dir/build.make CMakeFiles/calculated_laser_line.dir/build
 .PHONY : calculated_laser_line/fast
 
-AG_DEMO.o: AG_DEMO.cpp.o
+#=============================================================================
+# Target rules for targets named LaserDotAlignment
 
-.PHONY : AG_DEMO.o
+# Build rule for target.
+LaserDotAlignment: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 LaserDotAlignment
+.PHONY : LaserDotAlignment
+
+# fast build rule for target.
+LaserDotAlignment/fast:
+	$(MAKE) -f CMakeFiles/LaserDotAlignment.dir/build.make CMakeFiles/LaserDotAlignment.dir/build
+.PHONY : LaserDotAlignment/fast
+
+LaserDotAlignment.o: LaserDotAlignment.cpp.o
+
+.PHONY : LaserDotAlignment.o
 
 # target to build an object file
-AG_DEMO.cpp.o:
-	$(MAKE) -f CMakeFiles/AG_DEMO.dir/build.make CMakeFiles/AG_DEMO.dir/AG_DEMO.cpp.o
-.PHONY : AG_DEMO.cpp.o
+LaserDotAlignment.cpp.o:
+	$(MAKE) -f CMakeFiles/LaserDotAlignment.dir/build.make CMakeFiles/LaserDotAlignment.dir/LaserDotAlignment.cpp.o
+.PHONY : LaserDotAlignment.cpp.o
 
-AG_DEMO.i: AG_DEMO.cpp.i
+LaserDotAlignment.i: LaserDotAlignment.cpp.i
 
-.PHONY : AG_DEMO.i
+.PHONY : LaserDotAlignment.i
 
 # target to preprocess a source file
-AG_DEMO.cpp.i:
-	$(MAKE) -f CMakeFiles/AG_DEMO.dir/build.make CMakeFiles/AG_DEMO.dir/AG_DEMO.cpp.i
-.PHONY : AG_DEMO.cpp.i
+LaserDotAlignment.cpp.i:
+	$(MAKE) -f CMakeFiles/LaserDotAlignment.dir/build.make CMakeFiles/LaserDotAlignment.dir/LaserDotAlignment.cpp.i
+.PHONY : LaserDotAlignment.cpp.i
 
-AG_DEMO.s: AG_DEMO.cpp.s
+LaserDotAlignment.s: LaserDotAlignment.cpp.s
 
-.PHONY : AG_DEMO.s
+.PHONY : LaserDotAlignment.s
 
 # target to generate assembly for a file
-AG_DEMO.cpp.s:
-	$(MAKE) -f CMakeFiles/AG_DEMO.dir/build.make CMakeFiles/AG_DEMO.dir/AG_DEMO.cpp.s
-.PHONY : AG_DEMO.cpp.s
+LaserDotAlignment.cpp.s:
+	$(MAKE) -f CMakeFiles/LaserDotAlignment.dir/build.make CMakeFiles/LaserDotAlignment.dir/LaserDotAlignment.cpp.s
+.PHONY : LaserDotAlignment.cpp.s
+
+LaserLineAlignment.o: LaserLineAlignment.cpp.o
+
+.PHONY : LaserLineAlignment.o
+
+# target to build an object file
+LaserLineAlignment.cpp.o:
+	$(MAKE) -f CMakeFiles/LaserLineAlignment.dir/build.make CMakeFiles/LaserLineAlignment.dir/LaserLineAlignment.cpp.o
+.PHONY : LaserLineAlignment.cpp.o
+
+LaserLineAlignment.i: LaserLineAlignment.cpp.i
+
+.PHONY : LaserLineAlignment.i
+
+# target to preprocess a source file
+LaserLineAlignment.cpp.i:
+	$(MAKE) -f CMakeFiles/LaserLineAlignment.dir/build.make CMakeFiles/LaserLineAlignment.dir/LaserLineAlignment.cpp.i
+.PHONY : LaserLineAlignment.cpp.i
+
+LaserLineAlignment.s: LaserLineAlignment.cpp.s
+
+.PHONY : LaserLineAlignment.s
+
+# target to generate assembly for a file
+LaserLineAlignment.cpp.s:
+	$(MAKE) -f CMakeFiles/LaserLineAlignment.dir/build.make CMakeFiles/LaserLineAlignment.dir/LaserLineAlignment.cpp.s
+.PHONY : LaserLineAlignment.cpp.s
 
 calculated_laser_line.o: calculated_laser_line.cpp.o
 
@@ -203,53 +230,26 @@ calculated_laser_line.cpp.s:
 	$(MAKE) -f CMakeFiles/calculated_laser_line.dir/build.make CMakeFiles/calculated_laser_line.dir/calculated_laser_line.cpp.s
 .PHONY : calculated_laser_line.cpp.s
 
-planes_intersection.o: planes_intersection.cpp.o
-
-.PHONY : planes_intersection.o
-
-# target to build an object file
-planes_intersection.cpp.o:
-	$(MAKE) -f CMakeFiles/planes_intersection.dir/build.make CMakeFiles/planes_intersection.dir/planes_intersection.cpp.o
-.PHONY : planes_intersection.cpp.o
-
-planes_intersection.i: planes_intersection.cpp.i
-
-.PHONY : planes_intersection.i
-
-# target to preprocess a source file
-planes_intersection.cpp.i:
-	$(MAKE) -f CMakeFiles/planes_intersection.dir/build.make CMakeFiles/planes_intersection.dir/planes_intersection.cpp.i
-.PHONY : planes_intersection.cpp.i
-
-planes_intersection.s: planes_intersection.cpp.s
-
-.PHONY : planes_intersection.s
-
-# target to generate assembly for a file
-planes_intersection.cpp.s:
-	$(MAKE) -f CMakeFiles/planes_intersection.dir/build.make CMakeFiles/planes_intersection.dir/planes_intersection.cpp.s
-.PHONY : planes_intersection.cpp.s
-
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
 	@echo "... all (the default if no target is provided)"
 	@echo "... clean"
 	@echo "... depend"
-	@echo "... edit_cache"
 	@echo "... rebuild_cache"
-	@echo "... AG_DEMO"
-	@echo "... planes_intersection"
+	@echo "... edit_cache"
+	@echo "... LaserLineAlignment"
 	@echo "... calculated_laser_line"
-	@echo "... AG_DEMO.o"
-	@echo "... AG_DEMO.i"
-	@echo "... AG_DEMO.s"
+	@echo "... LaserDotAlignment"
+	@echo "... LaserDotAlignment.o"
+	@echo "... LaserDotAlignment.i"
+	@echo "... LaserDotAlignment.s"
+	@echo "... LaserLineAlignment.o"
+	@echo "... LaserLineAlignment.i"
+	@echo "... LaserLineAlignment.s"
 	@echo "... calculated_laser_line.o"
 	@echo "... calculated_laser_line.i"
 	@echo "... calculated_laser_line.s"
-	@echo "... planes_intersection.o"
-	@echo "... planes_intersection.i"
-	@echo "... planes_intersection.s"
 .PHONY : help
 
 

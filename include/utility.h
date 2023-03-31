@@ -440,4 +440,65 @@ namespace laserline
         return linecenter;
     }
 
+
+
+    std::pair<double, double> HoughAverage(cv::Mat src)
+    {
+        std::pair<double, double> hough_avg;
+        cv::Mat dst, cdst;
+        if(src.empty()){
+            std::cout << "Error opening image" << std::endl;
+            std::exit(0);
+        }
+
+        cv::Canny(src, dst, 50, 200, 3);
+        cv::cvtColor(dst, cdst, cv::COLOR_GRAY2BGR);
+
+        // Standard Hough Line Transform
+        std::vector<cv::Vec2f> lines; // will hold the results of the detection
+        cv::HoughLines(dst, lines, 1, CV_PI/180, 150, 0, 0 ); // runs the actual detection
+        // Draw the lines
+        float rho_avg = 0, theta_avg = 0;
+        int counter = 0;
+        for( size_t i = 0; i < lines.size(); i++ )
+        {
+            float rho = lines[i][0], theta = lines[i][1];
+            rho_avg+=rho;
+            theta_avg+=theta;
+            counter++;
+            std::cout << rho << "\t" << theta << "\t" << std::endl;
+            cv::Point pt1, pt2;
+            double a = cos(theta), b = sin(theta);
+            double x0 = a*rho, y0 = b*rho;
+            pt1.x = cvRound(x0 + 1000*(-b));
+            pt1.y = cvRound(y0 + 1000*(a));
+            pt2.x = cvRound(x0 - 1000*(-b));
+            pt2.y = cvRound(y0 - 1000*(a));
+            line( cdst, pt1, pt2, cv::Scalar(0,0,255), 3, cv::LINE_AA);		
+        }
+        hough_avg.first = rho_avg/(float)counter;
+        hough_avg.second = theta_avg/(float)counter;
+        std::cout << "Rho avg: " << hough_avg.first << "\tTheta avg: " << hough_avg.second << "\t" << std::endl;
+        return hough_avg;
+    }
+
+    void HoughAvgOnImage(cv::Mat src, std::pair<double,double> houghAvg)
+    {
+        if(src.empty()){
+            std::cout << "Error opening image" << std::endl;
+            std::exit(0);
+        }
+        // Draw Hough Avg Line
+        cv::Point pt1, pt2;
+        double a = cos(houghAvg.second), b = sin(houghAvg.second);
+        double x0 = a*houghAvg.first, y0 = b*houghAvg.first;
+        pt1.x = cvRound(x0 + 1000*(-b));
+        pt1.y = cvRound(y0 + 1000*(a));
+        pt2.x = cvRound(x0 - 1000*(-b));
+        pt2.y = cvRound(y0 - 1000*(a));
+        line(src, pt1, pt2, cv::Scalar(0,255,0), 3, cv::LINE_AA);
+
+        cv::imshow("Source", src);
+        // cv::waitKey(0);
+    }
 }

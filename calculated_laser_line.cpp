@@ -164,7 +164,7 @@ int main(int argc, char **argv)
     line( img, projectedlaserline_1[0], projectedlaserline_1[19], cv::Scalar( 0, 0, 255 ), thickness, lineType );
     line( img, projectedlaserline_2[0], projectedlaserline_2[19], cv::Scalar( 0, 255, 0 ), thickness, lineType );
     line( img, projectedlaserline_3[0], projectedlaserline_3[19], cv::Scalar( 255, 0, 0 ), thickness, lineType );
-    
+
     // draw the intersection point between laser beam and target board
     vector<Point3d> interPointArray;
     vector<Point2d> projectedInterPoints;
@@ -180,6 +180,6 @@ int main(int argc, char **argv)
 
 	//cv::circle( img, Point2d(720, 540), 5, cv::Scalar(0,0,255), -1, 8, 0 );
     cv::imshow("Image",img);
-    waitKey();
+    //waitKey();
     return EXIT_SUCCESS;
 }

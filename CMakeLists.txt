@@ -14,22 +14,6 @@ include_directories( include
 
 
 
-#add_executable( get_rvec_tvec get_rvec_tvec.cpp )
-#target_link_libraries( get_rvec_tvec
-#		       ${OpenCV_LIBS}
-#	               ${Pylon_LIBRARIES}
-#                      ${pylon_camera_INCLUDE_DIRS}
-                      
-#)
-
-add_executable( planes_intersection planes_intersection.cpp )
-target_link_libraries( planes_intersection
-		       ${OpenCV_LIBS}
-	               ${Pylon_LIBRARIES}
-                       ${pylon_camera_INCLUDE_DIRS}
-
-)
-
 add_executable( calculated_laser_line calculated_laser_line.cpp )
 target_link_libraries( calculated_laser_line
 		       ${OpenCV_LIBS}
@@ -38,12 +22,21 @@ target_link_libraries( calculated_laser_line
 
 )
 
-add_executable( AG_DEMO AG_DEMO.cpp )
-target_link_libraries( AG_DEMO
+add_executable( LaserDotAlignment LaserDotAlignment.cpp )
+target_link_libraries( LaserDotAlignment
 		       ${OpenCV_LIBS}
 	               ${Pylon_LIBRARIES}
                        ${pylon_camera_INCLUDE_DIRS}
 
 )
+
+add_executable( LaserLineAlignment LaserLineAlignment.cpp )
+target_link_libraries( LaserLineAlignment
+		       ${OpenCV_LIBS}
+	               ${Pylon_LIBRARIES}
+                       ${pylon_camera_INCLUDE_DIRS}
+
+)
+
 
 
