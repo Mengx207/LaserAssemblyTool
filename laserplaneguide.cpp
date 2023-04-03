@@ -35,7 +35,7 @@ using namespace GENAPI_NAMESPACE;
 #ifdef PYLON_WIN_BUILD
 #   include <pylon/PylonGUI.h>
 #endif
-void laserlineInfo(RotatedRect rect, Mat drawing);
+void laserlineInfo(RotatedRect rect, Point2d cal_center, int cal_angle, Mat drawing);
 
 int main(int argc, char* argv[])
 {
@@ -208,11 +208,19 @@ int main(int argc, char* argv[])
 				vector<Point2d> projectedlaserline_1,projectedlaserline_2,projectedlaserline_3;
 				projectPoints(laserline_points_1, Mat::zeros(3,1,CV_64FC1), Mat::zeros(3,1,CV_64FC1),cameraMatrix,distCoeffs, projectedlaserline_1);
 
+				double delta_y = abs(projectedlaserline_1[19].y - projectedlaserline_1[0].y);
+				cout<<endl<<delta_y<<endl;
+				double delta_x = abs(projectedlaserline_1[19].x - projectedlaserline_1[0].x);
+				cout<<endl<<delta_x<<endl;
+				int cal_angle = atan(delta_y/delta_x)*180/CV_PI;
+				cout<<endl<<cal_angle<<endl;
+
 			//----------raw image to greyscale, threshold filter
 				Mat img_grey;
 				cv::cvtColor(src, img_grey, cv::COLOR_BGR2GRAY);
 				Mat line_img = src.clone();
 				laserdot::CalculatedLine( line_img, projectedlaserline_1[0], projectedlaserline_1[19] );
+
 				cv::circle( line_img, projectedInterPoints[0], 5, cv::Scalar(0,0,255), -1, 8, 0 );
 
 				cv::Mat threshold_output1,threshold_output2;
@@ -243,7 +251,7 @@ int main(int argc, char* argv[])
 				/// Draw contours + rotated rects
 				Mat drawing = Mat::zeros( threshold_output2.size(), CV_8UC3 );
 
-				laserlineInfo(rect, line_img);
+				laserlineInfo(rect, projectedInterPoints[0], cal_angle, line_img);
 
 				for( int i = 0; i< contours.size(); i++ )
 					{
@@ -295,12 +303,18 @@ int main(int argc, char* argv[])
    
 }
 
-void laserlineInfo(RotatedRect rect, Mat drawing)
+void laserlineInfo(RotatedRect rect, Point2d cal_center, int cal_angle, Mat drawing)
 {
-	std::string center_print_x, center_print_y, angle_print;
-	center_print_x = std::to_string(rect.center.x);
-	center_print_y = std::to_string(rect.center.y);
-	angle_print = std::to_string(rect.angle);
-	cv::putText(drawing, "Center: [" + center_print_x+","+center_print_y+"]", cv::Point(10, 20), cv::FONT_HERSHEY_SIMPLEX, 0.8, cv::Scalar(255, 255, 255),2);
-	cv::putText(drawing, "Angle: " + angle_print, cv::Point(10, 50), cv::FONT_HERSHEY_SIMPLEX, 0.8, cv::Scalar(255, 255, 255),2);
+	std::string center_print_x, center_print_y, angle_print, cal_center_print_x, cal_center_print_y, cal_angle_print;
+	center_print_x = std::to_string(int(rect.center.x));
+	center_print_y = std::to_string(int(rect.center.y));
+	angle_print = std::to_string(int(rect.angle));
+	cal_center_print_x = std::to_string(int(cal_center.x));
+	cal_center_print_y = std::to_string(int(cal_center.y));
+	cal_angle_print = std::to_string(cal_angle);
+
+	cv::putText(drawing, "Calculated Center: [" + cal_center_print_x + "," + cal_center_print_y + "]", cv::Point(10, 20), cv::FONT_HERSHEY_SIMPLEX, 0.8, cv::Scalar(255, 255, 255),2);
+	cv::putText(drawing, "Calculated Angle: " + cal_angle_print, cv::Point(10,50), cv::FONT_HERSHEY_SIMPLEX, 0.8, cv::Scalar(255, 255, 255),2);
+	cv::putText(drawing, "Actual Center: [" + center_print_x + "," + center_print_y + "]", cv::Point(10, 80), cv::FONT_HERSHEY_SIMPLEX, 0.8, cv::Scalar(255, 255, 255),2);
+	cv::putText(drawing, "Actual Angle: " + angle_print, cv::Point(10,120), cv::FONT_HERSHEY_SIMPLEX, 0.8, cv::Scalar(255, 255, 255),2);
 }
