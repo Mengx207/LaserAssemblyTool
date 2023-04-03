@@ -111,124 +111,84 @@ depend:
 .PHONY : depend
 
 #=============================================================================
-# Target rules for targets named LaserLineAlignment
+# Target rules for targets named laserbeamguide
 
 # Build rule for target.
-LaserLineAlignment: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 LaserLineAlignment
-.PHONY : LaserLineAlignment
+laserbeamguide: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 laserbeamguide
+.PHONY : laserbeamguide
 
 # fast build rule for target.
-LaserLineAlignment/fast:
-	$(MAKE) -f CMakeFiles/LaserLineAlignment.dir/build.make CMakeFiles/LaserLineAlignment.dir/build
-.PHONY : LaserLineAlignment/fast
+laserbeamguide/fast:
+	$(MAKE) -f CMakeFiles/laserbeamguide.dir/build.make CMakeFiles/laserbeamguide.dir/build
+.PHONY : laserbeamguide/fast
 
 #=============================================================================
-# Target rules for targets named calculated_laser_line
+# Target rules for targets named laserplaneguide
 
 # Build rule for target.
-calculated_laser_line: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 calculated_laser_line
-.PHONY : calculated_laser_line
+laserplaneguide: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 laserplaneguide
+.PHONY : laserplaneguide
 
 # fast build rule for target.
-calculated_laser_line/fast:
-	$(MAKE) -f CMakeFiles/calculated_laser_line.dir/build.make CMakeFiles/calculated_laser_line.dir/build
-.PHONY : calculated_laser_line/fast
+laserplaneguide/fast:
+	$(MAKE) -f CMakeFiles/laserplaneguide.dir/build.make CMakeFiles/laserplaneguide.dir/build
+.PHONY : laserplaneguide/fast
 
-#=============================================================================
-# Target rules for targets named LaserDotAlignment
+laserbeamguide.o: laserbeamguide.cpp.o
 
-# Build rule for target.
-LaserDotAlignment: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 LaserDotAlignment
-.PHONY : LaserDotAlignment
-
-# fast build rule for target.
-LaserDotAlignment/fast:
-	$(MAKE) -f CMakeFiles/LaserDotAlignment.dir/build.make CMakeFiles/LaserDotAlignment.dir/build
-.PHONY : LaserDotAlignment/fast
-
-LaserDotAlignment.o: LaserDotAlignment.cpp.o
-
-.PHONY : LaserDotAlignment.o
+.PHONY : laserbeamguide.o
 
 # target to build an object file
-LaserDotAlignment.cpp.o:
-	$(MAKE) -f CMakeFiles/LaserDotAlignment.dir/build.make CMakeFiles/LaserDotAlignment.dir/LaserDotAlignment.cpp.o
-.PHONY : LaserDotAlignment.cpp.o
+laserbeamguide.cpp.o:
+	$(MAKE) -f CMakeFiles/laserbeamguide.dir/build.make CMakeFiles/laserbeamguide.dir/laserbeamguide.cpp.o
+.PHONY : laserbeamguide.cpp.o
 
-LaserDotAlignment.i: LaserDotAlignment.cpp.i
+laserbeamguide.i: laserbeamguide.cpp.i
 
-.PHONY : LaserDotAlignment.i
+.PHONY : laserbeamguide.i
 
 # target to preprocess a source file
-LaserDotAlignment.cpp.i:
-	$(MAKE) -f CMakeFiles/LaserDotAlignment.dir/build.make CMakeFiles/LaserDotAlignment.dir/LaserDotAlignment.cpp.i
-.PHONY : LaserDotAlignment.cpp.i
+laserbeamguide.cpp.i:
+	$(MAKE) -f CMakeFiles/laserbeamguide.dir/build.make CMakeFiles/laserbeamguide.dir/laserbeamguide.cpp.i
+.PHONY : laserbeamguide.cpp.i
 
-LaserDotAlignment.s: LaserDotAlignment.cpp.s
+laserbeamguide.s: laserbeamguide.cpp.s
 
-.PHONY : LaserDotAlignment.s
+.PHONY : laserbeamguide.s
 
 # target to generate assembly for a file
-LaserDotAlignment.cpp.s:
-	$(MAKE) -f CMakeFiles/LaserDotAlignment.dir/build.make CMakeFiles/LaserDotAlignment.dir/LaserDotAlignment.cpp.s
-.PHONY : LaserDotAlignment.cpp.s
+laserbeamguide.cpp.s:
+	$(MAKE) -f CMakeFiles/laserbeamguide.dir/build.make CMakeFiles/laserbeamguide.dir/laserbeamguide.cpp.s
+.PHONY : laserbeamguide.cpp.s
 
-LaserLineAlignment.o: LaserLineAlignment.cpp.o
+laserplaneguide.o: laserplaneguide.cpp.o
 
-.PHONY : LaserLineAlignment.o
+.PHONY : laserplaneguide.o
 
 # target to build an object file
-LaserLineAlignment.cpp.o:
-	$(MAKE) -f CMakeFiles/LaserLineAlignment.dir/build.make CMakeFiles/LaserLineAlignment.dir/LaserLineAlignment.cpp.o
-.PHONY : LaserLineAlignment.cpp.o
+laserplaneguide.cpp.o:
+	$(MAKE) -f CMakeFiles/laserplaneguide.dir/build.make CMakeFiles/laserplaneguide.dir/laserplaneguide.cpp.o
+.PHONY : laserplaneguide.cpp.o
 
-LaserLineAlignment.i: LaserLineAlignment.cpp.i
+laserplaneguide.i: laserplaneguide.cpp.i
 
-.PHONY : LaserLineAlignment.i
-
-# target to preprocess a source file
-LaserLineAlignment.cpp.i:
-	$(MAKE) -f CMakeFiles/LaserLineAlignment.dir/build.make CMakeFiles/LaserLineAlignment.dir/LaserLineAlignment.cpp.i
-.PHONY : LaserLineAlignment.cpp.i
-
-LaserLineAlignment.s: LaserLineAlignment.cpp.s
-
-.PHONY : LaserLineAlignment.s
-
-# target to generate assembly for a file
-LaserLineAlignment.cpp.s:
-	$(MAKE) -f CMakeFiles/LaserLineAlignment.dir/build.make CMakeFiles/LaserLineAlignment.dir/LaserLineAlignment.cpp.s
-.PHONY : LaserLineAlignment.cpp.s
-
-calculated_laser_line.o: calculated_laser_line.cpp.o
-
-.PHONY : calculated_laser_line.o
-
-# target to build an object file
-calculated_laser_line.cpp.o:
-	$(MAKE) -f CMakeFiles/calculated_laser_line.dir/build.make CMakeFiles/calculated_laser_line.dir/calculated_laser_line.cpp.o
-.PHONY : calculated_laser_line.cpp.o
-
-calculated_laser_line.i: calculated_laser_line.cpp.i
-
-.PHONY : calculated_laser_line.i
+.PHONY : laserplaneguide.i
 
 # target to preprocess a source file
-calculated_laser_line.cpp.i:
-	$(MAKE) -f CMakeFiles/calculated_laser_line.dir/build.make CMakeFiles/calculated_laser_line.dir/calculated_laser_line.cpp.i
-.PHONY : calculated_laser_line.cpp.i
+laserplaneguide.cpp.i:
+	$(MAKE) -f CMakeFiles/laserplaneguide.dir/build.make CMakeFiles/laserplaneguide.dir/laserplaneguide.cpp.i
+.PHONY : laserplaneguide.cpp.i
 
-calculated_laser_line.s: calculated_laser_line.cpp.s
+laserplaneguide.s: laserplaneguide.cpp.s
 
-.PHONY : calculated_laser_line.s
+.PHONY : laserplaneguide.s
 
 # target to generate assembly for a file
-calculated_laser_line.cpp.s:
-	$(MAKE) -f CMakeFiles/calculated_laser_line.dir/build.make CMakeFiles/calculated_laser_line.dir/calculated_laser_line.cpp.s
-.PHONY : calculated_laser_line.cpp.s
+laserplaneguide.cpp.s:
+	$(MAKE) -f CMakeFiles/laserplaneguide.dir/build.make CMakeFiles/laserplaneguide.dir/laserplaneguide.cpp.s
+.PHONY : laserplaneguide.cpp.s
 
 # Help Target
 help:
@@ -237,19 +197,15 @@ help:
 	@echo "... clean"
 	@echo "... depend"
 	@echo "... rebuild_cache"
+	@echo "... laserbeamguide"
 	@echo "... edit_cache"
-	@echo "... LaserLineAlignment"
-	@echo "... calculated_laser_line"
-	@echo "... LaserDotAlignment"
-	@echo "... LaserDotAlignment.o"
-	@echo "... LaserDotAlignment.i"
-	@echo "... LaserDotAlignment.s"
-	@echo "... LaserLineAlignment.o"
-	@echo "... LaserLineAlignment.i"
-	@echo "... LaserLineAlignment.s"
-	@echo "... calculated_laser_line.o"
-	@echo "... calculated_laser_line.i"
-	@echo "... calculated_laser_line.s"
+	@echo "... laserplaneguide"
+	@echo "... laserbeamguide.o"
+	@echo "... laserbeamguide.i"
+	@echo "... laserbeamguide.s"
+	@echo "... laserplaneguide.o"
+	@echo "... laserplaneguide.i"
+	@echo "... laserplaneguide.s"
 .PHONY : help
 
 

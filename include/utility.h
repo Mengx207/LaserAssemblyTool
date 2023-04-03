@@ -451,7 +451,8 @@ namespace laserline
             std::exit(0);
         }
 
-        cv::Canny(src, dst, 50, 200, 3);
+        cv::Canny(src, dst, 250, 255, 3);
+        // cv::GaussianBlur( dst, dst, cv::Size(5, 5), 2, 2 );
         cv::cvtColor(dst, cdst, cv::COLOR_GRAY2BGR);
 
         // Standard Hough Line Transform
@@ -466,7 +467,7 @@ namespace laserline
             rho_avg+=rho;
             theta_avg+=theta;
             counter++;
-            std::cout << rho << "\t" << theta << "\t" << std::endl;
+            // std::cout << rho << "\t" << theta << "\t" << std::endl;
             cv::Point pt1, pt2;
             double a = cos(theta), b = sin(theta);
             double x0 = a*rho, y0 = b*rho;
@@ -479,6 +480,7 @@ namespace laserline
         hough_avg.first = rho_avg/(float)counter;
         hough_avg.second = theta_avg/(float)counter;
         std::cout << "Rho avg: " << hough_avg.first << "\tTheta avg: " << hough_avg.second << "\t" << std::endl;
+        // imshow("Canny Edge", dst);
         return hough_avg;
     }
 
@@ -497,8 +499,6 @@ namespace laserline
         pt2.x = cvRound(x0 - 1000*(-b));
         pt2.y = cvRound(y0 - 1000*(a));
         line(src, pt1, pt2, cv::Scalar(0,255,0), 3, cv::LINE_AA);
-
-        cv::imshow("Source", src);
         // cv::waitKey(0);
     }
 }
