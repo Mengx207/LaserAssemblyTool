@@ -71,7 +71,7 @@ namespace laserdot
     //---------Draw the calculated laser line
     void CalculatedLine(cv::Mat img, cv::Point start, cv::Point end)
     {
-        int thickness = 2;
+        int thickness = 4;
         int lineType = cv::LINE_8;
         line( img, start, end, cv::Scalar( 0, 0, 255 ), thickness, lineType );
     }
@@ -293,11 +293,11 @@ namespace laserline
     }
 
     struct laser_plane{
-    vector<double> normalvector;
-    vector<double> V_L;
-    vector<double> P0;
-    vector<double> P1;
-    vector<double> laserbeam;
+        vector<double> normalvector;
+        // vector<double> V_L;
+        vector<double> origin;
+        // vector<double> P1;
+        vector<double> beam_dir;
     };
     laser_plane laserPlane(vector<double> rmatrix_laser_values, vector<double> tvec_laser_values)
     {
@@ -325,7 +325,7 @@ namespace laserline
             rmatrix_L.at<double>(3)+tvec_L.at<double>(1),
             rmatrix_L.at<double>(6)+tvec_L.at<double>(2)
         };
-        vector<double> laserbeam = {
+        vector<double> beam_dir = {
             p_100_L[0] - p_000_L[0],
             p_100_L[1] - p_000_L[1],
             p_100_L[2] - p_000_L[2]
@@ -355,10 +355,10 @@ namespace laserline
 
         laser_plane laser_values;
         laser_values.normalvector = normalvector;
-        laser_values.V_L = V_L;
-        laser_values.P0 = p_000_L;
-        laser_values.P1 = p_110_L;
-        laser_values.laserbeam = laserbeam;
+        // laser_values.V_L = V_L;
+        laser_values.origin = p_000_L;
+        // laser_values.P1 = p_110_L;
+        laser_values.beam_dir = beam_dir;
         return laser_values;
     }
 

@@ -161,8 +161,13 @@ int main(int argc, char* argv[])
 				}
 				if(argv[1] == string("4"))
 				{
-					path_rmatrix = "values/rmatrix_laser_4.txt";
-					path_tvec = "values/tvec_laser_4.txt";
+					path_rmatrix = "values/rmatrix_laser_10up_60.txt";
+					path_tvec = "values/tvec_laser_10up_60.txt";
+				}
+				if(argv[1] == string("5"))
+				{
+					path_rmatrix = "values/rmatrix_laser_10up_10.txt";
+					path_tvec = "values/tvec_laser_10up_10.txt";
 				}
 
 				// Calculate rotation vector and translation vector by a captured image of a pattern
@@ -188,7 +193,7 @@ int main(int argc, char* argv[])
 				laser_1 = laserline::laserPlane(rmatrix_laser_values, tvec_laser_values);
 				
 				Point3f interPoint1, interPoint2, interPoint3;
-				interPoint1 = laserline::intersectionPoint(laser_1.P0, laser_1.laserbeam, target.first, target.second);
+				interPoint1 = laserline::intersectionPoint(laser_1.origin, laser_1.beam_dir, target.first, target.second);
 				
 				// find intersection line between target board plane and laser plane in cam frame
 				std::vector<cv::Point3d> laserline_points_1, laserline_points_2, laserline_points_3;

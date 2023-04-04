@@ -158,8 +158,13 @@ int main(int argc, char* argv[])
 				}
 				if(argv[1] == string("4"))
 				{
-					path_rmatrix = "values/rmatrix_laser_4.txt";
-					path_tvec = "values/tvec_laser_4.txt";
+					path_rmatrix = "values/rmatrix_laser_10up_60.txt";
+					path_tvec = "values/tvec_laser_10up_60.txt";
+				}
+				if(argv[1] == string("5"))
+				{
+					path_rmatrix = "values/rmatrix_laser_10up_10.txt";
+					path_tvec = "values/tvec_laser_10up_10.txt";
 				}
 
 				// Calculate rotation vector and translation vector by a captured image of a pattern
@@ -186,7 +191,7 @@ int main(int argc, char* argv[])
 				
 				// find intersection between laser beam and target board
 				Point3f interPoint1;
-				interPoint1 = laserline::intersectionPoint(laser_1.P0, laser_1.laserbeam, target.first, target.second);
+				interPoint1 = laserline::intersectionPoint(laser_1.origin, laser_1.beam_dir, target.first, target.second);
 				vector<Point3d> interPointArray;
 				vector<Point2d> projectedInterPoints;
 				interPointArray.push_back(interPoint1);
@@ -208,9 +213,9 @@ int main(int argc, char* argv[])
 				vector<Point2d> projectedlaserline_1,projectedlaserline_2,projectedlaserline_3;
 				projectPoints(laserline_points_1, Mat::zeros(3,1,CV_64FC1), Mat::zeros(3,1,CV_64FC1),cameraMatrix,distCoeffs, projectedlaserline_1);
 
-				double delta_y = abs(projectedlaserline_1[19].y - projectedlaserline_1[0].y);
+				double delta_y = (projectedlaserline_1[19].y - projectedlaserline_1[0].y);
 				cout<<endl<<delta_y<<endl;
-				double delta_x = abs(projectedlaserline_1[19].x - projectedlaserline_1[0].x);
+				double delta_x = (projectedlaserline_1[19].x - projectedlaserline_1[0].x);
 				cout<<endl<<delta_x<<endl;
 				int cal_angle = atan(delta_y/delta_x)*180/CV_PI;
 				cout<<endl<<cal_angle<<endl;
@@ -227,9 +232,9 @@ int main(int argc, char* argv[])
 				vector<vector<Point> > contours;
   				vector<Vec4i> hierarchy;
 				cv::threshold(img_grey,threshold_output1,100,255,cv::THRESH_OTSU||cv::THRESH_TRIANGLE);	
-				cv::threshold(img_grey,threshold_output2,150,255,cv::THRESH_BINARY);
+				cv::threshold(img_grey,threshold_output2,200,255,cv::THRESH_BINARY);
 				// imshow("threshold1",threshold_output1);
-				// imshow("threshold2",threshold_output2);
+				imshow("threshold2",threshold_output2);
 				findContours( threshold_output2, contours, hierarchy, RETR_TREE, CHAIN_APPROX_SIMPLE, Point(0, 0) );
 
 				vector<RotatedRect> minRect;
@@ -237,7 +242,8 @@ int main(int argc, char* argv[])
 
 				for( int i = 0; i < contours.size(); i++ )
 				{ 
-					if(contours[i].size() > 30)
+					/* Any contour with too small size will be regard as noise, can limit the noise level be increase the contour size threshold  */
+					if(contours[i].size() > 100) 
 					{
 						rect = minAreaRect( Mat(contours[i]) );
 						minRect.push_back(rect);
@@ -247,11 +253,12 @@ int main(int argc, char* argv[])
 						//cout<<endl<<"contour #"<<i<<endl<<contours[i]<<endl;
 					}
 				}
-
+				
 				/// Draw contours + rotated rects
 				Mat drawing = Mat::zeros( threshold_output2.size(), CV_8UC3 );
 
 				laserlineInfo(rect, projectedInterPoints[0], cal_angle, line_img);
+				circle(line_img, rect.center, 5, Scalar(0,255,0), -1, 8, 0);
 
 				for( int i = 0; i< contours.size(); i++ )
 					{
@@ -266,7 +273,6 @@ int main(int argc, char* argv[])
 					// rotated rectangle
 					Point2f rect_points[4]; 
 					minRect[i].points( rect_points );
-					// cout<<"rect_points: "<<endl<<rect_points[0]<<rect_points[1]<<rect_points[2]<<rect_points[3]<<endl;
 
 					for( int j = 0; j < 4; j++ )
 					{
@@ -305,10 +311,19 @@ int main(int argc, char* argv[])
 
 void laserlineInfo(RotatedRect rect, Point2d cal_center, int cal_angle, Mat drawing)
 {
-	std::string center_print_x, center_print_y, angle_print, cal_center_print_x, cal_center_print_y, cal_angle_print;
+	std::string center_print_x, center_print_y, angle_print, width_print, cal_center_print_x, cal_center_print_y, cal_angle_print;
 	center_print_x = std::to_string(int(rect.center.x));
 	center_print_y = std::to_string(int(rect.center.y));
 	angle_print = std::to_string(int(rect.angle));
+	if(rect.size.width < rect.size.height)
+	{
+		width_print = std::to_string(int(rect.size.width));
+	}
+	else
+	{
+		width_print = std::to_string(int(rect.size.height));
+	}
+
 	cal_center_print_x = std::to_string(int(cal_center.x));
 	cal_center_print_y = std::to_string(int(cal_center.y));
 	cal_angle_print = std::to_string(cal_angle);
@@ -316,5 +331,6 @@ void laserlineInfo(RotatedRect rect, Point2d cal_center, int cal_angle, Mat draw
 	cv::putText(drawing, "Calculated Center: [" + cal_center_print_x + "," + cal_center_print_y + "]", cv::Point(10, 20), cv::FONT_HERSHEY_SIMPLEX, 0.8, cv::Scalar(255, 255, 255),2);
 	cv::putText(drawing, "Calculated Angle: " + cal_angle_print, cv::Point(10,50), cv::FONT_HERSHEY_SIMPLEX, 0.8, cv::Scalar(255, 255, 255),2);
 	cv::putText(drawing, "Actual Center: [" + center_print_x + "," + center_print_y + "]", cv::Point(10, 80), cv::FONT_HERSHEY_SIMPLEX, 0.8, cv::Scalar(255, 255, 255),2);
-	cv::putText(drawing, "Actual Angle: " + angle_print, cv::Point(10,120), cv::FONT_HERSHEY_SIMPLEX, 0.8, cv::Scalar(255, 255, 255),2);
+	cv::putText(drawing, "Actual Angle: " + angle_print, cv::Point(10,110), cv::FONT_HERSHEY_SIMPLEX, 0.8, cv::Scalar(255, 255, 255),2);
+	cv::putText(drawing, "Line Width: " + width_print, cv::Point(10,140), cv::FONT_HERSHEY_SIMPLEX, 0.8, cv::Scalar(255, 255, 255),2);
 }
