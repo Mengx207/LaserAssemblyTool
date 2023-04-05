@@ -296,6 +296,7 @@ int main(int argc, char* argv[])
 				
 				// cv::imshow("img_grey_filtered_dot", img_grey_filtered_dot);	
 				// cv::imshow("img_grey_filtered_line", img_grey_filtered_line);
+				cv::imwrite("saved_laser_beam/laser_" + string(argv[1]) + ".jpg", dot_img);  
 				cv::imshow("Laser Beam Alignment Window", dot_img);		
 				// cv::imshow("Laser Plane Alignment Window", line_img);					
 				cv::waitKey( 10 );		

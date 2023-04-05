@@ -212,15 +212,12 @@ int main(int argc, char* argv[])
 				}
 				vector<Point2d> projectedlaserline_1,projectedlaserline_2,projectedlaserline_3;
 				projectPoints(laserline_points_1, Mat::zeros(3,1,CV_64FC1), Mat::zeros(3,1,CV_64FC1),cameraMatrix,distCoeffs, projectedlaserline_1);
-
+				
+				// Calculated laser line angle
 				double delta_y = (projectedlaserline_1[19].y - projectedlaserline_1[0].y);
-				cout<<endl<<delta_y<<endl;
 				double delta_x = (projectedlaserline_1[19].x - projectedlaserline_1[0].x);
-				cout<<endl<<delta_x<<endl;
-				int cal_angle = atan(delta_y/delta_x)*180/CV_PI;
-				cout<<endl<<cal_angle<<endl;
+				int cal_angle = atan(delta_y/delta_x)*180/CV_PI;	
 
-			//----------raw image to greyscale, threshold filter
 				Mat img_grey;
 				cv::cvtColor(src, img_grey, cv::COLOR_BGR2GRAY);
 				Mat line_img = src.clone();
@@ -231,59 +228,94 @@ int main(int argc, char* argv[])
 				cv::Mat threshold_output1,threshold_output2;
 				vector<vector<Point> > contours;
   				vector<Vec4i> hierarchy;
-				cv::threshold(img_grey,threshold_output1,100,255,cv::THRESH_OTSU||cv::THRESH_TRIANGLE);	
+				// cv::threshold(img_grey,threshold_output1,100,255,cv::THRESH_OTSU||cv::THRESH_TRIANGLE);	
 				cv::threshold(img_grey,threshold_output2,200,255,cv::THRESH_BINARY);
 				// imshow("threshold1",threshold_output1);
-				imshow("threshold2",threshold_output2);
+
 				findContours( threshold_output2, contours, hierarchy, RETR_TREE, CHAIN_APPROX_SIMPLE, Point(0, 0) );
-
-				vector<RotatedRect> minRect;
-				RotatedRect rect;
-
-				for( int i = 0; i < contours.size(); i++ )
-				{ 
-					/* Any contour with too small size will be regard as noise, can limit the noise level be increase the contour size threshold  */
-					if(contours[i].size() > 100) 
-					{
-						rect = minAreaRect( Mat(contours[i]) );
-						minRect.push_back(rect);
-						cout<<"Rectangle center: "<<rect.center<<endl;
-						cout<<"Rectangle size "<<rect.size<<endl;
-						cout<<"Rectangle angle: "<<rect.angle<<endl;
-						//cout<<endl<<"contour #"<<i<<endl<<contours[i]<<endl;
-					}
-				}
+				vector<RotatedRect> minRect = laserline::findRectangle(contours);
 				
 				/// Draw contours + rotated rects
 				Mat drawing = Mat::zeros( threshold_output2.size(), CV_8UC3 );
 
-				laserlineInfo(rect, projectedInterPoints[0], cal_angle, line_img);
-				circle(line_img, rect.center, 5, Scalar(0,255,0), -1, 8, 0);
+				laserlineInfo(minRect[0], projectedInterPoints[0], cal_angle, line_img);
+				circle(line_img, minRect[0].center, 5, Scalar(0,255,0), -1, 8, 0);
 
-				for( int i = 0; i< contours.size(); i++ )
-					{
-					Scalar color = Scalar( 0, 0, 255 );
-					// contour
-					drawContours( drawing, contours, i, color, 1, 8, vector<Vec4i>(), 0, Point() );
-					}
+				laserline::drawContourRectangle(drawing, contours, minRect);
 
-				for( int i = 0; i < minRect.size(); i++)
+				// pair<double,double> hough_avg = laserline::HoughAverage(img_grey);
+				// laserline::HoughAvgOnImage(line_img,hough_avg);	
+				
+				Mat image_copy = threshold_output2.clone();
+				int imgheight = line_img.rows;
+				int imgwidth = line_img.cols;
+				int M = 215;
+				int N = 287;
+				
+				int x1 = 0;
+				int y1 = 0;
+				for (int y = 0; y<imgheight+1; y=y+M)
 				{
-					Scalar color = Scalar( 255, 255, 0 );
-					// rotated rectangle
-					Point2f rect_points[4]; 
-					minRect[i].points( rect_points );
-
-					for( int j = 0; j < 4; j++ )
+					for (int x = 0; x<imgwidth+1; x=x+N)
 					{
-						line( drawing, rect_points[j], rect_points[(j+1)%4], color, 1, 8 );
+						if ((imgheight - y) < M || (imgwidth - x) < N)
+						{
+							break;
+						}
+						y1 = y + M;
+						x1 = x + N;
+						string a = to_string(x);
+						string b = to_string(y);
+				
+						if (x1 >= imgwidth && y1 >= imgheight)
+						{
+							x = imgwidth - 1;
+							y = imgheight - 1;
+							x1 = imgwidth - 1;
+							y1 = imgheight - 1;
+				
+							// crop the patches of size MxN
+							Mat tiles = image_copy(Range(y, imgheight), Range(x, imgwidth));
+							//save each patches into file directory
+							imwrite("saved_patches/tile" + a + '_' + b + ".jpg", tiles);  
+							rectangle(line_img, Point(x,y), Point(x1,y1), Scalar(0,255,0), 1);    
+						}
+						else if (y1 > imgheight)
+						{
+							y = imgheight - 1;
+							y1 = imgheight - 1;
+				
+							// crop the patches of size MxN
+							Mat tiles = image_copy(Range(y, imgheight), Range(x, x+N));
+							//save each patches into file directory
+							imwrite("saved_patches/tile" + a + '_' + b + ".jpg", tiles);  
+							rectangle(line_img, Point(x,y), Point(x1,y1), Scalar(0,255,0), 1);    
+						}
+						else if (x1 > imgwidth)
+						{
+							x = imgwidth - 1;   
+							x1 = imgwidth - 1;
+				
+							// crop the patches of size MxN
+							Mat tiles = image_copy(Range(y, y+M), Range(x, imgwidth));
+							//save each patches into file directory
+							imwrite("saved_patches/tile" + a + '_' + b + ".jpg", tiles);  
+							rectangle(line_img, Point(x,y), Point(x1,y1), Scalar(0,255,0), 1);   
+						}
+						else
+						{
+							// crop the patches of size MxN
+							Mat tiles = image_copy(Range(y, y+M), Range(x, x+N));
+							//save each patches into file directory
+							imwrite("saved_patches/tile" + a + '_' + b + ".jpg", tiles);  
+							rectangle(line_img, Point(x,y), Point(x1,y1), Scalar(0,255,0), 1);  
+						}
 					}
 				}
 
-				pair<double,double> hough_avg = laserline::HoughAverage(img_grey);
-				// laserline::HoughAvgOnImage(line_img,hough_avg);	
-
+				cv::imwrite("saved_laser_plane/laser_" + string(argv[1]) + ".jpg", line_img);  
 				cv::imshow( "Contour and Area", drawing );
+				cv::imshow("threshold2",threshold_output2);
 				cv::imshow("Laser Plane Alignment GUI Window", line_img);
 				// Show in a window					
 				cv::waitKey( 10 );		

@@ -104,7 +104,7 @@ namespace laserdot
         cv::putText(img, "Laser Focus:", cv::Point(10, 20), cv::FONT_HERSHEY_SIMPLEX, 0.8, cv::Scalar(255, 255, 255),2);
         cv::putText(img, "Laser Dot Size: "+size_print, cv::Point(10, 50), cv::FONT_HERSHEY_SIMPLEX, 0.8, cv::Scalar(255, 255, 255),2);
         cv::putText(img, "Previous Min Dot Size: "+min_size_print, cv::Point(10, 80), cv::FONT_HERSHEY_SIMPLEX, 0.8, cv::Scalar(255, 255, 255),2);
-        cv::putText(img, "Laser Focus Status: ", cv::Point(10, 120), cv::FONT_HERSHEY_SIMPLEX, 0.8, cv::Scalar(255, 255, 255),2);
+        // cv::putText(img, "Laser Focus Status: ", cv::Point(10, 120), cv::FONT_HERSHEY_SIMPLEX, 0.8, cv::Scalar(255, 255, 255),2);
 
         cv::putText(img, "Laser Dot Location:", cv::Point(500, 20), cv::FONT_HERSHEY_SIMPLEX, 0.8, cv::Scalar(255, 255, 255),2);
         cv::putText(img, "Nominal Distance: "+nom_distance_print, cv::Point(500, 50), cv::FONT_HERSHEY_SIMPLEX, 0.8, cv::Scalar(255, 255, 255),2);
@@ -115,14 +115,14 @@ namespace laserdot
 
     void GreenLight(cv::Mat img, int last, int current, int nom_distance, int center_distance)
     {
-        if(last-current > 0 || abs(last-current) < 5)
-        {
-            cv::circle( img, cv::Point(300,110), 20, cv::Scalar(0,255,0), -1, 8, 0 );
-        }
-        else
-        {
-            cv::circle( img, cv::Point(300,110), 20, cv::Scalar(0,0,255), -1, 8, 0 );
-        }
+        // if(last-current > 0 || abs(last-current) < 5)
+        // {
+        //     cv::circle( img, cv::Point(300,110), 20, cv::Scalar(0,255,0), -1, 8, 0 );
+        // }
+        // else
+        // {
+        //     cv::circle( img, cv::Point(300,110), 20, cv::Scalar(0,0,255), -1, 8, 0 );
+        // }
 
         if(nom_distance < 2 && center_distance < 50)
         {
@@ -196,7 +196,8 @@ namespace laserline
     std::pair<Mat,Mat> getRvecTvec()
     {
         // load one captured image whose content is the chessboard pattern
-        Mat image_captured = imread("images/image_captured.png", IMREAD_GRAYSCALE);
+        // Mat image_captured = imread("images/image_captured.png", IMREAD_GRAYSCALE);
+        Mat image_captured = imread("images/pattern_image.png", IMREAD_GRAYSCALE);
         Mat image_corners(image_captured.rows, image_captured.cols, IMREAD_GRAYSCALE);
 
         if (image_captured.empty())
@@ -280,11 +281,11 @@ namespace laserline
         Mat point_B_O = Mat(1, 3, CV_64FC1, p_000.data());
         pair<Mat,Mat>target(NormalV_B, point_B_O);
 
-        cout <<endl<< "The Target Board: " << endl;
-        cout << "normal vector: " << endl
-            << NormalV_B << endl;
-        cout << "origin point: " << endl
-            << point_B_O << endl << endl;
+        // cout <<endl<< "The Target Board: " << endl;
+        // cout << "normal vector: " << endl
+        //     << NormalV_B << endl;
+        // cout << "origin point: " << endl
+        //     << point_B_O << endl << endl;
         // cout << "one point on plane: " << endl
         //     << point_B << endl;
         // cout << "(normal vector) * (vector on plane):         " << N_B[0] * P_B[0] + N_B[1] * P_B[1] + N_B[2] * P_B[2] <<endl<<endl;
@@ -442,63 +443,110 @@ namespace laserline
 
 
 
-    std::pair<double, double> HoughAverage(cv::Mat src)
+    // std::pair<double, double> HoughAverage(cv::Mat src)
+    // {
+    //     std::pair<double, double> hough_avg;
+    //     cv::Mat dst, cdst;
+    //     if(src.empty()){
+    //         std::cout << "Error opening image" << std::endl;
+    //         std::exit(0);
+    //     }
+
+    //     cv::Canny(src, dst, 250, 255, 3);
+    //     // cv::GaussianBlur( dst, dst, cv::Size(5, 5), 2, 2 );
+    //     cv::cvtColor(dst, cdst, cv::COLOR_GRAY2BGR);
+
+    //     // Standard Hough Line Transform
+    //     std::vector<cv::Vec2f> lines; // will hold the results of the detection
+    //     cv::HoughLines(dst, lines, 1, CV_PI/180, 150, 0, 0 ); // runs the actual detection
+    //     // Draw the lines
+    //     float rho_avg = 0, theta_avg = 0;
+    //     int counter = 0;
+    //     for( size_t i = 0; i < lines.size(); i++ )
+    //     {
+    //         float rho = lines[i][0], theta = lines[i][1];
+    //         rho_avg+=rho;
+    //         theta_avg+=theta;
+    //         counter++;
+    //         // std::cout << rho << "\t" << theta << "\t" << std::endl;
+    //         cv::Point pt1, pt2;
+    //         double a = cos(theta), b = sin(theta);
+    //         double x0 = a*rho, y0 = b*rho;
+    //         pt1.x = cvRound(x0 + 1000*(-b));
+    //         pt1.y = cvRound(y0 + 1000*(a));
+    //         pt2.x = cvRound(x0 - 1000*(-b));
+    //         pt2.y = cvRound(y0 - 1000*(a));
+    //         line( cdst, pt1, pt2, cv::Scalar(0,0,255), 3, cv::LINE_AA);		
+    //     }
+    //     hough_avg.first = rho_avg/(float)counter;
+    //     hough_avg.second = theta_avg/(float)counter;
+    //     std::cout << "Rho avg: " << hough_avg.first << "\tTheta avg: " << hough_avg.second << "\t" << std::endl;
+    //     // imshow("Canny Edge", dst);
+    //     return hough_avg;
+    // }
+
+    // void HoughAvgOnImage(cv::Mat src, std::pair<double,double> houghAvg)
+    // {
+    //     if(src.empty()){
+    //         std::cout << "Error opening image" << std::endl;
+    //         std::exit(0);
+    //     }
+    //     // Draw Hough Avg Line
+    //     cv::Point pt1, pt2;
+    //     double a = cos(houghAvg.second), b = sin(houghAvg.second);
+    //     double x0 = a*houghAvg.first, y0 = b*houghAvg.first;
+    //     pt1.x = cvRound(x0 + 1000*(-b));
+    //     pt1.y = cvRound(y0 + 1000*(a));
+    //     pt2.x = cvRound(x0 - 1000*(-b));
+    //     pt2.y = cvRound(y0 - 1000*(a));
+    //     line(src, pt1, pt2, cv::Scalar(0,255,0), 3, cv::LINE_AA);
+    //     // cv::waitKey(0);
+    // }
+
+
+    vector<RotatedRect> findRectangle(vector<vector<Point> > contours)
     {
-        std::pair<double, double> hough_avg;
-        cv::Mat dst, cdst;
-        if(src.empty()){
-            std::cout << "Error opening image" << std::endl;
-            std::exit(0);
+        vector<RotatedRect> minRect;
+        RotatedRect rect;
+        for( int i = 0; i < contours.size(); i++ )
+        { 
+            /* Any contour with too small size will be regard as noise, can limit the noise level be increase the contour size threshold  */
+            if(contours[i].size() > 100) 
+            {
+                rect = minAreaRect( Mat(contours[i]) );
+                minRect.push_back(rect);
+                cout<<"Rectangle center: "<<rect.center<<endl;
+                cout<<"Rectangle size "<<rect.size<<endl;
+                cout<<"Rectangle angle: "<<rect.angle<<endl;
+                Point2f vertices[4];
+                rect.points(vertices);
+                cout<<"Rectangle vertices: "<<vertices[0]<<","<<vertices[1]<<","<<vertices[2]<<","<<vertices[3]<<endl;
+            }
         }
+        return minRect;
+    }
 
-        cv::Canny(src, dst, 250, 255, 3);
-        // cv::GaussianBlur( dst, dst, cv::Size(5, 5), 2, 2 );
-        cv::cvtColor(dst, cdst, cv::COLOR_GRAY2BGR);
-
-        // Standard Hough Line Transform
-        std::vector<cv::Vec2f> lines; // will hold the results of the detection
-        cv::HoughLines(dst, lines, 1, CV_PI/180, 150, 0, 0 ); // runs the actual detection
-        // Draw the lines
-        float rho_avg = 0, theta_avg = 0;
-        int counter = 0;
-        for( size_t i = 0; i < lines.size(); i++ )
+    void drawContourRectangle(Mat drawing, vector<vector<Point>>contours, vector<RotatedRect> minRect)
+    {
+        for( int i = 0; i< contours.size(); i++ )
         {
-            float rho = lines[i][0], theta = lines[i][1];
-            rho_avg+=rho;
-            theta_avg+=theta;
-            counter++;
-            // std::cout << rho << "\t" << theta << "\t" << std::endl;
-            cv::Point pt1, pt2;
-            double a = cos(theta), b = sin(theta);
-            double x0 = a*rho, y0 = b*rho;
-            pt1.x = cvRound(x0 + 1000*(-b));
-            pt1.y = cvRound(y0 + 1000*(a));
-            pt2.x = cvRound(x0 - 1000*(-b));
-            pt2.y = cvRound(y0 - 1000*(a));
-            line( cdst, pt1, pt2, cv::Scalar(0,0,255), 3, cv::LINE_AA);		
+        Scalar color = Scalar( 0, 0, 255 );
+        // contour
+        cv::drawContours( drawing, contours, i, color, 1, 8, vector<Vec4i>(), 0, Point() );
         }
-        hough_avg.first = rho_avg/(float)counter;
-        hough_avg.second = theta_avg/(float)counter;
-        std::cout << "Rho avg: " << hough_avg.first << "\tTheta avg: " << hough_avg.second << "\t" << std::endl;
-        // imshow("Canny Edge", dst);
-        return hough_avg;
+
+        for( int i = 0; i < minRect.size(); i++)
+        {
+        Scalar color = Scalar( 255, 255, 0 );
+        // rotated rectangle
+        Point2f rect_points[4]; 
+        minRect[i].points( rect_points );
+
+        for( int j = 0; j < 4; j++ )
+        {
+            line( drawing, rect_points[j], rect_points[(j+1)%4], color, 1, 8 );
+        }
+        }
     }
 
-    void HoughAvgOnImage(cv::Mat src, std::pair<double,double> houghAvg)
-    {
-        if(src.empty()){
-            std::cout << "Error opening image" << std::endl;
-            std::exit(0);
-        }
-        // Draw Hough Avg Line
-        cv::Point pt1, pt2;
-        double a = cos(houghAvg.second), b = sin(houghAvg.second);
-        double x0 = a*houghAvg.first, y0 = b*houghAvg.first;
-        pt1.x = cvRound(x0 + 1000*(-b));
-        pt1.y = cvRound(y0 + 1000*(a));
-        pt2.x = cvRound(x0 - 1000*(-b));
-        pt2.y = cvRound(y0 - 1000*(a));
-        line(src, pt1, pt2, cv::Scalar(0,255,0), 3, cv::LINE_AA);
-        // cv::waitKey(0);
-    }
 }
