@@ -197,7 +197,8 @@ namespace laserline
     {
         // load one captured image whose content is the chessboard pattern
         // Mat image_captured = imread("images/image_captured.png", IMREAD_GRAYSCALE);
-        Mat image_captured = imread("images/pattern_image.png", IMREAD_GRAYSCALE);
+        // Mat image_captured = imread("images/pattern_image.png", IMREAD_GRAYSCALE);
+        Mat image_captured = imread("images/corner_pattern.png", IMREAD_GRAYSCALE);
         Mat image_corners(image_captured.rows, image_captured.cols, IMREAD_GRAYSCALE);
 
         if (image_captured.empty())
@@ -511,7 +512,7 @@ namespace laserline
         for( int i = 0; i < contours.size(); i++ )
         { 
             /* Any contour with too small size will be regard as noise, can limit the noise level be increase the contour size threshold  */
-            if(contours[i].size() > 100) 
+            if(contours[i].size() > 20) 
             {
                 rect = minAreaRect( Mat(contours[i]) );
                 minRect.push_back(rect);
@@ -530,22 +531,23 @@ namespace laserline
     {
         for( int i = 0; i< contours.size(); i++ )
         {
-        Scalar color = Scalar( 0, 0, 255 );
-        // contour
-        cv::drawContours( drawing, contours, i, color, 1, 8, vector<Vec4i>(), 0, Point() );
+            Scalar color = Scalar( 0, 0, 255 );
+            // contour
+            cv::drawContours( drawing, contours, i, color, 1, 8, vector<Vec4i>(), 0, Point() );
         }
 
         for( int i = 0; i < minRect.size(); i++)
         {
-        Scalar color = Scalar( 255, 255, 0 );
-        // rotated rectangle
-        Point2f rect_points[4]; 
-        minRect[i].points( rect_points );
+            Scalar color = Scalar( 255, 255, 0 );
+            // rotated rectangle
+            Point2f rect_points[4]; 
+            minRect[i].points( rect_points );
 
-        for( int j = 0; j < 4; j++ )
-        {
-            line( drawing, rect_points[j], rect_points[(j+1)%4], color, 1, 8 );
-        }
+            for( int j = 0; j < 4; j++ )
+            {
+                line( drawing, rect_points[j], rect_points[(j+1)%4], color, 1, 8 );
+            }
+            circle (drawing, minRect[i].center, 2, cv::Scalar(0,255,0), -1, 8, 0);
         }
     }
 

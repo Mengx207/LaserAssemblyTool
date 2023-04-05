@@ -215,9 +215,8 @@ int main(int argc, char* argv[])
 				Mat dot_img = src.clone();
 				Mat line_img = src.clone();
 
-				cv::Mat img_grey_filtered_dot, img_grey_filtered_line;
+				cv::Mat img_grey_filtered_dot;
 				cv::threshold(img_grey,img_grey_filtered_dot,250,255,cv::THRESH_OTSU||cv::THRESH_TRIANGLE);	
-				cv::threshold(img_grey,img_grey_filtered_line,50,255,cv::THRESH_OTSU||cv::THRESH_TRIANGLE);	
 				cv::circle( dot_img, projectedlaserline_1[0], 5, cv::Scalar(0,0,255), -1, 8, 0 );
 				laserdot::CalculatedLine( dot_img, projectedlaserline_1[0], projectedlaserline_1[19] );
 				laserdot::CalculatedLine( line_img, projectedlaserline_1[0], projectedlaserline_1[19] );
@@ -250,6 +249,10 @@ int main(int argc, char* argv[])
 			 //---------Clear center list and size array is capture an empty image
 			 	double nom_distance,center_distance;
 				vector<cv::Vec3f> circles;
+				Mat threshold_output;
+				cv::threshold(img_grey,threshold_output,200,255,cv::THRESH_BINARY);
+				Mat drawing = Mat::zeros( threshold_output.size(), CV_8UC3 );
+
 				if(non_zero > 50)
 				{	
 					cv::Point center;
@@ -258,6 +261,7 @@ int main(int argc, char* argv[])
 					{
 						center.x = cvRound(circles[0][0]);
 						center.y = cvRound(circles[0][1]);
+						circle (drawing, center, 2, cv::Scalar(0,0,255), -1, 8, 0);
 						center_list.push_back(center);
 						center_total ++;
 					}
@@ -277,11 +281,26 @@ int main(int argc, char* argv[])
 						cv::circle( dot_img, center_avg, 3, cv::Scalar(255,100,0), -1, 8, 0 );
 
 						// std::pair<double,double>dist = laserdot::DotToLine(src, line_1_Start, line_1_End, center_avg, Point2d(interPoint1.x+720,-interPoint1.y+540));
-						std::pair<double,double>dist = laserdot::DotToLine(dot_img, projectedlaserline_1[0], projectedlaserline_1[19], center_avg, Point2d(720,540));
+						std::pair<double,double>dist = laserdot::DotToLine(dot_img, projectedlaserline_1[0], projectedlaserline_1[19], center_avg, projectedInterPoints[0]);
 						nom_distance = dist.first;
 						center_distance = dist.second;
 					}
-;
+					
+					// Test another way of finding center of laser beam
+					vector<vector<Point> > contours;
+					vector<Vec4i> hierarchy;
+					findContours( threshold_output, contours, hierarchy, RETR_TREE, CHAIN_APPROX_SIMPLE, Point(0, 0) );
+					if(contours.size() > 0)
+					{
+						vector<RotatedRect> minRect = laserline::findRectangle(contours);
+						if(minRect.size()>0)
+						{
+							laserline::drawContourRectangle(drawing, contours, minRect);
+							cv::circle( dot_img, minRect[0].center, 3, cv::Scalar(100,255,0), -1, 8, 0 );
+							cout<<endl<<"minRect center: "<< minRect[0].center<<endl;
+						}
+					}
+
 				}
 				else
 				{
@@ -295,10 +314,10 @@ int main(int argc, char* argv[])
 				laserdot::GreenLight(dot_img, last_min_size, size_avg, nom_distance, center_distance);
 				
 				// cv::imshow("img_grey_filtered_dot", img_grey_filtered_dot);	
-				// cv::imshow("img_grey_filtered_line", img_grey_filtered_line);
+				// cv::imshow("threshold output", threshold_output);
+				cv::imshow("Contour and Rectangle", drawing);	
 				cv::imwrite("saved_laser_beam/laser_" + string(argv[1]) + ".jpg", dot_img);  
-				cv::imshow("Laser Beam Alignment Window", dot_img);		
-				// cv::imshow("Laser Plane Alignment Window", line_img);					
+				cv::imshow("Laser Beam Alignment Window", dot_img);						
 				cv::waitKey( 10 );		
 				sleep(0.1);
 				imgs_taken0++;

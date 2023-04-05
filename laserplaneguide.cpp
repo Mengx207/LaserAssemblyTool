@@ -35,7 +35,7 @@ using namespace GENAPI_NAMESPACE;
 #ifdef PYLON_WIN_BUILD
 #   include <pylon/PylonGUI.h>
 #endif
-void laserlineInfo(RotatedRect rect, Point2d cal_center, int cal_angle, Mat drawing);
+void laserlineGUI(RotatedRect rect, Point2d cal_center, int cal_angle, Mat drawing);
 
 int main(int argc, char* argv[])
 {
@@ -234,14 +234,13 @@ int main(int argc, char* argv[])
 
 				findContours( threshold_output2, contours, hierarchy, RETR_TREE, CHAIN_APPROX_SIMPLE, Point(0, 0) );
 				vector<RotatedRect> minRect = laserline::findRectangle(contours);
-				
+
 				/// Draw contours + rotated rects
 				Mat drawing = Mat::zeros( threshold_output2.size(), CV_8UC3 );
-
-				laserlineInfo(minRect[0], projectedInterPoints[0], cal_angle, line_img);
-				circle(line_img, minRect[0].center, 5, Scalar(0,255,0), -1, 8, 0);
-
 				laserline::drawContourRectangle(drawing, contours, minRect);
+				
+				laserlineGUI(minRect[0], projectedInterPoints[0], cal_angle, line_img);
+				circle(line_img, minRect[0].center, 5, Scalar(0,255,0), -1, 8, 0);
 
 				// pair<double,double> hough_avg = laserline::HoughAverage(img_grey);
 				// laserline::HoughAvgOnImage(line_img,hough_avg);	
@@ -341,7 +340,7 @@ int main(int argc, char* argv[])
    
 }
 
-void laserlineInfo(RotatedRect rect, Point2d cal_center, int cal_angle, Mat drawing)
+void laserlineGUI(RotatedRect rect, Point2d cal_center, int cal_angle, Mat drawing)
 {
 	std::string center_print_x, center_print_y, angle_print, width_print, cal_center_print_x, cal_center_print_y, cal_angle_print;
 	center_print_x = std::to_string(int(rect.center.x));
