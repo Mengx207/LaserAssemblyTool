@@ -159,9 +159,7 @@ namespace laserdot
         double min_distance = *min_element(distance_list.begin(), distance_list.end());
         vector<double>::iterator result = min_element(distance_list.begin(), distance_list.end());
         int num = distance(distance_list.begin(), result);
-        cout<<endl<<"drawing line"<<endl;
         cv::line( img, center, point_list[num], cv::Scalar( 255, 255, 0 ), 1, 8 );
-        cout<<endl<<"drawed line"<<endl;
         // dotLine.nom_distance = min_distance;
         // dotLine.center_distance = norm(point_list[num]-point_list[(laserline.count)/2]);
         // std::pair<double,double>dist(min_distance,norm(point_list[num]-point_list[(laserline.count)/2])) ;

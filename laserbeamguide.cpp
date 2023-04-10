@@ -107,7 +107,7 @@ int main(int argc, char* argv[])
 		CEnumParameter(nodemap0, "LineSelector").SetValue("Line4");			
 		CBooleanParameter(nodemap0, "LineInverter").SetValue(true);
 
-		while(waitKey(50) != 'q')
+		while(waitKey(10) != 'q')
 		{
 			int max_imgs0 = 1;   
 			int imgs_taken0 =0;
@@ -118,7 +118,6 @@ int main(int argc, char* argv[])
 			{	
 				CGrabResultPtr ptrGrabResult0;
 				CGrabResultPtr ptrGrabResult1;
-				sleep(0.1);
 				while(camera0.WaitForFrameTriggerReady(1000,TimeoutHandling_ThrowException)==0);			
 				CCommandParameter(nodemap0, "TriggerSoftware").Execute();	
 				bool test0 = camera0.RetrieveResult(1000, ptrGrabResult0, TimeoutHandling_ThrowException);
@@ -255,7 +254,7 @@ int main(int argc, char* argv[])
 				Mat drawing = Mat::zeros( threshold_output.size(), CV_8UC3 );
 
 				if(non_zero > 50)
-				{	
+				{
 					// cv::Point center;
 					// HoughCircles(img_grey_filtered_dot, circles, cv::HOUGH_GRADIENT,2, 2000,500,10,0,100);
 					// if(!circles.empty())
@@ -334,9 +333,7 @@ int main(int argc, char* argv[])
 				// cv::imshow("img_grey_filtered_dot", img_grey_filtered_dot);	
 				// cv::imshow("threshold output", threshold_output);
 				cv::imshow("Contour and Rectangle", drawing);	  
-				cv::imshow("Laser Beam Alignment Window", dot_img);						
-				cv::waitKey( 10 );		
-				sleep(0.1);
+				cv::imshow("Laser Beam Alignment Window", dot_img);							
 				imgs_taken0++;
 			}
 			camera0.StopGrabbing();
