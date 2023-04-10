@@ -225,7 +225,7 @@ int main(int argc, char* argv[])
 				vector<Point2d> projectedInterPoints;
 				interPointArray.push_back(interPoint1);
 				projectPoints(interPointArray, Mat::zeros(3,1,CV_64FC1), Mat::zeros(3,1,CV_64FC1),cameraMatrix,distCoeffs,projectedInterPoints);
-				cout<<endl<<"Intersection between laser beam and target board on camera image: "<<endl<<projectedInterPoints<<endl;
+				// cout<<endl<<"Intersection between laser beam and target board on camera image: "<<endl<<projectedInterPoints<<endl;
 				cv::circle( dot_img, projectedInterPoints[0], 5, cv::Scalar(0,0,255), -1, 8, 0 );
 
 

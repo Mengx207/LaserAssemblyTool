@@ -30,7 +30,7 @@ target_link_libraries( laserplaneguide
 
 )
 
-add_executable( resolution_test resolution_test.cpp )
+add_executable( resolution_test images/resoluiton_test.cpp )
 target_link_libraries( resolution_test
 		       ${OpenCV_LIBS}
 	               ${Pylon_LIBRARIES}
