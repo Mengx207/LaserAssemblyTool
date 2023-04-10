@@ -7,6 +7,7 @@
 	Meausre distance from the center of laser line to the laser dot along the line
 */
 #include <iostream>
+#include <iomanip>
 #include <sstream>
 #include <string>
 #include <unistd.h>
@@ -35,7 +36,8 @@ using namespace GENAPI_NAMESPACE;
 #ifdef PYLON_WIN_BUILD
 #   include <pylon/PylonGUI.h>
 #endif
-void laserlineGUI(RotatedRect rect, Point2d cal_center, int cal_angle, Mat drawing);
+
+void laserlineGUI(RotatedRect rect, Point2d cal_center, int cal_angle, laserline::uniformity_data uniformity1, Mat drawing);
 
 int main(int argc, char* argv[])
 {
@@ -44,7 +46,6 @@ int main(int argc, char* argv[])
      // Before using any pylon methods, the pylon runtime must be initialized.
      PylonInitialize();
      const char *err;
-   
 	try
 	{		
 		CDeviceInfo info0, info1;
@@ -237,17 +238,16 @@ int main(int argc, char* argv[])
 				Mat drawing = Mat::zeros( threshold_output2.size(), CV_8UC3 );
 				Mat rotated_image = threshold_output2.clone();
 
-				if (minRect.size() > 0)
+				if (minRect.size() == 1)
 				{
 					laserline::drawContourRectangle(drawing, contours, minRect);
-					laserlineGUI(minRect[0], projectedInterPoints[0], cal_angle, line_img);
 					circle(line_img, minRect[0].center, 5, Scalar(0,255,0), -1, 8, 0);
 					double angle = minRect[0].angle;
 					Mat rotation_matrix = getRotationMatrix2D(minRect[0].center, angle, 1.0);
 					warpAffine(threshold_output2, rotated_image, rotation_matrix, threshold_output2.size());
 					laserline::uniformity_data uniformity1;
 					uniformity1 = laserline::cropImage(rotated_image);
-					cout<< "Uniformity of the laser line: "<< uniformity1.width_sd<<endl;
+					laserlineGUI(minRect[0], projectedInterPoints[0], cal_angle, uniformity1, line_img);
 					cv::imshow( "Rotated and Cropped laser line", uniformity1.image_BGR );
 				}
 				
@@ -261,8 +261,9 @@ int main(int argc, char* argv[])
 			// if (cv::waitKey( 50 ) != -1 ) break;		
 		}
 		std::cout << std::endl << "Saving images" << std::endl;	
+		system("cd images && mkdir -p saved_laser_plane");
 		imwrite("images/saved_laser_plane/laser_" + string(argv[1]) + ".jpg", line_img); 
-		std::cout << std::endl << "Finish saving" << std::endl;	
+		std::cout << "Finish saving" << std::endl;	
 
 	}
 
@@ -280,20 +281,31 @@ int main(int argc, char* argv[])
    
 }
 
-void laserlineGUI(RotatedRect rect, Point2d cal_center, int cal_angle, Mat drawing)
+void laserlineGUI(RotatedRect rect, Point2d cal_center, int cal_angle, laserline::uniformity_data uniformity1, Mat drawing)
 {
-	std::string center_print_x, center_print_y, angle_print, width_print, cal_center_print_x, cal_center_print_y, cal_angle_print;
+	std::string center_print_x, center_print_y, angle_print, width_print, cal_center_print_x, cal_center_print_y, cal_angle_print, width_max_print, width_min_print, width_sd_print;
 	center_print_x = std::to_string(int(rect.center.x));
 	center_print_y = std::to_string(int(rect.center.y));
 	angle_print = std::to_string(int(rect.angle));
+
+	std::ostringstream streamObj;
+	streamObj << std::fixed;
+	streamObj << std::setprecision(2);
+
+	streamObj << uniformity1.width_max;
+	width_max_print = streamObj.str();
+	streamObj.str("");
+	streamObj << uniformity1.width_min;
+	width_min_print = streamObj.str();
+	streamObj.str("");
+	streamObj << uniformity1.width_sd;
+	width_sd_print = streamObj.str();
+	streamObj.str("");
+
 	if(rect.size.width < rect.size.height)
-	{
-		width_print = std::to_string(int(rect.size.width));
-	}
+	{width_print = std::to_string(int(rect.size.width));}
 	else
-	{
-		width_print = std::to_string(int(rect.size.height));
-	}
+	{width_print = std::to_string(int(rect.size.height));}
 
 	cal_center_print_x = std::to_string(int(cal_center.x));
 	cal_center_print_y = std::to_string(int(cal_center.y));
@@ -304,4 +316,8 @@ void laserlineGUI(RotatedRect rect, Point2d cal_center, int cal_angle, Mat drawi
 	cv::putText(drawing, "Actual Center: [" + center_print_x + "," + center_print_y + "]", cv::Point(10, 80), cv::FONT_HERSHEY_SIMPLEX, 0.8, cv::Scalar(255, 255, 255),2);
 	cv::putText(drawing, "Actual Angle: " + angle_print, cv::Point(10,110), cv::FONT_HERSHEY_SIMPLEX, 0.8, cv::Scalar(255, 255, 255),2);
 	cv::putText(drawing, "Line Width: " + width_print, cv::Point(10,140), cv::FONT_HERSHEY_SIMPLEX, 0.8, cv::Scalar(255, 255, 255),2);
+
+	cv::putText(drawing, "Maximum Width: " + width_max_print, cv::Point(500, 20), cv::FONT_HERSHEY_SIMPLEX, 0.8, cv::Scalar(255, 255, 255),2);
+	cv::putText(drawing, "Minimum Width: " + width_min_print, cv::Point(500,50), cv::FONT_HERSHEY_SIMPLEX, 0.8, cv::Scalar(255, 255, 255),2);
+	cv::putText(drawing, "Standard Deviation of Width: " + width_sd_print, cv::Point(500, 80), cv::FONT_HERSHEY_SIMPLEX, 0.8, cv::Scalar(255, 255, 255),2);
 }

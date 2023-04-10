@@ -235,9 +235,9 @@ int main(int argc, char* argv[])
 				// Number of bright pixel
 				int count = laserdot::PixelCounter(img_grey_filtered_dot);
 				// average size
-				size_avg = laserdot::SizeAverage(count,0,size_array, center_total);
+				size_avg = laserdot::SizeAverage(count,0,size_array, center_rect_count);
 				//-----------save min_size only when the value in size_array is stable and close to each other
-				if(size_avg < min_size && center_total > 20)
+				if(size_avg < min_size && center_rect_count > 20)
 				{
 					if(abs(size_array[0]-size_array[9]) <=3)
 					{
@@ -300,7 +300,7 @@ int main(int argc, char* argv[])
 							center_rect_count++;
 							laserline::drawContourRectangle(drawing, contours, minRect);
 							cv::circle( dot_img, minRect[0].center, 3, cv::Scalar(100,255,0), -1, 8, 0 );
-							cout<<endl<<"minRect center: "<< minRect[0].center<<endl;
+							// cout<<endl<<"minRect center: "<< minRect[0].center<<endl;
 						}
 						if (center_rect_count > 30)
 						{
@@ -323,8 +323,8 @@ int main(int argc, char* argv[])
 				{
 					last_min_size = min_size;
 					fill_n(size_array,10,0);
-					center_total = 0;
-					center_list.clear();
+					center_rect_count = 0;
+					center_rect_list.clear();
 					//fill(center_list.begin(), center_list.end(), cv::Point(0,0));
 				}
 				laserdot::HMI(dot_img, size_avg, min_size, non_zero, nom_distance, center_distance);
@@ -337,6 +337,7 @@ int main(int argc, char* argv[])
 				imgs_taken0++;
 			}
 			camera0.StopGrabbing();
+			system("cd images && mkdir -p saved_laser_beam");
 			cv::imwrite("images/saved_laser_beam/laser_" + string(argv[1]) + ".jpg", dot_img);
 		}
 

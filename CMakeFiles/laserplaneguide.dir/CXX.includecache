@@ -65,6 +65,8 @@ fstream
 /home/lingbo/Documents/GitHub/AssemblyGuidanceTool/laserplaneguide.cpp
 iostream
 -
+iomanip
+-
 sstream
 -
 string

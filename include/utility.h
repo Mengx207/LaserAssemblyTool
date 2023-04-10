@@ -604,51 +604,52 @@ namespace laserline
                 string a = to_string(x);
                 string b = to_string(y);
         
-                if (x1 >= imgwidth && y1 >= imgheight)
-                {
-                    x = imgwidth - 1;
-                    y = imgheight - 1;
-                    x1 = imgwidth - 1;
-                    y1 = imgheight - 1;
+                // if (x1 >= imgwidth && y1 >= imgheight)
+                // {
+                //     x = imgwidth - 1;
+                //     y = imgheight - 1;
+                //     x1 = imgwidth - 1;
+                //     y1 = imgheight - 1;
 
-                    // crop the patches of size MxN
-                    Mat tiles = image_copy(Range(y, imgheight), Range(x, imgwidth));
-                    rectWidth.push_back(findSquareWidth(tiles));
-                    //save each patches into file directory
-                    //imwrite("images/saved_patches/tile" + a + '_' + b + ".jpg", tiles);  
-                    rectangle(image_BGR, Point(x,y), Point(x1,y1), Scalar(0,255,0), 1);    
-                }
-                else if (y1 > imgheight)
-                {
-                    y = imgheight - 1;
-                    y1 = imgheight - 1;
+                //     // crop the patches of size MxN
+                //     Mat tiles = image_copy(Range(y, imgheight), Range(x, imgwidth));
+                //     rectWidth.push_back(findSquareWidth(tiles));
+                //     //save each patches into file directory
+                //     //imwrite("images/saved_patches/tile" + a + '_' + b + ".jpg", tiles);  
+                //     rectangle(image_BGR, Point(x,y), Point(x1,y1), Scalar(0,255,0), 1);    
+                // }
+                // else if (y1 > imgheight)
+                // {
+                //     y = imgheight - 1;
+                //     y1 = imgheight - 1;
         
-                    // crop the patches of size MxN
-                    Mat tiles = image_copy(Range(y, imgheight), Range(x, x+N));
-                    rectWidth.push_back(findSquareWidth(tiles));
-                    //save each patches into file directory
-                    //imwrite("images/saved_patches/tile" + a + '_' + b + ".jpg", tiles);  
-                    rectangle(image_BGR, Point(x,y), Point(x1,y1), Scalar(0,255,0), 1);    
-                }
-                else if (x1 > imgwidth)
-                {
-                    x = imgwidth - 1;   
-                    x1 = imgwidth - 1;
+                //     // crop the patches of size MxN
+                //     Mat tiles = image_copy(Range(y, imgheight), Range(x, x+N));
+                //     rectWidth.push_back(findSquareWidth(tiles));
+                //     //save each patches into file directory
+                //     //imwrite("images/saved_patches/tile" + a + '_' + b + ".jpg", tiles);  
+                //     rectangle(image_BGR, Point(x,y), Point(x1,y1), Scalar(0,255,0), 1);    
+                // }
+                // else if (x1 > imgwidth)
+                // {
+                //     x = imgwidth - 1;   
+                //     x1 = imgwidth - 1;
         
-                    // crop the patches of size MxN
-                    Mat tiles = image_copy(Range(y, y+M), Range(x, imgwidth));
-                    rectWidth.push_back(findSquareWidth(tiles));
-                    //save each patches into file directory
-                    //imwrite("images/saved_patches/tile" + a + '_' + b + ".jpg", tiles);  
-                    rectangle(image_BGR, Point(x,y), Point(x1,y1), Scalar(0,255,0), 1);   
-                }
-                else
+                //     // crop the patches of size MxN
+                //     Mat tiles = image_copy(Range(y, y+M), Range(x, imgwidth));
+                //     rectWidth.push_back(findSquareWidth(tiles));
+                //     //save each patches into file directory
+                //     //imwrite("images/saved_patches/tile" + a + '_' + b + ".jpg", tiles);  
+                //     rectangle(image_BGR, Point(x,y), Point(x1,y1), Scalar(0,255,0), 1);   
+                // }
+                // else
                 {
                     // crop the patches of size MxN
                     Mat tiles = image_copy(Range(y, y+M), Range(x, x+N));
                     rectWidth.push_back(findSquareWidth(tiles));
+                    system("cd images && mkdir -p saved_patches");
                     //save each patches into file directory
-                    //imwrite("images/saved_patches/tile" + a + '_' + b + ".jpg", tiles);  
+                    imwrite("images/saved_patches/tile" + a + '_' + b + ".jpg", tiles);  
                     rectangle(image_BGR, Point(x,y), Point(x1,y1), Scalar(0,255,0), 1);  
                 }
             }
