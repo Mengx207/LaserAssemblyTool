@@ -111,19 +111,6 @@ depend:
 .PHONY : depend
 
 #=============================================================================
-# Target rules for targets named rotate_image
-
-# Build rule for target.
-rotate_image: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 rotate_image
-.PHONY : rotate_image
-
-# fast build rule for target.
-rotate_image/fast:
-	$(MAKE) -f CMakeFiles/rotate_image.dir/build.make CMakeFiles/rotate_image.dir/build
-.PHONY : rotate_image/fast
-
-#=============================================================================
 # Target rules for targets named laserbeamguide
 
 # Build rule for target.
@@ -203,33 +190,6 @@ laserplaneguide.cpp.s:
 	$(MAKE) -f CMakeFiles/laserplaneguide.dir/build.make CMakeFiles/laserplaneguide.dir/laserplaneguide.cpp.s
 .PHONY : laserplaneguide.cpp.s
 
-rotate_image.o: rotate_image.cpp.o
-
-.PHONY : rotate_image.o
-
-# target to build an object file
-rotate_image.cpp.o:
-	$(MAKE) -f CMakeFiles/rotate_image.dir/build.make CMakeFiles/rotate_image.dir/rotate_image.cpp.o
-.PHONY : rotate_image.cpp.o
-
-rotate_image.i: rotate_image.cpp.i
-
-.PHONY : rotate_image.i
-
-# target to preprocess a source file
-rotate_image.cpp.i:
-	$(MAKE) -f CMakeFiles/rotate_image.dir/build.make CMakeFiles/rotate_image.dir/rotate_image.cpp.i
-.PHONY : rotate_image.cpp.i
-
-rotate_image.s: rotate_image.cpp.s
-
-.PHONY : rotate_image.s
-
-# target to generate assembly for a file
-rotate_image.cpp.s:
-	$(MAKE) -f CMakeFiles/rotate_image.dir/build.make CMakeFiles/rotate_image.dir/rotate_image.cpp.s
-.PHONY : rotate_image.cpp.s
-
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -237,7 +197,6 @@ help:
 	@echo "... clean"
 	@echo "... depend"
 	@echo "... rebuild_cache"
-	@echo "... rotate_image"
 	@echo "... laserbeamguide"
 	@echo "... edit_cache"
 	@echo "... laserplaneguide"
@@ -247,9 +206,6 @@ help:
 	@echo "... laserplaneguide.o"
 	@echo "... laserplaneguide.i"
 	@echo "... laserplaneguide.s"
-	@echo "... rotate_image.o"
-	@echo "... rotate_image.i"
-	@echo "... rotate_image.s"
 .PHONY : help
 
 
