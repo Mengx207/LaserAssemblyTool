@@ -14,14 +14,6 @@ include_directories( include
 
 
 
-#add_executable( calculated_laser_line calculated_laser_line.cpp )
-#target_link_libraries( calculated_laser_line
-#		       ${OpenCV_LIBS}
-#	               ${Pylon_LIBRARIES}
-#                       ${pylon_camera_INCLUDE_DIRS}
-
-#)
-
 add_executable( laserbeamguide laserbeamguide.cpp )
 target_link_libraries( laserbeamguide
 		       ${OpenCV_LIBS}
@@ -37,6 +29,8 @@ target_link_libraries( laserplaneguide
                        ${pylon_camera_INCLUDE_DIRS}
 
 )
+
+
 
 
 

@@ -48,8 +48,8 @@ int main(int argc, char* argv[])
 	try
 	{		
 		CDeviceInfo info0, info1;
-		info0.SetSerialNumber("40113772"); //cam1, right
-		//info1.SetSerialNumber("40172226"); //cam2, left
+		info0.SetSerialNumber("40113772"); //cam1
+		// info0.SetSerialNumber("40172396"); //cam2
 		
 
 	    CInstantCamera camera0( CTlFactory::GetInstance().CreateDevice(info0));	
@@ -58,7 +58,8 @@ int main(int argc, char* argv[])
 
 		//Create a pylon image that will be used to create an opencv image
 		CPylonImage pylonImage0;
-		cv::Mat src, cam_frame_temp0;
+		Mat src, cam_frame_temp0;
+		Mat line_img;
 		camera0.Open();
 
 		// These allow us to convert from GrabResultPtr_t to cv::Mat
@@ -101,18 +102,17 @@ int main(int argc, char* argv[])
 		CEnumParameter(nodemap0, "LineSelector").SetValue("Line4");			
 		CBooleanParameter(nodemap0, "LineInverter").SetValue(true);
 
-		while(1)
+		while(waitKey(10) != 'q')
 		{
-			int max_imgs0 = 50;   
-			int imgs_taken0 =0;
+			int max_imgs0 = 1;   
+			int imgs_taken = 0;
 
 			camera0.StartGrabbing(max_imgs0*1);
 
-			while (imgs_taken0 < max_imgs0) 
+			while (imgs_taken < max_imgs0) 
 			{	
 				CGrabResultPtr ptrGrabResult0;
 				CGrabResultPtr ptrGrabResult1;
-				sleep(0.1);
 				while(camera0.WaitForFrameTriggerReady(1000,TimeoutHandling_ThrowException)==0);			
 				CCommandParameter(nodemap0, "TriggerSoftware").Execute();	
 				bool test0 = camera0.RetrieveResult(1000, ptrGrabResult0, TimeoutHandling_ThrowException);
@@ -220,7 +220,7 @@ int main(int argc, char* argv[])
 
 				Mat img_grey;
 				cv::cvtColor(src, img_grey, cv::COLOR_BGR2GRAY);
-				Mat line_img = src.clone();
+				line_img = src.clone();
 				laserdot::CalculatedLine( line_img, projectedlaserline_1[0], projectedlaserline_1[19] );
 
 				cv::circle( line_img, projectedInterPoints[0], 5, cv::Scalar(0,0,255), -1, 8, 0 );
@@ -233,96 +233,36 @@ int main(int argc, char* argv[])
 				// imshow("threshold1",threshold_output1);
 
 				findContours( threshold_output2, contours, hierarchy, RETR_TREE, CHAIN_APPROX_SIMPLE, Point(0, 0) );
-				vector<RotatedRect> minRect = laserline::findRectangle(contours);
-
-				/// Draw contours + rotated rects
+				vector<RotatedRect> minRect = laserline::findRectangle(contours,100);
 				Mat drawing = Mat::zeros( threshold_output2.size(), CV_8UC3 );
-				laserline::drawContourRectangle(drawing, contours, minRect);
-				
-				laserlineGUI(minRect[0], projectedInterPoints[0], cal_angle, line_img);
-				circle(line_img, minRect[0].center, 5, Scalar(0,255,0), -1, 8, 0);
+				Mat rotated_image = threshold_output2.clone();
 
-				// pair<double,double> hough_avg = laserline::HoughAverage(img_grey);
-				// laserline::HoughAvgOnImage(line_img,hough_avg);	
-				
-				Mat image_copy = threshold_output2.clone();
-				int imgheight = line_img.rows;
-				int imgwidth = line_img.cols;
-				int M = 215;
-				int N = 287;
-				
-				int x1 = 0;
-				int y1 = 0;
-				for (int y = 0; y<imgheight+1; y=y+M)
+				if (minRect.size() > 0)
 				{
-					for (int x = 0; x<imgwidth+1; x=x+N)
-					{
-						if ((imgheight - y) < M || (imgwidth - x) < N)
-						{
-							break;
-						}
-						y1 = y + M;
-						x1 = x + N;
-						string a = to_string(x);
-						string b = to_string(y);
-				
-						if (x1 >= imgwidth && y1 >= imgheight)
-						{
-							x = imgwidth - 1;
-							y = imgheight - 1;
-							x1 = imgwidth - 1;
-							y1 = imgheight - 1;
-				
-							// crop the patches of size MxN
-							Mat tiles = image_copy(Range(y, imgheight), Range(x, imgwidth));
-							//save each patches into file directory
-							imwrite("saved_patches/tile" + a + '_' + b + ".jpg", tiles);  
-							rectangle(line_img, Point(x,y), Point(x1,y1), Scalar(0,255,0), 1);    
-						}
-						else if (y1 > imgheight)
-						{
-							y = imgheight - 1;
-							y1 = imgheight - 1;
-				
-							// crop the patches of size MxN
-							Mat tiles = image_copy(Range(y, imgheight), Range(x, x+N));
-							//save each patches into file directory
-							imwrite("saved_patches/tile" + a + '_' + b + ".jpg", tiles);  
-							rectangle(line_img, Point(x,y), Point(x1,y1), Scalar(0,255,0), 1);    
-						}
-						else if (x1 > imgwidth)
-						{
-							x = imgwidth - 1;   
-							x1 = imgwidth - 1;
-				
-							// crop the patches of size MxN
-							Mat tiles = image_copy(Range(y, y+M), Range(x, imgwidth));
-							//save each patches into file directory
-							imwrite("saved_patches/tile" + a + '_' + b + ".jpg", tiles);  
-							rectangle(line_img, Point(x,y), Point(x1,y1), Scalar(0,255,0), 1);   
-						}
-						else
-						{
-							// crop the patches of size MxN
-							Mat tiles = image_copy(Range(y, y+M), Range(x, x+N));
-							//save each patches into file directory
-							imwrite("saved_patches/tile" + a + '_' + b + ".jpg", tiles);  
-							rectangle(line_img, Point(x,y), Point(x1,y1), Scalar(0,255,0), 1);  
-						}
-					}
+					laserline::drawContourRectangle(drawing, contours, minRect);
+					laserlineGUI(minRect[0], projectedInterPoints[0], cal_angle, line_img);
+					circle(line_img, minRect[0].center, 5, Scalar(0,255,0), -1, 8, 0);
+					double angle = minRect[0].angle;
+					Mat rotation_matrix = getRotationMatrix2D(minRect[0].center, angle, 1.0);
+					warpAffine(threshold_output2, rotated_image, rotation_matrix, threshold_output2.size());
+					laserline::uniformity_data uniformity1;
+					uniformity1 = laserline::cropImage(rotated_image);
+					cout<< "Uniformity of the laser line: "<< uniformity1.width_sd<<endl;
+					cv::imshow( "Rotated and Cropped laser line", uniformity1.image_BGR );
 				}
-
-				cv::imwrite("saved_laser_plane/laser_" + string(argv[1]) + ".jpg", line_img);  
+				
 				cv::imshow( "Contour and Area", drawing );
 				cv::imshow("threshold2",threshold_output2);
-				cv::imshow("Laser Plane Alignment GUI Window", line_img);
-				// Show in a window					
-				cv::waitKey( 10 );		
-				sleep(0.1);
-				imgs_taken0++;
+				cv::imshow("Laser Plane Alignment GUI Window", line_img);	
+				imgs_taken ++;
 			}
 			camera0.StopGrabbing();
+			// std::cout << std::endl << cv::waitKey( 50 ) << std::endl;				
+			// if (cv::waitKey( 50 ) != -1 ) break;		
 		}
+		std::cout << std::endl << "Saving images" << std::endl;	
+		imwrite("images/saved_laser_plane/laser_" + string(argv[1]) + ".jpg", line_img); 
+		std::cout << std::endl << "Finish saving" << std::endl;	
 
 	}
 

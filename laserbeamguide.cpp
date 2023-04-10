@@ -292,7 +292,7 @@ int main(int argc, char* argv[])
 					findContours( threshold_output, contours, hierarchy, RETR_TREE, CHAIN_APPROX_SIMPLE, Point(0, 0) );
 					if(contours.size() > 0)
 					{
-						vector<RotatedRect> minRect = laserline::findRectangle(contours);
+						vector<RotatedRect> minRect = laserline::findRectangle(contours,20);
 						if(minRect.size()>0)
 						{
 							laserline::drawContourRectangle(drawing, contours, minRect);
@@ -316,7 +316,7 @@ int main(int argc, char* argv[])
 				// cv::imshow("img_grey_filtered_dot", img_grey_filtered_dot);	
 				// cv::imshow("threshold output", threshold_output);
 				cv::imshow("Contour and Rectangle", drawing);	
-				cv::imwrite("saved_laser_beam/laser_" + string(argv[1]) + ".jpg", dot_img);  
+				cv::imwrite("images/saved_laser_beam/laser_" + string(argv[1]) + ".jpg", dot_img);  
 				cv::imshow("Laser Beam Alignment Window", dot_img);						
 				cv::waitKey( 10 );		
 				sleep(0.1);

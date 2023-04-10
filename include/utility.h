@@ -107,7 +107,7 @@ namespace laserdot
         // cv::putText(img, "Laser Focus Status: ", cv::Point(10, 120), cv::FONT_HERSHEY_SIMPLEX, 0.8, cv::Scalar(255, 255, 255),2);
 
         cv::putText(img, "Laser Dot Location:", cv::Point(500, 20), cv::FONT_HERSHEY_SIMPLEX, 0.8, cv::Scalar(255, 255, 255),2);
-        cv::putText(img, "Nominal Distance: "+nom_distance_print, cv::Point(500, 50), cv::FONT_HERSHEY_SIMPLEX, 0.8, cv::Scalar(255, 255, 255),2);
+        cv::putText(img, "Normal Distance: "+nom_distance_print, cv::Point(500, 50), cv::FONT_HERSHEY_SIMPLEX, 0.8, cv::Scalar(255, 255, 255),2);
         cv::putText(img, "Distance from Center: "+center_distance_print, cv::Point(500, 80), cv::FONT_HERSHEY_SIMPLEX, 0.8, cv::Scalar(255, 255, 255),2);
         cv::putText(img, "Dot Location Status: ", cv::Point(500, 120), cv::FONT_HERSHEY_SIMPLEX, 0.8, cv::Scalar(255, 255, 255),2);
 
@@ -401,15 +401,15 @@ namespace laserline
         c2 = N_L[2];	
         vector<double> cross_P;
         //find the plane equations
-        cout<<endl<<"Target board plane equation: "<<a1<<"*(x-"<<point_B[0]<<")+"<<b1<<"*(y-"<<point_B[1]<<")+"<<c1<<"*(z-"<<point_B[2]<<") = 0"<<endl;
-        cout<<"Laser plane equation: "<<a2<<"(x-"<<point_L[0]<<")+"<<b2<<"*(y-"<<point_L[1]<<")+"<<c2<<"*(z-"<<point_L[2]<<") = 0"<<endl;
+        // cout<<endl<<"Target board plane equation: "<<a1<<"*(x-"<<point_B[0]<<")+"<<b1<<"*(y-"<<point_B[1]<<")+"<<c1<<"*(z-"<<point_B[2]<<") = 0"<<endl;
+        // cout<<"Laser plane equation: "<<a2<<"(x-"<<point_L[0]<<")+"<<b2<<"*(y-"<<point_L[1]<<")+"<<c2<<"*(z-"<<point_L[2]<<") = 0"<<endl;
         cross_P = crossProduct(N_B, N_L);
         // cout<<"Nomal vector cross product: v=("<<cross_P[0]<<","<<cross_P[1]<<","<<cross_P[2]<<")"<<endl<<endl;
         double x0,y0,z0;
         x0 = point_L[0];
         y0 = point_L[1];
         z0 = point_L[2];
-        cout<<"Intersection line of two planes__:"<<"r=("<<x0<<"+t*"<<cross_P[0]<<")*i+("<<y0<<"+t*"<<cross_P[1]<<")*j+("<<z0<<"+"<<cross_P[2]<<"*t)*k"<<endl;
+        // cout<<"Intersection line of two planes__:"<<"r=("<<x0<<"+t*"<<cross_P[0]<<")*i+("<<y0<<"+t*"<<cross_P[1]<<")*j+("<<z0<<"+"<<cross_P[2]<<"*t)*k"<<endl;
         //cout<<endl<<"One point on intersection line: r0 = ("<<x<<","<<y<<",0)"<<endl;
 
         // cout<<"Intersection line of two planes:"<<endl<<"r=("<<x<<"+t*"<<cross_P[0]<<")*i+("<<y<<"+t*"<<cross_P[1]<<")*j+("<<cross_P[2]<<"*t)*k"<<endl;
@@ -505,23 +505,23 @@ namespace laserline
     // }
 
 
-    vector<RotatedRect> findRectangle(vector<vector<Point> > contours)
+    vector<RotatedRect> findRectangle(vector<vector<Point> > contours, int sensitivity)
     {
         vector<RotatedRect> minRect;
         RotatedRect rect;
         for( int i = 0; i < contours.size(); i++ )
         { 
             /* Any contour with too small size will be regard as noise, can limit the noise level be increase the contour size threshold  */
-            if(contours[i].size() > 20) 
+            if(contours[i].size() > sensitivity) 
             {
                 rect = minAreaRect( Mat(contours[i]) );
                 minRect.push_back(rect);
-                cout<<"Rectangle center: "<<rect.center<<endl;
-                cout<<"Rectangle size "<<rect.size<<endl;
-                cout<<"Rectangle angle: "<<rect.angle<<endl;
+                // cout<<"Rectangle center: "<<rect.center<<endl;
+                // cout<<"Rectangle size "<<rect.size<<endl;
+                // cout<<"Rectangle angle: "<<rect.angle<<endl;
                 Point2f vertices[4];
                 rect.points(vertices);
-                cout<<"Rectangle vertices: "<<vertices[0]<<","<<vertices[1]<<","<<vertices[2]<<","<<vertices[3]<<endl;
+                // cout<<"Rectangle vertices: "<<vertices[0]<<","<<vertices[1]<<","<<vertices[2]<<","<<vertices[3]<<endl;
             }
         }
         return minRect;
@@ -549,6 +549,149 @@ namespace laserline
             }
             circle (drawing, minRect[i].center, 2, cv::Scalar(0,255,0), -1, 8, 0);
         }
+    }
+
+    struct uniformity_data{
+        Mat image_BGR;
+        double width_avg, width_max, width_min, width_sd;
+    };
+
+    double findSquareWidth(Mat tiles)
+    {
+        vector<vector<Point> > contours;
+  		vector<Vec4i> hierarchy;
+        findContours( tiles, contours, hierarchy, RETR_TREE, CHAIN_APPROX_SIMPLE, Point(0, 0) );
+        vector<RotatedRect> minRect = laserline::findRectangle(contours,50);
+        if(minRect.size()>0)
+        {
+            if (minRect[0].size.height > minRect[0].size.width)
+            {
+                //cout<<"Width of rectangle: "<<minRect[0].size.width<<endl;
+                return minRect[0].size.width;
+            }
+            else
+            {
+                //cout<<"Width of rectangle: "<<minRect[0].size.height<<endl;
+                return minRect[0].size.height;
+            }
+        }
+        else
+        {return 0;}
+    }
+
+    uniformity_data cropImage(Mat image)
+    {
+        Mat image_BGR;
+        cvtColor(image,image_BGR,COLOR_GRAY2BGR);
+
+        Mat image_copy = image.clone();
+        int imgheight = image_copy.rows;
+        int imgwidth = image_copy.cols;
+        int M = 215;
+        int N = 287;
+        int x1 = 0;
+        int y1 = 0;
+        vector<double> rectWidth;
+        for (int y = 0; y<imgheight+1; y=y+M)
+        {
+            for (int x = 0; x<imgwidth+1; x=x+N)
+            {
+                if ((imgheight - y) < M || (imgwidth - x) < N)
+                {
+                    break;
+                }
+                y1 = y + M;
+                x1 = x + N;
+                string a = to_string(x);
+                string b = to_string(y);
+        
+                if (x1 >= imgwidth && y1 >= imgheight)
+                {
+                    x = imgwidth - 1;
+                    y = imgheight - 1;
+                    x1 = imgwidth - 1;
+                    y1 = imgheight - 1;
+
+                    // crop the patches of size MxN
+                    Mat tiles = image_copy(Range(y, imgheight), Range(x, imgwidth));
+                    rectWidth.push_back(findSquareWidth(tiles));
+                    //save each patches into file directory
+                    //imwrite("images/saved_patches/tile" + a + '_' + b + ".jpg", tiles);  
+                    rectangle(image_BGR, Point(x,y), Point(x1,y1), Scalar(0,255,0), 1);    
+                }
+                else if (y1 > imgheight)
+                {
+                    y = imgheight - 1;
+                    y1 = imgheight - 1;
+        
+                    // crop the patches of size MxN
+                    Mat tiles = image_copy(Range(y, imgheight), Range(x, x+N));
+                    rectWidth.push_back(findSquareWidth(tiles));
+                    //save each patches into file directory
+                    //imwrite("images/saved_patches/tile" + a + '_' + b + ".jpg", tiles);  
+                    rectangle(image_BGR, Point(x,y), Point(x1,y1), Scalar(0,255,0), 1);    
+                }
+                else if (x1 > imgwidth)
+                {
+                    x = imgwidth - 1;   
+                    x1 = imgwidth - 1;
+        
+                    // crop the patches of size MxN
+                    Mat tiles = image_copy(Range(y, y+M), Range(x, imgwidth));
+                    rectWidth.push_back(findSquareWidth(tiles));
+                    //save each patches into file directory
+                    //imwrite("images/saved_patches/tile" + a + '_' + b + ".jpg", tiles);  
+                    rectangle(image_BGR, Point(x,y), Point(x1,y1), Scalar(0,255,0), 1);   
+                }
+                else
+                {
+                    // crop the patches of size MxN
+                    Mat tiles = image_copy(Range(y, y+M), Range(x, x+N));
+                    rectWidth.push_back(findSquareWidth(tiles));
+                    //save each patches into file directory
+                    //imwrite("images/saved_patches/tile" + a + '_' + b + ".jpg", tiles);  
+                    rectangle(image_BGR, Point(x,y), Point(x1,y1), Scalar(0,255,0), 1);  
+                }
+            }
+        }
+
+        uniformity_data uniformity1;
+        uniformity1.image_BGR = image_BGR;
+        double total = 0;
+        double count = 0;
+        double max = 0;
+        double min = 1000;
+        vector<double> nonEmptyRect;
+
+        for (int i=0; i<rectWidth.size(); i++)
+        {
+            if(rectWidth[i] > 0)
+            {
+                nonEmptyRect.push_back(rectWidth[i]);
+                total = total + rectWidth[i];
+                count++;
+                if (rectWidth[i]>max)
+                {
+                    max = rectWidth[i];
+                }
+                else if (rectWidth[i]<min)
+                {
+                    min = rectWidth[i];
+                }
+            }
+        }
+        uniformity1.width_max = max;
+        uniformity1.width_min = min;
+        uniformity1.width_avg = total/count;
+        
+        float tot = 0;
+        for (int j=0; j < nonEmptyRect.size(); j++)
+        {
+            tot = tot + (nonEmptyRect[j] - uniformity1.width_avg)*(nonEmptyRect[j] - uniformity1.width_avg);
+        }
+        uniformity1.width_sd = sqrt(tot/nonEmptyRect.size());
+        return uniformity1;
+       
     }
 
 }

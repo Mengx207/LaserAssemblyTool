@@ -1,0 +1,16 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/lingbo/Documents/GitHub/AssemblyGuidanceTool/KEYTEST.cpp
+iostream
+-
+sys/select.h
+-
+termios.h
+-
+
