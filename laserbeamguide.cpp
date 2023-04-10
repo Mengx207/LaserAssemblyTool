@@ -44,6 +44,7 @@ int main(int argc, char* argv[])
      // Before using any pylon methods, the pylon runtime must be initialized.
      PylonInitialize();
      const char *err;
+	 Mat src, dot_img;
    
 	try
 	{		
@@ -58,7 +59,7 @@ int main(int argc, char* argv[])
 
 		//Create a pylon image that will be used to create an opencv image
 		CPylonImage pylonImage0;
-		cv::Mat src, cam_frame_temp0;
+		cv::Mat cam_frame_temp0;
 		camera0.Open();
 		
 		cv::Point max_point;
@@ -76,7 +77,9 @@ int main(int argc, char* argv[])
 		cv::Point center_avg;
 
 		vector<cv::Point> center_list;
+		vector<cv::Point> center_rect_list;
 		double center_total = 0;
+		double center_rect_count = 0;
 			
 		INodeMap& nodemap0 = camera0.GetNodeMap();
 
@@ -104,9 +107,9 @@ int main(int argc, char* argv[])
 		CEnumParameter(nodemap0, "LineSelector").SetValue("Line4");			
 		CBooleanParameter(nodemap0, "LineInverter").SetValue(true);
 
-		while(1)
+		while(waitKey(50) != 'q')
 		{
-			int max_imgs0 = 50;   
+			int max_imgs0 = 1;   
 			int imgs_taken0 =0;
 
 			camera0.StartGrabbing(max_imgs0*1);
@@ -212,15 +215,13 @@ int main(int argc, char* argv[])
 
 			//----------raw image to greyscale, threshold filter
 				cv::cvtColor(src, img_grey, cv::COLOR_BGR2GRAY);
-				Mat dot_img = src.clone();
-				Mat line_img = src.clone();
+				dot_img = src.clone();
 
 				cv::Mat img_grey_filtered_dot;
 				cv::threshold(img_grey,img_grey_filtered_dot,250,255,cv::THRESH_OTSU||cv::THRESH_TRIANGLE);	
 				cv::circle( dot_img, projectedlaserline_1[0], 5, cv::Scalar(0,0,255), -1, 8, 0 );
 				laserdot::CalculatedLine( dot_img, projectedlaserline_1[0], projectedlaserline_1[19] );
-				laserdot::CalculatedLine( line_img, projectedlaserline_1[0], projectedlaserline_1[19] );
-
+				
 				vector<Point3d> interPointArray;
 				vector<Point2d> projectedInterPoints;
 				interPointArray.push_back(interPoint1);
@@ -255,49 +256,66 @@ int main(int argc, char* argv[])
 
 				if(non_zero > 50)
 				{	
-					cv::Point center;
-					HoughCircles(img_grey_filtered_dot, circles, cv::HOUGH_GRADIENT,2, 2000,500,10,0,100);
-					if(!circles.empty())
-					{
-						center.x = cvRound(circles[0][0]);
-						center.y = cvRound(circles[0][1]);
-						circle (drawing, center, 2, cv::Scalar(0,0,255), -1, 8, 0);
-						center_list.push_back(center);
-						center_total ++;
-					}
-					if (center_total > 30)
-					{
-						center_list.erase(center_list.begin());
-						center_total --;
-					}
+					// cv::Point center;
+					// HoughCircles(img_grey_filtered_dot, circles, cv::HOUGH_GRADIENT,2, 2000,500,10,0,100);
+					// if(!circles.empty())
+					// {
+					// 	center.x = cvRound(circles[0][0]);
+					// 	center.y = cvRound(circles[0][1]);
+					// 	circle (drawing, center, 2, cv::Scalar(0,0,255), -1, 8, 0);
+					// 	center_list.push_back(center);
+					// 	center_total ++;
+					// }
+					// if (center_total > 30)
+					// {
+					// 	center_list.erase(center_list.begin());
+					// 	center_total --;
+					// }
 					
-					if (center_total >= 10)
-					{
-						cv::Point sum  = std::accumulate(center_list.begin(), center_list.end(), cv::Point(0,0));
-						center_avg = sum*(1.0/center_total);
+					// if (center_total >= 10)
+					// {
+					// 	cv::Point sum  = std::accumulate(center_list.begin(), center_list.end(), cv::Point(0,0));
+					// 	center_avg = sum*(1.0/center_total);
 
-						sleep(0.1);
+					// 	sleep(0.1);
 
-						cv::circle( dot_img, center_avg, 3, cv::Scalar(255,100,0), -1, 8, 0 );
+					// 	cv::circle( dot_img, center_avg, 3, cv::Scalar(255,100,0), -1, 8, 0 );
 
-						// std::pair<double,double>dist = laserdot::DotToLine(src, line_1_Start, line_1_End, center_avg, Point2d(interPoint1.x+720,-interPoint1.y+540));
-						std::pair<double,double>dist = laserdot::DotToLine(dot_img, projectedlaserline_1[0], projectedlaserline_1[19], center_avg, projectedInterPoints[0]);
-						nom_distance = dist.first;
-						center_distance = dist.second;
-					}
+					// 	// std::pair<double,double>dist = laserdot::DotToLine(src, line_1_Start, line_1_End, center_avg, Point2d(interPoint1.x+720,-interPoint1.y+540));
+					// 	std::pair<double,double>dist = laserdot::DotToLine(dot_img, projectedlaserline_1[0], projectedlaserline_1[19], center_avg, projectedInterPoints[0]);
+					// 	nom_distance = dist.first;
+					// 	center_distance = dist.second;
+					// }
 					
 					// Test another way of finding center of laser beam
 					vector<vector<Point> > contours;
 					vector<Vec4i> hierarchy;
+					Point center_rect_avg;
 					findContours( threshold_output, contours, hierarchy, RETR_TREE, CHAIN_APPROX_SIMPLE, Point(0, 0) );
 					if(contours.size() > 0)
 					{
 						vector<RotatedRect> minRect = laserline::findRectangle(contours,20);
-						if(minRect.size()>0)
-						{
+						if(minRect.size() == 1)
+						{	
+							center_rect_list.push_back(minRect[0].center);
+							center_rect_count++;
 							laserline::drawContourRectangle(drawing, contours, minRect);
 							cv::circle( dot_img, minRect[0].center, 3, cv::Scalar(100,255,0), -1, 8, 0 );
 							cout<<endl<<"minRect center: "<< minRect[0].center<<endl;
+						}
+						if (center_rect_count > 30)
+						{
+							center_rect_list.erase(center_rect_list.begin());
+							center_rect_count --;
+						}
+						if (center_rect_count >= 10)
+						{
+							Point sum = accumulate(center_rect_list.begin(), center_rect_list.end(), Point(0,0));
+							center_rect_avg = sum*(1.0/center_rect_count);
+							circle(dot_img, center_rect_avg, 3, Scalar(255,0,255), -1, 8, 0);
+							std::pair<double,double>dist = laserdot::DotToLine(dot_img, projectedlaserline_1[0], projectedlaserline_1[19], center_rect_avg, projectedInterPoints[0]);
+							nom_distance = dist.first;
+							center_distance = dist.second;
 						}
 					}
 
@@ -315,14 +333,14 @@ int main(int argc, char* argv[])
 				
 				// cv::imshow("img_grey_filtered_dot", img_grey_filtered_dot);	
 				// cv::imshow("threshold output", threshold_output);
-				cv::imshow("Contour and Rectangle", drawing);	
-				cv::imwrite("images/saved_laser_beam/laser_" + string(argv[1]) + ".jpg", dot_img);  
+				cv::imshow("Contour and Rectangle", drawing);	  
 				cv::imshow("Laser Beam Alignment Window", dot_img);						
 				cv::waitKey( 10 );		
 				sleep(0.1);
 				imgs_taken0++;
 			}
 			camera0.StopGrabbing();
+			cv::imwrite("images/saved_laser_beam/laser_" + string(argv[1]) + ".jpg", dot_img);
 		}
 
 	}

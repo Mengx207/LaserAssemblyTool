@@ -30,6 +30,14 @@ target_link_libraries( laserplaneguide
 
 )
 
+add_executable( resolution_test resolution_test.cpp )
+target_link_libraries( resolution_test
+		       ${OpenCV_LIBS}
+	               ${Pylon_LIBRARIES}
+                       ${pylon_camera_INCLUDE_DIRS}
+
+)
+
 
 
 

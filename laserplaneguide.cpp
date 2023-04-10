@@ -102,7 +102,7 @@ int main(int argc, char* argv[])
 		CEnumParameter(nodemap0, "LineSelector").SetValue("Line4");			
 		CBooleanParameter(nodemap0, "LineInverter").SetValue(true);
 
-		while(waitKey(10) != 'q')
+		while(waitKey(50) != 'q')
 		{
 			int max_imgs0 = 1;   
 			int imgs_taken = 0;

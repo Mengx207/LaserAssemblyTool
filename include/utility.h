@@ -159,8 +159,9 @@ namespace laserdot
         double min_distance = *min_element(distance_list.begin(), distance_list.end());
         vector<double>::iterator result = min_element(distance_list.begin(), distance_list.end());
         int num = distance(distance_list.begin(), result);
-
+        cout<<endl<<"drawing line"<<endl;
         cv::line( img, center, point_list[num], cv::Scalar( 255, 255, 0 ), 1, 8 );
+        cout<<endl<<"drawed line"<<endl;
         // dotLine.nom_distance = min_distance;
         // dotLine.center_distance = norm(point_list[num]-point_list[(laserline.count)/2]);
         // std::pair<double,double>dist(min_distance,norm(point_list[num]-point_list[(laserline.count)/2])) ;
@@ -198,7 +199,7 @@ namespace laserline
         // load one captured image whose content is the chessboard pattern
         // Mat image_captured = imread("images/image_captured.png", IMREAD_GRAYSCALE);
         // Mat image_captured = imread("images/pattern_image.png", IMREAD_GRAYSCALE);
-        Mat image_captured = imread("images/corner_pattern.png", IMREAD_GRAYSCALE);
+        Mat image_captured = imread("images/pattern_image.png", IMREAD_GRAYSCALE);
         Mat image_corners(image_captured.rows, image_captured.cols, IMREAD_GRAYSCALE);
 
         if (image_captured.empty())

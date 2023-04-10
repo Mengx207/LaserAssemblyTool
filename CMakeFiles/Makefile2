@@ -60,6 +60,43 @@ CMAKE_SOURCE_DIR = /home/lingbo/Documents/GitHub/AssemblyGuidanceTool
 CMAKE_BINARY_DIR = /home/lingbo/Documents/GitHub/AssemblyGuidanceTool
 
 #=============================================================================
+# Target rules for target CMakeFiles/resolution_test.dir
+
+# All Build rule for target.
+CMakeFiles/resolution_test.dir/all:
+	$(MAKE) -f CMakeFiles/resolution_test.dir/build.make CMakeFiles/resolution_test.dir/depend
+	$(MAKE) -f CMakeFiles/resolution_test.dir/build.make CMakeFiles/resolution_test.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/lingbo/Documents/GitHub/AssemblyGuidanceTool/CMakeFiles --progress-num=5,6 "Built target resolution_test"
+.PHONY : CMakeFiles/resolution_test.dir/all
+
+# Include target in all.
+all: CMakeFiles/resolution_test.dir/all
+
+.PHONY : all
+
+# Build rule for subdir invocation for target.
+CMakeFiles/resolution_test.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/lingbo/Documents/GitHub/AssemblyGuidanceTool/CMakeFiles 2
+	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/resolution_test.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/lingbo/Documents/GitHub/AssemblyGuidanceTool/CMakeFiles 0
+.PHONY : CMakeFiles/resolution_test.dir/rule
+
+# Convenience name for target.
+resolution_test: CMakeFiles/resolution_test.dir/rule
+
+.PHONY : resolution_test
+
+# clean rule for target.
+CMakeFiles/resolution_test.dir/clean:
+	$(MAKE) -f CMakeFiles/resolution_test.dir/build.make CMakeFiles/resolution_test.dir/clean
+.PHONY : CMakeFiles/resolution_test.dir/clean
+
+# clean rule for target.
+clean: CMakeFiles/resolution_test.dir/clean
+
+.PHONY : clean
+
+#=============================================================================
 # Target rules for target CMakeFiles/laserbeamguide.dir
 
 # All Build rule for target.

@@ -111,6 +111,19 @@ depend:
 .PHONY : depend
 
 #=============================================================================
+# Target rules for targets named resolution_test
+
+# Build rule for target.
+resolution_test: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 resolution_test
+.PHONY : resolution_test
+
+# fast build rule for target.
+resolution_test/fast:
+	$(MAKE) -f CMakeFiles/resolution_test.dir/build.make CMakeFiles/resolution_test.dir/build
+.PHONY : resolution_test/fast
+
+#=============================================================================
 # Target rules for targets named laserbeamguide
 
 # Build rule for target.
@@ -190,6 +203,33 @@ laserplaneguide.cpp.s:
 	$(MAKE) -f CMakeFiles/laserplaneguide.dir/build.make CMakeFiles/laserplaneguide.dir/laserplaneguide.cpp.s
 .PHONY : laserplaneguide.cpp.s
 
+resolution_test.o: resolution_test.cpp.o
+
+.PHONY : resolution_test.o
+
+# target to build an object file
+resolution_test.cpp.o:
+	$(MAKE) -f CMakeFiles/resolution_test.dir/build.make CMakeFiles/resolution_test.dir/resolution_test.cpp.o
+.PHONY : resolution_test.cpp.o
+
+resolution_test.i: resolution_test.cpp.i
+
+.PHONY : resolution_test.i
+
+# target to preprocess a source file
+resolution_test.cpp.i:
+	$(MAKE) -f CMakeFiles/resolution_test.dir/build.make CMakeFiles/resolution_test.dir/resolution_test.cpp.i
+.PHONY : resolution_test.cpp.i
+
+resolution_test.s: resolution_test.cpp.s
+
+.PHONY : resolution_test.s
+
+# target to generate assembly for a file
+resolution_test.cpp.s:
+	$(MAKE) -f CMakeFiles/resolution_test.dir/build.make CMakeFiles/resolution_test.dir/resolution_test.cpp.s
+.PHONY : resolution_test.cpp.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -197,6 +237,7 @@ help:
 	@echo "... clean"
 	@echo "... depend"
 	@echo "... rebuild_cache"
+	@echo "... resolution_test"
 	@echo "... laserbeamguide"
 	@echo "... edit_cache"
 	@echo "... laserplaneguide"
@@ -206,6 +247,9 @@ help:
 	@echo "... laserplaneguide.o"
 	@echo "... laserplaneguide.i"
 	@echo "... laserplaneguide.s"
+	@echo "... resolution_test.o"
+	@echo "... resolution_test.i"
+	@echo "... resolution_test.s"
 .PHONY : help
 
 
