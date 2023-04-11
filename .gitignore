@@ -38,6 +38,7 @@ images/saved_laser_plane
 images/saved_patches
 
 *.png
+*.txt
 .git
 .vscode
 
