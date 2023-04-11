@@ -238,17 +238,24 @@ int main(int argc, char* argv[])
 				Mat drawing = Mat::zeros( threshold_output2.size(), CV_8UC3 );
 				Mat rotated_image = threshold_output2.clone();
 
-				if (minRect.size() == 1)
+				if (minRect.size() >= 1)
 				{
 					laserline::drawContourRectangle(drawing, contours, minRect);
 					circle(line_img, minRect[0].center, 5, Scalar(0,255,0), -1, 8, 0);
 					double angle = minRect[0].angle;
+					if (minRect[0].size.width < minRect[0].size.height) 
+					{
+						angle = 90 + angle;
+					}
+					cout<<endl<<"minRect angle: "<<angle<<endl;
+
 					Mat rotation_matrix = getRotationMatrix2D(minRect[0].center, angle, 1.0);
 					warpAffine(threshold_output2, rotated_image, rotation_matrix, threshold_output2.size());
 					laserline::uniformity_data uniformity1;
 					uniformity1 = laserline::cropImage(rotated_image);
 					laserlineGUI(minRect[0], projectedInterPoints[0], cal_angle, uniformity1, line_img);
 					cv::imshow( "Rotated and Cropped laser line", uniformity1.image_BGR );
+					cout<<"size of image BGR: "<<uniformity1.image_BGR.size<<endl;
 				}
 				
 				cv::imshow( "Contour and Area", drawing );
@@ -256,9 +263,7 @@ int main(int argc, char* argv[])
 				cv::imshow("Laser Plane Alignment GUI Window", line_img);	
 				imgs_taken ++;
 			}
-			camera0.StopGrabbing();
-			// std::cout << std::endl << cv::waitKey( 50 ) << std::endl;				
-			// if (cv::waitKey( 50 ) != -1 ) break;		
+			camera0.StopGrabbing();	
 		}
 		std::cout << std::endl << "Saving images" << std::endl;	
 		system("cd images && mkdir -p saved_laser_plane");

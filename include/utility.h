@@ -215,7 +215,7 @@ namespace laserline
         drawChessboardCorners(image_corners, patternsize, Mat(corners_found), patternfound);
         
         // create chessboard pattern
-        double squareSize = 4.5; // 10% square size in mm
+        double squareSize = 9; // 10% square size in mm
         vector<Point3f> corners_created = createChessBoardCorners(patternsize, squareSize);
         // cout << "created pattern corners in mm: " << endl << corners_created << endl;
 
