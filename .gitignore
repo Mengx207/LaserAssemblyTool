@@ -6,7 +6,7 @@
 *.exe
 *.o
 *.so
-*.app
+
 
 # Packages #
 ############
@@ -40,5 +40,6 @@ images/saved_patches
 .git
 .vscode
 
-
+laserbeamguide
+laserplaneguide
 
