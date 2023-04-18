@@ -144,32 +144,27 @@ int main(int argc, char* argv[])
 				Mat distCoeffs = Mat(5, 1, CV_64FC1, distCoeffs_values.data());
 
 				// gain rmatrix and tvec from target board to cam
-				string path_rmatrix = "values/rmatrix_laser_1.txt";
-				string path_tvec = "values/tvec_laser_1.txt";
+				string path_rmatrix = "values/rmatrix_1.txt";
+				string path_tvec = "values/tvec_1.txt";
 				if(argv[1] == string("1")) 
 				{
-					path_rmatrix = "values/rmatrix_laser_1.txt";
-					path_tvec = "values/tvec_laser_1.txt";
+					path_rmatrix = "values/rmatrix_1.txt";
+					path_tvec = "values/tvec_1.txt";
 				}
 				if(argv[1] == string("2")) 
 				{
-					path_rmatrix = "values/rmatrix_laser_2.txt";
-					path_tvec = "values/tvec_laser_2.txt";
+					path_rmatrix = "values/rmatrix_2.txt";
+					path_tvec = "values/tvec_2.txt";
 				}
 				if(argv[1] == string("3")) 
 				{
-					path_rmatrix = "values/rmatrix_laser_3.txt";
-					path_tvec = "values/tvec_laser_3.txt";
+					path_rmatrix = "values/rmatrix_3.txt";
+					path_tvec = "values/tvec_3.txt";
 				}
 				if(argv[1] == string("4"))
 				{
-					path_rmatrix = "values/rmatrix_laser_10up_60.txt";
-					path_tvec = "values/tvec_laser_10up_60.txt";
-				}
-				if(argv[1] == string("5"))
-				{
-					path_rmatrix = "values/rmatrix_laser_10up_10.txt";
-					path_tvec = "values/tvec_laser_10up_10.txt";
+					path_rmatrix = "values/rmatrix_4.txt";
+					path_tvec = "values/tvec_4.txt";
 				}
 
 				// Calculate rotation vector and translation vector by a captured image of a pattern
@@ -186,15 +181,15 @@ int main(int argc, char* argv[])
 				vector<double> tvec_laser_values;
 				while (tvecL >> val)
 				{
-					tvec_laser_values.push_back(val);
+					tvec_laser_values.push_back(val*1000.0);
 				}
 				// find target board plane in cam frame
 				pair<vector<double>,vector<double>>target = laserline::targetBoardPlane(vec.first, vec.second);
 
-				laserline::laser_plane laser_1, laser_2, laser_3;
+				laserline::laser_plane laser_1;
 				laser_1 = laserline::laserPlane(rmatrix_laser_values, tvec_laser_values);
 				
-				Point3f interPoint1, interPoint2, interPoint3;
+				Point3f interPoint1;
 				interPoint1 = laserline::intersectionPoint(laser_1.origin, laser_1.beam_dir, target.first, target.second);
 				
 				// find intersection line between target board plane and laser plane in cam frame
@@ -202,15 +197,28 @@ int main(int argc, char* argv[])
 				laserline::intersection line1, line2, line3;
 				line1 = laserline::intersectionLine(target.first, laser_1.normalvector, target.second, vector<double>{interPoint1.x, interPoint1.y, interPoint1.z});
 
-				for(int t=-100; t<100;)
+				for(int t=-150; t<150;)
 				{
 					t = t+10;
 					Point3d points((line1.x0+line1.a*t), (line1.y0+line1.b*t), (line1.z0+line1.c*t));
 					// cout<<"point: "<<points<<endl;
 					laserline_points_1.push_back(points);
 				}
-				vector<Point2d> projectedlaserline_1,projectedlaserline_2,projectedlaserline_3;
+				vector<Point2d> projectedlaserline_1;
 				projectPoints(laserline_points_1, Mat::zeros(3,1,CV_64FC1), Mat::zeros(3,1,CV_64FC1),cameraMatrix,distCoeffs, projectedlaserline_1);
+
+				for(int i=0; i < projectedlaserline_1.size()-1;)
+				{
+					if((projectedlaserline_1[i].x > 1440.0) || (projectedlaserline_1[i].y > 1080.0) || (projectedlaserline_1[i].x < 0.0) || (projectedlaserline_1[i].y < 0.0))
+					{
+						projectedlaserline_1.erase(projectedlaserline_1.begin()+i);
+					}
+					else
+					{
+						i++;
+					}
+				}
+				cout<<"two points on line: "<<projectedlaserline_1[0]<<projectedlaserline_1[projectedlaserline_1.size()-2]<<endl;
 
 			//----------raw image to greyscale, threshold filter
 				cv::cvtColor(src, img_grey, cv::COLOR_BGR2GRAY);
@@ -218,8 +226,7 @@ int main(int argc, char* argv[])
 
 				cv::Mat img_grey_filtered_dot;
 				cv::threshold(img_grey,img_grey_filtered_dot,250,255,cv::THRESH_OTSU||cv::THRESH_TRIANGLE);	
-				cv::circle( dot_img, projectedlaserline_1[0], 5, cv::Scalar(0,0,255), -1, 8, 0 );
-				laserdot::CalculatedLine( dot_img, projectedlaserline_1[0], projectedlaserline_1[19] );
+				laserdot::CalculatedLine( dot_img, projectedlaserline_1[0], projectedlaserline_1[projectedlaserline_1.size()-2] );
 				
 				vector<Point3d> interPointArray;
 				vector<Point2d> projectedInterPoints;

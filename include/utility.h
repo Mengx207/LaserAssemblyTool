@@ -22,8 +22,11 @@
 #include "opencv2/highgui.hpp"
 #include "opencv2/calib3d.hpp"
 #include <fstream> 
+#include <pylon/PylonIncludes.h>
+#include "ConfigurationEventPrinter.h"
 using namespace cv;
 using namespace std;
+using namespace Pylon;
 
 namespace laserdot
 {
@@ -72,7 +75,7 @@ namespace laserdot
     void CalculatedLine(cv::Mat img, cv::Point start, cv::Point end)
     {
         int thickness = 4;
-        int lineType = cv::LINE_8;
+        int lineType = cv::LINE_AA;
         line( img, start, end, cv::Scalar( 0, 0, 255 ), thickness, lineType );
     }
 
@@ -192,6 +195,15 @@ namespace laserline
         return centered_board_corners;
     }
 
+    //  vector<Point3f> createBreakChessBoardCorners(Size2i patternsize, double squareSize)
+    // {
+    //     vector<Point3f> centered_board_corners;
+    //     int count;
+    //     centered_board_corners.push_back(Point3f());
+
+    //     return centered_board_corners;
+    // }
+
     std::pair<Mat,Mat> getRvecTvec()
     {
         // load one captured image whose content is the chessboard pattern
@@ -204,7 +216,8 @@ namespace laserline
         {
             cout << "Error opening image" << endl;
         }
-        Size patternsize(5, 3);
+        // Size patternsize(5, 3);
+        Size patternsize(7, 4);
         vector<Point2f> corners_found; 
         SimpleBlobDetector::Params params;
         params.maxArea = 10e4;
@@ -215,7 +228,7 @@ namespace laserline
         drawChessboardCorners(image_corners, patternsize, Mat(corners_found), patternfound);
         
         // create chessboard pattern
-        double squareSize = 9; // 10% square size in mm
+        double squareSize = 14; // square size in mm
         vector<Point3f> corners_created = createChessBoardCorners(patternsize, squareSize);
         // cout << "created pattern corners in mm: " << endl << corners_created << endl;
 
@@ -240,14 +253,13 @@ namespace laserline
         Mat rvec, tvec;
         // corners_created:created pattern corners in mm    /corners_found: corners found on the loaded image in image coordinates system
         solvePnP(corners_created, corners_found, cameraMatrix, distCoeffs, rvec, tvec);
-        // cout << "tvec from the target board to cam:" << endl << tvec << endl;
-        // cout << "rvec from the target board to cam:" << endl << rvec << endl;
+        cout << "tvec from the target board to cam:" << endl << tvec << endl;
+        cout << "rvec from the target board to cam:" << endl << rvec << endl;
         double distance = sqrt(tvec.at<double>(0) * tvec.at<double>(0) + tvec.at<double>(1) * tvec.at<double>(1) + tvec.at<double>(2) * tvec.at<double>(2));
-        // cout << "distance between target board and camera: " << distance << "mm" << endl;
+
         // Convert rvec to rmatrix
         Mat rmatrix;
         Rodrigues(rvec, rmatrix);
-        // cout << "rmatrix from the target board to cam: " << endl << rmatrix << endl << endl;
         pair<Mat,Mat>vec(rmatrix,tvec) ; // rmatrix = vec.first tvec = vec.second
         return vec;
     }
@@ -295,9 +307,7 @@ namespace laserline
 
     struct laser_plane{
         vector<double> normalvector;
-        // vector<double> V_L;
         vector<double> origin;
-        // vector<double> P1;
         vector<double> beam_dir;
     };
     laser_plane laserPlane(vector<double> rmatrix_laser_values, vector<double> tvec_laser_values)
@@ -315,6 +325,11 @@ namespace laserline
             rmatrix_L.at<double>(5)+tvec_L.at<double>(1),
             rmatrix_L.at<double>(8)+tvec_L.at<double>(2)
         };
+        vector<double> p_010_L {
+            rmatrix_L.at<double>(1)+tvec_L.at<double>(0),
+            rmatrix_L.at<double>(4)+tvec_L.at<double>(1),
+            rmatrix_L.at<double>(7)+tvec_L.at<double>(2)
+        };
         //One point on the target board in camera frame
         vector<double> p_110_L {
             rmatrix_L.at<double>(0)+rmatrix_L.at<double>(1)+tvec_L.at<double>(0),
@@ -326,10 +341,15 @@ namespace laserline
             rmatrix_L.at<double>(3)+tvec_L.at<double>(1),
             rmatrix_L.at<double>(6)+tvec_L.at<double>(2)
         };
+        // vector<double> beam_dir = {
+        //     p_100_L[0] - p_000_L[0],
+        //     p_100_L[1] - p_000_L[1],
+        //     p_100_L[2] - p_000_L[2]
+        // };
         vector<double> beam_dir = {
-            p_100_L[0] - p_000_L[0],
-            p_100_L[1] - p_000_L[1],
-            p_100_L[2] - p_000_L[2]
+            p_001_L[0] - p_000_L[0],
+            p_001_L[1] - p_000_L[1],
+            p_001_L[2] - p_000_L[2]
         };
         // laser plane center line equation in camera frame: x=a1+b1*t, y=a2+b2*t, z=a3+b3*t
         // x = p_000_L[0] + C_L[0]*t
@@ -339,16 +359,16 @@ namespace laserline
         //"y="<<p_000_L[1]<<"+("<<C_L[1]<<")*t"<<endl<<"z="<<p_000_L[2]<<"+("<<C_L[2]<<")*t"<<endl<<endl;
 
         //Normal vector of the target board in camera frame
+        // vector<double> normalvector = {
+        //     p_001_L[0] - p_000_L[0],
+        //     p_001_L[1] - p_000_L[1],
+        //     p_001_L[2] - p_000_L[2]
+        // };   
         vector<double> normalvector = {
-            p_001_L[0] - p_000_L[0],
-            p_001_L[1] - p_000_L[1],
-            p_001_L[2] - p_000_L[2]
+            p_100_L[0] - p_000_L[0],
+            p_100_L[1] - p_000_L[1],
+            p_100_L[2] - p_000_L[2]
         };   
-        vector<double> V_L = {
-            p_110_L[0] - p_000_L[0],
-            p_110_L[1] - p_000_L[1],
-            p_110_L[2] - p_000_L[2]
-        }; 
         // Convert vector to Mat
         Mat NormalV_L = Mat(1, 3, CV_64FC1, normalvector.data());
         Mat point_L = Mat(1, 3, CV_64FC1, p_110_L.data());
@@ -356,10 +376,12 @@ namespace laserline
 
         laser_plane laser_values;
         laser_values.normalvector = normalvector;
-        // laser_values.V_L = V_L;
         laser_values.origin = p_000_L;
         // laser_values.P1 = p_110_L;
         laser_values.beam_dir = beam_dir;
+        cout<<endl<<"laser normal vector: "<< normalvector[0] << "," << normalvector[1] <<"," << normalvector[2] << endl;
+        cout<<"laser origin: "<< p_000_L[0] << "," << p_000_L[1] <<"," << p_000_L[2] << endl;
+        cout<<"laser direction: "<< beam_dir[0] << "," << beam_dir[1] <<"," << beam_dir[2] << endl;
         return laser_values;
     }
 
@@ -408,10 +430,9 @@ namespace laserline
         x0 = point_L[0];
         y0 = point_L[1];
         z0 = point_L[2];
-        // cout<<"Intersection line of two planes__:"<<"r=("<<x0<<"+t*"<<cross_P[0]<<")*i+("<<y0<<"+t*"<<cross_P[1]<<")*j+("<<z0<<"+"<<cross_P[2]<<"*t)*k"<<endl;
-        //cout<<endl<<"One point on intersection line: r0 = ("<<x<<","<<y<<",0)"<<endl;
+        // cout<<"Intersection line of two planes:"<<"r=("<<x0<<"+t*"<<cross_P[0]<<")*i+("<<y0<<"+t*"<<cross_P[1]<<")*j+("<<z0<<"+"<<cross_P[2]<<"*t)*k"<<endl;
+        // cout<<endl<<"One point on intersection line: r0 = ("<<x0<<","<<y0<<","<<z0<<")"<<endl;
 
-        // cout<<"Intersection line of two planes:"<<endl<<"r=("<<x<<"+t*"<<cross_P[0]<<")*i+("<<y<<"+t*"<<cross_P[1]<<")*j+("<<cross_P[2]<<"*t)*k"<<endl;
         intersection line;
         line.x0 = x0;
         line.a = cross_P[0];

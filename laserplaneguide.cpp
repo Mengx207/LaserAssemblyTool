@@ -26,7 +26,8 @@
 #include <time.h>
 #include <stdio.h>
 #include <ctime>
-
+#include <pylon/PylonIncludes.h>
+#include "include/ConfigurationEventPrinter.h"
 #include "include/utility.h"
 
 using namespace Pylon;
@@ -47,14 +48,15 @@ int main(int argc, char* argv[])
      PylonInitialize();
      const char *err;
 	try
-	{		
-		CDeviceInfo info0, info1;
-		info0.SetSerialNumber("40113772"); //cam1
-		// info0.SetSerialNumber("40172396"); //cam2
-		
-
-	    CInstantCamera camera0( CTlFactory::GetInstance().CreateDevice(info0));	
-		// camera0.RegisterConfiguration(new CSoftwareTriggerConfiguration,RegistrationMode_ReplaceAll, Cleanup_Delete);	
+	{	
+		CTlFactory& tlFactory = CTlFactory::GetInstance();
+		CInstantCamera camera0( tlFactory.CreateFirstDevice() );
+        // Print the camera information.
+        cout << "Using device " << camera0.GetDeviceInfo().GetModelName() << endl;
+        cout << "SerialNumber : " << camera0.GetDeviceInfo().GetSerialNumber() << endl;
+        cout << endl;
+		cout << "Program is running, select image window and press 'q' to quit."<<endl;
+	
 		camera0.RegisterConfiguration(new CSoftwareTriggerConfiguration1,RegistrationMode_ReplaceAll, Cleanup_Delete);
 
 		//Create a pylon image that will be used to create an opencv image
@@ -103,7 +105,7 @@ int main(int argc, char* argv[])
 		CEnumParameter(nodemap0, "LineSelector").SetValue("Line4");			
 		CBooleanParameter(nodemap0, "LineInverter").SetValue(true);
 
-		while(waitKey(50) != 'q')
+		while(waitKey(10) != 'q')
 		{
 			int max_imgs0 = 1;   
 			int imgs_taken = 0;
@@ -140,32 +142,27 @@ int main(int argc, char* argv[])
 				Mat distCoeffs = Mat(5, 1, CV_64FC1, distCoeffs_values.data());
 
 				// gain rmatrix and tvec from target board to cam
-				string path_rmatrix = "values/rmatrix_laser_1.txt";
-				string path_tvec = "values/tvec_laser_1.txt";
+				string path_rmatrix = "values/rmatrix_1.txt";
+				string path_tvec = "values/tvec_1.txt";
 				if(argv[1] == string("1")) 
 				{
-					path_rmatrix = "values/rmatrix_laser_1.txt";
-					path_tvec = "values/tvec_laser_1.txt";
+					path_rmatrix = "values/rmatrix_1.txt";
+					path_tvec = "values/tvec_1.txt";
 				}
 				if(argv[1] == string("2")) 
 				{
-					path_rmatrix = "values/rmatrix_laser_2.txt";
-					path_tvec = "values/tvec_laser_2.txt";
+					path_rmatrix = "values/rmatrix_2.txt";
+					path_tvec = "values/tvec_2.txt";
 				}
 				if(argv[1] == string("3")) 
 				{
-					path_rmatrix = "values/rmatrix_laser_3.txt";
-					path_tvec = "values/tvec_laser_3.txt";
+					path_rmatrix = "values/rmatrix_3.txt";
+					path_tvec = "values/tvec_3.txt";
 				}
 				if(argv[1] == string("4"))
 				{
-					path_rmatrix = "values/rmatrix_laser_10up_60.txt";
-					path_tvec = "values/tvec_laser_10up_60.txt";
-				}
-				if(argv[1] == string("5"))
-				{
-					path_rmatrix = "values/rmatrix_laser_10up_10.txt";
-					path_tvec = "values/tvec_laser_10up_10.txt";
+					path_rmatrix = "values/rmatrix_4.txt";
+					path_tvec = "values/tvec_4.txt";
 				}
 
 				// Calculate rotation vector and translation vector by a captured image of a pattern
@@ -182,7 +179,7 @@ int main(int argc, char* argv[])
 				vector<double> tvec_laser_values;
 				while (tvecL >> val)
 				{
-					tvec_laser_values.push_back(val);
+					tvec_laser_values.push_back(val*1000);
 				}
 				// find target board plane in cam frame
 				pair<vector<double>,vector<double>>target = laserline::targetBoardPlane(vec.first, vec.second);
@@ -197,14 +194,14 @@ int main(int argc, char* argv[])
 				vector<Point2d> projectedInterPoints;
 				interPointArray.push_back(interPoint1);
 				projectPoints(interPointArray, Mat::zeros(3,1,CV_64FC1), Mat::zeros(3,1,CV_64FC1),cameraMatrix,distCoeffs,projectedInterPoints);
-				// cout<<endl<<"Intersection between laser beam and target board on camera image: "<<endl<<projectedInterPoints<<endl;
+				cout<<endl<<"Intersection between laser beam and target board on camera image: "<<endl<<projectedInterPoints<<endl;
 				
 				// find intersection line between target board plane and laser plane in cam frame
-				std::vector<cv::Point3d> laserline_points_1, laserline_points_2, laserline_points_3;
+				std::vector<cv::Point3d> laserline_points_1;
 				laserline::intersection line1, line2, line3;
 				line1 = laserline::intersectionLine(target.first, laser_1.normalvector, target.second, vector<double>{interPoint1.x, interPoint1.y, interPoint1.z});
 
-				for(int t=-100; t<100;)
+				for(int t=-150; t<150;)
 				{
 					t = t+10;
 					Point3d points((line1.x0+line1.a*t), (line1.y0+line1.b*t), (line1.z0+line1.c*t));
@@ -213,18 +210,32 @@ int main(int argc, char* argv[])
 				}
 				vector<Point2d> projectedlaserline_1,projectedlaserline_2,projectedlaserline_3;
 				projectPoints(laserline_points_1, Mat::zeros(3,1,CV_64FC1), Mat::zeros(3,1,CV_64FC1),cameraMatrix,distCoeffs, projectedlaserline_1);
+
+				for(int i=0; i < projectedlaserline_1.size()-1;)
+				{
+					if((projectedlaserline_1[i].x > 1440.0) || (projectedlaserline_1[i].y > 1080.0) || (projectedlaserline_1[i].x < 0.0) || (projectedlaserline_1[i].y < 0.0))
+					{
+						projectedlaserline_1.erase(projectedlaserline_1.begin()+i);
+					}
+					else
+					{
+						i++;
+					}
+				}
+				cout<<"two points on line: "<<projectedlaserline_1[0]<<projectedlaserline_1[projectedlaserline_1.size()-2]<<endl;
 				
 				// Calculated laser line angle
-				double delta_y = (projectedlaserline_1[19].y - projectedlaserline_1[0].y);
-				double delta_x = (projectedlaserline_1[19].x - projectedlaserline_1[0].x);
+				double delta_y = (projectedlaserline_1[projectedlaserline_1.size()-2].y - projectedlaserline_1[1].y);
+				double delta_x = (projectedlaserline_1[projectedlaserline_1.size()-2].x - projectedlaserline_1[1].x);
 				int cal_angle = atan(delta_y/delta_x)*180/CV_PI;	
 
 				Mat img_grey;
 				cv::cvtColor(src, img_grey, cv::COLOR_BGR2GRAY);
 				line_img = src.clone();
-				laserdot::CalculatedLine( line_img, projectedlaserline_1[0], projectedlaserline_1[19] );
+				laserdot::CalculatedLine( line_img, projectedlaserline_1[0], projectedlaserline_1[projectedlaserline_1.size()-2] );
 
 				cv::circle( line_img, projectedInterPoints[0], 5, cv::Scalar(0,0,255), -1, 8, 0 );
+				// cout<<"one point: "<< projectedInterPoints[0]<<endl;
 
 				cv::Mat threshold_output1,threshold_output2;
 				vector<vector<Point> > contours;
@@ -247,7 +258,6 @@ int main(int argc, char* argv[])
 					{
 						angle = 90 + angle;
 					}
-					cout<<endl<<"minRect angle: "<<angle<<endl;
 
 					Mat rotation_matrix = getRotationMatrix2D(minRect[0].center, angle, 1.0);
 					warpAffine(threshold_output2, rotated_image, rotation_matrix, threshold_output2.size());
@@ -255,7 +265,6 @@ int main(int argc, char* argv[])
 					uniformity1 = laserline::cropImage(rotated_image);
 					laserlineGUI(minRect[0], projectedInterPoints[0], cal_angle, uniformity1, line_img);
 					cv::imshow( "Rotated and Cropped laser line", uniformity1.image_BGR );
-					cout<<"size of image BGR: "<<uniformity1.image_BGR.size<<endl;
 				}
 				
 				cv::imshow( "Contour and Area", drawing );

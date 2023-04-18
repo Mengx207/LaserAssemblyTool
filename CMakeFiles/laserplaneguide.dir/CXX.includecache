@@ -6,6 +6,12 @@
 
 #IncludeRegexTransform: 
 
+/home/lingbo/Documents/GitHub/AssemblyGuidanceTool/include/ConfigurationEventPrinter.h
+pylon/ConfigurationEventHandler.h
+-
+iostream
+-
+
 /home/lingbo/Documents/GitHub/AssemblyGuidanceTool/include/softwaretriggerconfiguration.h
 pylon/Platform.h
 -
@@ -61,6 +67,10 @@ opencv2/calib3d.hpp
 /home/lingbo/Documents/GitHub/AssemblyGuidanceTool/include/opencv2/calib3d.hpp
 fstream
 -
+pylon/PylonIncludes.h
+-
+ConfigurationEventPrinter.h
+/home/lingbo/Documents/GitHub/AssemblyGuidanceTool/include/ConfigurationEventPrinter.h
 
 /home/lingbo/Documents/GitHub/AssemblyGuidanceTool/laserplaneguide.cpp
 iostream
@@ -103,6 +113,10 @@ stdio.h
 -
 ctime
 -
+pylon/PylonIncludes.h
+-
+include/ConfigurationEventPrinter.h
+/home/lingbo/Documents/GitHub/AssemblyGuidanceTool/include/ConfigurationEventPrinter.h
 include/utility.h
 /home/lingbo/Documents/GitHub/AssemblyGuidanceTool/include/utility.h
 pylon/PylonGUI.h
