@@ -127,7 +127,7 @@ namespace laserdot
         //     cv::circle( img, cv::Point(300,110), 20, cv::Scalar(0,0,255), -1, 8, 0 );
         // }
 
-        if(nom_distance < 2 && center_distance < 50)
+        if(nom_distance < 2 && center_distance < 500)
         {
             cv::circle( img, cv::Point(800,110), 20, cv::Scalar(0,255,0), -1, 8, 0 );
         }
@@ -180,6 +180,7 @@ namespace laserdot
 
 namespace laserline
 {
+
     vector<Point3f> createChessBoardCorners(Size2i patternsize, double squareSize)
     {
         vector<Point3f> centered_board_corners;
@@ -195,21 +196,14 @@ namespace laserline
         return centered_board_corners;
     }
 
-    //  vector<Point3f> createBreakChessBoardCorners(Size2i patternsize, double squareSize)
-    // {
-    //     vector<Point3f> centered_board_corners;
-    //     int count;
-    //     centered_board_corners.push_back(Point3f());
 
-    //     return centered_board_corners;
-    // }
 
     std::pair<Mat,Mat> getRvecTvec()
     {
         // load one captured image whose content is the chessboard pattern
         // Mat image_captured = imread("images/image_captured.png", IMREAD_GRAYSCALE);
         // Mat image_captured = imread("images/pattern_image.png", IMREAD_GRAYSCALE);
-        Mat image_captured = imread("images/pattern_image.png", IMREAD_GRAYSCALE);
+        Mat image_captured = imread("images/pattern.png", IMREAD_GRAYSCALE);
         Mat image_corners(image_captured.rows, image_captured.cols, IMREAD_GRAYSCALE);
 
         if (image_captured.empty())
@@ -217,7 +211,7 @@ namespace laserline
             cout << "Error opening image" << endl;
         }
         // Size patternsize(5, 3);
-        Size patternsize(7, 4);
+        Size patternsize(5, 3);
         vector<Point2f> corners_found; 
         SimpleBlobDetector::Params params;
         params.maxArea = 10e4;
@@ -228,7 +222,7 @@ namespace laserline
         drawChessboardCorners(image_corners, patternsize, Mat(corners_found), patternfound);
         
         // create chessboard pattern
-        double squareSize = 14; // square size in mm
+        double squareSize = 6.75; // square size in mm
         vector<Point3f> corners_created = createChessBoardCorners(patternsize, squareSize);
         // cout << "created pattern corners in mm: " << endl << corners_created << endl;
 
@@ -298,9 +292,7 @@ namespace laserline
         //     << NormalV_B << endl;
         // cout << "origin point: " << endl
         //     << point_B_O << endl << endl;
-        // cout << "one point on plane: " << endl
-        //     << point_B << endl;
-        // cout << "(normal vector) * (vector on plane):         " << N_B[0] * P_B[0] + N_B[1] * P_B[1] + N_B[2] * P_B[2] <<endl<<endl;
+        
         pair<vector<double>,vector<double>> target_board_values(N_B,p_000);
         return target_board_values;
     }
@@ -341,11 +333,6 @@ namespace laserline
             rmatrix_L.at<double>(3)+tvec_L.at<double>(1),
             rmatrix_L.at<double>(6)+tvec_L.at<double>(2)
         };
-        // vector<double> beam_dir = {
-        //     p_100_L[0] - p_000_L[0],
-        //     p_100_L[1] - p_000_L[1],
-        //     p_100_L[2] - p_000_L[2]
-        // };
         vector<double> beam_dir = {
             p_001_L[0] - p_000_L[0],
             p_001_L[1] - p_000_L[1],
@@ -379,9 +366,9 @@ namespace laserline
         laser_values.origin = p_000_L;
         // laser_values.P1 = p_110_L;
         laser_values.beam_dir = beam_dir;
-        cout<<endl<<"laser normal vector: "<< normalvector[0] << "," << normalvector[1] <<"," << normalvector[2] << endl;
-        cout<<"laser origin: "<< p_000_L[0] << "," << p_000_L[1] <<"," << p_000_L[2] << endl;
-        cout<<"laser direction: "<< beam_dir[0] << "," << beam_dir[1] <<"," << beam_dir[2] << endl;
+        // cout<<endl<<"laser normal vector: "<< normalvector[0] << "," << normalvector[1] <<"," << normalvector[2] << endl;
+        // cout<<"laser origin: "<< p_000_L[0] << "," << p_000_L[1] <<"," << p_000_L[2] << endl;
+        // cout<<"laser direction: "<< beam_dir[0] << "," << beam_dir[1] <<"," << beam_dir[2] << endl;
         return laser_values;
     }
 
@@ -457,72 +444,10 @@ namespace laserline
         double t = (N_B[0]*point_B[0] + N_B[1]*point_B[1] + N_B[2]*point_B[2] - N_B[0]*P0[0] - N_B[1]*P0[1] - N_B[2]*P0[2]) / (N_B[0]*C_L[0]+N_B[1]*C_L[1]+N_B[2]*C_L[2]);
         //cout<<endl<<"t = "<<t<<endl;
         // Point2d interPoint (P0[0]+C_L[0]*t, P0[1]+C_L[1]*t);
-        Point3f linecenter (P0[0]+C_L[0]*t, P0[1]+C_L[1]*t, P0[2]+C_L[2]*t);
-        //cout<<endl<<"line center: "<< linecenter<<endl;
-        return linecenter;
+        Point3f interPoint (P0[0]+C_L[0]*t, P0[1]+C_L[1]*t, P0[2]+C_L[2]*t);
+        cout<<endl<<"Intersection point between laser beam and target board: "<< interPoint<<endl;
+        return interPoint;
     }
-
-
-
-    // std::pair<double, double> HoughAverage(cv::Mat src)
-    // {
-    //     std::pair<double, double> hough_avg;
-    //     cv::Mat dst, cdst;
-    //     if(src.empty()){
-    //         std::cout << "Error opening image" << std::endl;
-    //         std::exit(0);
-    //     }
-
-    //     cv::Canny(src, dst, 250, 255, 3);
-    //     // cv::GaussianBlur( dst, dst, cv::Size(5, 5), 2, 2 );
-    //     cv::cvtColor(dst, cdst, cv::COLOR_GRAY2BGR);
-
-    //     // Standard Hough Line Transform
-    //     std::vector<cv::Vec2f> lines; // will hold the results of the detection
-    //     cv::HoughLines(dst, lines, 1, CV_PI/180, 150, 0, 0 ); // runs the actual detection
-    //     // Draw the lines
-    //     float rho_avg = 0, theta_avg = 0;
-    //     int counter = 0;
-    //     for( size_t i = 0; i < lines.size(); i++ )
-    //     {
-    //         float rho = lines[i][0], theta = lines[i][1];
-    //         rho_avg+=rho;
-    //         theta_avg+=theta;
-    //         counter++;
-    //         // std::cout << rho << "\t" << theta << "\t" << std::endl;
-    //         cv::Point pt1, pt2;
-    //         double a = cos(theta), b = sin(theta);
-    //         double x0 = a*rho, y0 = b*rho;
-    //         pt1.x = cvRound(x0 + 1000*(-b));
-    //         pt1.y = cvRound(y0 + 1000*(a));
-    //         pt2.x = cvRound(x0 - 1000*(-b));
-    //         pt2.y = cvRound(y0 - 1000*(a));
-    //         line( cdst, pt1, pt2, cv::Scalar(0,0,255), 3, cv::LINE_AA);		
-    //     }
-    //     hough_avg.first = rho_avg/(float)counter;
-    //     hough_avg.second = theta_avg/(float)counter;
-    //     std::cout << "Rho avg: " << hough_avg.first << "\tTheta avg: " << hough_avg.second << "\t" << std::endl;
-    //     // imshow("Canny Edge", dst);
-    //     return hough_avg;
-    // }
-
-    // void HoughAvgOnImage(cv::Mat src, std::pair<double,double> houghAvg)
-    // {
-    //     if(src.empty()){
-    //         std::cout << "Error opening image" << std::endl;
-    //         std::exit(0);
-    //     }
-    //     // Draw Hough Avg Line
-    //     cv::Point pt1, pt2;
-    //     double a = cos(houghAvg.second), b = sin(houghAvg.second);
-    //     double x0 = a*houghAvg.first, y0 = b*houghAvg.first;
-    //     pt1.x = cvRound(x0 + 1000*(-b));
-    //     pt1.y = cvRound(y0 + 1000*(a));
-    //     pt2.x = cvRound(x0 - 1000*(-b));
-    //     pt2.y = cvRound(y0 - 1000*(a));
-    //     line(src, pt1, pt2, cv::Scalar(0,255,0), 3, cv::LINE_AA);
-    //     // cv::waitKey(0);
-    // }
 
 
     vector<RotatedRect> findRectangle(vector<vector<Point> > contours, int sensitivity)
@@ -625,46 +550,6 @@ namespace laserline
                 string a = to_string(x);
                 string b = to_string(y);
         
-                // if (x1 >= imgwidth && y1 >= imgheight)
-                // {
-                //     x = imgwidth - 1;
-                //     y = imgheight - 1;
-                //     x1 = imgwidth - 1;
-                //     y1 = imgheight - 1;
-
-                //     // crop the patches of size MxN
-                //     Mat tiles = image_copy(Range(y, imgheight), Range(x, imgwidth));
-                //     rectWidth.push_back(findSquareWidth(tiles));
-                //     //save each patches into file directory
-                //     //imwrite("images/saved_patches/tile" + a + '_' + b + ".jpg", tiles);  
-                //     rectangle(image_BGR, Point(x,y), Point(x1,y1), Scalar(0,255,0), 1);    
-                // }
-                // else if (y1 > imgheight)
-                // {
-                //     y = imgheight - 1;
-                //     y1 = imgheight - 1;
-        
-                //     // crop the patches of size MxN
-                //     Mat tiles = image_copy(Range(y, imgheight), Range(x, x+N));
-                //     rectWidth.push_back(findSquareWidth(tiles));
-                //     //save each patches into file directory
-                //     //imwrite("images/saved_patches/tile" + a + '_' + b + ".jpg", tiles);  
-                //     rectangle(image_BGR, Point(x,y), Point(x1,y1), Scalar(0,255,0), 1);    
-                // }
-                // else if (x1 > imgwidth)
-                // {
-                //     x = imgwidth - 1;   
-                //     x1 = imgwidth - 1;
-        
-                //     // crop the patches of size MxN
-                //     Mat tiles = image_copy(Range(y, y+M), Range(x, imgwidth));
-                //     rectWidth.push_back(findSquareWidth(tiles));
-                //     //save each patches into file directory
-                //     //imwrite("images/saved_patches/tile" + a + '_' + b + ".jpg", tiles);  
-                //     rectangle(image_BGR, Point(x,y), Point(x1,y1), Scalar(0,255,0), 1);   
-                // }
-                // else
-                {
                     // crop the patches of size MxN
                     Mat tiles = image_copy(Range(y, y+M), Range(x, x+N));
                     rectWidth.push_back(findSquareWidth(tiles));
@@ -672,7 +557,6 @@ namespace laserline
                     //save each patches into file directory
                     imwrite("images/saved_patches/tile" + a + '_' + b + ".jpg", tiles);  
                     rectangle(image_BGR, Point(x,y), Point(x1,y1), Scalar(0,255,0), 1);  
-                }
             }
         }
 
@@ -695,7 +579,7 @@ namespace laserline
                 {
                     max = rectWidth[i];
                 }
-                else if (rectWidth[i]<min)
+                if (rectWidth[i]<min)
                 {
                     min = rectWidth[i];
                 }

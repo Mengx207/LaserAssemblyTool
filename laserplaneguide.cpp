@@ -100,10 +100,22 @@ int main(int argc, char* argv[])
 		CEnumParameter(nodemap0, "LineSelector").SetValue("Line2");
 		CEnumParameter(nodemap0, "LineSource").SetValue("ExposureActive");
 
-		CEnumParameter(nodemap0, "LineSelector").SetValue("Line3");			
-		CBooleanParameter(nodemap0, "LineInverter").SetValue(true);
-		CEnumParameter(nodemap0, "LineSelector").SetValue("Line4");			
-		CBooleanParameter(nodemap0, "LineInverter").SetValue(true);
+		if(argv[1] == string("1") || argv[1] == string("3")) 
+		{
+			CEnumParameter(nodemap0, "LineSelector").SetValue("Line3");			
+			CBooleanParameter(nodemap0, "LineInverter").SetValue(false);
+
+			CEnumParameter(nodemap0, "LineSelector").SetValue("Line4");			
+			CBooleanParameter(nodemap0, "LineInverter").SetValue(true);
+		}
+		if(argv[1] == string("2") || argv[1] == string("4")) 
+		{
+			CEnumParameter(nodemap0, "LineSelector").SetValue("Line3");			
+			CBooleanParameter(nodemap0, "LineInverter").SetValue(true);
+
+			CEnumParameter(nodemap0, "LineSelector").SetValue("Line4");			
+			CBooleanParameter(nodemap0, "LineInverter").SetValue(false);
+		}
 
 		while(waitKey(10) != 'q')
 		{
@@ -194,7 +206,7 @@ int main(int argc, char* argv[])
 				vector<Point2d> projectedInterPoints;
 				interPointArray.push_back(interPoint1);
 				projectPoints(interPointArray, Mat::zeros(3,1,CV_64FC1), Mat::zeros(3,1,CV_64FC1),cameraMatrix,distCoeffs,projectedInterPoints);
-				cout<<endl<<"Intersection between laser beam and target board on camera image: "<<endl<<projectedInterPoints<<endl;
+				// cout<<endl<<"Intersection between laser beam and target board on camera image: "<<endl<<projectedInterPoints<<endl;
 				
 				// find intersection line between target board plane and laser plane in cam frame
 				std::vector<cv::Point3d> laserline_points_1;
@@ -222,12 +234,14 @@ int main(int argc, char* argv[])
 						i++;
 					}
 				}
-				cout<<"two points on line: "<<projectedlaserline_1[0]<<projectedlaserline_1[projectedlaserline_1.size()-2]<<endl;
+				// cout<<"two points on line: "<<projectedlaserline_1[0]<<projectedlaserline_1[projectedlaserline_1.size()-2]<<endl;
 				
 				// Calculated laser line angle
 				double delta_y = (projectedlaserline_1[projectedlaserline_1.size()-2].y - projectedlaserline_1[1].y);
 				double delta_x = (projectedlaserline_1[projectedlaserline_1.size()-2].x - projectedlaserline_1[1].x);
-				int cal_angle = atan(delta_y/delta_x)*180/CV_PI;	
+				double cal_angle = atan(delta_y/delta_x)*180/CV_PI;	
+				if (cal_angle < 0)
+				{cal_angle = 90 + cal_angle;}
 
 				Mat img_grey;
 				cv::cvtColor(src, img_grey, cv::COLOR_BGR2GRAY);
@@ -263,12 +277,17 @@ int main(int argc, char* argv[])
 					warpAffine(threshold_output2, rotated_image, rotation_matrix, threshold_output2.size());
 					laserline::uniformity_data uniformity1;
 					uniformity1 = laserline::cropImage(rotated_image);
+					// From pixel number to actual diameter on target board
+					uniformity1.width_avg = uniformity1.width_avg* 3.45 * (vec.second.at<double>(0,2)/12)/1000;
+					uniformity1.width_max = uniformity1.width_max* 3.45 * (vec.second.at<double>(0,2)/12)/1000;
+					uniformity1.width_min = uniformity1.width_min* 3.45 * (vec.second.at<double>(0,2)/12)/1000;
+
 					laserlineGUI(minRect[0], projectedInterPoints[0], cal_angle, uniformity1, line_img);
 					cv::imshow( "Rotated and Cropped laser line", uniformity1.image_BGR );
 				}
 				
-				cv::imshow( "Contour and Area", drawing );
-				cv::imshow("threshold2",threshold_output2);
+				// cv::imshow( "Contour and Area", drawing );
+				// cv::imshow("threshold2",threshold_output2);
 				cv::imshow("Laser Plane Alignment GUI Window", line_img);	
 				imgs_taken ++;
 			}
@@ -297,7 +316,7 @@ int main(int argc, char* argv[])
 
 void laserlineGUI(RotatedRect rect, Point2d cal_center, int cal_angle, laserline::uniformity_data uniformity1, Mat drawing)
 {
-	std::string center_print_x, center_print_y, angle_print, width_print, cal_center_print_x, cal_center_print_y, cal_angle_print, width_max_print, width_min_print, width_sd_print;
+	std::string center_print_x, center_print_y, angle_print, width_print, cal_center_print_x, cal_center_print_y, cal_angle_print, width_avg_print, width_max_print, width_min_print, width_sd_print;
 	center_print_x = std::to_string(int(rect.center.x));
 	center_print_y = std::to_string(int(rect.center.y));
 	angle_print = std::to_string(int(rect.angle));
@@ -315,6 +334,9 @@ void laserlineGUI(RotatedRect rect, Point2d cal_center, int cal_angle, laserline
 	streamObj << uniformity1.width_sd;
 	width_sd_print = streamObj.str();
 	streamObj.str("");
+	streamObj << uniformity1.width_avg;
+	width_avg_print = streamObj.str();
+	streamObj.str("");
 
 	if(rect.size.width < rect.size.height)
 	{width_print = std::to_string(int(rect.size.width));}
@@ -325,13 +347,12 @@ void laserlineGUI(RotatedRect rect, Point2d cal_center, int cal_angle, laserline
 	cal_center_print_y = std::to_string(int(cal_center.y));
 	cal_angle_print = std::to_string(cal_angle);
 
-	cv::putText(drawing, "Calculated Center: [" + cal_center_print_x + "," + cal_center_print_y + "]", cv::Point(10, 20), cv::FONT_HERSHEY_SIMPLEX, 0.8, cv::Scalar(255, 255, 255),2);
-	cv::putText(drawing, "Calculated Angle: " + cal_angle_print, cv::Point(10,50), cv::FONT_HERSHEY_SIMPLEX, 0.8, cv::Scalar(255, 255, 255),2);
-	cv::putText(drawing, "Actual Center: [" + center_print_x + "," + center_print_y + "]", cv::Point(10, 80), cv::FONT_HERSHEY_SIMPLEX, 0.8, cv::Scalar(255, 255, 255),2);
-	cv::putText(drawing, "Actual Angle: " + angle_print, cv::Point(10,110), cv::FONT_HERSHEY_SIMPLEX, 0.8, cv::Scalar(255, 255, 255),2);
-	cv::putText(drawing, "Line Width: " + width_print, cv::Point(10,140), cv::FONT_HERSHEY_SIMPLEX, 0.8, cv::Scalar(255, 255, 255),2);
-
-	cv::putText(drawing, "Maximum Width: " + width_max_print, cv::Point(500, 20), cv::FONT_HERSHEY_SIMPLEX, 0.8, cv::Scalar(255, 255, 255),2);
-	cv::putText(drawing, "Minimum Width: " + width_min_print, cv::Point(500,50), cv::FONT_HERSHEY_SIMPLEX, 0.8, cv::Scalar(255, 255, 255),2);
-	cv::putText(drawing, "Standard Deviation of Width: " + width_sd_print, cv::Point(500, 80), cv::FONT_HERSHEY_SIMPLEX, 0.8, cv::Scalar(255, 255, 255),2);
+	cv::putText(drawing, "Angle Designed: " + cal_angle_print, cv::Point(1000,600), cv::FONT_HERSHEY_SIMPLEX, 0.8, cv::Scalar(255, 255, 255),2);
+	cv::putText(drawing, "Angle Actual: " + angle_print, cv::Point(1000,630), cv::FONT_HERSHEY_SIMPLEX, 0.8, cv::Scalar(255, 255, 255),2);
+	cv::putText(drawing, "Width Average: " + width_avg_print + " mm", cv::Point(1000, 660), cv::FONT_HERSHEY_SIMPLEX, 0.8, cv::Scalar(255, 255, 255),2);
+	cv::putText(drawing, "Width Standard Deviation: " + width_sd_print, cv::Point(1000, 690), cv::FONT_HERSHEY_SIMPLEX, 0.8, cv::Scalar(255, 255, 255),2);
+	cv::putText(drawing, "Maximum Width: " + width_max_print + " mm", cv::Point(1000, 720), cv::FONT_HERSHEY_SIMPLEX, 0.6, cv::Scalar(255, 255, 255),2);
+	cv::putText(drawing, "Minimum Width: " + width_min_print + " mm", cv::Point(1000,740), cv::FONT_HERSHEY_SIMPLEX, 0.6, cv::Scalar(255, 255, 255),2);
+	cv::putText(drawing, "Designed Center: [" + cal_center_print_x + "," + cal_center_print_y + "]", cv::Point(1000, 760), cv::FONT_HERSHEY_SIMPLEX, 0.6, cv::Scalar(255, 255, 255),2);
+	// cv::putText(drawing, "Actual Center: [" + center_print_x + "," + center_print_y + "]", cv::Point(1000, 710), cv::FONT_HERSHEY_SIMPLEX, 0.6, cv::Scalar(255, 255, 255),2);
 }

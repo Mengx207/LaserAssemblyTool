@@ -84,7 +84,7 @@ int main(int argc, char* argv[])
 		INodeMap& nodemap0 = camera0.GetNodeMap();
 
 		CEnumerationPtr(nodemap0.GetNode("ExposureMode"))->FromString("Timed"); 
-		CFloatPtr(nodemap0.GetNode("ExposureTime"))->SetValue(50.0);
+		CFloatPtr(nodemap0.GetNode("ExposureTime"))->SetValue(30.0);
 
 		CEnumParameter(nodemap0, "LineSelector").SetValue("Line3");
 		CEnumParameter(nodemap0, "LineMode").SetValue("Output");
@@ -99,13 +99,26 @@ int main(int argc, char* argv[])
 
 		CEnumParameter(nodemap0, "LineSelector").SetValue("Line4");			
 		CBooleanParameter(nodemap0, "LineInverter").SetValue(false);
+
 		CEnumParameter(nodemap0, "LineSelector").SetValue("Line2");
 		CEnumParameter(nodemap0, "LineSource").SetValue("ExposureActive");
 
-		CEnumParameter(nodemap0, "LineSelector").SetValue("Line3");			
-		CBooleanParameter(nodemap0, "LineInverter").SetValue(true);
-		CEnumParameter(nodemap0, "LineSelector").SetValue("Line4");			
-		CBooleanParameter(nodemap0, "LineInverter").SetValue(true);
+		if(argv[1] == string("1") || argv[1] == string("3")) 
+		{
+			CEnumParameter(nodemap0, "LineSelector").SetValue("Line3");			
+			CBooleanParameter(nodemap0, "LineInverter").SetValue(false);
+
+			CEnumParameter(nodemap0, "LineSelector").SetValue("Line4");			
+			CBooleanParameter(nodemap0, "LineInverter").SetValue(true);
+		}
+		if(argv[1] == string("2") || argv[1] == string("4")) 
+		{
+			CEnumParameter(nodemap0, "LineSelector").SetValue("Line3");			
+			CBooleanParameter(nodemap0, "LineInverter").SetValue(true);
+
+			CEnumParameter(nodemap0, "LineSelector").SetValue("Line4");			
+			CBooleanParameter(nodemap0, "LineInverter").SetValue(false);
+		}
 
 		while(waitKey(10) != 'q')
 		{
@@ -181,7 +194,7 @@ int main(int argc, char* argv[])
 				vector<double> tvec_laser_values;
 				while (tvecL >> val)
 				{
-					tvec_laser_values.push_back(val*1000.0);
+					tvec_laser_values.push_back(val*1000);
 				}
 				// find target board plane in cam frame
 				pair<vector<double>,vector<double>>target = laserline::targetBoardPlane(vec.first, vec.second);
@@ -218,7 +231,7 @@ int main(int argc, char* argv[])
 						i++;
 					}
 				}
-				cout<<"two points on line: "<<projectedlaserline_1[0]<<projectedlaserline_1[projectedlaserline_1.size()-2]<<endl;
+				// cout<<"two points on line: "<<projectedlaserline_1[0]<<projectedlaserline_1[projectedlaserline_1.size()-2]<<endl;
 
 			//----------raw image to greyscale, threshold filter
 				cv::cvtColor(src, img_grey, cv::COLOR_BGR2GRAY);
@@ -293,7 +306,7 @@ int main(int argc, char* argv[])
 					// 	center_distance = dist.second;
 					// }
 					
-					// Test another way of finding center of laser beam
+					// Test another way of finding center of laser dot
 					vector<vector<Point> > contours;
 					vector<Vec4i> hierarchy;
 					Point center_rect_avg;
@@ -339,7 +352,7 @@ int main(int argc, char* argv[])
 				
 				// cv::imshow("img_grey_filtered_dot", img_grey_filtered_dot);	
 				// cv::imshow("threshold output", threshold_output);
-				cv::imshow("Contour and Rectangle", drawing);	  
+				// cv::imshow("Contour and Rectangle", drawing);	  
 				cv::imshow("Laser Beam Alignment Window", dot_img);							
 				imgs_taken0++;
 			}
