@@ -218,7 +218,7 @@ int main(int argc, char* argv[])
 					laserline_points_1.push_back(points);
 				}
 				vector<Point2d> projectedlaserline_1;
-				projectPoints(laserline_points_1, Mat::zeros(3,1,CV_64FC1), Mat::zeros(3,1,CV_64FC1),cameraMatrix,distCoeffs, projectedlaserline_1);
+			 	projectPoints(laserline_points_1, Mat::zeros(3,1,CV_64FC1), Mat::zeros(3,1,CV_64FC1),cameraMatrix,distCoeffs, projectedlaserline_1);
 
 				for(int i=0; i < projectedlaserline_1.size()-1;)
 				{
@@ -331,6 +331,7 @@ int main(int argc, char* argv[])
 						{
 							Point sum = accumulate(center_rect_list.begin(), center_rect_list.end(), Point(0,0));
 							center_rect_avg = sum*(1.0/center_rect_count);
+
 							circle(dot_img, center_rect_avg, 3, Scalar(255,0,255), -1, 8, 0);
 							std::pair<double,double>dist = laserdot::DotToLine(dot_img, projectedlaserline_1[0], projectedlaserline_1[19], center_rect_avg, projectedInterPoints[0]);
 							nom_distance = dist.first;
@@ -347,6 +348,40 @@ int main(int argc, char* argv[])
 					center_rect_list.clear();
 					//fill(center_list.begin(), center_list.end(), cv::Point(0,0));
 				}
+
+				// Point center_rect_avg = Point(0,0);
+				// cout<<"center location: "<<center_rect_avg<<endl;
+				// // centerPoint3D = projectMatrix.inv() * centerPoint
+				// Mat projectMatrix = Mat(4,4,CV_64F);
+				// projectMatrix.at<double>(0,3) = vec.second.at<double>(0,0);
+				// projectMatrix.at<double>(1,3) = vec.second.at<double>(0,1);
+				// projectMatrix.at<double>(2,3) = vec.second.at<double>(0,2);
+				// projectMatrix.at<double>(3,3) = 1;
+				// projectMatrix.at<double>(3,2) = 0;
+				// projectMatrix.at<double>(3,1) = 0;
+				// projectMatrix.at<double>(3,0) = 0;
+				// for(int i=0; i<3; i++)
+				// {
+				// 	for(int j=0; j<3; j++)
+				// 	{
+				// 		projectMatrix.at<double>(i,j) = vec.first.at<double>(i,j);
+				// 	}
+				// }
+				// cout<<"project matrix: "<<endl<<projectMatrix<<endl;
+				// cout<<"project matrix inverse: "<<endl<<projectMatrix.inv()<<endl;
+				// Mat centerPointMat = Mat(4,1,CV_64F);
+				// centerPointMat.at<double>(0,0) = center_rect_avg.x;
+				// centerPointMat.at<double>(1,0) = center_rect_avg.y;
+				// centerPointMat.at<double>(2,0) = 0;
+				// centerPointMat.at<double>(3,0) = 1;
+				// cout<<"centerPointMat: "<<endl<<centerPointMat<<endl;
+				// Mat Point3D = projectMatrix.inv() * centerPointMat;
+				// cout<<"Point3D: "<<endl<<Point3D<<endl;
+				// Mat retrack = projectMatrix*Point3D;
+				// cout<<"Point retrack: "<<endl<<retrack<<endl;
+
+
+
 				laserdot::HMI(dot_img, size_avg, min_size, non_zero, nom_distance, center_distance);
 				laserdot::GreenLight(dot_img, last_min_size, size_avg, nom_distance, center_distance);
 				

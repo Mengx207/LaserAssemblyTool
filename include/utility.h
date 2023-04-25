@@ -210,8 +210,8 @@ namespace laserline
         {
             cout << "Error opening image" << endl;
         }
-        // Size patternsize(5, 3);
         Size patternsize(5, 3);
+        // Size patternsize(7, 4);
         vector<Point2f> corners_found; 
         SimpleBlobDetector::Params params;
         params.maxArea = 10e4;
@@ -254,6 +254,7 @@ namespace laserline
         // Convert rvec to rmatrix
         Mat rmatrix;
         Rodrigues(rvec, rmatrix);
+        // cout << "rmatrix from the target board to cam:" << endl << rmatrix << endl;
         pair<Mat,Mat>vec(rmatrix,tvec) ; // rmatrix = vec.first tvec = vec.second
         return vec;
     }
