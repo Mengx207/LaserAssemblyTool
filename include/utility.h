@@ -247,8 +247,8 @@ namespace laserline
         Mat rvec, tvec;
         // corners_created:created pattern corners in mm    /corners_found: corners found on the loaded image in image coordinates system
         solvePnP(corners_created, corners_found, cameraMatrix, distCoeffs, rvec, tvec);
-        cout << "tvec from the target board to cam:" << endl << tvec << endl;
-        cout << "rvec from the target board to cam:" << endl << rvec << endl;
+        // cout << "tvec from the target board to cam:" << endl << tvec << endl;
+        // cout << "rvec from the target board to cam:" << endl << rvec << endl;
         double distance = sqrt(tvec.at<double>(0) * tvec.at<double>(0) + tvec.at<double>(1) * tvec.at<double>(1) + tvec.at<double>(2) * tvec.at<double>(2));
 
         // Convert rvec to rmatrix
@@ -445,7 +445,7 @@ namespace laserline
         //cout<<endl<<"t = "<<t<<endl;
         // Point2d interPoint (P0[0]+C_L[0]*t, P0[1]+C_L[1]*t);
         Point3f interPoint (P0[0]+C_L[0]*t, P0[1]+C_L[1]*t, P0[2]+C_L[2]*t);
-        cout<<endl<<"Intersection point between laser beam and target board: "<< interPoint<<endl;
+        // cout<<endl<<"Intersection point between laser beam and target board: "<< interPoint<<endl;
         return interPoint;
     }
 

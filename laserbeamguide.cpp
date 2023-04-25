@@ -48,13 +48,13 @@ int main(int argc, char* argv[])
    
 	try
 	{		
-		CDeviceInfo info0, info1;
-		info0.SetSerialNumber("40113772"); //cam1, right
-		//info1.SetSerialNumber("40172226"); //cam2, left
-		
-
-	    CInstantCamera camera0( CTlFactory::GetInstance().CreateDevice(info0));	
-		// camera0.RegisterConfiguration(new CSoftwareTriggerConfiguration,RegistrationMode_ReplaceAll, Cleanup_Delete);	
+		CTlFactory& tlFactory = CTlFactory::GetInstance();
+		CInstantCamera camera0( tlFactory.CreateFirstDevice() );
+        // Print the camera information.
+        cout << "Using device " << camera0.GetDeviceInfo().GetModelName() << endl;
+        cout << "SerialNumber : " << camera0.GetDeviceInfo().GetSerialNumber() << endl;
+		cout << endl << "Program is running, select image window and press 'q' to quit."<<endl;
+			
 		camera0.RegisterConfiguration(new CSoftwareTriggerConfiguration1,RegistrationMode_ReplaceAll, Cleanup_Delete);
 
 		//Create a pylon image that will be used to create an opencv image
