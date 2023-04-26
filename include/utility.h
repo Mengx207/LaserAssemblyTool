@@ -104,14 +104,14 @@ namespace laserdot
             nom_distance_print = std::to_string(nom_distance);
             center_distance_print = std::to_string(center_distance);
         }
-        cv::putText(img, "Laser Focus:", cv::Point(10, 20), cv::FONT_HERSHEY_SIMPLEX, 0.8, cv::Scalar(255, 255, 255),2);
-        cv::putText(img, "Laser Dot Size: "+size_print, cv::Point(10, 50), cv::FONT_HERSHEY_SIMPLEX, 0.8, cv::Scalar(255, 255, 255),2);
-        cv::putText(img, "Previous Min Dot Size: "+min_size_print, cv::Point(10, 80), cv::FONT_HERSHEY_SIMPLEX, 0.8, cv::Scalar(255, 255, 255),2);
+        cv::putText(img, "Laser Beam Focus", cv::Point(10, 20), cv::FONT_HERSHEY_SIMPLEX, 0.8, cv::Scalar(255, 255, 255),2);
+        cv::putText(img, "Laser Dot Size: "+size_print + " pixel", cv::Point(10, 60), cv::FONT_HERSHEY_SIMPLEX, 0.8, cv::Scalar(255, 255, 255),2);
+        cv::putText(img, "Previous Min Dot Size: "+min_size_print + " pixel", cv::Point(10, 90), cv::FONT_HERSHEY_SIMPLEX, 0.8, cv::Scalar(255, 255, 255),2);
         // cv::putText(img, "Laser Focus Status: ", cv::Point(10, 120), cv::FONT_HERSHEY_SIMPLEX, 0.8, cv::Scalar(255, 255, 255),2);
 
-        cv::putText(img, "Laser Dot Location:", cv::Point(500, 20), cv::FONT_HERSHEY_SIMPLEX, 0.8, cv::Scalar(255, 255, 255),2);
-        cv::putText(img, "Normal Distance: "+nom_distance_print, cv::Point(500, 50), cv::FONT_HERSHEY_SIMPLEX, 0.8, cv::Scalar(255, 255, 255),2);
-        cv::putText(img, "Distance from Center: "+center_distance_print, cv::Point(500, 80), cv::FONT_HERSHEY_SIMPLEX, 0.8, cv::Scalar(255, 255, 255),2);
+        cv::putText(img, "Laser Beam Location", cv::Point(500, 20), cv::FONT_HERSHEY_SIMPLEX, 0.8, cv::Scalar(255, 255, 255),2);
+        cv::putText(img, "Normal Distance: "+nom_distance_print+ " pixel", cv::Point(500, 60), cv::FONT_HERSHEY_SIMPLEX, 0.8, cv::Scalar(255, 255, 255),2);
+        cv::putText(img, "Distance from Center: "+center_distance_print+ " pixel", cv::Point(500, 90), cv::FONT_HERSHEY_SIMPLEX, 0.8, cv::Scalar(255, 255, 255),2);
         cv::putText(img, "Dot Location Status: ", cv::Point(500, 120), cv::FONT_HERSHEY_SIMPLEX, 0.8, cv::Scalar(255, 255, 255),2);
 
     }
@@ -129,11 +129,11 @@ namespace laserdot
 
         if(nom_distance < 2 && center_distance < 500)
         {
-            cv::circle( img, cv::Point(800,110), 20, cv::Scalar(0,255,0), -1, 8, 0 );
+            cv::circle( img, cv::Point(800,120), 20, cv::Scalar(0,255,0), -1, 8, 0 );
         }
         else
         {
-            cv::circle( img, cv::Point(800,110), 20, cv::Scalar(0,0,255), -1, 8, 0 );
+            cv::circle( img, cv::Point(800,120), 20, cv::Scalar(0,0,255), -1, 8, 0 );
         }
     }
 
