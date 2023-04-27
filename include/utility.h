@@ -127,7 +127,7 @@ namespace laserdot
         //     cv::circle( img, cv::Point(300,110), 20, cv::Scalar(0,0,255), -1, 8, 0 );
         // }
 
-        if(nom_distance < 2 && center_distance < 500)
+        if(nom_distance < 2 && center_distance < 600)
         {
             cv::circle( img, cv::Point(800,120), 20, cv::Scalar(0,255,0), -1, 8, 0 );
         }
