@@ -643,8 +643,19 @@ namespace general
         centerWF.at<double>(2) = centerWorldFrame.z;
         centerWF.at<double>(3) = 1;
         Mat centerCF = transMatrix*centerWF;
-        cout << endl<<"centerCF 1111: "<<endl<<centerCF<<endl;
+        cout << endl<<"centerCF: "<<endl<<centerCF<<endl;
 
+    }
+
+    void lineEquation(Point3d p1, Point3d p2)
+    {
+        double l = p2.x - p1.x;
+        double m = p2.y - p2.y;
+        double n = p2.z - p2.z;
+        // Cartesian form:
+        // (x-p2.x)/l = (y-p2.y)/m = (z-p2.z)/n
+        // Vector form:
+        // (p2.x*i + p2.y*j + p2.z*k) + t*(l*i + m*j + n*k)
     }
 
 
