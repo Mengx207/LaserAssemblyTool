@@ -181,7 +181,8 @@ int main(int argc, char* argv[])
 				}
 
 				// Calculate rotation vector and translation vector by a captured image of a pattern
-				pair<Mat,Mat>vec = laserline::getRvecTvec();
+				laserline::solvePnP_result solvePnP_result;
+				solvePnP_result = laserline::getRvecTvec();
 
 				// read laser 1
 				ifstream rmatrixL(path_rmatrix);
@@ -197,7 +198,7 @@ int main(int argc, char* argv[])
 					tvec_laser_values.push_back(val*1000);
 				}
 				// find target board plane in cam frame
-				pair<vector<double>,vector<double>>target = laserline::targetBoardPlane(vec.first, vec.second);
+				pair<vector<double>,vector<double>>target = laserline::targetBoardPlane(solvePnP_result.rmatrix, solvePnP_result.tvec);
 
 				laserline::laser_plane laser_1;
 				laser_1 = laserline::laserPlane(rmatrix_laser_values, tvec_laser_values);
@@ -336,6 +337,8 @@ int main(int argc, char* argv[])
 							std::pair<double,double>dist = laserdot::DotToLine(dot_img, projectedlaserline_1[0], projectedlaserline_1[19], center_rect_avg, projectedInterPoints[0]);
 							nom_distance = dist.first;
 							center_distance = dist.second;
+
+							// Point3d point_1 = general::locationCam2Target(center_rect_avg, solvePnP_result);
 						}
 					}
 
@@ -349,39 +352,7 @@ int main(int argc, char* argv[])
 					//fill(center_list.begin(), center_list.end(), cv::Point(0,0));
 				}
 
-				// Point center_rect_avg = Point(0,0);
-				// cout<<"center location: "<<center_rect_avg<<endl;
-				// // centerPoint3D = projectMatrix.inv() * centerPoint
-				// Mat projectMatrix = Mat(4,4,CV_64F);
-				// projectMatrix.at<double>(0,3) = vec.second.at<double>(0,0);
-				// projectMatrix.at<double>(1,3) = vec.second.at<double>(0,1);
-				// projectMatrix.at<double>(2,3) = vec.second.at<double>(0,2);
-				// projectMatrix.at<double>(3,3) = 1;
-				// projectMatrix.at<double>(3,2) = 0;
-				// projectMatrix.at<double>(3,1) = 0;
-				// projectMatrix.at<double>(3,0) = 0;
-				// for(int i=0; i<3; i++)
-				// {
-				// 	for(int j=0; j<3; j++)
-				// 	{
-				// 		projectMatrix.at<double>(i,j) = vec.first.at<double>(i,j);
-				// 	}
-				// }
-				// cout<<"project matrix: "<<endl<<projectMatrix<<endl;
-				// cout<<"project matrix inverse: "<<endl<<projectMatrix.inv()<<endl;
-				// Mat centerPointMat = Mat(4,1,CV_64F);
-				// centerPointMat.at<double>(0,0) = center_rect_avg.x;
-				// centerPointMat.at<double>(1,0) = center_rect_avg.y;
-				// centerPointMat.at<double>(2,0) = 0;
-				// centerPointMat.at<double>(3,0) = 1;
-				// cout<<"centerPointMat: "<<endl<<centerPointMat<<endl;
-				// Mat Point3D = projectMatrix.inv() * centerPointMat;
-				// cout<<"Point3D: "<<endl<<Point3D<<endl;
-				// Mat retrack = projectMatrix*Point3D;
-				// cout<<"Point retrack: "<<endl<<retrack<<endl;
-
-
-
+				Point3d point_1 = general::locationCam2Target(Point2d(130.94389, 389.96777), solvePnP_result);
 				laserdot::HMI(dot_img, size_avg, min_size, non_zero, nom_distance, center_distance);
 				laserdot::GreenLight(dot_img, last_min_size, size_avg, nom_distance, center_distance);
 				

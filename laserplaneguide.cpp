@@ -178,7 +178,8 @@ int main(int argc, char* argv[])
 				}
 
 				// Calculate rotation vector and translation vector by a captured image of a pattern
-				pair<Mat,Mat>vec = laserline::getRvecTvec();
+				laserline::solvePnP_result solvePnP_result;
+				solvePnP_result = laserline::getRvecTvec();
 
 				// read laser 1
 				ifstream rmatrixL(path_rmatrix);
@@ -194,7 +195,7 @@ int main(int argc, char* argv[])
 					tvec_laser_values.push_back(val*1000);
 				}
 				// find target board plane in cam frame
-				pair<vector<double>,vector<double>>target = laserline::targetBoardPlane(vec.first, vec.second);
+				pair<vector<double>,vector<double>>target = laserline::targetBoardPlane(solvePnP_result.rmatrix, solvePnP_result.tvec);
 
 				laserline::laser_plane laser_1, laser_2, laser_3;
 				laser_1 = laserline::laserPlane(rmatrix_laser_values, tvec_laser_values);
@@ -278,9 +279,9 @@ int main(int argc, char* argv[])
 					laserline::uniformity_data uniformity1;
 					uniformity1 = laserline::cropImage(rotated_image);
 					// From pixel number to actual diameter on target board
-					uniformity1.width_avg = uniformity1.width_avg* 3.45 * (vec.second.at<double>(0,2)/12)/1000;
-					uniformity1.width_max = uniformity1.width_max* 3.45 * (vec.second.at<double>(0,2)/12)/1000;
-					uniformity1.width_min = uniformity1.width_min* 3.45 * (vec.second.at<double>(0,2)/12)/1000;
+					uniformity1.width_avg = uniformity1.width_avg* 3.45 * (solvePnP_result.tvec.at<double>(0,2)/12)/1000;
+					uniformity1.width_max = uniformity1.width_max* 3.45 * (solvePnP_result.tvec.at<double>(0,2)/12)/1000;
+					uniformity1.width_min = uniformity1.width_min* 3.45 * (solvePnP_result.tvec.at<double>(0,2)/12)/1000;
 
 					laserlineGUI(minRect[0], projectedInterPoints[0], cal_angle, uniformity1, line_img);
 					cv::imshow( "Rotated and Cropped laser line", uniformity1.image_BGR );
