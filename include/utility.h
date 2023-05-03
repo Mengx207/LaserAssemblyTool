@@ -643,7 +643,7 @@ namespace general
         centerWF.at<double>(2) = centerWorldFrame.z;
         centerWF.at<double>(3) = 1;
         Mat centerCF = transMatrix*centerWF;
-        cout << endl<<"centerCF: "<<endl<<centerCF<<endl;
+        cout << endl<<"centerCF 1111: "<<endl<<centerCF<<endl;
 
     }
 
