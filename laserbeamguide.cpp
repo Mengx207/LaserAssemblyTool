@@ -363,9 +363,15 @@ int main(int argc, char* argv[])
 				imgs_taken0++;
 			}
 			camera0.StopGrabbing();
-			system("cd images && mkdir -p saved_laser_beam");
-			cv::imwrite("images/saved_laser_beam/laser_" + string(argv[1]) + ".jpg", dot_img);
 		}
+		std::cout << std::endl << "Saving images" << std::endl;	
+		system("cd images && mkdir -p saved_laser_beam");
+		if (argc == 3)
+		{
+			imwrite("images/saved_laser_beam/laser_" + string(argv[1]) + "_" + string(argv[2]) + ".jpg", dot_img);
+		}
+		else {imwrite("images/saved_laser_beam/laser_" + string(argv[1]) + ".jpg", dot_img);}
+		std::cout << "Finish saving" << std::endl;	
 
 	}
 
