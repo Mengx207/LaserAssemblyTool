@@ -226,7 +226,7 @@ namespace laserline
         drawChessboardCorners(image_corners, patternsize, Mat(corners_found), patternfound);
         
         // create chessboard pattern
-        double squareSize = 6.75; // square size in mm
+        double squareSize = 6.83; // square size in mm
         vector<Point3f> corners_created = createChessBoardCorners(patternsize, squareSize);
         cout << "created pattern corners in mm: " << endl << corners_created << endl;
 
@@ -647,15 +647,20 @@ namespace general
 
     }
 
-    void lineEquation(Point3d p1, Point3d p2)
+    void lineEquation(Point3d p1, Point3d p2, vector<double> tvec_laser_values)
     {
         double l = p2.x - p1.x;
-        double m = p2.y - p2.y;
-        double n = p2.z - p2.z;
+        double m = p2.y - p1.y;
+        double n = p2.z - p1.z;
         // Cartesian form:
         // (x-p2.x)/l = (y-p2.y)/m = (z-p2.z)/n
         // Vector form:
-        // (p2.x*i + p2.y*j + p2.z*k) + t*(l*i + m*j + n*k)
+        // (p2.x*i + p2.y*j + p2.z*k) + t*(l*i + m*j + n*k) = (p2.x + t*l)*i + (p2.y + t*m)*j + (p2.z + t*n)*k
+        cout<< "vector equation from two 3D points: (" << l<<"*t+"<<p2.x<<","<<m<<"*t+"<<p2.y<<","<<n<<"*t+"<<p2.z<<")"<<endl;
+        Mat tvec_L = Mat(3, 1, CV_64FC1, tvec_laser_values.data());
+        double t = (tvec_L.at<double>(2) - p2.z)/n;
+        cout<< "Retrace along the line to the laser origin: (" << p2.x + t*l<<","<<p2.y + t*m<<","<<p2.z + t*n<<")"<<endl;
+
     }
 
 

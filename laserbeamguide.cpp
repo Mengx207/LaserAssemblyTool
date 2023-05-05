@@ -120,11 +120,13 @@ int main(int argc, char* argv[])
 			CBooleanParameter(nodemap0, "LineInverter").SetValue(false);
 		}
 
+		vector<double> rmatrix_laser_values;
+		vector<double> tvec_laser_values;
+
 		while(waitKey(10) != 'q')
 		{
 			int max_imgs0 = 1;   
 			int imgs_taken0 =0;
-
 			camera0.StartGrabbing(max_imgs0*1);
 
 			while (imgs_taken0 < max_imgs0) 
@@ -186,13 +188,11 @@ int main(int argc, char* argv[])
 
 				// read laser 1
 				ifstream rmatrixL(path_rmatrix);
-				vector<double> rmatrix_laser_values;
 				while (rmatrixL >> val)
 				{
 					rmatrix_laser_values.push_back(val);
 				}
 				ifstream tvecL(path_tvec);
-				vector<double> tvec_laser_values;
 				while (tvecL >> val)
 				{
 					tvec_laser_values.push_back(val*1000);
@@ -353,6 +353,7 @@ int main(int argc, char* argv[])
 				}
 
 				Point3d point_1 = general::locationCam2Target(Point2d(130.94389, 389.96777), solvePnP_result);
+
 				laserdot::HMI(dot_img, size_avg, min_size, non_zero, nom_distance, center_distance);
 				laserdot::GreenLight(dot_img, last_min_size, size_avg, nom_distance, center_distance);
 				
@@ -372,6 +373,10 @@ int main(int argc, char* argv[])
 		}
 		else {imwrite("images/saved_laser_beam/laser_" + string(argv[1]) + ".jpg", dot_img);}
 		std::cout << "Finish saving" << std::endl;	
+
+		Point3d p1 (-63,-16,354);
+		Point3d p2 (-47,-12,264);
+		general::lineEquation(p1,p2,tvec_laser_values);
 
 	}
 
