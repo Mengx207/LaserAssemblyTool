@@ -351,10 +351,6 @@ namespace laserline
             p_100_L[1] - p_000_L[1],
             p_100_L[2] - p_000_L[2]
         };   
-        // Convert vector to Mat
-        Mat NormalV_L = Mat(1, 3, CV_64FC1, normalvector.data());
-        Mat point_L = Mat(1, 3, CV_64FC1, p_110_L.data());
-        Mat point_L_O = Mat(1, 3, CV_64FC1, p_000_L.data());
 
         laser_plane laser_values;
         laser_values.normalvector = normalvector;

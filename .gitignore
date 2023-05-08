@@ -45,3 +45,8 @@ images/saved_patches
 laserbeamguide
 laserplaneguide
 
+laserbeamguide
+CMakeFiles/laserplaneguide.dir/laserplaneguide.cpp.o
+CMakeFiles/laserbeamguide.dir/laserbeamguide.cpp.o
+.gitignore
+laserbeamguide
