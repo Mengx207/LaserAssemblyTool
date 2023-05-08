@@ -181,7 +181,7 @@ int main(int argc, char* argv[])
 				}
 
 				// Calculate rotation vector and translation vector by a captured image of a pattern
-				pair<Mat,Mat>vec = laserline::getRvecTvec();
+				pair<Mat,Mat>vec = laserline::getRvecTvec(); // vec.first = rmatrix, vec.second = tvec
 
 				// read laser 1
 				ifstream rmatrixL(path_rmatrix);
