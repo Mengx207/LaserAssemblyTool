@@ -398,17 +398,17 @@ namespace laserline
         b2 = N_L[1];
         c2 = N_L[2];	
         vector<double> cross_P;
-        //find the plane equations
-        // cout<<endl<<"Target board plane equation: "<<a1<<"*(x-"<<point_B[0]<<")+"<<b1<<"*(y-"<<point_B[1]<<")+"<<c1<<"*(z-"<<point_B[2]<<") = 0"<<endl;
-        // cout<<"Laser plane equation: "<<a2<<"(x-"<<point_L[0]<<")+"<<b2<<"*(y-"<<point_L[1]<<")+"<<c2<<"*(z-"<<point_L[2]<<") = 0"<<endl;
-        cross_P = crossProduct(N_B, N_L);
-        // cout<<"Nomal vector cross product: v=("<<cross_P[0]<<","<<cross_P[1]<<","<<cross_P[2]<<")"<<endl<<endl;
-        double x0,y0,z0;
-        x0 = point_L[0];
-        y0 = point_L[1];
-        z0 = point_L[2];
-        // cout<<"Intersection line of two planes:"<<"r=("<<x0<<"+t*"<<cross_P[0]<<")*i+("<<y0<<"+t*"<<cross_P[1]<<")*j+("<<z0<<"+"<<cross_P[2]<<"*t)*k"<<endl;
-        // cout<<endl<<"One point on intersection line: r0 = ("<<x0<<","<<y0<<","<<z0<<")"<<endl;
+        // //find the plane equations
+        // // cout<<endl<<"Target board plane equation: "<<a1<<"*(x-"<<point_B[0]<<")+"<<b1<<"*(y-"<<point_B[1]<<")+"<<c1<<"*(z-"<<point_B[2]<<") = 0"<<endl;
+        // // cout<<"Laser plane equation: "<<a2<<"(x-"<<point_L[0]<<")+"<<b2<<"*(y-"<<point_L[1]<<")+"<<c2<<"*(z-"<<point_L[2]<<") = 0"<<endl;
+        // cross_P = crossProduct(N_B, N_L);
+        // // cout<<"Nomal vector cross product: v=("<<cross_P[0]<<","<<cross_P[1]<<","<<cross_P[2]<<")"<<endl<<endl;
+        // double x0,y0,z0;
+        // x0 = point_L[0];
+        // y0 = point_L[1];
+        // z0 = point_L[2];
+        // // cout<<"Intersection line of two planes:"<<"r=("<<x0<<"+t*"<<cross_P[0]<<")*i+("<<y0<<"+t*"<<cross_P[1]<<")*j+("<<z0<<"+"<<cross_P[2]<<"*t)*k"<<endl;
+        // // cout<<endl<<"One point on intersection line: r0 = ("<<x0<<","<<y0<<","<<z0<<")"<<endl;
 
         intersection line;
         line.x0 = x0;
@@ -420,21 +420,31 @@ namespace laserline
         return line;
     }
     
-    Point3f intersectionPoint(vector<double>P0, vector<double>C_L, vector<double>N_B, vector<double>point_B)
+    Point3f intersectionPoint(vector<double>laserOrigin, vector<double>beamDirection, vector<double>N_B, vector<double>point_B)
     {
-        // target plane equation: N_B[0]*(x-point_B[0])+N_B[1]*(y-point_B[1])+N_B[2]*(z-point_B[2]) = 0;
-        // laser beam center line equation:
-        // x = P0[0] + C_L[0]*t
-        // y = P0[1] + C_L[1]*t
-        // z = P0[2] + C_L[2]*t
+        /*
+        Target plane equation: N_B[0]*(x-point_B[0])+N_B[1]*(y-point_B[1])+N_B[2]*(z-point_B[2]) = 0;
+        Laser beam line vector equation:
+        x = laserOrigin[0] + beamDirection[0]*t
+        y = laserOrigin[1] + beamDirection[1]*t
+        z = laserOrigin[2] + beamDirection[2]*t
 
-        // N_B[0]*((P0[0]+C_L[0]*t)-point_B[0]) + N_B[1]*((P0[1]+C_L[1]*t)-point_B[1]) + N_B[2]*((P0[2]+C_L[2]*t)-point_B[2]) = 0;
-        // N_B[0]*P0[0] + N_B[0]*C_L[0]*t - N_B[0]*point_B[0] + N_B[1]*P0[1] + N_B[1]*C_L[1]*t - N_B[1]*point_B[1] + N_B[2]*P0[2] + N_B[2]*C_L[2]*t - N_B[2]*point_B[2] = 0;
-        // t*(N_B[0]*C_L[0]+N_B[1]*C_L[1]+N_B[2]*C_L[2]) = N_B[0]*point_B[0] + N_B[1]*point_B[1] + N_B[2]*point_B[2] - N_B[0]*P0[0] - N_B[1]*P0[1] - N_B[2]*P0[2];
-        double t = (N_B[0]*point_B[0] + N_B[1]*point_B[1] + N_B[2]*point_B[2] - N_B[0]*P0[0] - N_B[1]*P0[1] - N_B[2]*P0[2]) / (N_B[0]*C_L[0]+N_B[1]*C_L[1]+N_B[2]*C_L[2]);
-        //cout<<endl<<"t = "<<t<<endl;
-        // Point2d interPoint (P0[0]+C_L[0]*t, P0[1]+C_L[1]*t);
-        Point3f interPoint (P0[0]+C_L[0]*t, P0[1]+C_L[1]*t, P0[2]+C_L[2]*t);
+        Combine target plane equation and laser beam equation:
+        N_B[0]*(laserOrigin[0]+beamDirection[0]*t-point_B[0]) 
+        + N_B[1]*(laserOrigin[1]+beamDirection[1]*t-point_B[1]) 
+        + N_B[2]*(laserOrigin[2]+beamDirection[2]*t-point_B[2]) = 0
+
+        N_B[0]*laserOrigin[0] + N_B[0]*beamDirection[0]*t - N_B[0]*point_B[0] 
+        + N_B[1]*laserOrigin[1] + N_B[1]*beamDirection[1]*t - N_B[1]*point_B[1] 
+        + N_B[2]*laserOrigin[2] + N_B[2]*beamDirection[2]*t - N_B[2]*point_B[2] = 0
+
+        t*(N_B[0]*beamDirection[0] + N_B[1]*beamDirection[1] + N_B[2]*beamDirection[2]) 
+        = N_B[0]*point_B[0] + N_B[1]*point_B[1] + N_B[2]*point_B[2] - N_B[0]*laserOrigin[0] - N_B[1]*laserOrigin[1] - N_B[2]*laserOrigin[2]
+        */
+
+        double t = (N_B[0]*point_B[0] + N_B[1]*point_B[1] + N_B[2]*point_B[2] - N_B[0]*laserOrigin[0] - N_B[1]*laserOrigin[1] - N_B[2]*laserOrigin[2]) / (N_B[0]*beamDirection[0] + N_B[1]*beamDirection[1] + N_B[2]*beamDirection[2]);
+        // cout<<endl<<"t = "<<t<<endl;
+        Point3f interPoint (laserOrigin[0]+beamDirection[0]*t, laserOrigin[1]+beamDirection[1]*t, laserOrigin[2]+beamDirection[2]*t);
         // cout<<endl<<"Intersection point between laser beam and target board: "<< interPoint<<endl;
         return interPoint;
     }
