@@ -198,7 +198,7 @@ namespace laserline
 
 
 
-    std::pair<Mat,Mat> getRvecTvec()
+    std::pair<Mat,Mat> getRvecTvec() // first rmatrix, second tvec
     {
         // load one captured image whose content is the chessboard pattern
         // Mat image_captured = imread("images/image_captured.png", IMREAD_GRAYSCALE);
@@ -275,18 +275,12 @@ namespace laserline
             p_001[1] - p_000[1],
             p_001[2] - p_000[2]
         };
-        //A vector on the plane
-        vector<double> P_B = {
-            p_110[0] - p_000[0],
-            p_110[1] - p_000[1],
-            p_110[2] - p_000[2]
-        };
 
         // Convert vector to Mat
-        Mat NormalV_B = Mat(1, 3, CV_64FC1, N_B.data());
-        Mat point_B = Mat(1, 3, CV_64FC1, p_110.data());
-        Mat point_B_O = Mat(1, 3, CV_64FC1, p_000.data());
-        pair<Mat,Mat>target(NormalV_B, point_B_O);
+        // Mat NormalV_B = Mat(1, 3, CV_64FC1, N_B.data());
+        // Mat point_B = Mat(1, 3, CV_64FC1, p_110.data());
+        // Mat point_B_O = Mat(1, 3, CV_64FC1, p_000.data());
+        // pair<Mat,Mat>target(NormalV_B, point_B_O);
 
         // cout <<endl<< "The Target Board: " << endl;
         // cout << "normal vector: " << endl
