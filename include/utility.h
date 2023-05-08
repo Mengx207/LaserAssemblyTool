@@ -355,7 +355,6 @@ namespace laserline
         laser_plane laser_values;
         laser_values.normalvector = normalvector;
         laser_values.origin = p_000_L;
-        // laser_values.P1 = p_110_L;
         laser_values.beam_dir = beam_dir;
         // cout<<endl<<"laser normal vector: "<< normalvector[0] << "," << normalvector[1] <<"," << normalvector[2] << endl;
         // cout<<"laser origin: "<< p_000_L[0] << "," << p_000_L[1] <<"," << p_000_L[2] << endl;
