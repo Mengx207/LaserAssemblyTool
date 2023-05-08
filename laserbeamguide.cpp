@@ -214,7 +214,6 @@ int main(int argc, char* argv[])
 				{
 					t = t+10;
 					Point3d points((line1.x0+line1.a*t), (line1.y0+line1.b*t), (line1.z0+line1.c*t));
-					// cout<<"point: "<<points<<endl;
 					laserline_points_1.push_back(points);
 				}
 				vector<Point2d> projectedlaserline_1;
