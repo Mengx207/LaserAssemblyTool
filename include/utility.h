@@ -226,7 +226,7 @@ namespace laserline
         drawChessboardCorners(image_corners, patternsize, Mat(corners_found), patternfound);
         
         // create chessboard pattern
-        double squareSize = 6.83; // square size in mm
+        double squareSize = 6.75; // square size in mm (6.75)
         vector<Point3f> corners_created = createChessBoardCorners(patternsize, squareSize);
         cout << "created pattern corners in mm: " << endl << corners_created << endl;
 
@@ -621,21 +621,21 @@ namespace general
         float yRange_created = solvePnP_result.corners_created[14].y - solvePnP_result.corners_created[0].y;
         float xRange_found = solvePnP_result.corners_found[14].x - solvePnP_result.corners_found[0].x;
         float yRange_found = solvePnP_result.corners_found[14].y - solvePnP_result.corners_found[0].y;
-        cout<< xRange_created<< endl << yRange_created<< endl<< xRange_found<<endl<<yRange_found<<endl;
+        // cout<< xRange_created<< endl << yRange_created<< endl<< xRange_found<<endl<<yRange_found<<endl;
         float magnifier = (xRange_found/xRange_created + yRange_found/yRange_created)/2;
 
         Point oneCorner = imageLocation;
-        cout<<endl<<"Conner on image plane in camera frame: "<<oneCorner<<endl;
+        cout<<endl<<"One conner on image plane in camera frame: "<<oneCorner<<endl;
 
         Point3d centerWorldFrame = Point3d((oneCorner.x-solvePnP_result.corners_found[7].x)/magnifier, (oneCorner.y-solvePnP_result.corners_found[7].y)/magnifier, 0);
-        cout<<endl<<"Same corner on target in target board frame: "<< centerWorldFrame << endl;
+        cout<<endl<<"Same corner on target board in target board frame: "<< centerWorldFrame << endl;
         
         Mat transMatrix;
         hconcat(solvePnP_result.rmatrix, solvePnP_result.tvec, transMatrix);
         Mat arr = Mat::zeros(1,4,CV_64F);
         arr.at<double>(3) = 1;
         vconcat(transMatrix, arr, transMatrix);
-        cout<<endl<<"transform matrix: "<<endl<<transMatrix<<endl;
+        // cout<<endl<<"transform matrix: "<<endl<<transMatrix<<endl;
         
         Mat centerWF = Mat(4,1,CV_64F);
         centerWF.at<double>(0) = centerWorldFrame.x;
@@ -643,7 +643,7 @@ namespace general
         centerWF.at<double>(2) = centerWorldFrame.z;
         centerWF.at<double>(3) = 1;
         Mat centerCF = transMatrix*centerWF;
-        cout << endl<<"centerCF: "<<endl<<centerCF<<endl;
+        cout << endl<<"Same corner on target board in camera frame: "<<endl<<centerCF<<endl;
 
     }
 

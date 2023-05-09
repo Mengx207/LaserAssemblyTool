@@ -337,8 +337,6 @@ int main(int argc, char* argv[])
 							std::pair<double,double>dist = laserdot::DotToLine(dot_img, projectedlaserline_1[0], projectedlaserline_1[19], center_rect_avg, projectedInterPoints[0]);
 							nom_distance = dist.first;
 							center_distance = dist.second;
-
-							// Point3d point_1 = general::locationCam2Target(center_rect_avg, solvePnP_result);
 						}
 					}
 
@@ -352,7 +350,7 @@ int main(int argc, char* argv[])
 					//fill(center_list.begin(), center_list.end(), cv::Point(0,0));
 				}
 
-				Point3d point_1 = general::locationCam2Target(Point2d(130.94389, 389.96777), solvePnP_result);
+				Point3d point_1 = general::locationCam2Target(projectedInterPoints[0], solvePnP_result);
 
 				laserdot::HMI(dot_img, size_avg, min_size, non_zero, nom_distance, center_distance);
 				laserdot::GreenLight(dot_img, last_min_size, size_avg, nom_distance, center_distance);
@@ -365,17 +363,17 @@ int main(int argc, char* argv[])
 			}
 			camera0.StopGrabbing();
 		}
-		std::cout << std::endl << "Saving images" << std::endl;	
+		// std::cout << std::endl << "Saving images" << std::endl;	
 		system("cd images && mkdir -p saved_laser_beam");
 		if (argc == 3)
 		{
 			imwrite("images/saved_laser_beam/laser_" + string(argv[1]) + "_" + string(argv[2]) + ".jpg", dot_img);
 		}
 		else {imwrite("images/saved_laser_beam/laser_" + string(argv[1]) + ".jpg", dot_img);}
-		std::cout << "Finish saving" << std::endl;	
+		// std::cout << "Finish saving" << std::endl;	
 
-		Point3d p1 (-63,-16,354);
-		Point3d p2 (-47,-12,264);
+		Point3d p1 (-13.92, -1.77, 418.21);
+		Point3d p2 (-13.93, -15.71, 355.31);
 		general::lineEquation(p1,p2,tvec_laser_values);
 
 	}
