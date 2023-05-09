@@ -627,8 +627,8 @@ namespace general
         Point oneCorner = imagePoint;
         cout<<endl<<"One conner on image plane in camera frame: "<<oneCorner<<endl;
 
-        Point3d centerWorldFrame = Point3d((oneCorner.x-solvePnP_result.corners_found[7].x)/magnifier, (oneCorner.y-solvePnP_result.corners_found[7].y)/magnifier, 0);
-        cout<<endl<<"Same corner on target board in target board frame: "<< centerWorldFrame << endl;
+        Point3d cornorTargetFrame = Point3d((oneCorner.x-solvePnP_result.corners_found[7].x)/magnifier, (oneCorner.y-solvePnP_result.corners_found[7].y)/magnifier, 0);
+        cout<<endl<<"Same corner on target board in target board frame: "<< cornorTargetFrame << endl;
         
         Mat transMatrix;
         hconcat(solvePnP_result.rmatrix, solvePnP_result.tvec, transMatrix);
@@ -637,13 +637,16 @@ namespace general
         vconcat(transMatrix, arr, transMatrix);
         // cout<<endl<<"transform matrix: "<<endl<<transMatrix<<endl;
         
-        Mat centerWF = Mat(4,1,CV_64F);
-        centerWF.at<double>(0) = centerWorldFrame.x;
-        centerWF.at<double>(1) = centerWorldFrame.y;
-        centerWF.at<double>(2) = centerWorldFrame.z;
-        centerWF.at<double>(3) = 1;
-        Mat centerCF = transMatrix*centerWF;
-        cout << endl<<"Same corner on target board in camera frame: "<<endl<<centerCF<<endl;
+        Mat cornorTF = Mat(4,1,CV_64F);
+        cornorTF.at<double>(0,0) = cornorTargetFrame.x;
+        cornorTF.at<double>(1,0) = cornorTargetFrame.y;
+        cornorTF.at<double>(2,0) = cornorTargetFrame.z;
+        cornorTF.at<double>(3,0) = 1;
+        Mat cornorImageFrame = transMatrix*cornorTF;
+        Mat cornorCamFrame = cornorImageFrame;
+        cornorCamFrame.at<double>(0,0) = cornorImageFrame.at<double>(0,0) - ((751.82*3.45)/1000);
+        cornorCamFrame.at<double>(0,1) = cornorImageFrame.at<double>(0,1) - ((545.15*3.45)/1000);
+        cout << endl<<"Same corner on target board in camera frame: "<<endl<<cornorCamFrame<<endl;
 
     }
 
