@@ -615,7 +615,7 @@ namespace laserline
 namespace general
 {
 
-    Point3d locationCam2Target(Point2d imageLocation, laserline::solvePnP_result solvePnP_result)
+    Point3d locationCam2Target(Point2d imagePoint, laserline::solvePnP_result solvePnP_result)
     {
         float xRange_created = solvePnP_result.corners_created[14].x - solvePnP_result.corners_created[0].x;
         float yRange_created = solvePnP_result.corners_created[14].y - solvePnP_result.corners_created[0].y;
@@ -624,7 +624,7 @@ namespace general
         // cout<< xRange_created<< endl << yRange_created<< endl<< xRange_found<<endl<<yRange_found<<endl;
         float magnifier = (xRange_found/xRange_created + yRange_found/yRange_created)/2;
 
-        Point oneCorner = imageLocation;
+        Point oneCorner = imagePoint;
         cout<<endl<<"One conner on image plane in camera frame: "<<oneCorner<<endl;
 
         Point3d centerWorldFrame = Point3d((oneCorner.x-solvePnP_result.corners_found[7].x)/magnifier, (oneCorner.y-solvePnP_result.corners_found[7].y)/magnifier, 0);
