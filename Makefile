@@ -111,6 +111,19 @@ depend:
 .PHONY : depend
 
 #=============================================================================
+# Target rules for targets named laserorigin
+
+# Build rule for target.
+laserorigin: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 laserorigin
+.PHONY : laserorigin
+
+# fast build rule for target.
+laserorigin/fast:
+	$(MAKE) -f CMakeFiles/laserorigin.dir/build.make CMakeFiles/laserorigin.dir/build
+.PHONY : laserorigin/fast
+
+#=============================================================================
 # Target rules for targets named laserbeamguide
 
 # Build rule for target.
@@ -163,6 +176,33 @@ laserbeamguide.cpp.s:
 	$(MAKE) -f CMakeFiles/laserbeamguide.dir/build.make CMakeFiles/laserbeamguide.dir/laserbeamguide.cpp.s
 .PHONY : laserbeamguide.cpp.s
 
+laserorigin.o: laserorigin.cpp.o
+
+.PHONY : laserorigin.o
+
+# target to build an object file
+laserorigin.cpp.o:
+	$(MAKE) -f CMakeFiles/laserorigin.dir/build.make CMakeFiles/laserorigin.dir/laserorigin.cpp.o
+.PHONY : laserorigin.cpp.o
+
+laserorigin.i: laserorigin.cpp.i
+
+.PHONY : laserorigin.i
+
+# target to preprocess a source file
+laserorigin.cpp.i:
+	$(MAKE) -f CMakeFiles/laserorigin.dir/build.make CMakeFiles/laserorigin.dir/laserorigin.cpp.i
+.PHONY : laserorigin.cpp.i
+
+laserorigin.s: laserorigin.cpp.s
+
+.PHONY : laserorigin.s
+
+# target to generate assembly for a file
+laserorigin.cpp.s:
+	$(MAKE) -f CMakeFiles/laserorigin.dir/build.make CMakeFiles/laserorigin.dir/laserorigin.cpp.s
+.PHONY : laserorigin.cpp.s
+
 laserplaneguide.o: laserplaneguide.cpp.o
 
 .PHONY : laserplaneguide.o
@@ -197,12 +237,16 @@ help:
 	@echo "... clean"
 	@echo "... depend"
 	@echo "... rebuild_cache"
+	@echo "... laserorigin"
 	@echo "... laserbeamguide"
 	@echo "... edit_cache"
 	@echo "... laserplaneguide"
 	@echo "... laserbeamguide.o"
 	@echo "... laserbeamguide.i"
 	@echo "... laserbeamguide.s"
+	@echo "... laserorigin.o"
+	@echo "... laserorigin.i"
+	@echo "... laserorigin.s"
 	@echo "... laserplaneguide.o"
 	@echo "... laserplaneguide.i"
 	@echo "... laserplaneguide.s"

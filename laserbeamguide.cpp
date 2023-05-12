@@ -122,9 +122,11 @@ int main(int argc, char* argv[])
 
 		vector<double> rmatrix_laser_values;
 		vector<double> tvec_laser_values;
+		Point centerImage;
 
 		while(waitKey(10) != 'q')
 		{
+			cout<<endl<<"--------------------------------------------------------------------------------"<<endl;
 			int max_imgs0 = 1;   
 			int imgs_taken0 =0;
 			camera0.StartGrabbing(max_imgs0*1);
@@ -243,11 +245,11 @@ int main(int argc, char* argv[])
 				laserdot::CalculatedLine( dot_img, projectedlaserline_1[0], projectedlaserline_1[projectedlaserline_1.size()-2] );
 				
 				vector<Point3d> interPointArray;
-				vector<Point2d> projectedInterPoints;
+				vector<Point2d> interPointsImage_vector;
 				interPointArray.push_back(interPoint1);
-				projectPoints(interPointArray, Mat::zeros(3,1,CV_64FC1), Mat::zeros(3,1,CV_64FC1),cameraMatrix,distCoeffs,projectedInterPoints);
-				// cout<<endl<<"Intersection between laser beam and target board on camera image: "<<endl<<projectedInterPoints<<endl;
-				cv::circle( dot_img, projectedInterPoints[0], 5, cv::Scalar(0,0,255), -1, 8, 0 );
+				projectPoints(interPointArray, Mat::zeros(3,1,CV_64FC1), Mat::zeros(3,1,CV_64FC1),cameraMatrix,distCoeffs,interPointsImage_vector);
+				// cout<<endl<<"Intersection between laser beam and target board on camera image: "<<endl<<interPointsImage_vector<<endl;
+				cv::circle( dot_img, interPointsImage_vector[0], 5, cv::Scalar(0,0,255), -1, 8, 0 );
 
 
 				// Number of non_zero pixel
@@ -302,7 +304,7 @@ int main(int argc, char* argv[])
 					// 	cv::circle( dot_img, center_avg, 3, cv::Scalar(255,100,0), -1, 8, 0 );
 
 					// 	// std::pair<double,double>dist = laserdot::DotToLine(src, line_1_Start, line_1_End, center_avg, Point2d(interPoint1.x+720,-interPoint1.y+540));
-					// 	std::pair<double,double>dist = laserdot::DotToLine(dot_img, projectedlaserline_1[0], projectedlaserline_1[19], center_avg, projectedInterPoints[0]);
+					// 	std::pair<double,double>dist = laserdot::DotToLine(dot_img, projectedlaserline_1[0], projectedlaserline_1[19], center_avg, interPointsImage_vector[0]);
 					// 	nom_distance = dist.first;
 					// 	center_distance = dist.second;
 					// }
@@ -334,9 +336,10 @@ int main(int argc, char* argv[])
 							center_rect_avg = sum*(1.0/center_rect_count);
 
 							circle(dot_img, center_rect_avg, 3, Scalar(255,0,255), -1, 8, 0);
-							std::pair<double,double>dist = laserdot::DotToLine(dot_img, projectedlaserline_1[0], projectedlaserline_1[19], center_rect_avg, projectedInterPoints[0]);
+							std::pair<double,double>dist = laserdot::DotToLine(dot_img, projectedlaserline_1[0], projectedlaserline_1[19], center_rect_avg, interPointsImage_vector[0]);
 							nom_distance = dist.first;
 							center_distance = dist.second;
+							centerImage = center_rect_avg;
 						}
 					}
 
@@ -350,7 +353,7 @@ int main(int argc, char* argv[])
 					//fill(center_list.begin(), center_list.end(), cv::Point(0,0));
 				}
 
-				Point3d point_1 = general::locationCam2Target(projectedInterPoints[0], solvePnP_result);
+				Point3d point_1 = general::locationCam2Target(interPointsImage_vector[0], solvePnP_result);
 
 				laserdot::HMI(dot_img, size_avg, min_size, non_zero, nom_distance, center_distance);
 				laserdot::GreenLight(dot_img, last_min_size, size_avg, nom_distance, center_distance);
@@ -363,18 +366,32 @@ int main(int argc, char* argv[])
 			}
 			camera0.StopGrabbing();
 		}
-		// std::cout << std::endl << "Saving images" << std::endl;	
 		system("cd images && mkdir -p saved_laser_beam");
 		if (argc == 3)
 		{
 			imwrite("images/saved_laser_beam/laser_" + string(argv[1]) + "_" + string(argv[2]) + ".jpg", dot_img);
 		}
 		else {imwrite("images/saved_laser_beam/laser_" + string(argv[1]) + ".jpg", dot_img);}
-		// std::cout << "Finish saving" << std::endl;	
 
-		Point3d p1 (-13.92, -1.77, 418.21);
-		Point3d p2 (-13.93, -15.71, 355.31);
-		general::lineEquation(p1,p2,tvec_laser_values);
+		// save center_rect_avg for future use
+		system("cd values && mkdir -p intersections && cd intersections");
+		system("touch intersections_d1.txt && touch intersections_d2.txt && touch intersections_d3.txt");
+
+		if(argv[3] == string("1"))
+		{
+			ofstream interpoint("values/intersections/intersections_d1.txt");
+			interpoint << centerImage <<"\n";
+		}
+		if(argv[3] == string("2"))
+		{
+			ofstream interpoint("values/intersections/intersections_d1.txt");
+			interpoint << centerImage <<"\n";
+		}
+		if(argv[3] == string("3"))
+		{
+			ofstream interpoint("values/intersections/intersections_d3.txt");
+			interpoint << centerImage <<"\n";
+		}
 
 	}
 

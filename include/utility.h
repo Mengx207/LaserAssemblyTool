@@ -221,14 +221,14 @@ namespace laserline
         params.maxArea = 10e4;
         Ptr<FeatureDetector> blobDetector = SimpleBlobDetector::create(params);
         bool patternfound = findChessboardCorners(image_captured, patternsize, corners_found, CALIB_CB_ASYMMETRIC_GRID);
-        cout <<endl<<endl<< "Corners found: " << endl << corners_found << endl << endl;
+        // cout <<endl<<endl<< "Corners found: " << endl << corners_found << endl << endl;
 
         drawChessboardCorners(image_corners, patternsize, Mat(corners_found), patternfound);
         
         // create chessboard pattern
         double squareSize = 6.75; // square size in mm (6.75)
         vector<Point3f> corners_created = createChessBoardCorners(patternsize, squareSize);
-        cout << "created pattern corners in mm: " << endl << corners_created << endl;
+        // cout << "created pattern corners in mm: " << endl << corners_created << endl;
 
         // import camera matrix and distortion coefficients from txt file
         ifstream intrin("values/intrinsic.txt");
@@ -251,14 +251,14 @@ namespace laserline
         Mat rvec, tvec;
         // corners_created:created pattern corners in mm    /corners_found: corners found on the loaded image in image coordinates system
         solvePnP(corners_created, corners_found, cameraMatrix, distCoeffs, rvec, tvec);
-        cout << "tvec from the target board origin to cam:" << endl << tvec << endl;
-        cout << "rvec from the target board origin to cam:" << endl << rvec << endl;
+        // cout << "tvec from the target board origin to cam:" << endl << tvec << endl;
+        // cout << "rvec from the target board origin to cam:" << endl << rvec << endl;
         double distance = sqrt(tvec.at<double>(0) * tvec.at<double>(0) + tvec.at<double>(1) * tvec.at<double>(1) + tvec.at<double>(2) * tvec.at<double>(2));
 
         // Convert rvec to rmatrix
         Mat rmatrix;
         Rodrigues(rvec, rmatrix);
-        cout << "rmatrix from the target board to cam:" << endl << rmatrix << endl;
+        // cout << "rmatrix from the target board to cam:" << endl << rmatrix << endl;
         solvePnP_result result;
         result.rmatrix = rmatrix;
         result.rvec = rvec;
@@ -299,11 +299,11 @@ namespace laserline
         Mat point_B_O = Mat(1, 3, CV_64FC1, p_000.data());
         pair<Mat,Mat>target(NormalV_B, point_B_O);
 
-        cout <<endl<< "The Target Board: " << endl;
-        cout << "normal vector: " << endl
-            << NormalV_B << endl;
-        cout << "origin point: " << endl
-            << point_B_O << endl << endl;
+        // cout <<endl<< "The Target Board: " << endl;
+        // cout << "normal vector: " << endl
+        //     << NormalV_B << endl;
+        // cout << "origin point: " << endl
+        //     << point_B_O << endl << endl;
         
         pair<vector<double>,vector<double>> target_board_values(N_B,p_000);
         return target_board_values;
@@ -421,7 +421,7 @@ namespace laserline
         c2 = N_L[2];	
         vector<double> cross_P;
         //find the plane equations
-        cout<<endl<<"Target board plane equation: "<<a1<<"*(x-"<<point_B[0]<<")+"<<b1<<"*(y-"<<point_B[1]<<")+"<<c1<<"*(z-"<<point_B[2]<<") = 0"<<endl;
+        // cout<<endl<<"Target board plane equation: "<<a1<<"*(x-"<<point_B[0]<<")+"<<b1<<"*(y-"<<point_B[1]<<")+"<<c1<<"*(z-"<<point_B[2]<<") = 0"<<endl;
         // cout<<"Laser plane equation: "<<a2<<"(x-"<<point_L[0]<<")+"<<b2<<"*(y-"<<point_L[1]<<")+"<<c2<<"*(z-"<<point_L[2]<<") = 0"<<endl;
         cross_P = crossProduct(N_B, N_L);
         // cout<<"Nomal vector cross product: v=("<<cross_P[0]<<","<<cross_P[1]<<","<<cross_P[2]<<")"<<endl<<endl;
@@ -625,10 +625,10 @@ namespace general
         float magnifier = (xRange_found/xRange_created + yRange_found/yRange_created)/2;
 
         Point oneCorner = imagePoint;
-        cout<<endl<<"One conner on image plane in camera frame: "<<oneCorner<<endl;
+        cout<<endl<<"One corner on image plane in camera frame: "<<endl<<oneCorner<<endl;
 
         Point3d cornorTargetFrame = Point3d((oneCorner.x-solvePnP_result.corners_found[7].x)/magnifier, (oneCorner.y-solvePnP_result.corners_found[7].y)/magnifier, 0);
-        cout<<endl<<"Same corner on target board in target board frame: "<< cornorTargetFrame << endl;
+        cout<<endl<<"Same corner on target board in target board frame: "<<endl<<cornorTargetFrame <<endl;
         
         Mat transMatrix;
         hconcat(solvePnP_result.rmatrix, solvePnP_result.tvec, transMatrix);
@@ -659,10 +659,11 @@ namespace general
         // (x-p2.x)/l = (y-p2.y)/m = (z-p2.z)/n
         // Vector form:
         // (p2.x*i + p2.y*j + p2.z*k) + t*(l*i + m*j + n*k) = (p2.x + t*l)*i + (p2.y + t*m)*j + (p2.z + t*n)*k
-        cout<< "vector equation from two 3D points: (" << l<<"*t+"<<p2.x<<","<<m<<"*t+"<<p2.y<<","<<n<<"*t+"<<p2.z<<")"<<endl;
+        // cout<< "vector equation from two 3D points: (" << l<<"*t+"<<p2.x<<","<<m<<"*t+"<<p2.y<<","<<n<<"*t+"<<p2.z<<")"<<endl;
         Mat tvec_L = Mat(3, 1, CV_64FC1, tvec_laser_values.data());
         double t = (tvec_L.at<double>(2) - p2.z)/n;
-        cout<< "Retrace along the line to the laser origin: (" << p2.x + t*l<<","<<p2.y + t*m<<","<<p2.z + t*n<<")"<<endl;
+        cout<<endl<<"Retrace along the line to the laser origin: (" << p2.x + t*l<<","<<p2.y + t*m<<","<<p2.z + t*n<<")"<<endl<<endl;
+
 
     }
 

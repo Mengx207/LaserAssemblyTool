@@ -60,6 +60,43 @@ CMAKE_SOURCE_DIR = /home/lingbo/Documents/GitHub/AssemblyGuidanceTool
 CMAKE_BINARY_DIR = /home/lingbo/Documents/GitHub/AssemblyGuidanceTool
 
 #=============================================================================
+# Target rules for target CMakeFiles/laserorigin.dir
+
+# All Build rule for target.
+CMakeFiles/laserorigin.dir/all:
+	$(MAKE) -f CMakeFiles/laserorigin.dir/build.make CMakeFiles/laserorigin.dir/depend
+	$(MAKE) -f CMakeFiles/laserorigin.dir/build.make CMakeFiles/laserorigin.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/lingbo/Documents/GitHub/AssemblyGuidanceTool/CMakeFiles --progress-num=3,4 "Built target laserorigin"
+.PHONY : CMakeFiles/laserorigin.dir/all
+
+# Include target in all.
+all: CMakeFiles/laserorigin.dir/all
+
+.PHONY : all
+
+# Build rule for subdir invocation for target.
+CMakeFiles/laserorigin.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/lingbo/Documents/GitHub/AssemblyGuidanceTool/CMakeFiles 2
+	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/laserorigin.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/lingbo/Documents/GitHub/AssemblyGuidanceTool/CMakeFiles 0
+.PHONY : CMakeFiles/laserorigin.dir/rule
+
+# Convenience name for target.
+laserorigin: CMakeFiles/laserorigin.dir/rule
+
+.PHONY : laserorigin
+
+# clean rule for target.
+CMakeFiles/laserorigin.dir/clean:
+	$(MAKE) -f CMakeFiles/laserorigin.dir/build.make CMakeFiles/laserorigin.dir/clean
+.PHONY : CMakeFiles/laserorigin.dir/clean
+
+# clean rule for target.
+clean: CMakeFiles/laserorigin.dir/clean
+
+.PHONY : clean
+
+#=============================================================================
 # Target rules for target CMakeFiles/laserbeamguide.dir
 
 # All Build rule for target.
@@ -103,7 +140,7 @@ clean: CMakeFiles/laserbeamguide.dir/clean
 CMakeFiles/laserplaneguide.dir/all:
 	$(MAKE) -f CMakeFiles/laserplaneguide.dir/build.make CMakeFiles/laserplaneguide.dir/depend
 	$(MAKE) -f CMakeFiles/laserplaneguide.dir/build.make CMakeFiles/laserplaneguide.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/lingbo/Documents/GitHub/AssemblyGuidanceTool/CMakeFiles --progress-num=3,4 "Built target laserplaneguide"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/lingbo/Documents/GitHub/AssemblyGuidanceTool/CMakeFiles --progress-num=5,6 "Built target laserplaneguide"
 .PHONY : CMakeFiles/laserplaneguide.dir/all
 
 # Include target in all.
