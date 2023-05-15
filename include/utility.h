@@ -210,8 +210,8 @@ namespace laserline
         {
             cout << "Error opening image" << endl;
         }
-        Size patternsize(5, 3);
-        // Size patternsize(7, 4);
+        // Size patternsize(5, 3);
+        Size patternsize(7, 4);
         vector<Point2f> corners_found; 
         SimpleBlobDetector::Params params;
         params.maxArea = 10e4;
@@ -222,7 +222,7 @@ namespace laserline
         drawChessboardCorners(image_corners, patternsize, Mat(corners_found), patternfound);
         
         // create chessboard pattern
-        double squareSize = 6.75; // square size in mm
+        double squareSize = 7; // square size in mm
         vector<Point3f> corners_created = createChessBoardCorners(patternsize, squareSize);
         // cout << "created pattern corners in mm: " << endl << corners_created << endl;
 
@@ -283,10 +283,8 @@ namespace laserline
         // pair<Mat,Mat>target(NormalV_B, point_B_O);
 
         // cout <<endl<< "The Target Board: " << endl;
-        // cout << "normal vector: " << endl
-        //     << NormalV_B << endl;
-        // cout << "origin point: " << endl
-        //     << point_B_O << endl << endl;
+        // cout << "normal vector: " << endl << N_B[0]<<","<< N_B[1] <<","<< N_B[2] << endl;
+        // cout << "origin point: " << endl << p_000[0] <<","<< p_000[1] <<","<< p_000[2]<< endl << endl;
         
         pair<vector<double>,vector<double>> target_board_values(N_B,p_000);
         return target_board_values;
@@ -312,6 +310,7 @@ namespace laserline
             rmatrix_L.at<double>(5)+tvec_L.at<double>(1),
             rmatrix_L.at<double>(8)+tvec_L.at<double>(2)
         };
+        // cout<<endl<<"p_001[2]: "<< rmatrix_L.at<double>(8)<<" + "<<tvec_L.at<double>(2)<<endl;
         vector<double> p_010_L {
             rmatrix_L.at<double>(1)+tvec_L.at<double>(0),
             rmatrix_L.at<double>(4)+tvec_L.at<double>(1),
@@ -333,6 +332,10 @@ namespace laserline
             p_001_L[1] - p_000_L[1],
             p_001_L[2] - p_000_L[2]
         };
+        // cout<<endl<<"p_100 x: "<< p_100_L[0]<<endl;
+        // cout<<endl<<"p_100 y: "<< p_100_L[1]<<endl;
+        // cout<<endl<<"p_100 z: "<< p_100_L[2]<<endl;
+
         // laser plane center line equation in camera frame: x=a1+b1*t, y=a2+b2*t, z=a3+b3*t
         // x = p_000_L[0] + C_L[0]*t
         // y = p_000_L[1] + C_L[1]*t

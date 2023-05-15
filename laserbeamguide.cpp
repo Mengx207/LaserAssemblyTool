@@ -84,7 +84,7 @@ int main(int argc, char* argv[])
 		INodeMap& nodemap0 = camera0.GetNodeMap();
 
 		CEnumerationPtr(nodemap0.GetNode("ExposureMode"))->FromString("Timed"); 
-		CFloatPtr(nodemap0.GetNode("ExposureTime"))->SetValue(30.0);
+		CFloatPtr(nodemap0.GetNode("ExposureTime"))->SetValue(50.0);
 
 		CEnumParameter(nodemap0, "LineSelector").SetValue("Line3");
 		CEnumParameter(nodemap0, "LineMode").SetValue("Output");
@@ -103,7 +103,7 @@ int main(int argc, char* argv[])
 		CEnumParameter(nodemap0, "LineSelector").SetValue("Line2");
 		CEnumParameter(nodemap0, "LineSource").SetValue("ExposureActive");
 
-		if(argv[1] == string("1") || argv[1] == string("3")) 
+		if(argv[1] == string("1") || argv[1] == string("3") || argv[1] == string("high")) 
 		{
 			CEnumParameter(nodemap0, "LineSelector").SetValue("Line3");			
 			CBooleanParameter(nodemap0, "LineInverter").SetValue(false);
@@ -111,7 +111,7 @@ int main(int argc, char* argv[])
 			CEnumParameter(nodemap0, "LineSelector").SetValue("Line4");			
 			CBooleanParameter(nodemap0, "LineInverter").SetValue(true);
 		}
-		if(argv[1] == string("2") || argv[1] == string("4")) 
+		if(argv[1] == string("2") || argv[1] == string("4") || argv[1] == string("low")) 
 		{
 			CEnumParameter(nodemap0, "LineSelector").SetValue("Line3");			
 			CBooleanParameter(nodemap0, "LineInverter").SetValue(true);
@@ -157,27 +157,37 @@ int main(int argc, char* argv[])
 				Mat distCoeffs = Mat(5, 1, CV_64FC1, distCoeffs_values.data());
 
 				// gain rmatrix and tvec from target board to cam
-				string path_rmatrix = "values/rmatrix_1.txt";
-				string path_tvec = "values/tvec_1.txt";
+				string path_rmatrix = "values/rmatrix_1_newmount.txt";
+				string path_tvec = "values/tvec_1_newmount.txt";
+				if(argv[1] == string("high")) 
+				{
+					path_rmatrix = "values/rmatrix_high.txt";
+					path_tvec = "values/tvec_high.txt";
+				}
+				if(argv[1] == string("low")) 
+				{
+					path_rmatrix = "values/rmatrix_low.txt";
+					path_tvec = "values/tvec_low.txt";
+				}
 				if(argv[1] == string("1")) 
 				{
-					path_rmatrix = "values/rmatrix_1.txt";
-					path_tvec = "values/tvec_1.txt";
+					path_rmatrix = "values/rmatrix_1_newmount.txt";
+					path_tvec = "values/tvec_1_newmount.txt";
 				}
 				if(argv[1] == string("2")) 
 				{
-					path_rmatrix = "values/rmatrix_2.txt";
-					path_tvec = "values/tvec_2.txt";
+					path_rmatrix = "values/rmatrix_2_newmount.txt";
+					path_tvec = "values/tvec_2_newmount.txt";
 				}
 				if(argv[1] == string("3")) 
 				{
-					path_rmatrix = "values/rmatrix_3.txt";
-					path_tvec = "values/tvec_3.txt";
+					path_rmatrix = "values/rmatrix_3_newmount.txt";
+					path_tvec = "values/tvec_3_newmount.txt";
 				}
 				if(argv[1] == string("4"))
 				{
-					path_rmatrix = "values/rmatrix_4.txt";
-					path_tvec = "values/tvec_4.txt";
+					path_rmatrix = "values/rmatrix_4_newmount.txt";
+					path_tvec = "values/tvec_4_newmount.txt";
 				}
 
 				// Calculate rotation vector and translation vector by a captured image of a pattern
@@ -239,6 +249,7 @@ int main(int argc, char* argv[])
 				cv::Mat img_grey_filtered_dot;
 				cv::threshold(img_grey,img_grey_filtered_dot,250,255,cv::THRESH_OTSU||cv::THRESH_TRIANGLE);	
 				laserdot::CalculatedLine( dot_img, projectedlaserline_1[0], projectedlaserline_1[projectedlaserline_1.size()-2] );
+				// cout<<endl<<"line start: "<< projectedlaserline_1[0]<<endl<<"line end: "<< projectedlaserline_1[projectedlaserline_1.size()-2]<<endl;
 				
 				vector<Point3d> interPointArray;
 				vector<Point2d> projectedInterPoints;
