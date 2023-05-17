@@ -161,27 +161,27 @@ int main(int argc, char* argv[])
 				Mat distCoeffs = Mat(5, 1, CV_64FC1, distCoeffs_values.data());
 
 				// gain rmatrix and tvec from target board to cam
-				string path_rmatrix = "values/rmatrix_1.txt";
-				string path_tvec = "values/tvec_1.txt";
+				string path_rmatrix = "values/rmatrix_1_newmount.txt";
+				string path_tvec = "values/tvec_1_newmount.txt";
 				if(argv[1] == string("1")) 
 				{
-					path_rmatrix = "values/rmatrix_1.txt";
-					path_tvec = "values/tvec_1.txt";
+					path_rmatrix = "values/rmatrix_1_newmount.txt";
+					path_tvec = "values/tvec_1_newmount.txt";
 				}
 				if(argv[1] == string("2")) 
 				{
-					path_rmatrix = "values/rmatrix_2.txt";
-					path_tvec = "values/tvec_2.txt";
+					path_rmatrix = "values/rmatrix_2_newmount.txt";
+					path_tvec = "values/tvec_2_newmount.txt";
 				}
 				if(argv[1] == string("3")) 
 				{
-					path_rmatrix = "values/rmatrix_3.txt";
-					path_tvec = "values/tvec_3.txt";
+					path_rmatrix = "values/rmatrix_3_newmount.txt";
+					path_tvec = "values/tvec_3_newmount.txt";
 				}
 				if(argv[1] == string("4"))
 				{
-					path_rmatrix = "values/rmatrix_4.txt";
-					path_tvec = "values/tvec_4.txt";
+					path_rmatrix = "values/rmatrix_4_newmount.txt";
+					path_tvec = "values/tvec_4_newmount.txt";
 				}
 
 				// Calculate rotation vector and translation vector by a captured image of a pattern
@@ -201,10 +201,8 @@ int main(int argc, char* argv[])
 				}
 				// find target board plane in cam frame
 				pair<vector<double>,vector<double>>target = laserline::targetBoardPlane(solvePnP_result.rmatrix, solvePnP_result.tvec);
-
 				laserline::laser_plane laser_1;
 				laser_1 = laserline::laserPlane(rmatrix_laser_values, tvec_laser_values);
-				
 				Point3f interPoint1;
 				interPoint1 = laserline::intersectionPoint(laser_1.origin, laser_1.beam_dir, target.first, target.second);
 				
@@ -212,7 +210,6 @@ int main(int argc, char* argv[])
 				std::vector<cv::Point3d> laserline_points_1, laserline_points_2, laserline_points_3;
 				laserline::intersection line1, line2, line3;
 				line1 = laserline::intersectionLine(target.first, laser_1.normalvector, target.second, vector<double>{interPoint1.x, interPoint1.y, interPoint1.z});
-
 				for(int t=-150; t<150;)
 				{
 					t = t+10;

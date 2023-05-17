@@ -214,8 +214,8 @@ namespace laserline
         {
             cout << "Error opening image" << endl;
         }
-        Size patternsize(5, 3);
-        // Size patternsize(7, 4);
+        // Size patternsize(5, 3);
+        Size patternsize(7, 4);
         vector<Point2f> corners_found; 
         SimpleBlobDetector::Params params;
         params.maxArea = 10e4;
@@ -226,7 +226,8 @@ namespace laserline
         drawChessboardCorners(image_corners, patternsize, Mat(corners_found), patternfound);
         
         // create chessboard pattern
-        double squareSize = 6.75; // square size in mm (6.75)
+        // double squareSize = 6.75; // square size in mm (6.75)
+        double squareSize = 7;
         vector<Point3f> corners_created = createChessBoardCorners(patternsize, squareSize);
         // cout << "created pattern corners in mm: " << endl << corners_created << endl;
 
