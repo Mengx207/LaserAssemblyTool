@@ -214,22 +214,22 @@ namespace laserline
         {
             cout << "Error opening image" << endl;
         }
-        // Size patternsize(5, 3);
-        Size patternsize(7, 4);
+        Size patternsize(5, 3);
+        // Size patternsize(7, 4);
         vector<Point2f> corners_found; 
         SimpleBlobDetector::Params params;
         params.maxArea = 10e4;
         Ptr<FeatureDetector> blobDetector = SimpleBlobDetector::create(params);
         bool patternfound = findChessboardCorners(image_captured, patternsize, corners_found, CALIB_CB_ASYMMETRIC_GRID);
-        // cout <<endl<<endl<< "Corners found: " << endl << corners_found << endl << endl;
+        cout <<endl<<endl<< "Corners found: " << endl << corners_found << endl << endl;
 
         drawChessboardCorners(image_corners, patternsize, Mat(corners_found), patternfound);
         
         // create chessboard pattern
-        // double squareSize = 6.75; // square size in mm (6.75)
-        double squareSize = 7;
+        double squareSize = 6.75; // square size in mm (6.75)
+        // double squareSize = 7;
         vector<Point3f> corners_created = createChessBoardCorners(patternsize, squareSize);
-        // cout << "created pattern corners in mm: " << endl << corners_created << endl;
+        cout << "created pattern corners in mm: " << endl << corners_created << endl;
 
         // import camera matrix and distortion coefficients from txt file
         ifstream intrin("values/intrinsic.txt");
@@ -618,17 +618,76 @@ namespace general
 
     Point3d locationCam2Target(Point2d imagePoint, laserline::solvePnP_result solvePnP_result)
     {
-        float xRange_created = solvePnP_result.corners_created[14].x - solvePnP_result.corners_created[0].x;
-        float yRange_created = solvePnP_result.corners_created[14].y - solvePnP_result.corners_created[0].y;
-        float xRange_found = solvePnP_result.corners_found[14].x - solvePnP_result.corners_found[0].x;
-        float yRange_found = solvePnP_result.corners_found[14].y - solvePnP_result.corners_found[0].y;
-        // cout<< xRange_created<< endl << yRange_created<< endl<< xRange_found<<endl<<yRange_found<<endl;
+        Point3f corner_created_max_x = solvePnP_result.corners_created[0];
+        Point3f corner_created_max_y = solvePnP_result.corners_created[0];
+        Point2f corner_found_max_x = solvePnP_result.corners_found[0];
+        Point2f corner_found_max_y = solvePnP_result.corners_found[0];
+        Point3f corner_created_min_x = solvePnP_result.corners_created[0];
+        Point3f corner_created_min_y = solvePnP_result.corners_created[0];
+        Point2f corner_found_min_x = solvePnP_result.corners_found[0];
+        Point2f corner_found_min_y = solvePnP_result.corners_found[0];
+
+        for(int i = 1; i < solvePnP_result.corners_created.size(); i++)
+        {
+            if(solvePnP_result.corners_created[i].x > corner_created_max_x.x)
+            {
+                corner_created_max_x = solvePnP_result.corners_created[i];
+            }
+
+            if(solvePnP_result.corners_created[i].y > corner_created_max_y.y)
+            {
+                corner_created_max_y = solvePnP_result.corners_created[i];
+            }
+
+            if(solvePnP_result.corners_found[i].x > corner_found_max_x.x)
+            {
+                corner_found_max_x = solvePnP_result.corners_found[i];
+            }
+
+            if(solvePnP_result.corners_found[i].y > corner_found_max_y.y)
+            {
+                corner_found_max_y = solvePnP_result.corners_found[i];
+            }
+            
+            if(solvePnP_result.corners_created[i].x < corner_created_min_x.x)
+            {
+                corner_created_min_x = solvePnP_result.corners_created[i];
+            }
+            if(solvePnP_result.corners_created[i].y < corner_created_min_y.y)
+            {
+                corner_created_min_y = solvePnP_result.corners_created[i];
+            }
+            if(solvePnP_result.corners_found[i].x < corner_found_min_x.x)
+            {
+                corner_found_min_x = solvePnP_result.corners_found[i];
+            }
+            if(solvePnP_result.corners_found[i].y < corner_found_min_y.y)
+            {
+                corner_found_min_y = solvePnP_result.corners_found[i];
+            }
+        }
+
+
+        // float xRange_created = solvePnP_result.corners_created[14].x - solvePnP_result.corners_created[0].x;
+        // float yRange_created = solvePnP_result.corners_created[14].y - solvePnP_result.corners_created[0].y;
+        // float xRange_found = solvePnP_result.corners_found[14].x - solvePnP_result.corners_found[0].x;
+        // float yRange_found = solvePnP_result.corners_found[14].y - solvePnP_result.corners_found[0].y;
+        float xRange_created = corner_created_max_x.x - corner_created_min_x.x;
+        float yRange_created = corner_created_max_y.y - corner_created_min_y.y;
+        float xRange_found = corner_found_max_x.x - corner_found_min_x.x;
+        float yRange_found = corner_found_max_y.y - corner_found_min_y.y;
+        cout<< xRange_created<< endl << yRange_created<< endl<< xRange_found<<endl<<yRange_found<<endl;
         float magnifier = (xRange_found/xRange_created + yRange_found/yRange_created)/2;
+        // cout<<endl<<"magnifier: "<< magnifier<<endl;
 
         Point oneCorner = imagePoint;
         cout<<endl<<"One corner on image plane in camera frame: "<<endl<<oneCorner<<endl;
 
-        Point3d cornorTargetFrame = Point3d((oneCorner.x-solvePnP_result.corners_found[7].x)/magnifier, (oneCorner.y-solvePnP_result.corners_found[7].y)/magnifier, 0);
+        float corners_found_mid_x = (corner_found_max_x.x + corner_found_min_x.x)/2;
+        float corners_found_mid_y = (corner_found_max_y.y + corner_found_min_y.y)/2;
+        cout<<endl<<"center point of pattern: "<<corners_found_mid_x<<" "<<corners_found_mid_y<<endl;
+
+        Point3d cornorTargetFrame = Point3d((oneCorner.x - corners_found_mid_x)/magnifier, (oneCorner.y - corners_found_mid_y)/magnifier, 0);
         cout<<endl<<"Same corner on target board in target board frame: "<<endl<<cornorTargetFrame <<endl;
         
         Mat transMatrix;

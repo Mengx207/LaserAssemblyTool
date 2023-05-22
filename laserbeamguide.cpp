@@ -377,17 +377,20 @@ int main(int argc, char* argv[])
 		if(argv[3] == string("1"))
 		{
 			ofstream interpoint("values/intersections/intersections_d1.txt");
-			interpoint << centerImage <<"\n";
+			interpoint << centerImage.x <<" ";
+			interpoint << centerImage.y;
 		}
 		if(argv[3] == string("2"))
 		{
-			ofstream interpoint("values/intersections/intersections_d1.txt");
-			interpoint << centerImage <<"\n";
+			ofstream interpoint("values/intersections/intersections_d2.txt");
+			interpoint << centerImage.x <<" ";
+			interpoint << centerImage.y;
 		}
 		if(argv[3] == string("3"))
 		{
 			ofstream interpoint("values/intersections/intersections_d3.txt");
-			interpoint << centerImage <<"\n";
+			interpoint << centerImage.x <<" ";
+			interpoint << centerImage.y;
 		}
 
 	}

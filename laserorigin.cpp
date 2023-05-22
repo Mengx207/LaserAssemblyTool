@@ -39,27 +39,27 @@ using namespace GENAPI_NAMESPACE;
 
 int main(int argc, char* argv[])
 {
-	string path_rmatrix = "values/rmatrix_1.txt";
-	string path_tvec = "values/tvec_1.txt";
+	string path_rmatrix = "values/rmatrix_1_newmount.txt";
+	string path_tvec = "values/tvec_1_newmount.txt";
 	if(argv[1] == string("1")) 
 	{
-		path_rmatrix = "values/rmatrix_1.txt";
-		path_tvec = "values/tvec_1.txt";
+		path_rmatrix = "values/rmatrix_1_newmount.txt";
+		path_tvec = "values/tvec_1_newmount.txt";
 	}
 	if(argv[1] == string("2")) 
 	{
-		path_rmatrix = "values/rmatrix_2.txt";
-		path_tvec = "values/tvec_2.txt";
+		path_rmatrix = "values/rmatrix_2_newmount.txt";
+		path_tvec = "values/tvec_2_newmount.txt";
 	}
 	if(argv[1] == string("3")) 
 	{
-		path_rmatrix = "values/rmatrix_3.txt";
-		path_tvec = "values/tvec_3.txt";
+		path_rmatrix = "values/rmatrix_3_newmount.txt";
+		path_tvec = "values/tvec_3_newmount.txt";
 	}
 	if(argv[1] == string("4"))
 	{
-		path_rmatrix = "values/rmatrix_4.txt";
-		path_tvec = "values/tvec_4.txt";
+		path_rmatrix = "values/rmatrix_4_newmount.txt";
+		path_tvec = "values/tvec_4_newmount.txt";
 	}
 
 	vector<double> tvec_laser_values;
@@ -76,27 +76,20 @@ int main(int argc, char* argv[])
 		tvec_laser_values.push_back(val*1000);
 	}
 
-	vector<Point2d> imgPoint_vector;
+	vector<double> imgPoint_vector;
+	ifstream readPoint("values/intersections/intersections_d2_test.txt");
+	while (readPoint >> val)
+	{
+		imgPoint_vector.push_back(val);
+	}
 	Point2d imgPoint;
-	ifstream readPoint("values/intersections/intersections_d1.txt");
-	// while (readPoint >> imgPoint)
-	// {
-	// 	imgPoint_vector.push_back(imgPoint);
-	// }
+	imgPoint.x = imgPoint_vector[0];
+	imgPoint.y = imgPoint_vector[1];
 
-	// ifstream readPoint("values/intersections/intersections_d1.txt");
-	// while (readPoint >> imgPoint)
-	// {
-	// 	imgPoint_vector.push_back(imgPoint);
-	// }
-
-	// ifstream readPoint("values/intersections/intersections_d1.txt");
-	// while (readPoint >> imgPoint)
-	// {
-	// 	imgPoint_vector.push_back(imgPoint);
-	// }
 	// cout<<endl<<"read imgPoint: "<<imgPoint_vector<<endl;
-	
-	//Point3d p2 (-13.93, -15.71, 355.31);
-	//general::lineEquation(p1,p2,tvec_laser_values);
+	laserline::solvePnP_result solvePnP_result;
+	solvePnP_result = laserline::getRvecTvec();
+    Point3d p1 = general::locationCam2Target( imgPoint, solvePnP_result);
+	Point3d p2 (-13.93, -15.71, 355.31);
+	general::lineEquation(p1,p2,tvec_laser_values);
 }
