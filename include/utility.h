@@ -72,11 +72,10 @@ namespace laserdot
     }
 
     //---------Draw the calculated laser line
-    void CalculatedLine(cv::Mat img, cv::Point start, cv::Point end)
+    void drawLine(cv::Mat img, cv::Point start, cv::Point end, int thickness)
     {
-        int thickness = 4;
         int lineType = cv::LINE_AA;
-        line( img, start, end, cv::Scalar( 0, 0, 255 ), thickness, lineType );
+        line( img, start, end, cv::Scalar( 0, 255, 255 ), thickness, lineType );
     }
 
     //----------Use Canny to find the Canny edges of objects in image

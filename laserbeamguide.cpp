@@ -248,7 +248,7 @@ int main(int argc, char* argv[])
 
 				cv::Mat img_grey_filtered_dot;
 				cv::threshold(img_grey,img_grey_filtered_dot,250,255,cv::THRESH_OTSU||cv::THRESH_TRIANGLE);	
-				laserdot::CalculatedLine( dot_img, projectedlaserline_1[0], projectedlaserline_1[projectedlaserline_1.size()-2] );
+				laserdot::drawLine( dot_img, projectedlaserline_1[0], projectedlaserline_1[projectedlaserline_1.size()-2], 4 );
 				// cout<<endl<<"line start: "<< projectedlaserline_1[0]<<endl<<"line end: "<< projectedlaserline_1[projectedlaserline_1.size()-2]<<endl;
 				
 				vector<Point3d> interPointArray;
@@ -256,7 +256,7 @@ int main(int argc, char* argv[])
 				interPointArray.push_back(interPoint1);
 				projectPoints(interPointArray, Mat::zeros(3,1,CV_64FC1), Mat::zeros(3,1,CV_64FC1),cameraMatrix,distCoeffs,projectedInterPoints);
 				// cout<<endl<<"Intersection between laser beam and target board on camera image: "<<endl<<projectedInterPoints<<endl;
-				cv::circle( dot_img, projectedInterPoints[0], 5, cv::Scalar(0,0,255), -1, 8, 0 );
+				cv::circle( dot_img, projectedInterPoints[0], 7, cv::Scalar(0,255,255), -1, 8, 0 );
 
 
 				// Number of non_zero pixel
