@@ -202,19 +202,17 @@ namespace laserline
         vector<Point3f> corners_created;
     };
 
-    solvePnP_result getRvecTvec()
+    solvePnP_result getRvecTvec(Mat image_captured, Size patternsize, double squareSize)
     {
         // load one captured image whose content is the chessboard pattern
         // Mat image_captured = imread("images/image_captured.png", IMREAD_GRAYSCALE);
         // Mat image_captured = imread("images/pattern_image.png", IMREAD_GRAYSCALE);
-        Mat image_captured = imread("images/pattern.png", IMREAD_GRAYSCALE);
         Mat image_corners(image_captured.rows, image_captured.cols, IMREAD_GRAYSCALE);
 
         if (image_captured.empty())
         {
             cout << "Error opening image" << endl;
         }
-        Size patternsize(5, 3);
         // Size patternsize(7, 4);
         vector<Point2f> corners_found; 
         SimpleBlobDetector::Params params;
@@ -226,7 +224,6 @@ namespace laserline
         drawChessboardCorners(image_corners, patternsize, Mat(corners_found), patternfound);
         
         // create chessboard pattern
-        double squareSize = 6.75; // square size in mm (6.75)
         // double squareSize = 7;
         vector<Point3f> corners_created = createChessBoardCorners(patternsize, squareSize);
         cout << "created pattern corners in mm: " << endl << corners_created << endl;
@@ -707,6 +704,11 @@ namespace general
         cornorCamFrame.at<double>(0,0) = cornorImageFrame.at<double>(0,0) - ((751.82*3.45)/1000);
         cornorCamFrame.at<double>(0,1) = cornorImageFrame.at<double>(0,1) - ((545.15*3.45)/1000);
         cout << endl<<"Same corner on target board in camera frame: "<<endl<<cornorCamFrame<<endl;
+        Point3d pointCamFrame;
+        pointCamFrame.x = cornorCamFrame.at<double>(0);
+        pointCamFrame.y = cornorCamFrame.at<double>(1);
+        pointCamFrame.z = cornorCamFrame.at<double>(2);
+        return pointCamFrame;
 
     }
 
@@ -719,7 +721,7 @@ namespace general
         // (x-p2.x)/l = (y-p2.y)/m = (z-p2.z)/n
         // Vector form:
         // (p2.x*i + p2.y*j + p2.z*k) + t*(l*i + m*j + n*k) = (p2.x + t*l)*i + (p2.y + t*m)*j + (p2.z + t*n)*k
-        // cout<< "vector equation from two 3D points: (" << l<<"*t+"<<p2.x<<","<<m<<"*t+"<<p2.y<<","<<n<<"*t+"<<p2.z<<")"<<endl;
+        cout<< "vector equation from two 3D points: (" << l<<"*t+"<<p2.x<<","<<m<<"*t+"<<p2.y<<","<<n<<"*t+"<<p2.z<<")"<<endl;
         Mat tvec_L = Mat(3, 1, CV_64FC1, tvec_laser_values.data());
         double t = (tvec_L.at<double>(2) - p2.z)/n;
         cout<<endl<<"Retrace along the line to the laser origin: (" << p2.x + t*l<<","<<p2.y + t*m<<","<<p2.z + t*n<<")"<<endl<<endl;

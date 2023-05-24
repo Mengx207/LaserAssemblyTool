@@ -65,6 +65,7 @@ int main(int argc, char* argv[])
 	vector<double> tvec_laser_values;
 	vector<double> rmatrix_laser_values;
 	double val;
+
 	ifstream rmatrixL(path_rmatrix);
 	while (rmatrixL >> val)
 	{
@@ -76,20 +77,52 @@ int main(int argc, char* argv[])
 		tvec_laser_values.push_back(val*1000);
 	}
 
-	vector<double> imgPoint_vector;
-	ifstream readPoint("values/intersections/intersections_d2_test.txt");
-	while (readPoint >> val)
+	vector<double> imgPoint_d1_vector, imgPoint_d2_vector, imgPoint_d3_vector;
+
+	ifstream readPointd1("values/intersections/intersections_d1.txt");
+	while (readPointd1 >> val)
 	{
-		imgPoint_vector.push_back(val);
+		imgPoint_d1_vector.push_back(val);
 	}
-	Point2d imgPoint;
-	imgPoint.x = imgPoint_vector[0];
-	imgPoint.y = imgPoint_vector[1];
+	Point2d imgPoint_d1;
+	imgPoint_d1.x = imgPoint_d1_vector[0];
+	imgPoint_d1.y = imgPoint_d1_vector[1];
+
+	ifstream readPointd2("values/intersections/intersections_d2.txt");
+	while (readPointd2 >> val)
+	{
+		imgPoint_d2_vector.push_back(val);
+	}
+	Point2d imgPoint_d2;
+	imgPoint_d2.x = imgPoint_d2_vector[0];
+	imgPoint_d2.y = imgPoint_d2_vector[1];
+
+	ifstream readPointd3("values/intersections/intersections_d3.txt");
+	while (readPointd3 >> val)
+	{
+		imgPoint_d3_vector.push_back(val);
+	}
+	Point2d imgPoint_d3;
+	imgPoint_d3.x = imgPoint_d3_vector[0];
+	imgPoint_d3.y = imgPoint_d3_vector[1];
 
 	// cout<<endl<<"read imgPoint: "<<imgPoint_vector<<endl;
-	laserline::solvePnP_result solvePnP_result;
-	solvePnP_result = laserline::getRvecTvec();
-    Point3d p1 = general::locationCam2Target( imgPoint, solvePnP_result);
-	Point3d p2 (-13.93, -15.71, 355.31);
-	general::lineEquation(p1,p2,tvec_laser_values);
+	laserline::solvePnP_result solvePnP_result_d1,solvePnP_result_d2,solvePnP_result_d3;
+	Mat image_captured = imread("images/pattern.png", IMREAD_GRAYSCALE);
+	Size patternSize (5,3);
+
+	double squareSize = 6.75;
+	solvePnP_result_d2 = laserline::getRvecTvec(image_captured,patternSize,squareSize);
+
+	squareSize = 7.75;
+	solvePnP_result_d3 = laserline::getRvecTvec(image_captured,patternSize,squareSize);
+
+	squareSize = 5.75;
+	solvePnP_result_d1 = laserline::getRvecTvec(image_captured,patternSize,squareSize);
+
+    Point3d p1 = general::locationCam2Target( imgPoint_d1, solvePnP_result_d1);
+	Point3d p2 = general::locationCam2Target( imgPoint_d2, solvePnP_result_d2);
+	Point3d p3 = general::locationCam2Target( imgPoint_d3, solvePnP_result_d3);
+	cout<<endl<<"3 points: "<<p1<<" "<<p2<<" "<<p3<<endl;
+	general::lineEquation(p1,p3,tvec_laser_values);
 }

@@ -179,7 +179,10 @@ int main(int argc, char* argv[])
 
 				// Calculate rotation vector and translation vector by a captured image of a pattern
 				laserline::solvePnP_result solvePnP_result;
-				solvePnP_result = laserline::getRvecTvec();
+				Mat image_captured = imread("images/pattern.png", IMREAD_GRAYSCALE);
+				Size patternSize (5,3);
+				double squareSize = 6.75;
+				solvePnP_result = laserline::getRvecTvec(image_captured,patternSize,squareSize);
 
 				// read laser 1
 				ifstream rmatrixL(path_rmatrix);
