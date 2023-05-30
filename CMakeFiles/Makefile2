@@ -60,39 +60,39 @@ CMAKE_SOURCE_DIR = /home/lingbo/Documents/GitHub/AssemblyGuidanceTool
 CMAKE_BINARY_DIR = /home/lingbo/Documents/GitHub/AssemblyGuidanceTool
 
 #=============================================================================
-# Target rules for target CMakeFiles/laserorigin.dir
+# Target rules for target CMakeFiles/laserbeamverification.dir
 
 # All Build rule for target.
-CMakeFiles/laserorigin.dir/all:
-	$(MAKE) -f CMakeFiles/laserorigin.dir/build.make CMakeFiles/laserorigin.dir/depend
-	$(MAKE) -f CMakeFiles/laserorigin.dir/build.make CMakeFiles/laserorigin.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/lingbo/Documents/GitHub/AssemblyGuidanceTool/CMakeFiles --progress-num=3,4 "Built target laserorigin"
-.PHONY : CMakeFiles/laserorigin.dir/all
+CMakeFiles/laserbeamverification.dir/all:
+	$(MAKE) -f CMakeFiles/laserbeamverification.dir/build.make CMakeFiles/laserbeamverification.dir/depend
+	$(MAKE) -f CMakeFiles/laserbeamverification.dir/build.make CMakeFiles/laserbeamverification.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/lingbo/Documents/GitHub/AssemblyGuidanceTool/CMakeFiles --progress-num=3,4 "Built target laserbeamverification"
+.PHONY : CMakeFiles/laserbeamverification.dir/all
 
 # Include target in all.
-all: CMakeFiles/laserorigin.dir/all
+all: CMakeFiles/laserbeamverification.dir/all
 
 .PHONY : all
 
 # Build rule for subdir invocation for target.
-CMakeFiles/laserorigin.dir/rule: cmake_check_build_system
+CMakeFiles/laserbeamverification.dir/rule: cmake_check_build_system
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/lingbo/Documents/GitHub/AssemblyGuidanceTool/CMakeFiles 2
-	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/laserorigin.dir/all
+	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/laserbeamverification.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/lingbo/Documents/GitHub/AssemblyGuidanceTool/CMakeFiles 0
-.PHONY : CMakeFiles/laserorigin.dir/rule
+.PHONY : CMakeFiles/laserbeamverification.dir/rule
 
 # Convenience name for target.
-laserorigin: CMakeFiles/laserorigin.dir/rule
+laserbeamverification: CMakeFiles/laserbeamverification.dir/rule
 
-.PHONY : laserorigin
-
-# clean rule for target.
-CMakeFiles/laserorigin.dir/clean:
-	$(MAKE) -f CMakeFiles/laserorigin.dir/build.make CMakeFiles/laserorigin.dir/clean
-.PHONY : CMakeFiles/laserorigin.dir/clean
+.PHONY : laserbeamverification
 
 # clean rule for target.
-clean: CMakeFiles/laserorigin.dir/clean
+CMakeFiles/laserbeamverification.dir/clean:
+	$(MAKE) -f CMakeFiles/laserbeamverification.dir/build.make CMakeFiles/laserbeamverification.dir/clean
+.PHONY : CMakeFiles/laserbeamverification.dir/clean
+
+# clean rule for target.
+clean: CMakeFiles/laserbeamverification.dir/clean
 
 .PHONY : clean
 

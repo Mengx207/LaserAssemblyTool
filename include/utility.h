@@ -219,14 +219,14 @@ namespace laserline
         params.maxArea = 10e4;
         Ptr<FeatureDetector> blobDetector = SimpleBlobDetector::create(params);
         bool patternfound = findChessboardCorners(image_captured, patternsize, corners_found, CALIB_CB_ASYMMETRIC_GRID);
-        cout <<endl<<endl<< "Corners found: " << endl << corners_found << endl << endl;
+        // cout <<endl<<endl<< "Corners found: " << endl << corners_found << endl << endl;
 
         drawChessboardCorners(image_corners, patternsize, Mat(corners_found), patternfound);
         
         // create chessboard pattern
         // double squareSize = 7;
         vector<Point3f> corners_created = createChessBoardCorners(patternsize, squareSize);
-        cout << "created pattern corners in mm: " << endl << corners_created << endl;
+        // cout << "created pattern corners in mm: " << endl << corners_created << endl;
 
         // import camera matrix and distortion coefficients from txt file
         ifstream intrin("values/intrinsic.txt");
@@ -619,6 +619,7 @@ namespace general
         Point3f corner_created_max_y = solvePnP_result.corners_created[0];
         Point2f corner_found_max_x = solvePnP_result.corners_found[0];
         Point2f corner_found_max_y = solvePnP_result.corners_found[0];
+
         Point3f corner_created_min_x = solvePnP_result.corners_created[0];
         Point3f corner_created_min_y = solvePnP_result.corners_created[0];
         Point2f corner_found_min_x = solvePnP_result.corners_found[0];
@@ -664,50 +665,42 @@ namespace general
             }
         }
 
-
-        // float xRange_created = solvePnP_result.corners_created[14].x - solvePnP_result.corners_created[0].x;
-        // float yRange_created = solvePnP_result.corners_created[14].y - solvePnP_result.corners_created[0].y;
-        // float xRange_found = solvePnP_result.corners_found[14].x - solvePnP_result.corners_found[0].x;
-        // float yRange_found = solvePnP_result.corners_found[14].y - solvePnP_result.corners_found[0].y;
         float xRange_created = corner_created_max_x.x - corner_created_min_x.x;
         float yRange_created = corner_created_max_y.y - corner_created_min_y.y;
         float xRange_found = corner_found_max_x.x - corner_found_min_x.x;
         float yRange_found = corner_found_max_y.y - corner_found_min_y.y;
-        cout<< xRange_created<< endl << yRange_created<< endl<< xRange_found<<endl<<yRange_found<<endl;
-        float magnifier = (xRange_found/xRange_created + yRange_found/yRange_created)/2;
+        // cout<< endl<<"magnifier calculation: "<<endl<<xRange_created<< endl << yRange_created<< endl<< xRange_found<<endl<<yRange_found<<endl;
+        float magnifier = (xRange_found + yRange_found)/(xRange_created+yRange_created);
         // cout<<endl<<"magnifier: "<< magnifier<<endl;
 
         Point oneCorner = imagePoint;
-        cout<<endl<<"One corner on image plane in camera frame: "<<endl<<oneCorner<<endl;
+        cout<<endl<<"Dot coordinates on image plane (imageframe): "<<endl<<oneCorner<<endl;
 
         float corners_found_mid_x = (corner_found_max_x.x + corner_found_min_x.x)/2;
         float corners_found_mid_y = (corner_found_max_y.y + corner_found_min_y.y)/2;
-        cout<<endl<<"center point of pattern: "<<corners_found_mid_x<<" "<<corners_found_mid_y<<endl;
+        // cout<<endl<<"center point of pattern: "<<corners_found_mid_x<<" "<<corners_found_mid_y<<endl;
 
-        Point3d cornorTargetFrame = Point3d((oneCorner.x - corners_found_mid_x)/magnifier, (oneCorner.y - corners_found_mid_y)/magnifier, 0);
-        cout<<endl<<"Same corner on target board in target board frame: "<<endl<<cornorTargetFrame <<endl;
+        Point3d cornerTargetFrame = Point3d((oneCorner.x-corners_found_mid_x) / magnifier, (oneCorner.y-corners_found_mid_y) / magnifier, 0);
+        cout <<"Dot coordinates on target board (targetframe): "<<endl<<cornerTargetFrame <<endl;
         
-        Mat transMatrix;
+        Mat transMatrix; // translation matrix from target board frame to image frame
         hconcat(solvePnP_result.rmatrix, solvePnP_result.tvec, transMatrix);
         Mat arr = Mat::zeros(1,4,CV_64F);
         arr.at<double>(3) = 1;
         vconcat(transMatrix, arr, transMatrix);
         // cout<<endl<<"transform matrix: "<<endl<<transMatrix<<endl;
         
-        Mat cornorTF = Mat(4,1,CV_64F);
-        cornorTF.at<double>(0,0) = cornorTargetFrame.x;
-        cornorTF.at<double>(1,0) = cornorTargetFrame.y;
-        cornorTF.at<double>(2,0) = cornorTargetFrame.z;
-        cornorTF.at<double>(3,0) = 1;
-        Mat cornorImageFrame = transMatrix*cornorTF;
-        Mat cornorCamFrame = cornorImageFrame;
-        cornorCamFrame.at<double>(0,0) = cornorImageFrame.at<double>(0,0) - ((751.82*3.45)/1000);
-        cornorCamFrame.at<double>(0,1) = cornorImageFrame.at<double>(0,1) - ((545.15*3.45)/1000);
-        cout << endl<<"Same corner on target board in camera frame: "<<endl<<cornorCamFrame<<endl;
+        Mat cornerTF = Mat(4,1,CV_64F); //Translate Point3d into 4x1 matrix
+        cornerTF.at<double>(0,0) = cornerTargetFrame.x;
+        cornerTF.at<double>(1,0) = cornerTargetFrame.y;
+        cornerTF.at<double>(2,0) = cornerTargetFrame.z;
+        cornerTF.at<double>(3,0) = 1;
+        Mat cornerCamFrame = transMatrix*cornerTF; //Same dot expressed in Image Frame
+        cout<<"Dot coordinates on target board (cam frame)"<<endl<<cornerCamFrame<<endl;
         Point3d pointCamFrame;
-        pointCamFrame.x = cornorCamFrame.at<double>(0);
-        pointCamFrame.y = cornorCamFrame.at<double>(1);
-        pointCamFrame.z = cornorCamFrame.at<double>(2);
+        pointCamFrame.x = cornerCamFrame.at<double>(0);
+        pointCamFrame.y = cornerCamFrame.at<double>(1);
+        pointCamFrame.z = cornerCamFrame.at<double>(2);
         return pointCamFrame;
 
     }
@@ -721,10 +714,10 @@ namespace general
         // (x-p2.x)/l = (y-p2.y)/m = (z-p2.z)/n
         // Vector form:
         // (p2.x*i + p2.y*j + p2.z*k) + t*(l*i + m*j + n*k) = (p2.x + t*l)*i + (p2.y + t*m)*j + (p2.z + t*n)*k
-        cout<< "vector equation from two 3D points: (" << l<<"*t+"<<p2.x<<","<<m<<"*t+"<<p2.y<<","<<n<<"*t+"<<p2.z<<")"<<endl;
+        cout<< "Vector equation from two 3D points: (" << l<<"*t + "<<p2.x<<", "<<m<<"*t + "<<p2.y<<", "<<n<<"*t + "<<p2.z<<")"<<endl;
         Mat tvec_L = Mat(3, 1, CV_64FC1, tvec_laser_values.data());
         double t = (tvec_L.at<double>(2) - p2.z)/n;
-        cout<<endl<<"Retrace along the line to the laser origin: (" << p2.x + t*l<<","<<p2.y + t*m<<","<<p2.z + t*n<<")"<<endl<<endl;
+        cout<<"Retrace along the line back to the laser origin: (" << p2.x + t*l<<","<<p2.y + t*m<<","<<p2.z + t*n<<")"<<endl<<endl;
 
 
     }

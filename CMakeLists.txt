@@ -30,8 +30,8 @@ target_link_libraries( laserplaneguide
 
 )
 
-add_executable( laserorigin laserorigin.cpp )
-target_link_libraries( laserorigin
+add_executable( laserbeamverification laserbeamverification.cpp )
+target_link_libraries( laserbeamverification
 		       ${OpenCV_LIBS}
 	               ${Pylon_LIBRARIES}
                        ${pylon_camera_INCLUDE_DIRS}
