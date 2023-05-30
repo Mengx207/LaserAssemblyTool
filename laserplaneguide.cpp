@@ -255,17 +255,15 @@ int main(int argc, char* argv[])
 				cv::circle( line_img, projectedInterPoints[0], 5, cv::Scalar(0,0,255), -1, 8, 0 );
 				// cout<<"one point: "<< projectedInterPoints[0]<<endl;
 
-				cv::Mat threshold_output1,threshold_output2;
+				cv::Mat threshold_output;
 				vector<vector<Point> > contours;
   				vector<Vec4i> hierarchy;
-				// cv::threshold(img_grey,threshold_output1,100,255,cv::THRESH_OTSU||cv::THRESH_TRIANGLE);	
-				cv::threshold(img_grey,threshold_output2,200,255,cv::THRESH_BINARY);
-				// imshow("threshold1",threshold_output1);
+				cv::threshold(img_grey,threshold_output,200,255,cv::THRESH_BINARY);
 
-				findContours( threshold_output2, contours, hierarchy, RETR_TREE, CHAIN_APPROX_SIMPLE, Point(0, 0) );
+				findContours( threshold_output, contours, hierarchy, RETR_TREE, CHAIN_APPROX_SIMPLE, Point(0, 0) );
 				vector<RotatedRect> minRect = laserline::findRectangle(contours,100);
-				Mat drawing = Mat::zeros( threshold_output2.size(), CV_8UC3 );
-				Mat rotated_image = threshold_output2.clone();
+				Mat drawing = Mat::zeros( threshold_output.size(), CV_8UC3 );
+				Mat rotated_image = threshold_output.clone();
 
 				if (minRect.size() >= 1)
 				{
@@ -278,7 +276,7 @@ int main(int argc, char* argv[])
 					}
 
 					Mat rotation_matrix = getRotationMatrix2D(minRect[0].center, angle, 1.0);
-					warpAffine(threshold_output2, rotated_image, rotation_matrix, threshold_output2.size());
+					warpAffine(threshold_output, rotated_image, rotation_matrix, threshold_output.size());
 					laserline::uniformity_data uniformity1;
 					uniformity1 = laserline::cropImage(rotated_image);
 					// From pixel number to actual diameter on target board
@@ -291,7 +289,7 @@ int main(int argc, char* argv[])
 				}
 				
 				// cv::imshow( "Contour and Area", drawing );
-				// cv::imshow("threshold2",threshold_output2);
+				// cv::imshow("threshold",threshold_output);
 				cv::imshow("Laser Plane Alignment GUI Window", line_img);	
 				imgs_taken ++;
 			}
