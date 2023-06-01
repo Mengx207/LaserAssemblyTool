@@ -608,6 +608,7 @@ namespace laserline
         return uniformity1;
        
     }
+
 }
 
 namespace general
@@ -670,18 +671,18 @@ namespace general
         float xRange_found = corner_found_max_x.x - corner_found_min_x.x;
         float yRange_found = corner_found_max_y.y - corner_found_min_y.y;
         // cout<< endl<<"magnifier calculation: "<<endl<<xRange_created<< endl << yRange_created<< endl<< xRange_found<<endl<<yRange_found<<endl;
-        float magnifier = (xRange_found + yRange_found)/(xRange_created+yRange_created);
+        float magnifier = (xRange_found + yRange_found)/(xRange_created+yRange_created); //pattern is square
         // cout<<endl<<"magnifier: "<< magnifier<<endl;
 
         Point oneCorner = imagePoint;
-        cout<<endl<<"Dot coordinates on image plane (imageframe): "<<endl<<oneCorner<<endl;
+        cout<<endl<<"Dot coordinates on image plane (imageframe) in pixel: "<<endl<<oneCorner<<endl;
 
         float corners_found_mid_x = (corner_found_max_x.x + corner_found_min_x.x)/2;
         float corners_found_mid_y = (corner_found_max_y.y + corner_found_min_y.y)/2;
         // cout<<endl<<"center point of pattern: "<<corners_found_mid_x<<" "<<corners_found_mid_y<<endl;
-
+        // Origin of the target frame is the center of the pattern, /magnifier transfer pixel to mm
         Point3d cornerTargetFrame = Point3d((oneCorner.x-corners_found_mid_x) / magnifier, (oneCorner.y-corners_found_mid_y) / magnifier, 0);
-        cout <<"Dot coordinates on target board (targetframe): "<<endl<<cornerTargetFrame <<endl;
+        cout <<"Dot coordinates on target board (targetframe) in mm: "<<endl<<cornerTargetFrame <<endl;
         
         Mat transMatrix; // translation matrix from target board frame to image frame
         hconcat(solvePnP_result.rmatrix, solvePnP_result.tvec, transMatrix);
@@ -695,7 +696,7 @@ namespace general
         cornerTF.at<double>(1,0) = cornerTargetFrame.y;
         cornerTF.at<double>(2,0) = cornerTargetFrame.z;
         cornerTF.at<double>(3,0) = 1;
-        Mat cornerCamFrame = transMatrix*cornerTF; //Same dot expressed in Image Frame
+        Mat cornerCamFrame = transMatrix*cornerTF; //Same dot expressed in Cam Frame
         cout<<"Dot coordinates on target board (cam frame)"<<endl<<cornerCamFrame<<endl;
         Point3d pointCamFrame;
         pointCamFrame.x = cornerCamFrame.at<double>(0);
@@ -722,5 +723,58 @@ namespace general
 
     }
 
+     pair<Point2f, Point2f> extractLaserline2Points(Mat whiteline, laserline::solvePnP_result result)
+    {
+        Mat whiteline_blur, whiteline_color;
+        cvtColor(whiteline, whiteline_color, COLOR_GRAY2BGR);
+        blur(whiteline, whiteline_blur, Size(5,5));
+        Canny(whiteline_blur, whiteline_blur, 200, 255, 5);
+
+        vector<Vec2f> lines;
+        HoughLines(whiteline_blur, lines, 1, CV_PI/180, 60, 0, 0 );
+        Mat findline = Mat(whiteline.size().height, whiteline.size().width, CV_8UC3);
+
+        float start_x_total = 0; float start_y_total = 0; float start_x, start_y;
+        float end_x_total = 0; float end_y_total = 0; float end_x, end_y;
+        for( size_t i = 0; i < lines.size(); i++ )
+        {
+            float rho = lines[i][0], theta = lines[i][1];	
+            Point pt1, pt2;
+            double a = cos(theta), b = sin(theta);
+            double x0 = a*rho, y0 = b*rho;
+            pt1.x = cvRound(x0 + 1000*(-b));
+            pt1.y = cvRound(y0 + 1000*(a));
+            pt2.x = cvRound(x0 - 1000*(-b));
+            pt2.y = cvRound(y0 - 1000*(a));
+            start_x_total = start_x_total + pt1.x;
+            start_y_total = start_y_total + pt1.y;
+            end_x_total = end_x_total + pt2.x;
+            end_y_total = end_y_total + pt2.y;
+            // cout<<"ends of line: "<<pt1<<", "<<pt2<<endl;
+            // line( findline, pt1, pt2, Scalar(0,0,255), 1, LINE_AA);
+            line( whiteline_color, pt1, pt2, Scalar(150,100,0), 1, LINE_AA);
+            // circle( whiteline_color, pt1, 5, cv::Scalar(0,0,255), -1, 8, 0 );
+            // circle( whiteline_color, pt2, 5, cv::Scalar(0,0,255), -1, 8, 0 );
+        }
+        start_x = start_x_total/lines.size();
+        start_y = start_y_total/lines.size();
+        end_x = end_x_total/lines.size();
+        end_y = end_y_total/lines.size();
+        Point2f start, end;
+        start.x = cvRound(start_x);
+        start.y = cvRound(start_y);
+        end.x = cvRound(end_x);
+        end.y = cvRound(end_y);
+        // cout<<"start and end points of the line: ("<<start_x<<", "<<start_y<<") ("<<end_x<<", "<<end_y<<")"<<endl;
+        pair<Point2f, Point2f> laserline2Points;
+        laserline2Points.first = start;
+        laserline2Points.second = end;
+        cout<<"cvRounded start and end points of the line: "<<start<<", "<<end<<endl;
+        // line( whiteline_color, start, end, Scalar(0,0,255), 1, LINE_AA);
+        // imshow("White Line", whiteline_color);
+        // imshow("Blurred White Line", whiteline_blur);
+        // waitKey();
+        return laserline2Points;
+    }
 
 }

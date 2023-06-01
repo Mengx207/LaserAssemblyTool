@@ -111,17 +111,17 @@ depend:
 .PHONY : depend
 
 #=============================================================================
-# Target rules for targets named laserbeamverification
+# Target rules for targets named laserverification
 
 # Build rule for target.
-laserbeamverification: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 laserbeamverification
-.PHONY : laserbeamverification
+laserverification: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 laserverification
+.PHONY : laserverification
 
 # fast build rule for target.
-laserbeamverification/fast:
-	$(MAKE) -f CMakeFiles/laserbeamverification.dir/build.make CMakeFiles/laserbeamverification.dir/build
-.PHONY : laserbeamverification/fast
+laserverification/fast:
+	$(MAKE) -f CMakeFiles/laserverification.dir/build.make CMakeFiles/laserverification.dir/build
+.PHONY : laserverification/fast
 
 #=============================================================================
 # Target rules for targets named laserbeamguide
@@ -176,33 +176,6 @@ laserbeamguide.cpp.s:
 	$(MAKE) -f CMakeFiles/laserbeamguide.dir/build.make CMakeFiles/laserbeamguide.dir/laserbeamguide.cpp.s
 .PHONY : laserbeamguide.cpp.s
 
-laserbeamverification.o: laserbeamverification.cpp.o
-
-.PHONY : laserbeamverification.o
-
-# target to build an object file
-laserbeamverification.cpp.o:
-	$(MAKE) -f CMakeFiles/laserbeamverification.dir/build.make CMakeFiles/laserbeamverification.dir/laserbeamverification.cpp.o
-.PHONY : laserbeamverification.cpp.o
-
-laserbeamverification.i: laserbeamverification.cpp.i
-
-.PHONY : laserbeamverification.i
-
-# target to preprocess a source file
-laserbeamverification.cpp.i:
-	$(MAKE) -f CMakeFiles/laserbeamverification.dir/build.make CMakeFiles/laserbeamverification.dir/laserbeamverification.cpp.i
-.PHONY : laserbeamverification.cpp.i
-
-laserbeamverification.s: laserbeamverification.cpp.s
-
-.PHONY : laserbeamverification.s
-
-# target to generate assembly for a file
-laserbeamverification.cpp.s:
-	$(MAKE) -f CMakeFiles/laserbeamverification.dir/build.make CMakeFiles/laserbeamverification.dir/laserbeamverification.cpp.s
-.PHONY : laserbeamverification.cpp.s
-
 laserplaneguide.o: laserplaneguide.cpp.o
 
 .PHONY : laserplaneguide.o
@@ -230,6 +203,33 @@ laserplaneguide.cpp.s:
 	$(MAKE) -f CMakeFiles/laserplaneguide.dir/build.make CMakeFiles/laserplaneguide.dir/laserplaneguide.cpp.s
 .PHONY : laserplaneguide.cpp.s
 
+laserverification.o: laserverification.cpp.o
+
+.PHONY : laserverification.o
+
+# target to build an object file
+laserverification.cpp.o:
+	$(MAKE) -f CMakeFiles/laserverification.dir/build.make CMakeFiles/laserverification.dir/laserverification.cpp.o
+.PHONY : laserverification.cpp.o
+
+laserverification.i: laserverification.cpp.i
+
+.PHONY : laserverification.i
+
+# target to preprocess a source file
+laserverification.cpp.i:
+	$(MAKE) -f CMakeFiles/laserverification.dir/build.make CMakeFiles/laserverification.dir/laserverification.cpp.i
+.PHONY : laserverification.cpp.i
+
+laserverification.s: laserverification.cpp.s
+
+.PHONY : laserverification.s
+
+# target to generate assembly for a file
+laserverification.cpp.s:
+	$(MAKE) -f CMakeFiles/laserverification.dir/build.make CMakeFiles/laserverification.dir/laserverification.cpp.s
+.PHONY : laserverification.cpp.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -237,19 +237,19 @@ help:
 	@echo "... clean"
 	@echo "... depend"
 	@echo "... rebuild_cache"
-	@echo "... laserbeamverification"
+	@echo "... laserverification"
 	@echo "... laserbeamguide"
 	@echo "... edit_cache"
 	@echo "... laserplaneguide"
 	@echo "... laserbeamguide.o"
 	@echo "... laserbeamguide.i"
 	@echo "... laserbeamguide.s"
-	@echo "... laserbeamverification.o"
-	@echo "... laserbeamverification.i"
-	@echo "... laserbeamverification.s"
 	@echo "... laserplaneguide.o"
 	@echo "... laserplaneguide.i"
 	@echo "... laserplaneguide.s"
+	@echo "... laserverification.o"
+	@echo "... laserverification.i"
+	@echo "... laserverification.s"
 .PHONY : help
 
 

@@ -61,8 +61,7 @@ int main(int argc, char* argv[])
 
 		//Create a pylon image that will be used to create an opencv image
 		CPylonImage pylonImage0;
-		Mat src, cam_frame_temp0;
-		Mat line_img;
+		Mat src, cam_frame_temp0, line_img, threshold_output;
 		camera0.Open();
 
 		// These allow us to convert from GrabResultPtr_t to cv::Mat
@@ -117,6 +116,7 @@ int main(int argc, char* argv[])
 			CBooleanParameter(nodemap0, "LineInverter").SetValue(false);
 		}
 
+		laserline::solvePnP_result solvePnP_result;
 		while(waitKey(10) != 'q')
 		{
 			int max_imgs0 = 1;   
@@ -178,8 +178,24 @@ int main(int argc, char* argv[])
 				}
 
 				// Calculate rotation vector and translation vector by a captured image of a pattern
-				laserline::solvePnP_result solvePnP_result;
-				Mat image_captured = imread("images/pattern.png", IMREAD_GRAYSCALE);
+				Mat image_captured;
+				if(argc == 4)
+				{
+					if(argv[3] == string("d1"))
+					{
+						image_captured = imread("images/pattern_d1.png", IMREAD_GRAYSCALE);
+					}
+					if(argv[3] == string("d2"))
+					{
+						image_captured = imread("images/pattern_d2.png", IMREAD_GRAYSCALE);
+					}
+					if(argv[3] == string("d3"))
+					{
+						image_captured = imread("images/pattern_d3.png", IMREAD_GRAYSCALE);
+					}
+				}
+				else {image_captured = imread("images/pattern.png", IMREAD_GRAYSCALE);}
+
 				Size patternSize (5,3);
 				double squareSize = 6.75;
 				solvePnP_result = laserline::getRvecTvec(image_captured,patternSize,squareSize);
@@ -255,7 +271,6 @@ int main(int argc, char* argv[])
 				cv::circle( line_img, projectedInterPoints[0], 5, cv::Scalar(0,0,255), -1, 8, 0 );
 				// cout<<"one point: "<< projectedInterPoints[0]<<endl;
 
-				cv::Mat threshold_output;
 				vector<vector<Point> > contours;
   				vector<Vec4i> hierarchy;
 				cv::threshold(img_grey,threshold_output,200,255,cv::THRESH_BINARY);
@@ -301,7 +316,41 @@ int main(int argc, char* argv[])
 		{
 			imwrite("images/saved_laser_plane/laser_" + string(argv[1]) + "_" + string(argv[2]) + ".jpg", line_img);
 		}
-		else {imwrite("images/saved_laser_beam/laser_" + string(argv[1]) + ".jpg", line_img);}
+		else if (argc == 4)
+		{
+			imwrite("images/saved_laser_plane/laser_" + string(argv[1]) + "_" + string(argv[2]) + "_" + string(argv[3]) + "_MD.jpg", line_img);
+			// imwrite("images/saved_laser_plane/laser_plane_" + string(argv[1]) + "_" + string(argv[2]) + "_" + string(argv[3]) + "_threshold.jpg", threshold_output);
+			system("cd values && mkdir -p laserlinetwopoints && cd laserlinetwopoints");
+			system("touch start_d1.txt && touch end_d1.txt && touch start_d2.txt && touch end_d2.txt && touch start_d3.txt && touch end_d3.txt");
+			
+			pair<Point2f,Point2f> laserline2Points = general::extractLaserline2Points(threshold_output, solvePnP_result);
+			Point3d startCam = general::locationCam2Target( laserline2Points.first, solvePnP_result);
+			Point3d endCam= general::locationCam2Target( laserline2Points.second, solvePnP_result);
+			
+			if(argv[3] == string("d1"))
+			{
+				ofstream start_d1("values/laserlinetwopoints/start_d1.txt");
+				start_d1 << startCam.x <<" "<< startCam.y <<" "<< startCam.z;
+				ofstream end_d1("values/laserlinetwopoints/end_d1.txt");
+				end_d1 << endCam.x <<" "<< endCam.y <<" "<< endCam.z;
+			}
+			else if(argv[3] == string("d2"))
+			{
+				ofstream start_d2("values/laserlinetwopoints/start_d2.txt");
+				start_d2 << startCam.x <<" "<< startCam.y <<" "<< startCam.z;
+				ofstream end_d2("values/laserlinetwopoints/end_d2.txt");
+				end_d2 << endCam.x <<" "<< endCam.y <<" "<< endCam.z;
+			}
+			else if(argv[3] == string("d3"))
+			{
+				ofstream start_d3("values/laserlinetwopoints/start_d3.txt");
+				start_d3 << startCam.x <<" "<< startCam.y <<" "<< startCam.z;
+				ofstream end_d3("values/laserlinetwopoints/end_d3.txt");
+				end_d3 << endCam.x <<" "<< endCam.y <<" "<< endCam.z;
+			}
+			
+		}
+		else {imwrite("images/saved_laser_plane/laser_" + string(argv[1]) + ".jpg", line_img);}
 		std::cout << "Finish saving" << std::endl;	
 
 	}

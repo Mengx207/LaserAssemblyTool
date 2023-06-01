@@ -108,17 +108,16 @@ int main(int argc, char* argv[])
 
 	// cout<<endl<<"read imgPoint: "<<imgPoint_vector<<endl;
 	laserline::solvePnP_result solvePnP_result_d1,solvePnP_result_d2,solvePnP_result_d3;
-	Mat image_captured = imread("images/pattern.png", IMREAD_GRAYSCALE);
+	Mat image_captured_d1, image_captured_d2, image_captured_d3;
+	image_captured_d1 = imread("images/pattern_d1.png", IMREAD_GRAYSCALE);
+	image_captured_d2 = imread("images/pattern_d2.png", IMREAD_GRAYSCALE);
+	image_captured_d3 = imread("images/pattern_d3.png", IMREAD_GRAYSCALE);
+
 	Size patternSize (5,3);
-
-	double squareSize = 6.72;
-	solvePnP_result_d2 = laserline::getRvecTvec(image_captured,patternSize,squareSize);
-
-	squareSize = 7.75;
-	solvePnP_result_d3 = laserline::getRvecTvec(image_captured,patternSize,squareSize);
-
-	squareSize = 5.705;
-	solvePnP_result_d1 = laserline::getRvecTvec(image_captured,patternSize,squareSize);
+	double squareSize = 6.75;
+	solvePnP_result_d2 = laserline::getRvecTvec(image_captured_d2,patternSize,squareSize);
+	solvePnP_result_d3 = laserline::getRvecTvec(image_captured_d3,patternSize,squareSize);
+	solvePnP_result_d1 = laserline::getRvecTvec(image_captured_d1,patternSize,squareSize);
 
     Point3d p1 = general::locationCam2Target( imgPoint_d1, solvePnP_result_d1);
 	Point3d p2 = general::locationCam2Target( imgPoint_d2, solvePnP_result_d2);
@@ -126,34 +125,4 @@ int main(int argc, char* argv[])
 	cout<<endl<<"3 points in camera frame: " << endl <<p1<<" "<<p2<<" "<<p3<<endl;
 	general::lineEquation(p1,p3,tvec_laser_values);
 
-	Mat whiteline = imread("images/whiteline.jpg", IMREAD_GRAYSCALE);
-	vector<Vec2f> lines;
-	HoughLines(whiteline, lines, 1, CV_PI/60, 254, 0, 0 );
-	Mat findline = Mat(whiteline.size().height, whiteline.size().width, CV_8UC3);;
-
-	float start_x_total, start_y_total, start_x, start_y;
-	float end_x_total, end_y_total, end_x, end_y;
-	for( size_t i = 0; i < lines.size(); i++ )
-    {
-        float rho = lines[i][0], theta = lines[i][1];
-        Point pt1, pt2;
-        double a = cos(theta), b = sin(theta);
-        double x0 = a*rho, y0 = b*rho;
-        pt1.x = cvRound(x0 + 1000*(-b));
-        pt1.y = cvRound(y0 + 1000*(a));
-        pt2.x = cvRound(x0 - 1000*(-b));
-        pt2.y = cvRound(y0 - 1000*(a));
-		start_x_total = start_x_total + pt1.x;
-		start_y_total = start_y_total + pt1.y;
-		end_x_total = end_x_total + pt2.x;
-		end_x_total = end_x_total + pt2.y;
-		cout<<"ends of line: "<<pt1<<", "<<pt2<<endl;
-        line( findline, pt1, pt2, Scalar(0,0,255), 1, LINE_AA);
-    }
-	start_x = start_x_total/lines.size();
-	start_y = start_y_total/lines.size();
-	cout<<"start and end points of the line: "<< start_x<<", "<<start_y<<endl;
-	imshow("Detected Lines", findline);
-	imshow("Original White Line", whiteline);
-	waitKey();
 }
