@@ -125,4 +125,103 @@ int main(int argc, char* argv[])
 	cout<<endl<<"3 points in camera frame: " << endl <<p1<<" "<<p2<<" "<<p3<<endl;
 	general::lineEquation(p1,p3,tvec_laser_values);
 
+	/*Laser plane verification----------------------------------------------------------------------------------------------------*/
+	vector<Point3d> start_vector, end_vector;
+	ifstream start_d1("values/laserlinetwopoints/start_d1.txt");
+	ifstream start_d2("values/laserlinetwopoints/start_d2.txt");
+	ifstream start_d3("values/laserlinetwopoints/start_d3.txt");
+	ifstream end_d1("values/laserlinetwopoints/end_d1.txt");
+	ifstream end_d2("values/laserlinetwopoints/end_d2.txt");
+	ifstream end_d3("values/laserlinetwopoints/end_d3.txt");
+	double x, y, z;
+	char comma;
+	
+	while (start_d1 >> x >> comma >> y >> comma >> z)
+	{
+		start_vector.push_back(Point3d(x,y,z));
+	}
+	while (start_d2 >> x >> comma >> y >> comma >> z)
+	{
+		start_vector.push_back(Point3d(x,y,z));
+	}
+	while (start_d3 >> x >> comma >> y >> comma >> z)
+	{
+		start_vector.push_back(Point3d(x,y,z));
+	}
+	while (end_d1 >> x >> comma >> y >> comma >> z)
+	{
+		end_vector.push_back(Point3d(x,y,z));
+	}
+	while (end_d2 >> x >> comma >> y >> comma >> z)
+	{
+		end_vector.push_back(Point3d(x,y,z));
+	}
+	while (end_d3 >> x >> comma >> y >> comma >> z)
+	{
+		end_vector.push_back(Point3d(x,y,z));
+	}
+	cout<<endl<< "start_d1: "<< start_vector[0]<<endl;
+	cout<<endl<< "start_d2: "<< start_vector[1]<<endl;
+	cout<<endl<< "start_d3: "<< start_vector[2]<<endl;
+	cout<<endl<< "end_d1: "<< end_vector[0]<<endl;
+	cout<<endl<< "end_d2: "<< end_vector[1]<<endl;
+	cout<<endl<< "end_d3: "<< end_vector[2]<<endl;
+	vector<double> s1e1,s1e2,s1e3,s2e1,s2e2,s2e3,s3e1,s3e2,s3e3;
+	s1e1.push_back(end_vector[0].x-start_vector[0].x);
+	s1e1.push_back(end_vector[0].y-start_vector[0].y);
+	s1e1.push_back(end_vector[0].z-start_vector[0].z);
+
+	s1e2.push_back(end_vector[1].x-start_vector[0].x);
+	s1e2.push_back(end_vector[1].y-start_vector[0].y);
+	s1e2.push_back(end_vector[1].z-start_vector[0].z);
+
+	s1e3.push_back(end_vector[2].x-start_vector[0].x);
+	s1e3.push_back(end_vector[2].y-start_vector[0].y);
+	s1e3.push_back(end_vector[2].z-start_vector[0].z);
+
+	s2e1.push_back(end_vector[0].x-start_vector[1].x);
+	s2e1.push_back(end_vector[0].y-start_vector[1].y);
+	s2e1.push_back(end_vector[0].z-start_vector[1].z);
+
+	s2e2.push_back(end_vector[1].x-start_vector[1].x);
+	s2e2.push_back(end_vector[1].y-start_vector[1].y);
+	s2e2.push_back(end_vector[1].z-start_vector[1].z);
+
+	s2e3.push_back(end_vector[2].x-start_vector[1].x);
+	s2e3.push_back(end_vector[2].y-start_vector[1].y);
+	s2e3.push_back(end_vector[2].z-start_vector[1].z);
+
+	s3e1.push_back(end_vector[0].x-start_vector[2].x);
+	s3e1.push_back(end_vector[0].y-start_vector[2].y);
+	s3e1.push_back(end_vector[0].z-start_vector[2].z);
+
+	s3e2.push_back(end_vector[1].x-start_vector[2].x);
+	s3e2.push_back(end_vector[1].y-start_vector[2].y);
+	s3e2.push_back(end_vector[1].z-start_vector[2].z);
+
+	s3e3.push_back(end_vector[2].x-start_vector[2].x);
+	s3e3.push_back(end_vector[2].y-start_vector[2].y);
+	s3e3.push_back(end_vector[2].z-start_vector[2].z);
+
+	vector<double> N112 = laserline::crossProduct(s1e1,s1e2);
+	auto max_it = max_element(begin(N112), end(N112));
+	vector<double> N123 = laserline::crossProduct(s1e2,s1e3);
+	vector<double> N113 = laserline::crossProduct(s1e1,s1e3);
+	vector<double> N212 = laserline::crossProduct(s2e1,s2e2);
+	vector<double> N223 = laserline::crossProduct(s2e2,s2e3);
+	vector<double> N213 = laserline::crossProduct(s2e1,s2e3);
+	vector<double> N312 = laserline::crossProduct(s3e1,s3e2);
+	vector<double> N323 = laserline::crossProduct(s3e2,s3e3);
+	vector<double> N313 = laserline::crossProduct(s3e1,s3e3);
+
+	cout << endl << "N112: " << N112[0]/N112[2] << "," << N112[1]/N112[2] << "," << N112[2]/N112[2] << endl;
+	cout << endl << "N123: " << N123[0]/N123[2] << "," << N123[1]/N123[2] << "," << N123[2]/N123[2] << endl;	
+	cout << endl << "N113: " << N113[0]/N113[2] << "," << N113[1]/N113[2] << "," << N113[2]/N113[2] << endl;
+	cout << endl << "N212: " << N212[0]/N212[2] << "," << N212[1]/N212[2] << "," << N212[2]/N212[2] << endl;
+	cout << endl << "N223: " << N223[0]/N223[2] << "," << N223[1]/N223[2] << "," << N223[2]/N223[2] << endl;
+	cout << endl << "N213: " << N213[0]/N213[2] << "," << N213[1]/N213[2] << "," << N213[2]/N213[2] << endl;
+	cout << endl << "N312: " << N312[0]/N312[2] << "," << N312[1]/N312[2] << "," << N312[2]/N312[2] << endl;
+	cout << endl << "N323: " << N323[0]/N323[2] << "," << N323[1]/N323[2] << "," << N323[2]/N323[2] << endl;
+	cout << endl << "N313: " << N313[0]/N313[2] << "," << N313[1]/N313[2] << "," << N313[2]/N313[2] << endl;
+
 }

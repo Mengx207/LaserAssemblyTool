@@ -752,7 +752,7 @@ namespace general
             end_y_total = end_y_total + pt2.y;
             // cout<<"ends of line: "<<pt1<<", "<<pt2<<endl;
             // line( findline, pt1, pt2, Scalar(0,0,255), 1, LINE_AA);
-            line( whiteline_color, pt1, pt2, Scalar(150,100,0), 1, LINE_AA);
+            // line( whiteline_color, pt1, pt2, Scalar(150,100,0), 1, LINE_AA);
             // circle( whiteline_color, pt1, 5, cv::Scalar(0,0,255), -1, 8, 0 );
             // circle( whiteline_color, pt2, 5, cv::Scalar(0,0,255), -1, 8, 0 );
         }

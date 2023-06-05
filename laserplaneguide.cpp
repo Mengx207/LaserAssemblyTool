@@ -312,6 +312,7 @@ int main(int argc, char* argv[])
 		}
 		std::cout << std::endl << "Saving images" << std::endl;	
 		system("cd images && mkdir -p saved_laser_plane");
+		
 		if (argc == 3)
 		{
 			imwrite("images/saved_laser_plane/laser_" + string(argv[1]) + "_" + string(argv[2]) + ".jpg", line_img);
@@ -319,34 +320,51 @@ int main(int argc, char* argv[])
 		else if (argc == 4)
 		{
 			imwrite("images/saved_laser_plane/laser_" + string(argv[1]) + "_" + string(argv[2]) + "_" + string(argv[3]) + "_MD.jpg", line_img);
-			// imwrite("images/saved_laser_plane/laser_plane_" + string(argv[1]) + "_" + string(argv[2]) + "_" + string(argv[3]) + "_threshold.jpg", threshold_output);
+			// imwrite("images/saved_laser_plane/laser_plane_" + string(argv[1]) + "_" + string(argv[2]) + "_" + string(argv[3]) + "_threshold.jpg", threshold_output)
+			Mat threshold_output1;
+
+			/*Test for threshold image at different distances*/
+			if(argv[3] == string("d1"))
+			{threshold_output1 = imread("images/saved_laser_plane/laser_plane_1_d1_threshold.jpg", IMREAD_GRAYSCALE);}
+			else if(argv[3] == string("d2"))
+			{threshold_output1 = imread("images/saved_laser_plane/laser_plane_1_d2_threshold.jpg", IMREAD_GRAYSCALE);}
+			else if(argv[3] == string("d3"))
+			{threshold_output1 = imread("images/saved_laser_plane/laser_plane_1_d3_threshold.jpg", IMREAD_GRAYSCALE);}
+
 			system("cd values && mkdir -p laserlinetwopoints && cd laserlinetwopoints");
-			system("touch start_d1.txt && touch end_d1.txt && touch start_d2.txt && touch end_d2.txt && touch start_d3.txt && touch end_d3.txt");
-			
-			pair<Point2f,Point2f> laserline2Points = general::extractLaserline2Points(threshold_output, solvePnP_result);
+			system("touch start.txt && touch start_d1.txt && touch end_d1.txt && touch start_d2.txt && touch end_d2.txt && touch start_d3.txt && touch end_d3.txt");
+			pair<Point2f,Point2f> laserline2Points = general::extractLaserline2Points(threshold_output1, solvePnP_result);
 			Point3d startCam = general::locationCam2Target( laserline2Points.first, solvePnP_result);
 			Point3d endCam= general::locationCam2Target( laserline2Points.second, solvePnP_result);
-			
+			/*record the start and end points of the laser line in camera frame*/
+			// ofstream start("values/laserlinetwopoints/start.txt");
+			// if(argv[3] == string("d1"))
+			// {start << startCam.x <<","<< startCam.y <<","<< startCam.z;}
+			// if(argv[3] == string("d2"))
+			// {start << endl << startCam.x <<","<< startCam.y <<","<< startCam.z;}
+			// if(argv[3] == string("d3"))
+			// {start << endl << endl << startCam.x <<","<< startCam.y <<","<< startCam.z;}
+
 			if(argv[3] == string("d1"))
 			{
 				ofstream start_d1("values/laserlinetwopoints/start_d1.txt");
-				start_d1 << startCam.x <<" "<< startCam.y <<" "<< startCam.z;
+				start_d1 << startCam.x <<","<< startCam.y <<","<< startCam.z;
 				ofstream end_d1("values/laserlinetwopoints/end_d1.txt");
-				end_d1 << endCam.x <<" "<< endCam.y <<" "<< endCam.z;
+				end_d1 << endCam.x <<","<< endCam.y <<","<< endCam.z;
 			}
 			else if(argv[3] == string("d2"))
 			{
 				ofstream start_d2("values/laserlinetwopoints/start_d2.txt");
-				start_d2 << startCam.x <<" "<< startCam.y <<" "<< startCam.z;
+				start_d2 << endl << startCam.x <<","<< startCam.y <<","<< startCam.z;
 				ofstream end_d2("values/laserlinetwopoints/end_d2.txt");
-				end_d2 << endCam.x <<" "<< endCam.y <<" "<< endCam.z;
+				end_d2 << endCam.x <<","<< endCam.y <<","<< endCam.z;
 			}
 			else if(argv[3] == string("d3"))
 			{
 				ofstream start_d3("values/laserlinetwopoints/start_d3.txt");
-				start_d3 << startCam.x <<" "<< startCam.y <<" "<< startCam.z;
+				start_d3 << endl << endl << startCam.x <<","<< startCam.y <<","<< startCam.z;
 				ofstream end_d3("values/laserlinetwopoints/end_d3.txt");
-				end_d3 << endCam.x <<" "<< endCam.y <<" "<< endCam.z;
+				end_d3 << endCam.x <<","<< endCam.y <<","<< endCam.z;
 			}
 			
 		}
