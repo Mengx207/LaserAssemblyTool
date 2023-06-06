@@ -135,7 +135,7 @@ int main(int argc, char* argv[])
 	ifstream end_d3("values/laserlinetwopoints/end_d3.txt");
 	double x, y, z;
 	char comma;
-	
+	// Read Point3d in vector
 	while (start_d1 >> x >> comma >> y >> comma >> z)
 	{
 		start_vector.push_back(Point3d(x,y,z));
@@ -166,62 +166,59 @@ int main(int argc, char* argv[])
 	cout<<endl<< "end_d1: "<< end_vector[0]<<endl;
 	cout<<endl<< "end_d2: "<< end_vector[1]<<endl;
 	cout<<endl<< "end_d3: "<< end_vector[2]<<endl;
-	vector<double> s1e1,s1e2,s1e3,s2e1,s2e2,s2e3,s3e1,s3e2,s3e3;
-	s1e1.push_back(end_vector[0].x-start_vector[0].x);
-	s1e1.push_back(end_vector[0].y-start_vector[0].y);
-	s1e1.push_back(end_vector[0].z-start_vector[0].z);
+	
+	// Vector for vectors in 3D space from start to end points
+	vector<vector<double>> vect3D_collection;
+	for (int i=0; i<9; i++)
+	{
+		for(int s=0; s<3; s++)
+		{
+			vector<double> v1;
+			for(int e=0; e<3; e++)
+			{
+				vector<double> v1;
+				v1.push_back(end_vector[e].x-start_vector[s].x);
+				v1.push_back(end_vector[e].y-start_vector[s].y);
+				v1.push_back(end_vector[e].z-start_vector[s].z);
+				vect3D_collection.push_back(v1);
+			}
+		}
+	}
 
-	s1e2.push_back(end_vector[1].x-start_vector[0].x);
-	s1e2.push_back(end_vector[1].y-start_vector[0].y);
-	s1e2.push_back(end_vector[1].z-start_vector[0].z);
+	double min;
+	vector<vector<double>> normalVector_collection;
+	for(int i=0; i<3; i++)
+	{
+		normalVector_collection.push_back(laserline::crossProduct(vect3D_collection[3*i],vect3D_collection[3*i+1]));
+		min = *min_element(normalVector_collection[3*i].begin(), normalVector_collection[3*i].end());
+		transform(normalVector_collection[3*i].begin(), normalVector_collection[3*i].end(), normalVector_collection[3*i].begin(), [min](double &c){ return c/min; });
 
-	s1e3.push_back(end_vector[2].x-start_vector[0].x);
-	s1e3.push_back(end_vector[2].y-start_vector[0].y);
-	s1e3.push_back(end_vector[2].z-start_vector[0].z);
+		normalVector_collection.push_back(laserline::crossProduct(vect3D_collection[3*i],vect3D_collection[3*i+2]));
+		min = *min_element(normalVector_collection[3*i+1].begin(), normalVector_collection[3*i+1].end());
+		transform(normalVector_collection[3*i+1].begin(), normalVector_collection[3*i+1].end(), normalVector_collection[3*i+1].begin(), [min](double &c){ return c/min; });
 
-	s2e1.push_back(end_vector[0].x-start_vector[1].x);
-	s2e1.push_back(end_vector[0].y-start_vector[1].y);
-	s2e1.push_back(end_vector[0].z-start_vector[1].z);
+		normalVector_collection.push_back(laserline::crossProduct(vect3D_collection[3*i+1],vect3D_collection[3*i+2]));
+		min = *min_element(normalVector_collection[3*i+2].begin(), normalVector_collection[3*i+2].end());
+		transform(normalVector_collection[3*i+2].begin(), normalVector_collection[3*i+2].end(), normalVector_collection[3*i+2].begin(), [min](double &c){ return c/min; });
+	}
 
-	s2e2.push_back(end_vector[1].x-start_vector[1].x);
-	s2e2.push_back(end_vector[1].y-start_vector[1].y);
-	s2e2.push_back(end_vector[1].z-start_vector[1].z);
+	double xSum = 0; double ySum = 0; double zSum = 0;
+	Point3d norm_avg;
+	for(int i=0; i<9; i++)
+	{
+		cout << endl << "normal vector: " << normalVector_collection[i][0] << "," << normalVector_collection[i][1] << "," << normalVector_collection[i][2]<< endl;
+		xSum = xSum + normalVector_collection[i][0];
+		ySum = ySum + normalVector_collection[i][1];
+		zSum = zSum + normalVector_collection[i][2];
+	}
+	cout<<endl<<xSum<<","<<ySum<<","<<zSum<<endl;
+	norm_avg.x = xSum/9;
+	norm_avg.y = ySum/9;
+	norm_avg.z = zSum/9;
+	cout<<endl<<"Normal vector average: "<< norm_avg<<endl;
 
-	s2e3.push_back(end_vector[2].x-start_vector[1].x);
-	s2e3.push_back(end_vector[2].y-start_vector[1].y);
-	s2e3.push_back(end_vector[2].z-start_vector[1].z);
-
-	s3e1.push_back(end_vector[0].x-start_vector[2].x);
-	s3e1.push_back(end_vector[0].y-start_vector[2].y);
-	s3e1.push_back(end_vector[0].z-start_vector[2].z);
-
-	s3e2.push_back(end_vector[1].x-start_vector[2].x);
-	s3e2.push_back(end_vector[1].y-start_vector[2].y);
-	s3e2.push_back(end_vector[1].z-start_vector[2].z);
-
-	s3e3.push_back(end_vector[2].x-start_vector[2].x);
-	s3e3.push_back(end_vector[2].y-start_vector[2].y);
-	s3e3.push_back(end_vector[2].z-start_vector[2].z);
-
-	vector<double> N112 = laserline::crossProduct(s1e1,s1e2);
-	auto max_it = max_element(begin(N112), end(N112));
-	vector<double> N123 = laserline::crossProduct(s1e2,s1e3);
-	vector<double> N113 = laserline::crossProduct(s1e1,s1e3);
-	vector<double> N212 = laserline::crossProduct(s2e1,s2e2);
-	vector<double> N223 = laserline::crossProduct(s2e2,s2e3);
-	vector<double> N213 = laserline::crossProduct(s2e1,s2e3);
-	vector<double> N312 = laserline::crossProduct(s3e1,s3e2);
-	vector<double> N323 = laserline::crossProduct(s3e2,s3e3);
-	vector<double> N313 = laserline::crossProduct(s3e1,s3e3);
-
-	cout << endl << "N112: " << N112[0]/N112[2] << "," << N112[1]/N112[2] << "," << N112[2]/N112[2] << endl;
-	cout << endl << "N123: " << N123[0]/N123[2] << "," << N123[1]/N123[2] << "," << N123[2]/N123[2] << endl;	
-	cout << endl << "N113: " << N113[0]/N113[2] << "," << N113[1]/N113[2] << "," << N113[2]/N113[2] << endl;
-	cout << endl << "N212: " << N212[0]/N212[2] << "," << N212[1]/N212[2] << "," << N212[2]/N212[2] << endl;
-	cout << endl << "N223: " << N223[0]/N223[2] << "," << N223[1]/N223[2] << "," << N223[2]/N223[2] << endl;
-	cout << endl << "N213: " << N213[0]/N213[2] << "," << N213[1]/N213[2] << "," << N213[2]/N213[2] << endl;
-	cout << endl << "N312: " << N312[0]/N312[2] << "," << N312[1]/N312[2] << "," << N312[2]/N312[2] << endl;
-	cout << endl << "N323: " << N323[0]/N323[2] << "," << N323[1]/N323[2] << "," << N323[2]/N323[2] << endl;
-	cout << endl << "N313: " << N313[0]/N313[2] << "," << N313[1]/N313[2] << "," << N313[2]/N313[2] << endl;
+	laserline::laser_plane laser_plane;
+	laser_plane = laserline::laserPlane(rmatrix_laser_values, tvec_laser_values);
+	cout<<endl<<"Normal vector of ideal laser plane: "<< laser_plane.normalvector[0]<<","<<laser_plane.normalvector[1]<<","<<laser_plane.normalvector[2]<<endl;
 
 }

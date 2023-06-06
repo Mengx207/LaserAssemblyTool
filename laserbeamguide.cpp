@@ -186,7 +186,24 @@ int main(int argc, char* argv[])
 
 				// Calculate rotation vector and translation vector by a captured image of a pattern
 				laserline::solvePnP_result solvePnP_result;
-				Mat image_captured = imread("images/pattern.png", IMREAD_GRAYSCALE);
+				Mat image_captured;
+				if(argc == 4)
+				{
+					if(argv[3] == string("d1"))
+					{
+						image_captured = imread("images/pattern_d1.png", IMREAD_GRAYSCALE);
+					}
+					if(argv[3] == string("d2"))
+					{
+						image_captured = imread("images/pattern_d2.png", IMREAD_GRAYSCALE);
+					}
+					if(argv[3] == string("d3"))
+					{
+						image_captured = imread("images/pattern_d3.png", IMREAD_GRAYSCALE);
+					}
+				}
+				else {image_captured = imread("images/pattern_d2.png", IMREAD_GRAYSCALE);}
+
 				Size patternSize (5,3);
 				double squareSize = 6.75;
 				solvePnP_result = laserline::getRvecTvec(image_captured, patternSize, squareSize);

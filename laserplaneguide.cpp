@@ -194,7 +194,7 @@ int main(int argc, char* argv[])
 						image_captured = imread("images/pattern_d3.png", IMREAD_GRAYSCALE);
 					}
 				}
-				else {image_captured = imread("images/pattern.png", IMREAD_GRAYSCALE);}
+				else {image_captured = imread("images/pattern_d2.png", IMREAD_GRAYSCALE);}
 
 				Size patternSize (5,3);
 				double squareSize = 6.75;
@@ -334,6 +334,7 @@ int main(int argc, char* argv[])
 			system("cd values && mkdir -p laserlinetwopoints && cd laserlinetwopoints");
 			system("touch start.txt && touch start_d1.txt && touch end_d1.txt && touch start_d2.txt && touch end_d2.txt && touch start_d3.txt && touch end_d3.txt");
 			pair<Point2f,Point2f> laserline2Points = general::extractLaserline2Points(threshold_output1, solvePnP_result);
+			cout<<"Pair of end points of actual laser line on image plane: "<< laserline2Points.first << ", " << laserline2Points.second;
 			Point3d startCam = general::locationCam2Target( laserline2Points.first, solvePnP_result);
 			Point3d endCam= general::locationCam2Target( laserline2Points.second, solvePnP_result);
 			/*record the start and end points of the laser line in camera frame*/
