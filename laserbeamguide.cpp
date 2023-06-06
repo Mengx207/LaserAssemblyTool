@@ -375,9 +375,9 @@ int main(int argc, char* argv[])
 				laserdot::HMI(dot_img, size_avg, min_size, non_zero, nom_distance, center_distance);
 				laserdot::GreenLight(dot_img, last_min_size, size_avg, nom_distance, center_distance);
 				
-				// cv::imshow("img_grey_filtered_dot", img_grey_filtered_dot);	
-				// cv::imshow("threshold output", threshold_output);
-				// cv::imshow("Contour and Rectangle", drawing);	  
+				cv::imshow("img_grey_filtered_dot", img_grey_filtered_dot);	
+				cv::imshow("threshold output", threshold_output);
+				cv::imshow("Contour and Rectangle", drawing);	  
 				cv::imshow("Laser Beam Alignment Window", dot_img);							
 				imgs_taken0++;
 			}
