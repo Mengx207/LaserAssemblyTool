@@ -106,24 +106,23 @@ int main(int argc, char* argv[])
 	imgPoint_d3.x = imgPoint_d3_vector[0];
 	imgPoint_d3.y = imgPoint_d3_vector[1];
 
-	// cout<<endl<<"read imgPoint: "<<imgPoint_vector<<endl;
 	laserline::solvePnP_result solvePnP_result_d1,solvePnP_result_d2,solvePnP_result_d3;
-	Mat image_captured_d1, image_captured_d2, image_captured_d3;
-	image_captured_d1 = imread("images/pattern_d1.png", IMREAD_GRAYSCALE);
-	image_captured_d2 = imread("images/pattern_d2.png", IMREAD_GRAYSCALE);
-	image_captured_d3 = imread("images/pattern_d3.png", IMREAD_GRAYSCALE);
+	// Mat image_captured_d1, image_captured_d2, image_captured_d3;
+	// image_captured_d1 = imread("images/pattern_d1.png", IMREAD_GRAYSCALE);
+	// image_captured_d2 = imread("images/pattern_d2.png", IMREAD_GRAYSCALE);
+	// image_captured_d3 = imread("images/pattern_d3.png", IMREAD_GRAYSCALE);
 
-	Size patternSize (5,3);
-	double squareSize = 6.75;
-	solvePnP_result_d2 = laserline::getRvecTvec(image_captured_d2,patternSize,squareSize);
-	solvePnP_result_d3 = laserline::getRvecTvec(image_captured_d3,patternSize,squareSize);
-	solvePnP_result_d1 = laserline::getRvecTvec(image_captured_d1,patternSize,squareSize);
+	// Size patternSize (5,3);
+	// double squareSize = 6.75;
+	// solvePnP_result_d2 = laserline::getRvecTvec(image_captured_d2,patternSize,squareSize);
+	// solvePnP_result_d3 = laserline::getRvecTvec(image_captured_d3,patternSize,squareSize);
+	// solvePnP_result_d1 = laserline::getRvecTvec(image_captured_d1,patternSize,squareSize);
 
-    Point3d p1 = general::locationCam2Target( imgPoint_d1, solvePnP_result_d1);
-	Point3d p2 = general::locationCam2Target( imgPoint_d2, solvePnP_result_d2);
-	Point3d p3 = general::locationCam2Target( imgPoint_d3, solvePnP_result_d3);
-	cout<<endl<<"3 points in camera frame: " << endl <<p1<<" "<<p2<<" "<<p3<<endl;
-	general::lineEquation(p1,p3,tvec_laser_values);
+    // Point3d p1 = general::locationCam2Target( imgPoint_d1, solvePnP_result_d1);
+	// Point3d p2 = general::locationCam2Target( imgPoint_d2, solvePnP_result_d2);
+	// Point3d p3 = general::locationCam2Target( imgPoint_d3, solvePnP_result_d3);
+	// cout<<endl<<"3 points in camera frame: " << endl <<p1<<" "<<p2<<" "<<p3<<endl;
+	// general::lineEquation(p1,p3,tvec_laser_values);
 
 	/*Laser plane verification----------------------------------------------------------------------------------------------------*/
 	vector<Point3d> start_vector, end_vector;
@@ -160,6 +159,7 @@ int main(int argc, char* argv[])
 	{
 		end_vector.push_back(Point3d(x,y,z));
 	}
+
 	cout<<endl<< "start_d1: "<< start_vector[0]<<endl;
 	cout<<endl<< "start_d2: "<< start_vector[1]<<endl;
 	cout<<endl<< "start_d3: "<< start_vector[2]<<endl;
@@ -169,26 +169,31 @@ int main(int argc, char* argv[])
 	
 	// Vector for vectors in 3D space from start to end points
 	vector<vector<double>> vect3D_collection;
-	for (int i=0; i<9; i++)
+
+	for(int s=0; s<3; s++)
 	{
-		for(int s=0; s<3; s++)
+		vector<double> v1;
+		for(int e=0; e<3; e++)
 		{
 			vector<double> v1;
-			for(int e=0; e<3; e++)
-			{
-				vector<double> v1;
-				v1.push_back(end_vector[e].x-start_vector[s].x);
-				v1.push_back(end_vector[e].y-start_vector[s].y);
-				v1.push_back(end_vector[e].z-start_vector[s].z);
-				vect3D_collection.push_back(v1);
-			}
+			v1.push_back(end_vector[e].x-start_vector[s].x);
+			v1.push_back(end_vector[e].y-start_vector[s].y);
+			v1.push_back(end_vector[e].z-start_vector[s].z);
+			vect3D_collection.push_back(v1);
 		}
 	}
-
 	double min;
 	vector<vector<double>> normalVector_collection;
 	for(int i=0; i<3; i++)
 	{
+		// normalVector_collection.push_back(laserline::crossProduct(vect3D_collection[0],vect3D_collection[1]));
+		// min = *min_element(normalVector_collection[0].begin(), normalVector_collection[0].end());
+		// transform(normalVector_collection[0].begin(), normalVector_collection[0].end(), normalVector_collection[0].begin(), [min](double &c){ return c/min; });
+
+		// normalVector_collection.push_back(laserline::crossProduct(vect3D_collection[2],vect3D_collection[3]));
+		// min = *min_element(normalVector_collection[1].begin(), normalVector_collection[1].end());
+		// transform(normalVector_collection[1].begin(), normalVector_collection[1].end(), normalVector_collection[1].begin(), [min](double &c){ return c/min; });
+
 		normalVector_collection.push_back(laserline::crossProduct(vect3D_collection[3*i],vect3D_collection[3*i+1]));
 		min = *min_element(normalVector_collection[3*i].begin(), normalVector_collection[3*i].end());
 		transform(normalVector_collection[3*i].begin(), normalVector_collection[3*i].end(), normalVector_collection[3*i].begin(), [min](double &c){ return c/min; });

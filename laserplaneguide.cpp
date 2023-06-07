@@ -184,20 +184,29 @@ int main(int argc, char* argv[])
 					if(argv[3] == string("d1"))
 					{
 						image_captured = imread("images/pattern_d1.png", IMREAD_GRAYSCALE);
+						imshow("pattern image", image_captured);
+						// waitKey();
 					}
 					if(argv[3] == string("d2"))
 					{
 						image_captured = imread("images/pattern_d2.png", IMREAD_GRAYSCALE);
+						imshow("pattern image", image_captured);
+						// waitKey();
 					}
 					if(argv[3] == string("d3"))
 					{
 						image_captured = imread("images/pattern_d3.png", IMREAD_GRAYSCALE);
+						imshow("pattern image", image_captured);
+						// waitKey();
 					}
 				}
 				else {image_captured = imread("images/pattern_d2.png", IMREAD_GRAYSCALE);}
 
-				Size patternSize (5,3);
-				double squareSize = 6.75;
+				// Size patternSize (5,3);
+				// double squareSize = 6.75;
+				Size patternSize (7,4);
+				double squareSize = 7;
+
 				solvePnP_result = laserline::getRvecTvec(image_captured,patternSize,squareSize);
 
 				// read laser 1
@@ -216,7 +225,7 @@ int main(int argc, char* argv[])
 				// find target board plane in cam frame
 				pair<vector<double>,vector<double>>target = laserline::targetBoardPlane(solvePnP_result.rmatrix, solvePnP_result.tvec);
 
-				laserline::laser_plane laser_1, laser_2, laser_3;
+				laserline::laser_plane laser_1;
 				laser_1 = laserline::laserPlane(rmatrix_laser_values, tvec_laser_values);
 				
 				// find intersection between laser beam and target board
@@ -321,19 +330,18 @@ int main(int argc, char* argv[])
 		{
 			imwrite("images/saved_laser_plane/laser_" + string(argv[1]) + "_" + string(argv[2]) + "_" + string(argv[3]) + "_MD.jpg", line_img);
 			imwrite("images/saved_laser_plane/laser_plane_" + string(argv[1]) + "_" + string(argv[2]) + "_" + string(argv[3]) + "_threshold.jpg", threshold_output);
-			Mat threshold_output1;
-
+			// Mat threshold_output1;
 			/*Test for threshold image at different distances*/
-			if(argv[3] == string("d1"))
-			{threshold_output1 = imread("images/saved_laser_plane/laser_plane_1_d1_threshold.jpg", IMREAD_GRAYSCALE);}
-			else if(argv[3] == string("d2"))
-			{threshold_output1 = imread("images/saved_laser_plane/laser_plane_1_d2_threshold.jpg", IMREAD_GRAYSCALE);}
-			else if(argv[3] == string("d3"))
-			{threshold_output1 = imread("images/saved_laser_plane/laser_plane_1_d3_threshold.jpg", IMREAD_GRAYSCALE);}
+			// if(argv[3] == string("d1"))
+			// {threshold_output1 = imread("images/saved_laser_plane/laser_plane_1_d1_threshold.jpg", IMREAD_GRAYSCALE);}
+			// else if(argv[3] == string("d2"))
+			// {threshold_output1 = imread("images/saved_laser_plane/laser_plane_1_d2_threshold.jpg", IMREAD_GRAYSCALE);}
+			// else if(argv[3] == string("d3"))
+			// {threshold_output1 = imread("images/saved_laser_plane/laser_plane_1_d3_threshold.jpg", IMREAD_GRAYSCALE);}
 
 			system("cd values && mkdir -p laserlinetwopoints && cd laserlinetwopoints");
 			system("touch start.txt && touch start_d1.txt && touch end_d1.txt && touch start_d2.txt && touch end_d2.txt && touch start_d3.txt && touch end_d3.txt");
-			pair<Point2f,Point2f> laserline2Points = general::extractLaserline2Points(threshold_output1, solvePnP_result);
+			pair<Point2f,Point2f> laserline2Points = general::extractLaserline2Points(threshold_output, solvePnP_result);
 			cout<<"Pair of end points of actual laser line on image plane: "<< laserline2Points.first << ", " << laserline2Points.second;
 			Point3d startCam = general::locationCam2Target( laserline2Points.first, solvePnP_result);
 			Point3d endCam= general::locationCam2Target( laserline2Points.second, solvePnP_result);

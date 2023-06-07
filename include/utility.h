@@ -189,7 +189,7 @@ namespace laserline
         {
             for( int j = 0; j < patternsize.width; j++ )
             {
-                centered_board_corners.push_back(Point3f((j*squareSize)-2*squareSize, (i*squareSize)-squareSize, 0.0));
+                centered_board_corners.push_back(Point3f((j*squareSize)-2*squareSize, squareSize-squareSize*i, 0.0));
             }
         }
 
@@ -219,14 +219,14 @@ namespace laserline
         params.maxArea = 10e4;
         Ptr<FeatureDetector> blobDetector = SimpleBlobDetector::create(params);
         bool patternfound = findChessboardCorners(image_captured, patternsize, corners_found, CALIB_CB_ASYMMETRIC_GRID);
-        // cout <<endl<<endl<< "Corners found: " << endl << corners_found << endl << endl;
+        cout <<endl<<endl<< "Corners found: " << endl << corners_found << endl << endl;
 
         drawChessboardCorners(image_corners, patternsize, Mat(corners_found), patternfound);
         
         // create chessboard pattern
         // double squareSize = 7;
         vector<Point3f> corners_created = createChessBoardCorners(patternsize, squareSize);
-        // cout << "created pattern corners in mm: " << endl << corners_created << endl;
+        cout << "created pattern corners in mm: " << endl << corners_created << endl;
 
         // import camera matrix and distortion coefficients from txt file
         ifstream intrin("values/intrinsic.txt");
@@ -769,11 +769,13 @@ namespace general
         pair<Point2f, Point2f> laserline2Points;
         laserline2Points.first = start;
         laserline2Points.second = end;
-        cout<<"cvRounded start and end points of the line: "<<start<<", "<<end<<endl;
-        // line( whiteline_color, start, end, Scalar(0,0,255), 1, LINE_AA);
-        // imshow("White Line", whiteline_color);
+        cout<<"cvRounded start and end points of the line on image in image frame: "<<start<<", "<<end<<endl;
+        line( whiteline_color, start, end, Scalar(0,0,255), 1, LINE_AA);
+        circle(whiteline_color, start, 2, Scalar(0,0,255),3);
+        circle(whiteline_color, end, 2, Scalar(0,0,255),3);
+        imshow("White Line", whiteline_color);
         // imshow("Blurred White Line", whiteline_blur);
-        // waitKey();
+        waitKey();
         return laserline2Points;
     }
 
