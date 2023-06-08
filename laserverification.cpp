@@ -106,14 +106,14 @@ int main(int argc, char* argv[])
 	imgPoint_d3.x = imgPoint_d3_vector[0];
 	imgPoint_d3.y = imgPoint_d3_vector[1];
 
-	laserline::solvePnP_result solvePnP_result_d1,solvePnP_result_d2,solvePnP_result_d3;
+	// laserline::solvePnP_result solvePnP_result_d1,solvePnP_result_d2,solvePnP_result_d3;
 	// Mat image_captured_d1, image_captured_d2, image_captured_d3;
 	// image_captured_d1 = imread("images/pattern_d1.png", IMREAD_GRAYSCALE);
 	// image_captured_d2 = imread("images/pattern_d2.png", IMREAD_GRAYSCALE);
 	// image_captured_d3 = imread("images/pattern_d3.png", IMREAD_GRAYSCALE);
 
-	// Size patternSize (5,3);
-	// double squareSize = 6.75;
+	// Size patternSize (7,4);
+	// double squareSize = 7;
 	// solvePnP_result_d2 = laserline::getRvecTvec(image_captured_d2,patternSize,squareSize);
 	// solvePnP_result_d3 = laserline::getRvecTvec(image_captured_d3,patternSize,squareSize);
 	// solvePnP_result_d1 = laserline::getRvecTvec(image_captured_d1,patternSize,squareSize);
@@ -125,13 +125,50 @@ int main(int argc, char* argv[])
 	// general::lineEquation(p1,p3,tvec_laser_values);
 
 	/*Laser plane verification----------------------------------------------------------------------------------------------------*/
+	cout<<endl<<"plane verification starts"<<endl;
 	vector<Point3d> start_vector, end_vector;
-	ifstream start_d1("values/laserlinetwopoints/start_d1.txt");
-	ifstream start_d2("values/laserlinetwopoints/start_d2.txt");
-	ifstream start_d3("values/laserlinetwopoints/start_d3.txt");
-	ifstream end_d1("values/laserlinetwopoints/end_d1.txt");
-	ifstream end_d2("values/laserlinetwopoints/end_d2.txt");
-	ifstream end_d3("values/laserlinetwopoints/end_d3.txt");
+	ifstream start_d1("values/laserlinetwopoints/start_l2_d1.txt");
+	ifstream start_d2("values/laserlinetwopoints/start_l2_d2.txt");
+	ifstream start_d3("values/laserlinetwopoints/start_l2_d3.txt");
+	ifstream end_d1("values/laserlinetwopoints/end_l2_d1.txt");
+	ifstream end_d2("values/laserlinetwopoints/end_l2_d2.txt");
+	ifstream end_d3("values/laserlinetwopoints/end_l2_d3.txt");
+	if(argv[1] == string("1"))
+	{
+		ifstream start_d1("values/laserlinetwopoints/start_l1_d1.txt");
+		ifstream start_d2("values/laserlinetwopoints/start_l1_d2.txt");
+		ifstream start_d3("values/laserlinetwopoints/start_l1_d3.txt");
+		ifstream end_d1("values/laserlinetwopoints/end_l1_d1.txt");
+		ifstream end_d2("values/laserlinetwopoints/end_l1_d2.txt");
+		ifstream end_d3("values/laserlinetwopoints/end_l1_d3.txt");
+	}
+	else if(argv[1] == string("2"))
+	{
+		ifstream start_d1("values/laserlinetwopoints/start_l2_d1.txt");
+		ifstream start_d2("values/laserlinetwopoints/start_l2_d2.txt");
+		ifstream start_d3("values/laserlinetwopoints/start_l2_d3.txt");
+		ifstream end_d1("values/laserlinetwopoints/end_l2_d1.txt");
+		ifstream end_d2("values/laserlinetwopoints/end_l2_d2.txt");
+		ifstream end_d3("values/laserlinetwopoints/end_l2_d3.txt");
+	}
+	else if(argv[1] == string("3"))
+	{
+		ifstream start_d1("values/laserlinetwopoints/start_l3_d1.txt");
+		ifstream start_d2("values/laserlinetwopoints/start_l3_d2.txt");
+		ifstream start_d3("values/laserlinetwopoints/start_l3_d3.txt");
+		ifstream end_d1("values/laserlinetwopoints/end_l3_d1.txt");
+		ifstream end_d2("values/laserlinetwopoints/end_l3_d2.txt");
+		ifstream end_d3("values/laserlinetwopoints/end_l3_d3.txt");
+	}
+	else
+	{
+		ifstream start_d1("values/laserlinetwopoints/start_l4_d1.txt");
+		ifstream start_d2("values/laserlinetwopoints/start_l4_d2.txt");
+		ifstream start_d3("values/laserlinetwopoints/start_l4_d3.txt");
+		ifstream end_d1("values/laserlinetwopoints/end_l4_d1.txt");
+		ifstream end_d2("values/laserlinetwopoints/end_l4_d2.txt");
+		ifstream end_d3("values/laserlinetwopoints/end_l4_d3.txt");
+	}
 	double x, y, z;
 	char comma;
 	// Read Point3d in vector
@@ -179,6 +216,7 @@ int main(int argc, char* argv[])
 			v1.push_back(end_vector[e].x-start_vector[s].x);
 			v1.push_back(end_vector[e].y-start_vector[s].y);
 			v1.push_back(end_vector[e].z-start_vector[s].z);
+			// cout<<endl<<v1[0]<<" "<<v1[1]<<" "<<v1[2]<<endl;
 			vect3D_collection.push_back(v1);
 		}
 	}
@@ -211,7 +249,7 @@ int main(int argc, char* argv[])
 	Point3d norm_avg;
 	for(int i=0; i<9; i++)
 	{
-		cout << endl << "normal vector: " << normalVector_collection[i][0] << "," << normalVector_collection[i][1] << "," << normalVector_collection[i][2]<< endl;
+		cout << endl << "normal vectors: " << normalVector_collection[i][0] << "," << normalVector_collection[i][1] << "," << normalVector_collection[i][2]<< endl;
 		xSum = xSum + normalVector_collection[i][0];
 		ySum = ySum + normalVector_collection[i][1];
 		zSum = zSum + normalVector_collection[i][2];

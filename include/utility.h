@@ -263,9 +263,8 @@ namespace laserline
         result.tvec = tvec;
         result.corners_created = corners_created;
         result.corners_found = corners_found;
+        cout<<endl<<"rvec:"<<endl<<result.rvec<<endl<<"tvec: "<<endl<<result.tvec<<endl;
         return result;
-        // pair<Mat,Mat>vec(rmatrix,tvec) ; // rmatrix = vec.first tvec = vec.second
-        // return vec;
     }
 
     std::pair<vector<double>,vector<double>> targetBoardPlane(Mat rmatrix, Mat tvec)
@@ -675,14 +674,17 @@ namespace general
         // cout<<endl<<"magnifier: "<< magnifier<<endl;
 
         Point oneCorner = imagePoint;
-        cout<<endl<<"Dot coordinates on image plane (imageframe) in pixel: "<<endl<<oneCorner<<endl;
+        // cout<<endl<<"Dot coordinates on image plane (imageframe) in pixel: "<<endl<<oneCorner<<endl;
 
-        float corners_found_mid_x = (corner_found_max_x.x + corner_found_min_x.x)/2;
-        float corners_found_mid_y = (corner_found_max_y.y + corner_found_min_y.y)/2;
-        // cout<<endl<<"center point of pattern: "<<corners_found_mid_x<<" "<<corners_found_mid_y<<endl;
+        // float corners_found_center_x = (corner_found_max_x.x + corner_found_min_x.x)/2;
+        // float corners_found_center_y = (corner_found_max_y.y + corner_found_min_y.y)/2;
+        float corners_found_center_x = solvePnP_result.corners_found[9].x;
+        float corners_found_center_y = solvePnP_result.corners_found[9].y;
+        // cout<<endl<<"center point of pattern (pixel) on image plane: "<<corners_found_center_x<<","<<corners_found_center_y<<endl;
         // Origin of the target frame is the center of the pattern, /magnifier transfer pixel to mm
-        Point3d cornerTargetFrame = Point3d((oneCorner.x-corners_found_mid_x) / magnifier, (oneCorner.y-corners_found_mid_y) / magnifier, 0);
-        cout <<"Dot coordinates on target board (targetframe) in mm: "<<endl<<cornerTargetFrame <<endl;
+        // Point3d cornerTargetFrame = Point3d((oneCorner.x-corners_found_center_x) / magnifier, (oneCorner.y-corners_found_center_y) / magnifier, 0);
+        Point3d cornerTargetFrame = Point3d(-(oneCorner.y-corners_found_center_y)/magnifier,-(oneCorner.x-corners_found_center_x)/magnifier, 0);
+        // cout <<"Dot coordinates on target board (targetframe) in mm: "<<endl<<cornerTargetFrame <<endl;
         
         Mat transMatrix; // translation matrix from target board frame to image frame
         hconcat(solvePnP_result.rmatrix, solvePnP_result.tvec, transMatrix);
@@ -697,7 +699,7 @@ namespace general
         cornerTF.at<double>(2,0) = cornerTargetFrame.z;
         cornerTF.at<double>(3,0) = 1;
         Mat cornerCamFrame = transMatrix*cornerTF; //Same dot expressed in Cam Frame
-        cout<<"Dot coordinates on target board (cam frame)"<<endl<<cornerCamFrame<<endl;
+        // cout<<"Dot coordinates on target board (cam frame)"<<endl<<cornerCamFrame<<endl;
         Point3d pointCamFrame;
         pointCamFrame.x = cornerCamFrame.at<double>(0);
         pointCamFrame.y = cornerCamFrame.at<double>(1);

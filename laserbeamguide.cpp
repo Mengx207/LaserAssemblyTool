@@ -204,8 +204,8 @@ int main(int argc, char* argv[])
 				}
 				else {image_captured = imread("images/pattern_d2.png", IMREAD_GRAYSCALE);}
 
-				Size patternSize (5,3);
-				double squareSize = 6.75;
+				Size patternSize (7,4);
+				double squareSize = 7;
 				solvePnP_result = laserline::getRvecTvec(image_captured, patternSize, squareSize);
 
 				// read laser 1
