@@ -106,23 +106,23 @@ int main(int argc, char* argv[])
 	imgPoint_d3.x = imgPoint_d3_vector[0];
 	imgPoint_d3.y = imgPoint_d3_vector[1];
 
-	// laserline::solvePnP_result solvePnP_result_d1,solvePnP_result_d2,solvePnP_result_d3;
-	// Mat image_captured_d1, image_captured_d2, image_captured_d3;
-	// image_captured_d1 = imread("images/pattern_d1.png", IMREAD_GRAYSCALE);
-	// image_captured_d2 = imread("images/pattern_d2.png", IMREAD_GRAYSCALE);
-	// image_captured_d3 = imread("images/pattern_d3.png", IMREAD_GRAYSCALE);
+	laserline::solvePnP_result solvePnP_result_d1,solvePnP_result_d2,solvePnP_result_d3;
+	Mat image_captured_d1, image_captured_d2, image_captured_d3;
+	image_captured_d1 = imread("images/pattern_d1.png", IMREAD_GRAYSCALE);
+	image_captured_d2 = imread("images/pattern_d2.png", IMREAD_GRAYSCALE);
+	image_captured_d3 = imread("images/pattern_d3.png", IMREAD_GRAYSCALE);
 
-	// Size patternSize (7,4);
-	// double squareSize = 7;
-	// solvePnP_result_d2 = laserline::getRvecTvec(image_captured_d2,patternSize,squareSize);
-	// solvePnP_result_d3 = laserline::getRvecTvec(image_captured_d3,patternSize,squareSize);
-	// solvePnP_result_d1 = laserline::getRvecTvec(image_captured_d1,patternSize,squareSize);
+	Size patternSize (7,4);
+	double squareSize = 7;
+	solvePnP_result_d2 = laserline::getRvecTvec(image_captured_d2,patternSize,squareSize);
+	solvePnP_result_d3 = laserline::getRvecTvec(image_captured_d3,patternSize,squareSize);
+	solvePnP_result_d1 = laserline::getRvecTvec(image_captured_d1,patternSize,squareSize);
 
-    // Point3d p1 = general::locationCam2Target( imgPoint_d1, solvePnP_result_d1);
-	// Point3d p2 = general::locationCam2Target( imgPoint_d2, solvePnP_result_d2);
-	// Point3d p3 = general::locationCam2Target( imgPoint_d3, solvePnP_result_d3);
-	// cout<<endl<<"3 points in camera frame: " << endl <<p1<<" "<<p2<<" "<<p3<<endl;
-	// general::lineEquation(p1,p3,tvec_laser_values);
+    Point3d p1 = general::locationCam2Target( imgPoint_d1, solvePnP_result_d1);
+	Point3d p2 = general::locationCam2Target( imgPoint_d2, solvePnP_result_d2);
+	Point3d p3 = general::locationCam2Target( imgPoint_d3, solvePnP_result_d3);
+	cout<<endl<<"3 points in camera frame: " << endl <<p1<<" "<<p2<<" "<<p3<<endl;
+	general::lineEquation(p1,p3,tvec_laser_values);
 
 	/*Laser plane verification----------------------------------------------------------------------------------------------------*/
 	cout<<endl<<"plane verification starts"<<endl;
