@@ -340,9 +340,9 @@ int main(int argc, char* argv[])
 			// {threshold_output1 = imread("images/saved_laser_plane/laser_plane_1_d3_threshold.jpg", IMREAD_GRAYSCALE);}
 
 			system("cd values && mkdir -p laserlinetwopoints && cd laserlinetwopoints");
-			system("touch start_l1_d1.txt && touch end_l1_d1.txt && touch start_l1_d2.txt && touch end_l1_d2.txt && touch start_l1_d3.txt && touch end_l1_d3.txt");
-			system("touch start_l2_d1.txt && touch end_l2_d1.txt && touch start_l2_d2.txt && touch end_l2_d2.txt && touch start_l2_d3.txt && touch end_l2_d3.txt");
-			system("touch start_l3_d1.txt && touch end_l3_d1.txt && touch start_l3_d2.txt && touch end_l3_d2.txt && touch start_l3_d3.txt && touch end_l3_d3.txt");
+			// system("touch start_l1_d1.txt && touch end_l1_d1.txt && touch start_l1_d2.txt && touch end_l1_d2.txt && touch start_l1_d3.txt && touch end_l1_d3.txt");
+			// system("touch start_l2_d1.txt && touch end_l2_d1.txt && touch start_l2_d2.txt && touch end_l2_d2.txt && touch start_l2_d3.txt && touch end_l2_d3.txt");
+			// system("touch start_l3_d1.txt && touch end_l3_d1.txt && touch start_l3_d2.txt && touch end_l3_d2.txt && touch start_l3_d3.txt && touch end_l3_d3.txt");
 			pair<Point2f,Point2f> laserline2Points = general::extractLaserline2Points(threshold_output, solvePnP_result);
 			cout<<"Pair of end points of actual laser line on image plane: "<< laserline2Points.first << ", " << laserline2Points.second;
 			Point3d startCam = general::locationCam2Target( laserline2Points.first, solvePnP_result);
