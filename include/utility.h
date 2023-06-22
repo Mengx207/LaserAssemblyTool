@@ -775,9 +775,9 @@ namespace general
         line( whiteline_color, start, end, Scalar(0,0,255), 1, LINE_AA);
         circle(whiteline_color, start, 2, Scalar(0,0,255),3);
         circle(whiteline_color, end, 2, Scalar(0,0,255),3);
-        imshow("White Line", whiteline_color);
+        // imshow("White Line", whiteline_color);
         // imshow("Blurred White Line", whiteline_blur);
-        waitKey();
+        // waitKey();
         return laserline2Points;
     }
 

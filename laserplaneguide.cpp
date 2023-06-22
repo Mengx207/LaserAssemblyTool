@@ -184,19 +184,19 @@ int main(int argc, char* argv[])
 					if(argv[3] == string("d1"))
 					{
 						image_captured = imread("images/pattern_d1.png", IMREAD_GRAYSCALE);
-						imshow("pattern image", image_captured);
+						// imshow("pattern image", image_captured);
 						// waitKey();
 					}
 					if(argv[3] == string("d2"))
 					{
 						image_captured = imread("images/pattern_d2.png", IMREAD_GRAYSCALE);
-						imshow("pattern image", image_captured);
+						// imshow("pattern image", image_captured);
 						// waitKey();
 					}
 					if(argv[3] == string("d3"))
 					{
 						image_captured = imread("images/pattern_d3.png", IMREAD_GRAYSCALE);
-						imshow("pattern image", image_captured);
+						// imshow("pattern image", image_captured);
 						// waitKey();
 					}
 				}
@@ -309,7 +309,7 @@ int main(int argc, char* argv[])
 					uniformity1.width_min = uniformity1.width_min* 3.45 * (solvePnP_result.tvec.at<double>(0,2)/12)/1000;
 
 					laserlineGUI(minRect[0], projectedInterPoints[0], cal_angle, uniformity1, line_img);
-					cv::imshow( "Rotated and Cropped laser line", uniformity1.image_BGR );
+					// cv::imshow( "Rotated and Cropped laser line", uniformity1.image_BGR );
 				}
 				
 				// cv::imshow( "Contour and Area", drawing );
