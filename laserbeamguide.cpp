@@ -126,7 +126,7 @@ int main(int argc, char* argv[])
 
 		while(waitKey(10) != 'q')
 		{
-			cout<<endl<<"--------------------------------------------------------------------------------"<<endl;
+			// cout<<endl<<"--------------------------------------------------------------------------------"<<endl;
 			int max_imgs0 = 1;   
 			int imgs_taken0 =0;
 			camera0.StartGrabbing(max_imgs0*1);
@@ -394,25 +394,27 @@ int main(int argc, char* argv[])
 			
 			// save center_rect_avg for future use
 			system("cd values && mkdir -p intersections && cd intersections");
-			system("touch intersections_d1.txt && touch intersections_d2.txt && touch intersections_d3.txt");
-			if(argv[3] == string("d1"))
-			{
-				ofstream interpoint("values/intersections/intersections_d1.txt");
-				interpoint << centerImage.x <<" ";
-				interpoint << centerImage.y;
-			}
-			if(argv[3] == string("d2"))
-			{
-				ofstream interpoint("values/intersections/intersections_d2.txt");
-				interpoint << centerImage.x <<" ";
-				interpoint << centerImage.y;
-			}
-			if(argv[3] == string("d3"))
-			{
-				ofstream interpoint("values/intersections/intersections_d3.txt");
-				interpoint << centerImage.x <<" ";
-				interpoint << centerImage.y;
-			}
+			ofstream interpoint("values/intersections/intersections_l"+string(argv[1])+"_"+string(argv[3])+".txt");
+			interpoint << centerImage.x <<" ";
+			interpoint << centerImage.y;
+			// if(argv[3] == string("d1"))
+			// {
+			// 	ofstream interpoint("values/intersections/intersections_d1.txt");
+			// 	interpoint << centerImage.x <<" ";
+			// 	interpoint << centerImage.y;
+			// }
+			// if(argv[3] == string("d2"))
+			// {
+			// 	ofstream interpoint("values/intersections/intersections_d2.txt");
+			// 	interpoint << centerImage.x <<" ";
+			// 	interpoint << centerImage.y;
+			// }
+			// if(argv[3] == string("d3"))
+			// {
+			// 	ofstream interpoint("values/intersections/intersections_d3.txt");
+			// 	interpoint << centerImage.x <<" ";
+			// 	interpoint << centerImage.y;
+			// }
 		}
 		else {imwrite("images/saved_laser_beam/laser_" + string(argv[1]) + ".jpg", dot_img);}
 

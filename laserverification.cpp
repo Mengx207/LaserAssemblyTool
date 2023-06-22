@@ -76,10 +76,10 @@ int main(int argc, char* argv[])
 	{
 		tvec_laser_values.push_back(val*1000);
 	}
-
+	cout<<endl<<"beam verification-------------------------------------------"<<endl;
 	vector<double> imgPoint_d1_vector, imgPoint_d2_vector, imgPoint_d3_vector;
 
-	ifstream readPointd1("values/intersections/intersections_d1.txt");
+	ifstream readPointd1("values/intersections/intersections_l"+string(argv[1])+"_d1.txt");
 	while (readPointd1 >> val)
 	{
 		imgPoint_d1_vector.push_back(val);
@@ -88,7 +88,7 @@ int main(int argc, char* argv[])
 	imgPoint_d1.x = imgPoint_d1_vector[0];
 	imgPoint_d1.y = imgPoint_d1_vector[1];
 
-	ifstream readPointd2("values/intersections/intersections_d2.txt");
+	ifstream readPointd2("values/intersections/intersections_l"+string(argv[1])+"_d2.txt");
 	while (readPointd2 >> val)
 	{
 		imgPoint_d2_vector.push_back(val);
@@ -97,7 +97,7 @@ int main(int argc, char* argv[])
 	imgPoint_d2.x = imgPoint_d2_vector[0];
 	imgPoint_d2.y = imgPoint_d2_vector[1];
 
-	ifstream readPointd3("values/intersections/intersections_d3.txt");
+	ifstream readPointd3("values/intersections/intersections_l"+string(argv[1])+"_d3.txt");
 	while (readPointd3 >> val)
 	{
 		imgPoint_d3_vector.push_back(val);
@@ -121,11 +121,12 @@ int main(int argc, char* argv[])
     Point3d p1 = general::locationCam2Target( imgPoint_d1, solvePnP_result_d1);
 	Point3d p2 = general::locationCam2Target( imgPoint_d2, solvePnP_result_d2);
 	Point3d p3 = general::locationCam2Target( imgPoint_d3, solvePnP_result_d3);
-	cout<<endl<<"3 points in camera frame: " << endl <<p1<<" "<<p2<<" "<<p3<<endl;
+	// cout<<endl<<"3 points in camera frame:   " <<p1<<" "<<p2<<" "<<p3<<endl;
 	general::lineEquation(p1,p3,tvec_laser_values);
+	cout<<endl<<"ideal laser origin: "<<"("<<tvec_laser_values[0]<<", "<<tvec_laser_values[1]<<", "<<tvec_laser_values[2]<<")"<<endl;
 
 	/*Laser plane verification----------------------------------------------------------------------------------------------------*/
-	cout<<endl<<"plane verification starts"<<endl;
+	cout<<endl<<endl<<"plane verification-------------------------------------------"<<endl;
 	vector<Point3d> start_vector, end_vector;
 	ifstream start_d1, start_d2, start_d3, end_d1, end_d2, end_d3;
 
@@ -169,12 +170,12 @@ int main(int argc, char* argv[])
 		end_vector.push_back(Point3d(x,y,z));
 	}
 
-	cout<<endl<< "start_d1: "<< start_vector[0]<<endl;
-	cout<<endl<< "start_d2: "<< start_vector[1]<<endl;
-	cout<<endl<< "start_d3: "<< start_vector[2]<<endl;
-	cout<<endl<< "end_d1: "<< end_vector[0]<<endl;
-	cout<<endl<< "end_d2: "<< end_vector[1]<<endl;
-	cout<<endl<< "end_d3: "<< end_vector[2]<<endl;
+	// cout<<endl<< "start_d1: "<< start_vector[0]<<endl;
+	// cout<<endl<< "start_d2: "<< start_vector[1]<<endl;
+	// cout<<endl<< "start_d3: "<< start_vector[2]<<endl;
+	// cout<<endl<< "end_d1: "<< end_vector[0]<<endl;
+	// cout<<endl<< "end_d2: "<< end_vector[1]<<endl;
+	// cout<<endl<< "end_d3: "<< end_vector[2]<<endl;
 	
 	// Vector for vectors in 3D space from start to end points
 	vector<vector<double>> vect3D_collection;
@@ -220,7 +221,7 @@ int main(int argc, char* argv[])
 	Point3d norm_avg;
 	for(int i=0; i<9; i++)
 	{
-		cout << endl << "The actual normal vectors: " << normalVector_collection[i][0] << "," << normalVector_collection[i][1] << "," << normalVector_collection[i][2]<< endl;
+		// cout << endl << "The actual normal vectors: " << normalVector_collection[i][0] << "," << normalVector_collection[i][1] << "," << normalVector_collection[i][2]<< endl;
 		xSum = xSum + normalVector_collection[i][0];
 		ySum = ySum + normalVector_collection[i][1];
 		zSum = zSum + normalVector_collection[i][2];
@@ -232,6 +233,6 @@ int main(int argc, char* argv[])
 
 	laserline::laser_plane laser_plane;
 	laser_plane = laserline::laserPlane(rmatrix_laser_values, tvec_laser_values);
-	cout<<endl<<"The ideal normal vector of ideal laser plane: "<< laser_plane.normalvector[0]<<","<<laser_plane.normalvector[1]<<","<<laser_plane.normalvector[2]<<endl;
+	cout<<endl<<"The ideal normal vector of ideal laser plane: "<<"["<< laser_plane.normalvector[0]<<","<<laser_plane.normalvector[1]<<","<<laser_plane.normalvector[2]<<"]"<<endl;
 
 }

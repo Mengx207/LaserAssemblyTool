@@ -219,14 +219,14 @@ namespace laserline
         params.maxArea = 10e4;
         Ptr<FeatureDetector> blobDetector = SimpleBlobDetector::create(params);
         bool patternfound = findChessboardCorners(image_captured, patternsize, corners_found, CALIB_CB_ASYMMETRIC_GRID);
-        cout <<endl<<endl<< "Corners found: " << endl << corners_found << endl << endl;
+        // cout <<endl<<endl<< "Corners found: " << endl << corners_found << endl << endl;
 
         drawChessboardCorners(image_corners, patternsize, Mat(corners_found), patternfound);
         
         // create chessboard pattern
         // double squareSize = 7;
         vector<Point3f> corners_created = createChessBoardCorners(patternsize, squareSize);
-        cout << "created pattern corners in mm: " << endl << corners_created << endl;
+        // cout << "created pattern corners in mm: " << endl << corners_created << endl;
 
         // import camera matrix and distortion coefficients from txt file
         ifstream intrin("values/intrinsic.txt");
@@ -263,7 +263,7 @@ namespace laserline
         result.tvec = tvec;
         result.corners_created = corners_created;
         result.corners_found = corners_found;
-        cout<<endl<<"rvec:"<<endl<<result.rvec<<endl<<"tvec: "<<endl<<result.tvec<<endl;
+        // cout<<endl<<"rvec:"<<endl<<result.rvec<<endl<<"tvec: "<<endl<<result.tvec<<endl;
         return result;
     }
 
@@ -720,7 +720,7 @@ namespace general
         cout<< "Vector equation from two 3D points: (" << l<<"*t + "<<p2.x<<", "<<m<<"*t + "<<p2.y<<", "<<n<<"*t + "<<p2.z<<")"<<endl;
         Mat tvec_L = Mat(3, 1, CV_64FC1, tvec_laser_values.data());
         double t = (tvec_L.at<double>(2) - p2.z)/n;
-        cout<<"Retrace along the line back to the laser origin: (" << p2.x + t*l<<","<<p2.y + t*m<<","<<p2.z + t*n<<")"<<endl<<endl;
+        cout<<endl<<"Retrace along the line back to the laser origin: (" << p2.x + t*l<<","<<p2.y + t*m<<","<<p2.z + t*n<<")"<<endl;
 
 
     }
