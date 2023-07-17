@@ -1,5 +1,7 @@
 file(REMOVE_RECURSE
   "CMakeFiles/laserverification.dir/laserverification.cpp.o"
+  "CMakeFiles/laserverification.dir/imgpro.cpp.o"
+  "CMakeFiles/laserverification.dir/gencal.cpp.o"
   "laserverification.pdb"
   "laserverification"
 )

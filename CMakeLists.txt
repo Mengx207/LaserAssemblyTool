@@ -6,6 +6,7 @@ find_package(Pylon QUIET)
 if (NOT ${Pylon_FOUND})
     include("${CMAKE_CURRENT_SOURCE_DIR}/cmake/FindPylon.cmake")
 endif()
+
 include_directories( include
 		     		${OpenCV_INCLUDE_DIRS}
 		     		${Pylon_INCLUDE_DIRS}
@@ -13,8 +14,31 @@ include_directories( include
  )
 
 
+# add_executable( laserbeamguide laserbeamguide.cpp )
+# target_link_libraries( laserbeamguide
+# 		       ${OpenCV_LIBS}
+# 	               ${Pylon_LIBRARIES}
+#                        ${pylon_camera_INCLUDE_DIRS}
 
-add_executable( laserbeamguide laserbeamguide.cpp )
+# )
+
+# add_executable( laserplaneguide laserplaneguide.cpp )
+# target_link_libraries( laserplaneguide
+# 		       ${OpenCV_LIBS}
+# 	               ${Pylon_LIBRARIES}
+#                        ${pylon_camera_INCLUDE_DIRS}
+
+# )
+
+# add_executable( laserverification laserverification.cpp )
+# target_link_libraries( laserverification
+# 		       ${OpenCV_LIBS}
+# 	               ${Pylon_LIBRARIES}
+#                        ${pylon_camera_INCLUDE_DIRS}
+
+# )
+
+add_executable( laserbeamguide laserbeamguide.cpp imgpro.cpp gencal.cpp)
 target_link_libraries( laserbeamguide
 		       ${OpenCV_LIBS}
 	               ${Pylon_LIBRARIES}
@@ -22,7 +46,7 @@ target_link_libraries( laserbeamguide
 
 )
 
-add_executable( laserplaneguide laserplaneguide.cpp )
+add_executable( laserplaneguide laserplaneguide.cpp imgpro.cpp gencal.cpp)
 target_link_libraries( laserplaneguide
 		       ${OpenCV_LIBS}
 	               ${Pylon_LIBRARIES}
@@ -30,15 +54,13 @@ target_link_libraries( laserplaneguide
 
 )
 
-add_executable( laserverification laserverification.cpp )
+add_executable( laserverification laserverification.cpp imgpro.cpp gencal.cpp)
 target_link_libraries( laserverification
 		       ${OpenCV_LIBS}
 	               ${Pylon_LIBRARIES}
                        ${pylon_camera_INCLUDE_DIRS}
 
 )
-
-
 
 
 

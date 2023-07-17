@@ -1,5 +1,7 @@
 file(REMOVE_RECURSE
   "CMakeFiles/laserplaneguide.dir/laserplaneguide.cpp.o"
+  "CMakeFiles/laserplaneguide.dir/imgpro.cpp.o"
+  "CMakeFiles/laserplaneguide.dir/gencal.cpp.o"
   "laserplaneguide.pdb"
   "laserplaneguide"
 )

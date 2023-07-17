@@ -6,29 +6,10 @@
 	Measure nomal distance between laser dot and calculated laser line
 	Meausre distance from the center of laser line to the laser dot along the line
 */
-#include <iostream>
-#include <iomanip>
-#include <sstream>
-#include <string>
-#include <unistd.h>
-#include <pylon/InstantCamera.h>
-#include <pylon/PylonIncludes.h>
-#include <GenApi/IEnumeration.h>
-#include <pylon/EnumParameter.h>
-#include <Base/GCString.h>
-#include <opencv2/core/core.hpp>
-#include <opencv2/core/utility.hpp>
-#include "opencv2/imgproc/imgproc.hpp"
-#include <bits/stdc++.h>
-#include <vector>
-#include <opencv2/highgui/highgui.hpp>
-#include "include/softwaretriggerconfiguration.h"
-#include <time.h>
-#include <stdio.h>
-#include <ctime>
-#include <pylon/PylonIncludes.h>
-#include "include/ConfigurationEventPrinter.h"
+
 #include "include/utility.h"
+#include "include/imgpro.h"
+#include "include/gencal.h"
 
 using namespace Pylon;
 using namespace std;
@@ -38,7 +19,7 @@ using namespace GENAPI_NAMESPACE;
 #   include <pylon/PylonGUI.h>
 #endif
 
-void laserlineGUI(RotatedRect rect, Point2d cal_center, int cal_angle, laserline::uniformity_data uniformity1, Mat drawing);
+// void laserlineGUI(RotatedRect rect, Point2d cal_center, int cal_angle, uniformity_data uniformity1, Mat drawing);
 
 int main(int argc, char* argv[])
 {
@@ -116,7 +97,7 @@ int main(int argc, char* argv[])
 			CBooleanParameter(nodemap0, "LineInverter").SetValue(false);
 		}
 
-		laserline::solvePnP_result solvePnP_result;
+		solvePnP_result solvePnP_result;
 		while(waitKey(10) != 'q')
 		{
 			int max_imgs0 = 1;   
@@ -207,7 +188,7 @@ int main(int argc, char* argv[])
 				Size patternSize (7,4);
 				double squareSize = 7;
 
-				solvePnP_result = laserline::getRvecTvec(image_captured,patternSize,squareSize);
+				solvePnP_result = getRvecTvec(image_captured,patternSize,squareSize);
 
 				// read laser 1
 				ifstream rmatrixL(path_rmatrix);
@@ -223,14 +204,14 @@ int main(int argc, char* argv[])
 					tvec_laser_values.push_back(val*1000);
 				}
 				// find target board plane in cam frame
-				pair<vector<double>,vector<double>>target = laserline::targetBoardPlane(solvePnP_result.rmatrix, solvePnP_result.tvec);
+				pair<vector<double>,vector<double>>target = targetBoardPlane(solvePnP_result.rmatrix, solvePnP_result.tvec);
 
-				laserline::laser_plane laser_1;
-				laser_1 = laserline::laserPlane(rmatrix_laser_values, tvec_laser_values);
+				laser_plane laser_1;
+				laser_1 = laserPlane(rmatrix_laser_values, tvec_laser_values);
 				
 				// find intersection between laser beam and target board
 				Point3f interPoint1;
-				interPoint1 = laserline::intersectionPoint(laser_1.origin, laser_1.beam_dir, target.first, target.second);
+				interPoint1 = intersectionPoint(laser_1.origin, laser_1.beam_dir, target.first, target.second);
 				vector<Point3d> interPointArray;
 				vector<Point2d> projectedInterPoints;
 				interPointArray.push_back(interPoint1);
@@ -239,8 +220,8 @@ int main(int argc, char* argv[])
 				
 				// find intersection line between target board plane and laser plane in cam frame
 				std::vector<cv::Point3d> laserline_points_1;
-				laserline::intersection line1, line2, line3;
-				line1 = laserline::intersectionLine(target.first, laser_1.normalvector, target.second, vector<double>{interPoint1.x, interPoint1.y, interPoint1.z});
+				intersection line1, line2, line3;
+				line1 = intersectionLine(target.first, laser_1.normalvector, target.second, vector<double>{interPoint1.x, interPoint1.y, interPoint1.z});
 
 				for(int t=-150; t<150;)
 				{
@@ -275,9 +256,11 @@ int main(int argc, char* argv[])
 				Mat img_grey;
 				cv::cvtColor(src, img_grey, cv::COLOR_BGR2GRAY);
 				line_img = src.clone();
-				laserdot::CalculatedLine( line_img, projectedlaserline_1[0], projectedlaserline_1[projectedlaserline_1.size()-2] );
+				// CalculatedLine( line_img, projectedlaserline_1[0], projectedlaserline_1[projectedlaserline_1.size()-2] );
+				line( line_img, projectedlaserline_1[0], projectedlaserline_1[projectedlaserline_1.size()-2],Scalar(100,100,0), 3, LINE_AA );
 
-				cv::circle( line_img, projectedInterPoints[0], 5, cv::Scalar(0,0,255), -1, 8, 0 );
+
+				cv::circle( line_img, projectedInterPoints[0], 5, cv::Scalar(100,100,0), -1, 8, 0 );
 				// cout<<"one point: "<< projectedInterPoints[0]<<endl;
 
 				vector<vector<Point> > contours;
@@ -285,13 +268,13 @@ int main(int argc, char* argv[])
 				cv::threshold(img_grey,threshold_output,200,255,cv::THRESH_BINARY);
 
 				findContours( threshold_output, contours, hierarchy, RETR_TREE, CHAIN_APPROX_SIMPLE, Point(0, 0) );
-				vector<RotatedRect> minRect = laserline::findRectangle(contours,100);
+				vector<RotatedRect> minRect = findRectangle(contours,100);
 				Mat drawing = Mat::zeros( threshold_output.size(), CV_8UC3 );
 				Mat rotated_image = threshold_output.clone();
 
 				if (minRect.size() >= 1)
 				{
-					laserline::drawContourRectangle(drawing, contours, minRect);
+					drawContourRectangle(drawing, contours, minRect);
 					circle(line_img, minRect[0].center, 5, Scalar(0,255,0), -1, 8, 0);
 					double angle = minRect[0].angle;
 					if (minRect[0].size.width < minRect[0].size.height) 
@@ -301,8 +284,8 @@ int main(int argc, char* argv[])
 
 					Mat rotation_matrix = getRotationMatrix2D(minRect[0].center, angle, 1.0);
 					warpAffine(threshold_output, rotated_image, rotation_matrix, threshold_output.size());
-					laserline::uniformity_data uniformity1;
-					uniformity1 = laserline::cropImage(rotated_image);
+					uniformity_data uniformity1;
+					uniformity1 = cropImage(rotated_image);
 					// From pixel number to actual diameter on target board
 					uniformity1.width_avg = uniformity1.width_avg* 3.45 * (solvePnP_result.tvec.at<double>(0,2)/12)/1000;
 					uniformity1.width_max = uniformity1.width_max* 3.45 * (solvePnP_result.tvec.at<double>(0,2)/12)/1000;
@@ -343,10 +326,10 @@ int main(int argc, char* argv[])
 			// system("touch start_l1_d1.txt && touch end_l1_d1.txt && touch start_l1_d2.txt && touch end_l1_d2.txt && touch start_l1_d3.txt && touch end_l1_d3.txt");
 			// system("touch start_l2_d1.txt && touch end_l2_d1.txt && touch start_l2_d2.txt && touch end_l2_d2.txt && touch start_l2_d3.txt && touch end_l2_d3.txt");
 			// system("touch start_l3_d1.txt && touch end_l3_d1.txt && touch start_l3_d2.txt && touch end_l3_d2.txt && touch start_l3_d3.txt && touch end_l3_d3.txt");
-			pair<Point2f,Point2f> laserline2Points = general::extractLaserline2Points(threshold_output, solvePnP_result);
+			pair<Point2f,Point2f> laserline2Points = extractLaserline2Points(threshold_output);
 			cout<<"Pair of end points of actual laser line on image plane: "<< laserline2Points.first << ", " << laserline2Points.second;
-			Point3d startCam = general::locationCam2Target( laserline2Points.first, solvePnP_result);
-			Point3d endCam= general::locationCam2Target( laserline2Points.second, solvePnP_result);
+			Point3d startCam = locationCam2Target( laserline2Points.first, solvePnP_result);
+			Point3d endCam= locationCam2Target( laserline2Points.second, solvePnP_result);
 			/*record the start and end points of the laser line in camera frame*/
 			// ofstream start("values/laserlinetwopoints/start.txt");
 			// if(argv[3] == string("d1"))
@@ -472,45 +455,45 @@ int main(int argc, char* argv[])
    
 }
 
-void laserlineGUI(RotatedRect rect, Point2d cal_center, int cal_angle, laserline::uniformity_data uniformity1, Mat drawing)
-{
-	std::string center_print_x, center_print_y, angle_print, width_print, cal_center_print_x, cal_center_print_y, cal_angle_print, width_avg_print, width_max_print, width_min_print, width_sd_print;
-	center_print_x = std::to_string(int(rect.center.x));
-	center_print_y = std::to_string(int(rect.center.y));
-	angle_print = std::to_string(int(rect.angle));
+// void laserlineGUI(RotatedRect rect, Point2d cal_center, int cal_angle, uniformity_data uniformity1, Mat drawing)
+// {
+// 	std::string center_print_x, center_print_y, angle_print, width_print, cal_center_print_x, cal_center_print_y, cal_angle_print, width_avg_print, width_max_print, width_min_print, width_sd_print;
+// 	center_print_x = std::to_string(int(rect.center.x));
+// 	center_print_y = std::to_string(int(rect.center.y));
+// 	angle_print = std::to_string(int(rect.angle));
 
-	std::ostringstream streamObj;
-	streamObj << std::fixed;
-	streamObj << std::setprecision(2);
+// 	std::ostringstream streamObj;
+// 	streamObj << std::fixed;
+// 	streamObj << std::setprecision(2);
 
-	streamObj << uniformity1.width_max;
-	width_max_print = streamObj.str();
-	streamObj.str("");
-	streamObj << uniformity1.width_min;
-	width_min_print = streamObj.str();
-	streamObj.str("");
-	streamObj << uniformity1.width_sd;
-	width_sd_print = streamObj.str();
-	streamObj.str("");
-	streamObj << uniformity1.width_avg;
-	width_avg_print = streamObj.str();
-	streamObj.str("");
+// 	streamObj << uniformity1.width_max;
+// 	width_max_print = streamObj.str();
+// 	streamObj.str("");
+// 	streamObj << uniformity1.width_min;
+// 	width_min_print = streamObj.str();
+// 	streamObj.str("");
+// 	streamObj << uniformity1.width_sd;
+// 	width_sd_print = streamObj.str();
+// 	streamObj.str("");
+// 	streamObj << uniformity1.width_avg;
+// 	width_avg_print = streamObj.str();
+// 	streamObj.str("");
 
-	if(rect.size.width < rect.size.height)
-	{width_print = std::to_string(int(rect.size.width));}
-	else
-	{width_print = std::to_string(int(rect.size.height));}
+// 	if(rect.size.width < rect.size.height)
+// 	{width_print = std::to_string(int(rect.size.width));}
+// 	else
+// 	{width_print = std::to_string(int(rect.size.height));}
 
-	cal_center_print_x = std::to_string(int(cal_center.x));
-	cal_center_print_y = std::to_string(int(cal_center.y));
-	cal_angle_print = std::to_string(cal_angle);
+// 	cal_center_print_x = std::to_string(int(cal_center.x));
+// 	cal_center_print_y = std::to_string(int(cal_center.y));
+// 	cal_angle_print = std::to_string(cal_angle);
 
-	cv::putText(drawing, "Angle Designed: " + cal_angle_print, cv::Point(1000,600), cv::FONT_HERSHEY_SIMPLEX, 0.8, cv::Scalar(255, 255, 255),2);
-	cv::putText(drawing, "Angle Actual: " + angle_print, cv::Point(1000,630), cv::FONT_HERSHEY_SIMPLEX, 0.8, cv::Scalar(255, 255, 255),2);
-	cv::putText(drawing, "Width Average: " + width_avg_print + " mm", cv::Point(1000, 660), cv::FONT_HERSHEY_SIMPLEX, 0.8, cv::Scalar(255, 255, 255),2);
-	cv::putText(drawing, "Width Standard Deviation: " + width_sd_print, cv::Point(1000, 690), cv::FONT_HERSHEY_SIMPLEX, 0.8, cv::Scalar(255, 255, 255),2);
-	cv::putText(drawing, "Maximum Width: " + width_max_print + " mm", cv::Point(1000, 720), cv::FONT_HERSHEY_SIMPLEX, 0.6, cv::Scalar(255, 255, 255),2);
-	cv::putText(drawing, "Minimum Width: " + width_min_print + " mm", cv::Point(1000,740), cv::FONT_HERSHEY_SIMPLEX, 0.6, cv::Scalar(255, 255, 255),2);
-	cv::putText(drawing, "Designed Center: [" + cal_center_print_x + "," + cal_center_print_y + "]", cv::Point(1000, 760), cv::FONT_HERSHEY_SIMPLEX, 0.6, cv::Scalar(255, 255, 255),2);
-	// cv::putText(drawing, "Actual Center: [" + center_print_x + "," + center_print_y + "]", cv::Point(1000, 710), cv::FONT_HERSHEY_SIMPLEX, 0.6, cv::Scalar(255, 255, 255),2);
-}
+// 	cv::putText(drawing, "Angle Designed: " + cal_angle_print, cv::Point(1000,600), cv::FONT_HERSHEY_SIMPLEX, 0.8, cv::Scalar(255, 255, 255),2);
+// 	cv::putText(drawing, "Angle Actual: " + angle_print, cv::Point(1000,630), cv::FONT_HERSHEY_SIMPLEX, 0.8, cv::Scalar(255, 255, 255),2);
+// 	cv::putText(drawing, "Width Average: " + width_avg_print + " mm", cv::Point(1000, 660), cv::FONT_HERSHEY_SIMPLEX, 0.8, cv::Scalar(255, 255, 255),2);
+// 	cv::putText(drawing, "Width Standard Deviation: " + width_sd_print, cv::Point(1000, 690), cv::FONT_HERSHEY_SIMPLEX, 0.8, cv::Scalar(255, 255, 255),2);
+// 	cv::putText(drawing, "Maximum Width: " + width_max_print + " mm", cv::Point(1000, 720), cv::FONT_HERSHEY_SIMPLEX, 0.6, cv::Scalar(255, 255, 255),2);
+// 	cv::putText(drawing, "Minimum Width: " + width_min_print + " mm", cv::Point(1000,740), cv::FONT_HERSHEY_SIMPLEX, 0.6, cv::Scalar(255, 255, 255),2);
+// 	cv::putText(drawing, "Designed Center: [" + cal_center_print_x + "," + cal_center_print_y + "]", cv::Point(1000, 760), cv::FONT_HERSHEY_SIMPLEX, 0.6, cv::Scalar(255, 255, 255),2);
+// 	// cv::putText(drawing, "Actual Center: [" + center_print_x + "," + center_print_y + "]", cv::Point(1000, 710), cv::FONT_HERSHEY_SIMPLEX, 0.6, cv::Scalar(255, 255, 255),2);
+// }

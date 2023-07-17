@@ -6,27 +6,9 @@
 	Measure nomal distance between laser dot and calculated laser line
 	Meausre distance from the center of laser line to the laser dot along the line
 */
-#include <iostream>
-#include <sstream>
-#include <string>
-#include <unistd.h>
-#include <pylon/InstantCamera.h>
-#include <pylon/PylonIncludes.h>
-#include <GenApi/IEnumeration.h>
-#include <pylon/EnumParameter.h>
-#include <Base/GCString.h>
-#include <opencv2/core/core.hpp>
-#include <opencv2/core/utility.hpp>
-#include "opencv2/imgproc/imgproc.hpp"
-#include <bits/stdc++.h>
-#include <vector>
-#include <opencv2/highgui/highgui.hpp>
-#include "include/softwaretriggerconfiguration.h"
-#include <time.h>
-#include <stdio.h>
-#include <ctime>
-
 #include "include/utility.h"
+#include "include/imgpro.h"
+#include "include/gencal.h"
 
 using namespace Pylon;
 using namespace std;
@@ -106,7 +88,7 @@ int main(int argc, char* argv[])
 	imgPoint_d3.x = imgPoint_d3_vector[0];
 	imgPoint_d3.y = imgPoint_d3_vector[1];
 
-	laserline::solvePnP_result solvePnP_result_d1,solvePnP_result_d2,solvePnP_result_d3;
+	solvePnP_result solvePnP_result_d1,solvePnP_result_d2,solvePnP_result_d3;
 	Mat image_captured_d1, image_captured_d2, image_captured_d3;
 	image_captured_d1 = imread("images/pattern_d1.png", IMREAD_GRAYSCALE);
 	image_captured_d2 = imread("images/pattern_d2.png", IMREAD_GRAYSCALE);
@@ -114,15 +96,15 @@ int main(int argc, char* argv[])
 
 	Size patternSize (7,4);
 	double squareSize = 7;
-	solvePnP_result_d2 = laserline::getRvecTvec(image_captured_d2,patternSize,squareSize);
-	solvePnP_result_d3 = laserline::getRvecTvec(image_captured_d3,patternSize,squareSize);
-	solvePnP_result_d1 = laserline::getRvecTvec(image_captured_d1,patternSize,squareSize);
+	solvePnP_result_d2 = getRvecTvec(image_captured_d2,patternSize,squareSize);
+	solvePnP_result_d3 = getRvecTvec(image_captured_d3,patternSize,squareSize);
+	solvePnP_result_d1 = getRvecTvec(image_captured_d1,patternSize,squareSize);
 
-    Point3d p1 = general::locationCam2Target( imgPoint_d1, solvePnP_result_d1);
-	Point3d p2 = general::locationCam2Target( imgPoint_d2, solvePnP_result_d2);
-	Point3d p3 = general::locationCam2Target( imgPoint_d3, solvePnP_result_d3);
+    Point3d p1 = locationCam2Target( imgPoint_d1, solvePnP_result_d1);
+	Point3d p2 = locationCam2Target( imgPoint_d2, solvePnP_result_d2);
+	Point3d p3 = locationCam2Target( imgPoint_d3, solvePnP_result_d3);
 	// cout<<endl<<"3 points in camera frame:   " <<p1<<" "<<p2<<" "<<p3<<endl;
-	general::lineEquation(p1,p3,tvec_laser_values);
+	lineEquation(p1,p3,tvec_laser_values);
 	cout<<endl<<"ideal laser origin: "<<"("<<tvec_laser_values[0]<<", "<<tvec_laser_values[1]<<", "<<tvec_laser_values[2]<<")"<<endl;
 
 	/*Laser plane verification----------------------------------------------------------------------------------------------------*/
@@ -197,22 +179,22 @@ int main(int argc, char* argv[])
 	vector<vector<double>> normalVector_collection;
 	for(int i=0; i<3; i++)
 	{
-		vector<double> NV = laserline::crossProduct(vect3D_collection[3*i],vect3D_collection[3*i+1]);
+		vector<double> NV = crossProduct(vect3D_collection[3*i],vect3D_collection[3*i+1]);
 		double d = sqrt(NV[0]*NV[0] + NV[1]*NV[1] + NV[2]*NV[2]);
 		NV[0] = NV[0]/d; NV[1] = NV[1]/d; NV[2] = NV[2]/d;
 		normalVector_collection.push_back(NV);
 
-		NV = laserline::crossProduct(vect3D_collection[3*i],vect3D_collection[3*i+2]);
+		NV = crossProduct(vect3D_collection[3*i],vect3D_collection[3*i+2]);
 		d = sqrt(NV[0]*NV[0] + NV[1]*NV[1] + NV[2]*NV[2]);
 		NV[0] = NV[0]/d; NV[1] = NV[1]/d; NV[2] = NV[2]/d;
 		normalVector_collection.push_back(NV);
 
-		NV = laserline::crossProduct(vect3D_collection[3*i+1],vect3D_collection[3*i+2]);
+		NV = crossProduct(vect3D_collection[3*i+1],vect3D_collection[3*i+2]);
 		d = sqrt(NV[0]*NV[0] + NV[1]*NV[1] + NV[2]*NV[2]);
 		NV[0] = NV[0]/d; NV[1] = NV[1]/d; NV[2] = NV[2]/d;
 		normalVector_collection.push_back(NV);
 
-		// normalVector_collection.push_back(laserline::crossProduct(vect3D_collection[3*i+1],vect3D_collection[3*i+2]));
+		// normalVector_collection.push_back(crossProduct(vect3D_collection[3*i+1],vect3D_collection[3*i+2]));
 		// min = *min_element(normalVector_collection[3*i+2].begin(), normalVector_collection[3*i+2].end());
 		// transform(normalVector_collection[3*i+2].begin(), normalVector_collection[3*i+2].end(), normalVector_collection[3*i+2].begin(), [min](double &c){ return c/min; });
 	}
@@ -231,8 +213,8 @@ int main(int argc, char* argv[])
 	norm_avg.z = zSum/9;
 	cout<<endl<<"The actual normal vector average: "<< norm_avg<<endl;
 
-	laserline::laser_plane laser_plane;
-	laser_plane = laserline::laserPlane(rmatrix_laser_values, tvec_laser_values);
+	laser_plane laser_plane;
+	laser_plane = laserPlane(rmatrix_laser_values, tvec_laser_values);
 	cout<<endl<<"The ideal normal vector of ideal laser plane: "<<"["<< laser_plane.normalvector[0]<<","<<laser_plane.normalvector[1]<<","<<laser_plane.normalvector[2]<<"]"<<endl;
 
 }

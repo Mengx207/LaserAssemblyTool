@@ -6,27 +6,10 @@
 	Measure nomal distance between laser dot and calculated laser line
 	Meausre distance from the center of laser line to the laser dot along the line
 */
-#include <iostream>
-#include <sstream>
-#include <string>
-#include <unistd.h>
-#include <pylon/InstantCamera.h>
-#include <pylon/PylonIncludes.h>
-#include <GenApi/IEnumeration.h>
-#include <pylon/EnumParameter.h>
-#include <Base/GCString.h>
-#include <opencv2/core/core.hpp>
-#include <opencv2/core/utility.hpp>
-#include "opencv2/imgproc/imgproc.hpp"
-#include <bits/stdc++.h>
-#include <vector>
-#include <opencv2/highgui/highgui.hpp>
-#include "include/softwaretriggerconfiguration.h"
-#include <time.h>
-#include <stdio.h>
-#include <ctime>
 
 #include "include/utility.h"
+#include "include/imgpro.h"
+#include "include/gencal.h"
 
 using namespace Pylon;
 using namespace std;
@@ -185,7 +168,7 @@ int main(int argc, char* argv[])
 				}
 
 				// Calculate rotation vector and translation vector by a captured image of a pattern
-				laserline::solvePnP_result solvePnP_result;
+				solvePnP_result solvePnP_result;
 				Mat image_captured;
 				if(argc == 4)
 				{
@@ -206,7 +189,7 @@ int main(int argc, char* argv[])
 
 				Size patternSize (7,4);
 				double squareSize = 7;
-				solvePnP_result = laserline::getRvecTvec(image_captured, patternSize, squareSize);
+				solvePnP_result = getRvecTvec(image_captured, patternSize, squareSize);
 
 				// read laser 1
 				ifstream rmatrixL(path_rmatrix);
@@ -220,16 +203,16 @@ int main(int argc, char* argv[])
 					tvec_laser_values.push_back(val*1000);
 				}
 				// find target board plane in cam frame
-				pair<vector<double>,vector<double>>target = laserline::targetBoardPlane(solvePnP_result.rmatrix, solvePnP_result.tvec);
-				laserline::laser_plane laser_1;
-				laser_1 = laserline::laserPlane(rmatrix_laser_values, tvec_laser_values);
+				pair<vector<double>,vector<double>>target = targetBoardPlane(solvePnP_result.rmatrix, solvePnP_result.tvec);
+				laser_plane laser_1;
+				laser_1 = laserPlane(rmatrix_laser_values, tvec_laser_values);
 				Point3f interPoint1;
-				interPoint1 = laserline::intersectionPoint(laser_1.origin, laser_1.beam_dir, target.first, target.second);
+				interPoint1 = intersectionPoint(laser_1.origin, laser_1.beam_dir, target.first, target.second);
 				
 				// find intersection line between target board plane and laser plane in cam frame
 				std::vector<cv::Point3d> laserline_points_1, laserline_points_2, laserline_points_3;
-				laserline::intersection line1, line2, line3;
-				line1 = laserline::intersectionLine(target.first, laser_1.normalvector, target.second, vector<double>{interPoint1.x, interPoint1.y, interPoint1.z});
+				intersection line1, line2, line3;
+				line1 = intersectionLine(target.first, laser_1.normalvector, target.second, vector<double>{interPoint1.x, interPoint1.y, interPoint1.z});
 				for(int t=-150; t<150;)
 				{
 					t = t+10;
@@ -259,23 +242,24 @@ int main(int argc, char* argv[])
 
 				cv::Mat img_grey_filtered_dot;
 				cv::threshold(img_grey,img_grey_filtered_dot,250,255,cv::THRESH_OTSU||cv::THRESH_TRIANGLE);	
-				laserdot::CalculatedLine( dot_img, projectedlaserline_1[0], projectedlaserline_1[projectedlaserline_1.size()-2] );
+				line( dot_img, projectedlaserline_1[0], projectedlaserline_1[projectedlaserline_1.size()-2],Scalar(100,100,0), 3, LINE_AA );
+
 				
 				vector<Point3d> interPointArray;
 				vector<Point2d> interPointsImage_vector;
 				interPointArray.push_back(interPoint1);
 				projectPoints(interPointArray, Mat::zeros(3,1,CV_64FC1), Mat::zeros(3,1,CV_64FC1),cameraMatrix,distCoeffs,interPointsImage_vector);
 				// cout<<endl<<"Intersection between laser beam and target board on camera image: "<<endl<<interPointsImage_vector<<endl;
-				cv::circle( dot_img, interPointsImage_vector[0], 5, cv::Scalar(0,0,255), -1, 8, 0 );
+				cv::circle( dot_img, interPointsImage_vector[0], 5, cv::Scalar(100,100,0), -1, 8, 0 );
 
 
 				// Number of non_zero pixel
-				int non_zero = laserdot::NonZero(img_grey_filtered_dot);
+				int non_zero = NonZero(img_grey_filtered_dot);
 
 				// Number of bright pixel
-				int count = laserdot::PixelCounter(img_grey_filtered_dot);
+				int count = PixelCounter(img_grey_filtered_dot);
 				// average size
-				size_avg = laserdot::SizeAverage(count,0,size_array, center_rect_count);
+				size_avg = SizeAverage(count,0,size_array, center_rect_count);
 				//-----------save min_size only when the value in size_array is stable and close to each other
 				if(size_avg < min_size && center_rect_count > 20)
 				{
@@ -320,8 +304,8 @@ int main(int argc, char* argv[])
 
 					// 	cv::circle( dot_img, center_avg, 3, cv::Scalar(255,100,0), -1, 8, 0 );
 
-					// 	// std::pair<double,double>dist = laserdot::DotToLine(src, line_1_Start, line_1_End, center_avg, Point2d(interPoint1.x+720,-interPoint1.y+540));
-					// 	std::pair<double,double>dist = laserdot::DotToLine(dot_img, projectedlaserline_1[0], projectedlaserline_1[19], center_avg, interPointsImage_vector[0]);
+					// 	// std::pair<double,double>dist = DotToLine(src, line_1_Start, line_1_End, center_avg, Point2d(interPoint1.x+720,-interPoint1.y+540));
+					// 	std::pair<double,double>dist = DotToLine(dot_img, projectedlaserline_1[0], projectedlaserline_1[19], center_avg, interPointsImage_vector[0]);
 					// 	nom_distance = dist.first;
 					// 	center_distance = dist.second;
 					// }
@@ -333,12 +317,12 @@ int main(int argc, char* argv[])
 					findContours( threshold_output, contours, hierarchy, RETR_TREE, CHAIN_APPROX_SIMPLE, Point(0, 0) );
 					if(contours.size() > 0)
 					{
-						vector<RotatedRect> minRect = laserline::findRectangle(contours,20);
+						vector<RotatedRect> minRect = findRectangle(contours,20);
 						if(minRect.size() == 1)
 						{	
 							center_rect_list.push_back(minRect[0].center);
 							center_rect_count++;
-							laserline::drawContourRectangle(drawing, contours, minRect);
+							drawContourRectangle(drawing, contours, minRect);
 							cv::circle( dot_img, minRect[0].center, 3, cv::Scalar(100,255,0), -1, 8, 0 );
 							// cout<<endl<<"minRect center: "<< minRect[0].center<<endl;
 						}
@@ -353,7 +337,7 @@ int main(int argc, char* argv[])
 							center_rect_avg = sum*(1.0/center_rect_count);
 
 							circle(dot_img, center_rect_avg, 3, Scalar(255,0,255), -1, 8, 0);
-							std::pair<double,double>dist = laserdot::DotToLine(dot_img, projectedlaserline_1[0], projectedlaserline_1[19], center_rect_avg, interPointsImage_vector[0]);
+							std::pair<double,double>dist = DotToLine(dot_img, projectedlaserline_1[0], projectedlaserline_1[19], center_rect_avg, interPointsImage_vector[0]);
 							nom_distance = dist.first;
 							center_distance = dist.second;
 							centerImage = center_rect_avg;
@@ -370,10 +354,10 @@ int main(int argc, char* argv[])
 					//fill(center_list.begin(), center_list.end(), cv::Point(0,0));
 				}
 
-				Point3d point_1 = general::locationCam2Target(interPointsImage_vector[0], solvePnP_result);
+				Point3d point_1 = locationCam2Target(interPointsImage_vector[0], solvePnP_result);
 
-				laserdot::HMI(dot_img, size_avg, min_size, non_zero, nom_distance, center_distance);
-				laserdot::GreenLight(dot_img, last_min_size, size_avg, nom_distance, center_distance);
+				HMI(dot_img, size_avg, min_size, non_zero, nom_distance, center_distance);
+				GreenLight(dot_img, last_min_size, size_avg, nom_distance, center_distance);
 				
 				// cv::imshow("img_grey_filtered_dot", img_grey_filtered_dot);	
 				// cv::imshow("threshold output", threshold_output);
