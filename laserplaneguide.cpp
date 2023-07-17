@@ -257,10 +257,10 @@ int main(int argc, char* argv[])
 				cv::cvtColor(src, img_grey, cv::COLOR_BGR2GRAY);
 				line_img = src.clone();
 				// CalculatedLine( line_img, projectedlaserline_1[0], projectedlaserline_1[projectedlaserline_1.size()-2] );
-				line( line_img, projectedlaserline_1[0], projectedlaserline_1[projectedlaserline_1.size()-2],Scalar(100,100,0), 3, LINE_AA );
+				line( line_img, projectedlaserline_1[0], projectedlaserline_1[projectedlaserline_1.size()-2],Scalar(200,200,0), 5, LINE_AA );
 
 
-				cv::circle( line_img, projectedInterPoints[0], 5, cv::Scalar(100,100,0), -1, 8, 0 );
+				cv::circle( line_img, projectedInterPoints[0], 5, cv::Scalar(200,200,0), -1, 8, 0 );
 				// cout<<"one point: "<< projectedInterPoints[0]<<endl;
 
 				vector<vector<Point> > contours;

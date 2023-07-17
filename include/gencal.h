@@ -33,6 +33,7 @@ void laserlineGUI(RotatedRect rect, Point2d cal_center, int cal_angle, uniformit
 laser_beam_return callLaserBeamAlign(Mat image_captured, string path, string path_rmatrix, string path_tvec, Mat src, int min_size, int last_min_size, int size_array[10],vector<Point> center_rect_list, double center_rect_count);
 laser_plane_return callLaserPlaneAlign(Mat image_captured, string path, string path_rmatrix, string path_tvec, Mat src);
 laser_verification_return callLaserVerification(string path_rmatrix, string path, string path_tvec, string path_beam_verify, string path_plane_verify);
+void arucoLocate(Mat cvCamMat, Mat cvDistCoeffs);
 
 
 #endif // GENCAL_H

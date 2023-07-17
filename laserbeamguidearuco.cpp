@@ -10,6 +10,7 @@
 #include "include/utility.h"
 #include "include/imgpro.h"
 #include "include/gencal.h"
+#include <opencv2/aruco.hpp>
 
 using namespace Pylon;
 using namespace std;
@@ -106,9 +107,25 @@ int main(int argc, char* argv[])
 		vector<double> rmatrix_laser_values;
 		vector<double> tvec_laser_values;
 		Point centerImage;
+		ifstream intrin("values/intrinsic.txt");
+		vector<double> cameraMatrix_values;
+		double val;
+		while (intrin >> val)
+		{
+			cameraMatrix_values.push_back(val);
+		}
+		ifstream dist("values/distortion.txt");
+		vector<double> distCoeffs_values;
+		while (dist >> val)
+		{
+			distCoeffs_values.push_back(val);
+		}
+		Mat cameraMatrix = Mat(3, 3, CV_64FC1, cameraMatrix_values.data());
+		Mat distCoeffs = Mat(5, 1, CV_64FC1, distCoeffs_values.data());
 
 		while(waitKey(10) != 'q')
 		{
+
 			// cout<<endl<<"--------------------------------------------------------------------------------"<<endl;
 			int max_imgs0 = 1;   
 			int imgs_taken0 =0;
@@ -117,6 +134,7 @@ int main(int argc, char* argv[])
 			while (imgs_taken0 < max_imgs0) 
 			{	
 				CGrabResultPtr ptrGrabResult0;
+				CGrabResultPtr ptrGrabResult1;
 				while(camera0.WaitForFrameTriggerReady(1000,TimeoutHandling_ThrowException)==0);			
 				CCommandParameter(nodemap0, "TriggerSoftware").Execute();	
 				bool test0 = camera0.RetrieveResult(1000, ptrGrabResult0, TimeoutHandling_ThrowException);
@@ -125,24 +143,7 @@ int main(int argc, char* argv[])
 				cam_frame_temp0 = cv::Mat(ptrGrabResult0->GetHeight(), ptrGrabResult0->GetWidth(), CV_8UC3, (uint8_t *) pylonImage0.GetBuffer());
 				src = cam_frame_temp0.clone();
 
-			    // gain rmatrix and tvec from target board to cam
-				ifstream intrin("values/intrinsic.txt");
-				vector<double> cameraMatrix_values;
-				double val;
-				while (intrin >> val)
-				{
-					cameraMatrix_values.push_back(val);
-				}
-				ifstream dist("values/distortion.txt");
-				vector<double> distCoeffs_values;
-				while (dist >> val)
-				{
-					distCoeffs_values.push_back(val);
-				}
-				Mat cameraMatrix = Mat(3, 3, CV_64FC1, cameraMatrix_values.data());
-				Mat distCoeffs = Mat(5, 1, CV_64FC1, distCoeffs_values.data());
-
-				// gain rmatrix and tvec from target board to cam
+				// gain rmatrix and tvec from lasers to cam
 				string path_rmatrix = "values/rmatrix_1_newmount.txt";
 				string path_tvec = "values/tvec_1_newmount.txt";
 				if(argv[1] == string("1")) 
@@ -350,7 +351,6 @@ int main(int argc, char* argv[])
 					fill_n(size_array,10,0);
 					center_rect_count = 0;
 					center_rect_list.clear();
-					//fill(center_list.begin(), center_list.end(), cv::Point(0,0));
 				}
 
 				Point3d point_1 = locationCam2Target(interPointsImage_vector[0], solvePnP_result);
@@ -380,24 +380,7 @@ int main(int argc, char* argv[])
 			ofstream interpoint("values/intersections/intersections_l"+string(argv[1])+"_"+string(argv[3])+".txt");
 			interpoint << centerImage.x <<" ";
 			interpoint << centerImage.y;
-			// if(argv[3] == string("d1"))
-			// {
-			// 	ofstream interpoint("values/intersections/intersections_d1.txt");
-			// 	interpoint << centerImage.x <<" ";
-			// 	interpoint << centerImage.y;
-			// }
-			// if(argv[3] == string("d2"))
-			// {
-			// 	ofstream interpoint("values/intersections/intersections_d2.txt");
-			// 	interpoint << centerImage.x <<" ";
-			// 	interpoint << centerImage.y;
-			// }
-			// if(argv[3] == string("d3"))
-			// {
-			// 	ofstream interpoint("values/intersections/intersections_d3.txt");
-			// 	interpoint << centerImage.x <<" ";
-			// 	interpoint << centerImage.y;
-			// }
+
 		}
 		else {imwrite("images/saved_laser_beam/laser_" + string(argv[1]) + ".jpg", dot_img);}
 

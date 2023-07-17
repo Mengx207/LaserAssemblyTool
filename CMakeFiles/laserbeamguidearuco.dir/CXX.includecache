@@ -92,13 +92,15 @@ softwaretriggerconfiguration.h
 opencv2/aruco.hpp
 -
 
-/home/lingbo/Documents/GitHub/AssemblyGuidanceTool/laserbeamguide.cpp
+/home/lingbo/Documents/GitHub/AssemblyGuidanceTool/laserbeamguidearuco.cpp
 include/utility.h
 /home/lingbo/Documents/GitHub/AssemblyGuidanceTool/include/utility.h
 include/imgpro.h
 /home/lingbo/Documents/GitHub/AssemblyGuidanceTool/include/imgpro.h
 include/gencal.h
 /home/lingbo/Documents/GitHub/AssemblyGuidanceTool/include/gencal.h
+opencv2/aruco.hpp
+-
 pylon/PylonGUI.h
 -
 

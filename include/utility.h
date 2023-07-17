@@ -24,6 +24,9 @@
 #include <fstream> 
 #include "ConfigurationEventPrinter.h"
 #include "softwaretriggerconfiguration.h"
+#include <opencv2/aruco.hpp>
+
+
 
 
 using namespace cv;

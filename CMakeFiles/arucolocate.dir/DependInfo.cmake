@@ -4,9 +4,7 @@ set(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_CXX
-  "/home/lingbo/Documents/GitHub/AssemblyGuidanceTool/gencal.cpp" "/home/lingbo/Documents/GitHub/AssemblyGuidanceTool/CMakeFiles/laserbeamguide.dir/gencal.cpp.o"
-  "/home/lingbo/Documents/GitHub/AssemblyGuidanceTool/imgpro.cpp" "/home/lingbo/Documents/GitHub/AssemblyGuidanceTool/CMakeFiles/laserbeamguide.dir/imgpro.cpp.o"
-  "/home/lingbo/Documents/GitHub/AssemblyGuidanceTool/laserbeamguide.cpp" "/home/lingbo/Documents/GitHub/AssemblyGuidanceTool/CMakeFiles/laserbeamguide.dir/laserbeamguide.cpp.o"
+  "/home/lingbo/Documents/GitHub/AssemblyGuidanceTool/arucolocate.cpp" "/home/lingbo/Documents/GitHub/AssemblyGuidanceTool/CMakeFiles/arucolocate.dir/arucolocate.cpp.o"
   )
 set(CMAKE_CXX_COMPILER_ID "GNU")
 

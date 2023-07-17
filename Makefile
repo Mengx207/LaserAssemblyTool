@@ -56,17 +56,6 @@ CMAKE_BINARY_DIR = /home/lingbo/Documents/GitHub/AssemblyGuidanceTool
 #=============================================================================
 # Targets provided globally by CMake.
 
-# Special rule for the target rebuild_cache
-rebuild_cache:
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running CMake to regenerate build system..."
-	/usr/bin/cmake -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
-.PHONY : rebuild_cache
-
-# Special rule for the target rebuild_cache
-rebuild_cache/fast: rebuild_cache
-
-.PHONY : rebuild_cache/fast
-
 # Special rule for the target edit_cache
 edit_cache:
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "No interactive CMake dialog available..."
@@ -77,6 +66,17 @@ edit_cache:
 edit_cache/fast: edit_cache
 
 .PHONY : edit_cache/fast
+
+# Special rule for the target rebuild_cache
+rebuild_cache:
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running CMake to regenerate build system..."
+	/usr/bin/cmake -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
+.PHONY : rebuild_cache
+
+# Special rule for the target rebuild_cache
+rebuild_cache/fast: rebuild_cache
+
+.PHONY : rebuild_cache/fast
 
 # The main all target
 all: cmake_check_build_system
@@ -111,43 +111,57 @@ depend:
 .PHONY : depend
 
 #=============================================================================
-# Target rules for targets named laserverification
+# Target rules for targets named arucolocate
 
 # Build rule for target.
-laserverification: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 laserverification
-.PHONY : laserverification
+arucolocate: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 arucolocate
+.PHONY : arucolocate
 
 # fast build rule for target.
-laserverification/fast:
-	$(MAKE) -f CMakeFiles/laserverification.dir/build.make CMakeFiles/laserverification.dir/build
-.PHONY : laserverification/fast
+arucolocate/fast:
+	$(MAKE) -f CMakeFiles/arucolocate.dir/build.make CMakeFiles/arucolocate.dir/build
+.PHONY : arucolocate/fast
 
 #=============================================================================
-# Target rules for targets named laserbeamguide
+# Target rules for targets named laserbeamguidearuco
 
 # Build rule for target.
-laserbeamguide: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 laserbeamguide
-.PHONY : laserbeamguide
+laserbeamguidearuco: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 laserbeamguidearuco
+.PHONY : laserbeamguidearuco
 
 # fast build rule for target.
-laserbeamguide/fast:
-	$(MAKE) -f CMakeFiles/laserbeamguide.dir/build.make CMakeFiles/laserbeamguide.dir/build
-.PHONY : laserbeamguide/fast
+laserbeamguidearuco/fast:
+	$(MAKE) -f CMakeFiles/laserbeamguidearuco.dir/build.make CMakeFiles/laserbeamguidearuco.dir/build
+.PHONY : laserbeamguidearuco/fast
 
-#=============================================================================
-# Target rules for targets named laserplaneguide
+arucolocate.o: arucolocate.cpp.o
 
-# Build rule for target.
-laserplaneguide: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 laserplaneguide
-.PHONY : laserplaneguide
+.PHONY : arucolocate.o
 
-# fast build rule for target.
-laserplaneguide/fast:
-	$(MAKE) -f CMakeFiles/laserplaneguide.dir/build.make CMakeFiles/laserplaneguide.dir/build
-.PHONY : laserplaneguide/fast
+# target to build an object file
+arucolocate.cpp.o:
+	$(MAKE) -f CMakeFiles/arucolocate.dir/build.make CMakeFiles/arucolocate.dir/arucolocate.cpp.o
+.PHONY : arucolocate.cpp.o
+
+arucolocate.i: arucolocate.cpp.i
+
+.PHONY : arucolocate.i
+
+# target to preprocess a source file
+arucolocate.cpp.i:
+	$(MAKE) -f CMakeFiles/arucolocate.dir/build.make CMakeFiles/arucolocate.dir/arucolocate.cpp.i
+.PHONY : arucolocate.cpp.i
+
+arucolocate.s: arucolocate.cpp.s
+
+.PHONY : arucolocate.s
+
+# target to generate assembly for a file
+arucolocate.cpp.s:
+	$(MAKE) -f CMakeFiles/arucolocate.dir/build.make CMakeFiles/arucolocate.dir/arucolocate.cpp.s
+.PHONY : arucolocate.cpp.s
 
 gencal.o: gencal.cpp.o
 
@@ -155,9 +169,7 @@ gencal.o: gencal.cpp.o
 
 # target to build an object file
 gencal.cpp.o:
-	$(MAKE) -f CMakeFiles/laserverification.dir/build.make CMakeFiles/laserverification.dir/gencal.cpp.o
-	$(MAKE) -f CMakeFiles/laserbeamguide.dir/build.make CMakeFiles/laserbeamguide.dir/gencal.cpp.o
-	$(MAKE) -f CMakeFiles/laserplaneguide.dir/build.make CMakeFiles/laserplaneguide.dir/gencal.cpp.o
+	$(MAKE) -f CMakeFiles/laserbeamguidearuco.dir/build.make CMakeFiles/laserbeamguidearuco.dir/gencal.cpp.o
 .PHONY : gencal.cpp.o
 
 gencal.i: gencal.cpp.i
@@ -166,9 +178,7 @@ gencal.i: gencal.cpp.i
 
 # target to preprocess a source file
 gencal.cpp.i:
-	$(MAKE) -f CMakeFiles/laserverification.dir/build.make CMakeFiles/laserverification.dir/gencal.cpp.i
-	$(MAKE) -f CMakeFiles/laserbeamguide.dir/build.make CMakeFiles/laserbeamguide.dir/gencal.cpp.i
-	$(MAKE) -f CMakeFiles/laserplaneguide.dir/build.make CMakeFiles/laserplaneguide.dir/gencal.cpp.i
+	$(MAKE) -f CMakeFiles/laserbeamguidearuco.dir/build.make CMakeFiles/laserbeamguidearuco.dir/gencal.cpp.i
 .PHONY : gencal.cpp.i
 
 gencal.s: gencal.cpp.s
@@ -177,9 +187,7 @@ gencal.s: gencal.cpp.s
 
 # target to generate assembly for a file
 gencal.cpp.s:
-	$(MAKE) -f CMakeFiles/laserverification.dir/build.make CMakeFiles/laserverification.dir/gencal.cpp.s
-	$(MAKE) -f CMakeFiles/laserbeamguide.dir/build.make CMakeFiles/laserbeamguide.dir/gencal.cpp.s
-	$(MAKE) -f CMakeFiles/laserplaneguide.dir/build.make CMakeFiles/laserplaneguide.dir/gencal.cpp.s
+	$(MAKE) -f CMakeFiles/laserbeamguidearuco.dir/build.make CMakeFiles/laserbeamguidearuco.dir/gencal.cpp.s
 .PHONY : gencal.cpp.s
 
 imgpro.o: imgpro.cpp.o
@@ -188,9 +196,7 @@ imgpro.o: imgpro.cpp.o
 
 # target to build an object file
 imgpro.cpp.o:
-	$(MAKE) -f CMakeFiles/laserverification.dir/build.make CMakeFiles/laserverification.dir/imgpro.cpp.o
-	$(MAKE) -f CMakeFiles/laserbeamguide.dir/build.make CMakeFiles/laserbeamguide.dir/imgpro.cpp.o
-	$(MAKE) -f CMakeFiles/laserplaneguide.dir/build.make CMakeFiles/laserplaneguide.dir/imgpro.cpp.o
+	$(MAKE) -f CMakeFiles/laserbeamguidearuco.dir/build.make CMakeFiles/laserbeamguidearuco.dir/imgpro.cpp.o
 .PHONY : imgpro.cpp.o
 
 imgpro.i: imgpro.cpp.i
@@ -199,9 +205,7 @@ imgpro.i: imgpro.cpp.i
 
 # target to preprocess a source file
 imgpro.cpp.i:
-	$(MAKE) -f CMakeFiles/laserverification.dir/build.make CMakeFiles/laserverification.dir/imgpro.cpp.i
-	$(MAKE) -f CMakeFiles/laserbeamguide.dir/build.make CMakeFiles/laserbeamguide.dir/imgpro.cpp.i
-	$(MAKE) -f CMakeFiles/laserplaneguide.dir/build.make CMakeFiles/laserplaneguide.dir/imgpro.cpp.i
+	$(MAKE) -f CMakeFiles/laserbeamguidearuco.dir/build.make CMakeFiles/laserbeamguidearuco.dir/imgpro.cpp.i
 .PHONY : imgpro.cpp.i
 
 imgpro.s: imgpro.cpp.s
@@ -210,91 +214,35 @@ imgpro.s: imgpro.cpp.s
 
 # target to generate assembly for a file
 imgpro.cpp.s:
-	$(MAKE) -f CMakeFiles/laserverification.dir/build.make CMakeFiles/laserverification.dir/imgpro.cpp.s
-	$(MAKE) -f CMakeFiles/laserbeamguide.dir/build.make CMakeFiles/laserbeamguide.dir/imgpro.cpp.s
-	$(MAKE) -f CMakeFiles/laserplaneguide.dir/build.make CMakeFiles/laserplaneguide.dir/imgpro.cpp.s
+	$(MAKE) -f CMakeFiles/laserbeamguidearuco.dir/build.make CMakeFiles/laserbeamguidearuco.dir/imgpro.cpp.s
 .PHONY : imgpro.cpp.s
 
-laserbeamguide.o: laserbeamguide.cpp.o
+laserbeamguidearuco.o: laserbeamguidearuco.cpp.o
 
-.PHONY : laserbeamguide.o
-
-# target to build an object file
-laserbeamguide.cpp.o:
-	$(MAKE) -f CMakeFiles/laserbeamguide.dir/build.make CMakeFiles/laserbeamguide.dir/laserbeamguide.cpp.o
-.PHONY : laserbeamguide.cpp.o
-
-laserbeamguide.i: laserbeamguide.cpp.i
-
-.PHONY : laserbeamguide.i
-
-# target to preprocess a source file
-laserbeamguide.cpp.i:
-	$(MAKE) -f CMakeFiles/laserbeamguide.dir/build.make CMakeFiles/laserbeamguide.dir/laserbeamguide.cpp.i
-.PHONY : laserbeamguide.cpp.i
-
-laserbeamguide.s: laserbeamguide.cpp.s
-
-.PHONY : laserbeamguide.s
-
-# target to generate assembly for a file
-laserbeamguide.cpp.s:
-	$(MAKE) -f CMakeFiles/laserbeamguide.dir/build.make CMakeFiles/laserbeamguide.dir/laserbeamguide.cpp.s
-.PHONY : laserbeamguide.cpp.s
-
-laserplaneguide.o: laserplaneguide.cpp.o
-
-.PHONY : laserplaneguide.o
+.PHONY : laserbeamguidearuco.o
 
 # target to build an object file
-laserplaneguide.cpp.o:
-	$(MAKE) -f CMakeFiles/laserplaneguide.dir/build.make CMakeFiles/laserplaneguide.dir/laserplaneguide.cpp.o
-.PHONY : laserplaneguide.cpp.o
+laserbeamguidearuco.cpp.o:
+	$(MAKE) -f CMakeFiles/laserbeamguidearuco.dir/build.make CMakeFiles/laserbeamguidearuco.dir/laserbeamguidearuco.cpp.o
+.PHONY : laserbeamguidearuco.cpp.o
 
-laserplaneguide.i: laserplaneguide.cpp.i
+laserbeamguidearuco.i: laserbeamguidearuco.cpp.i
 
-.PHONY : laserplaneguide.i
-
-# target to preprocess a source file
-laserplaneguide.cpp.i:
-	$(MAKE) -f CMakeFiles/laserplaneguide.dir/build.make CMakeFiles/laserplaneguide.dir/laserplaneguide.cpp.i
-.PHONY : laserplaneguide.cpp.i
-
-laserplaneguide.s: laserplaneguide.cpp.s
-
-.PHONY : laserplaneguide.s
-
-# target to generate assembly for a file
-laserplaneguide.cpp.s:
-	$(MAKE) -f CMakeFiles/laserplaneguide.dir/build.make CMakeFiles/laserplaneguide.dir/laserplaneguide.cpp.s
-.PHONY : laserplaneguide.cpp.s
-
-laserverification.o: laserverification.cpp.o
-
-.PHONY : laserverification.o
-
-# target to build an object file
-laserverification.cpp.o:
-	$(MAKE) -f CMakeFiles/laserverification.dir/build.make CMakeFiles/laserverification.dir/laserverification.cpp.o
-.PHONY : laserverification.cpp.o
-
-laserverification.i: laserverification.cpp.i
-
-.PHONY : laserverification.i
+.PHONY : laserbeamguidearuco.i
 
 # target to preprocess a source file
-laserverification.cpp.i:
-	$(MAKE) -f CMakeFiles/laserverification.dir/build.make CMakeFiles/laserverification.dir/laserverification.cpp.i
-.PHONY : laserverification.cpp.i
+laserbeamguidearuco.cpp.i:
+	$(MAKE) -f CMakeFiles/laserbeamguidearuco.dir/build.make CMakeFiles/laserbeamguidearuco.dir/laserbeamguidearuco.cpp.i
+.PHONY : laserbeamguidearuco.cpp.i
 
-laserverification.s: laserverification.cpp.s
+laserbeamguidearuco.s: laserbeamguidearuco.cpp.s
 
-.PHONY : laserverification.s
+.PHONY : laserbeamguidearuco.s
 
 # target to generate assembly for a file
-laserverification.cpp.s:
-	$(MAKE) -f CMakeFiles/laserverification.dir/build.make CMakeFiles/laserverification.dir/laserverification.cpp.s
-.PHONY : laserverification.cpp.s
+laserbeamguidearuco.cpp.s:
+	$(MAKE) -f CMakeFiles/laserbeamguidearuco.dir/build.make CMakeFiles/laserbeamguidearuco.dir/laserbeamguidearuco.cpp.s
+.PHONY : laserbeamguidearuco.cpp.s
 
 # Help Target
 help:
@@ -302,26 +250,22 @@ help:
 	@echo "... all (the default if no target is provided)"
 	@echo "... clean"
 	@echo "... depend"
-	@echo "... rebuild_cache"
-	@echo "... laserverification"
-	@echo "... laserbeamguide"
 	@echo "... edit_cache"
-	@echo "... laserplaneguide"
+	@echo "... rebuild_cache"
+	@echo "... arucolocate"
+	@echo "... laserbeamguidearuco"
+	@echo "... arucolocate.o"
+	@echo "... arucolocate.i"
+	@echo "... arucolocate.s"
 	@echo "... gencal.o"
 	@echo "... gencal.i"
 	@echo "... gencal.s"
 	@echo "... imgpro.o"
 	@echo "... imgpro.i"
 	@echo "... imgpro.s"
-	@echo "... laserbeamguide.o"
-	@echo "... laserbeamguide.i"
-	@echo "... laserbeamguide.s"
-	@echo "... laserplaneguide.o"
-	@echo "... laserplaneguide.i"
-	@echo "... laserplaneguide.s"
-	@echo "... laserverification.o"
-	@echo "... laserverification.i"
-	@echo "... laserverification.s"
+	@echo "... laserbeamguidearuco.o"
+	@echo "... laserbeamguidearuco.i"
+	@echo "... laserbeamguidearuco.s"
 .PHONY : help
 
 
