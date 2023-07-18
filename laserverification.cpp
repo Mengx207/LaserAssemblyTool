@@ -21,27 +21,27 @@ using namespace GENAPI_NAMESPACE;
 
 int main(int argc, char* argv[])
 {
-	string path_rmatrix = "values/rmatrix_L1.txt";
-	string path_tvec = "values/tvec_L1.txt";
+	string path_rmatrix = "values/laser2cam_transformatrix/rmatrix_L1.txt";
+	string path_tvec = "values/laser2cam_transformatrix/tvec_L1.txt";
 	if(argv[1] == string("1")) 
 	{
-		path_rmatrix = "values/rmatrix_L1.txt";
-		path_tvec = "values/tvec_L1.txt";
+		path_rmatrix = "values/laser2cam_transformatrix/rmatrix_L1.txt";
+		path_tvec = "values/laser2cam_transformatrix/tvec_L1.txt";
 	}
 	if(argv[1] == string("2")) 
 	{
-		path_rmatrix = "values/rmatrix_L2.txt";
-		path_tvec = "values/tvec_L2.txt";
+		path_rmatrix = "values/laser2cam_transformatrix/rmatrix_L2.txt";
+		path_tvec = "values/laser2cam_transformatrix/tvec_L2.txt";
 	}
 	if(argv[1] == string("3")) 
 	{
-		path_rmatrix = "values/rmatrix_L3.txt";
-		path_tvec = "values/tvec_L3.txt";
+		path_rmatrix = "values/laser2cam_transformatrix/rmatrix_L3.txt";
+		path_tvec = "values/laser2cam_transformatrix/tvec_L3.txt";
 	}
 	if(argv[1] == string("4"))
 	{
-		path_rmatrix = "values/rmatrix_L4.txt";
-		path_tvec = "values/tvec_L4.txt";
+		path_rmatrix = "values/laser2cam_transformatrix/rmatrix_L4.txt";
+		path_tvec = "values/laser2cam_transformatrix/tvec_L4.txt";
 	}
 
 	vector<double> tvec_laser_values;

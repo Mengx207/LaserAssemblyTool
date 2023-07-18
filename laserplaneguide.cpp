@@ -123,14 +123,14 @@ int main(int argc, char* argv[])
 				src = cam_frame_temp0.clone();
 
 			    // gain rmatrix and tvec from target board to cam
-				ifstream intrin("values/intrinsic.txt");
+				ifstream intrin("values/camera_matrix/intrinsic.txt");
 				vector<double> cameraMatrix_values;
 				double val;
 				while (intrin >> val)
 				{
 					cameraMatrix_values.push_back(val);
 				}
-				ifstream dist("values/distortion.txt");
+				ifstream dist("values/camera_matrix/distortion.txt");
 				vector<double> distCoeffs_values;
 				while (dist >> val)
 				{
@@ -140,27 +140,27 @@ int main(int argc, char* argv[])
 				Mat distCoeffs = Mat(5, 1, CV_64FC1, distCoeffs_values.data());
 
 				// gain rmatrix and tvec from target board to cam
-				string path_rmatrix = "values/rmatrix_L1.txt";
-				string path_tvec = "values/tvec_L1.txt";
+				string path_rmatrix = "values/laser2cam_transformatrix/rmatrix_L1.txt";
+				string path_tvec = "values/laser2cam_transformatrix/tvec_L1.txt";
 				if(argv[1] == string("1")) 
 				{
-					path_rmatrix = "values/rmatrix_L1.txt";
-					path_tvec = "values/tvec_L1.txt";
+					path_rmatrix = "values/laser2cam_transformatrix/rmatrix_L1.txt";
+					path_tvec = "values/laser2cam_transformatrix/tvec_L1.txt";
 				}
 				if(argv[1] == string("2")) 
 				{
-					path_rmatrix = "values/rmatrix_L2.txt";
-					path_tvec = "values/tvec_L2.txt";
+					path_rmatrix = "values/laser2cam_transformatrix/rmatrix_L2.txt";
+					path_tvec = "values/laser2cam_transformatrix/tvec_L2.txt";
 				}
 				if(argv[1] == string("3")) 
 				{
-					path_rmatrix = "values/rmatrix_L3.txt";
-					path_tvec = "values/tvec_L3.txt";
+					path_rmatrix = "values/laser2cam_transformatrix/rmatrix_L3.txt";
+					path_tvec = "values/laser2cam_transformatrix/tvec_L3.txt";
 				}
 				if(argv[1] == string("4"))
 				{
-					path_rmatrix = "values/rmatrix_L4.txt";
-					path_tvec = "values/tvec_L4.txt";
+					path_rmatrix = "values/laser2cam_transformatrix/rmatrix_L4.txt";
+					path_tvec = "values/laser2cam_transformatrix/tvec_L4.txt";
 				}
 
 				// Calculate rotation vector and translation vector by a captured image of a pattern
@@ -170,28 +170,17 @@ int main(int argc, char* argv[])
 					if(argv[3] == string("d1"))
 					{
 						image_captured = imread("images/pattern_d1.png", IMREAD_GRAYSCALE);
-						// imshow("pattern image", image_captured);
-						// waitKey();
 					}
 					if(argv[3] == string("d2"))
 					{
 						image_captured = imread("images/pattern_d2.png", IMREAD_GRAYSCALE);
-						// imshow("pattern image", image_captured);
-						// waitKey();
 					}
 					if(argv[3] == string("d3"))
 					{
 						image_captured = imread("images/pattern_d3.png", IMREAD_GRAYSCALE);
-						// imshow("pattern image", image_captured);
-						// waitKey();
 					}
 				}
 				else {image_captured = imread("images/pattern_d2.png", IMREAD_GRAYSCALE);}
-
-				// Size patternSize (5,3);
-				// double squareSize = 6.75;
-				Size patternSize (7,4);
-				double squareSize = 7;
 
 				// read laser 1
 				ifstream rmatrixL(path_rmatrix);
@@ -339,19 +328,9 @@ int main(int argc, char* argv[])
 		{
 			imwrite("images/saved_laser_plane/laser_" + string(argv[1]) + "_" + string(argv[2]) + "_" + string(argv[3]) + "_MD.jpg", line_img);
 			imwrite("images/saved_laser_plane/laser_plane_" + string(argv[1]) + "_" + string(argv[2]) + "_" + string(argv[3]) + "_threshold.jpg", threshold_output);
-			// Mat threshold_output1;
-			/*Test for threshold image at different distances*/
-			// if(argv[3] == string("d1"))
-			// {threshold_output1 = imread("images/saved_laser_plane/laser_plane_1_d1_threshold.jpg", IMREAD_GRAYSCALE);}
-			// else if(argv[3] == string("d2"))
-			// {threshold_output1 = imread("images/saved_laser_plane/laser_plane_1_d2_threshold.jpg", IMREAD_GRAYSCALE);}
-			// else if(argv[3] == string("d3"))
-			// {threshold_output1 = imread("images/saved_laser_plane/laser_plane_1_d3_threshold.jpg", IMREAD_GRAYSCALE);}
 
 			system("cd values && mkdir -p laserlinetwopoints && cd laserlinetwopoints");
-			// system("touch start_l1_d1.txt && touch end_l1_d1.txt && touch start_l1_d2.txt && touch end_l1_d2.txt && touch start_l1_d3.txt && touch end_l1_d3.txt");
-			// system("touch start_l2_d1.txt && touch end_l2_d1.txt && touch start_l2_d2.txt && touch end_l2_d2.txt && touch start_l2_d3.txt && touch end_l2_d3.txt");
-			// system("touch start_l3_d1.txt && touch end_l3_d1.txt && touch start_l3_d2.txt && touch end_l3_d2.txt && touch start_l3_d3.txt && touch end_l3_d3.txt");
+			
 			pair<Point2f,Point2f> laserline2Points = extractLaserline2Points(threshold_output);
 			cout<<"Pair of end points of actual laser line on image plane: "<< laserline2Points.first << ", " << laserline2Points.second<<endl;
 

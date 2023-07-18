@@ -126,14 +126,14 @@ int main(int argc, char* argv[])
 				src = cam_frame_temp0.clone();
 
 			    // gain rmatrix and tvec from target board to cam
-				ifstream intrin("values/intrinsic.txt");
+				ifstream intrin("values/camera_matrix/intrinsic.txt");
 				vector<double> cameraMatrix_values;
 				double val;
 				while (intrin >> val)
 				{
 					cameraMatrix_values.push_back(val);
 				}
-				ifstream dist("values/distortion.txt");
+				ifstream dist("values/camera_matrix/distortion.txt");
 				vector<double> distCoeffs_values;
 				while (dist >> val)
 				{
@@ -143,27 +143,27 @@ int main(int argc, char* argv[])
 				Mat distCoeffs = Mat(5, 1, CV_64FC1, distCoeffs_values.data());
 
 				// gain rmatrix and tvec from target board to cam
-				string path_rmatrix = "values/rmatrix_L1.txt";
-				string path_tvec = "values/tvec_L1.txt";
+				string path_rmatrix = "values/laser2cam_transformatrix/rmatrix_L1.txt";
+				string path_tvec = "values/laser2cam_transformatrix/tvec_L1.txt";
 				if(argv[1] == string("1")) 
 				{
-					path_rmatrix = "values/rmatrix_L1.txt";
-					path_tvec = "values/tvec_L1.txt";
+					path_rmatrix = "values/laser2cam_transformatrix/rmatrix_L1.txt";
+					path_tvec = "values/laser2cam_transformatrix/tvec_L1.txt";
 				}
 				if(argv[1] == string("2")) 
 				{
-					path_rmatrix = "values/rmatrix_L2.txt";
-					path_tvec = "values/tvec_L2.txt";
+					path_rmatrix = "values/laser2cam_transformatrix/rmatrix_L2.txt";
+					path_tvec = "values/laser2cam_transformatrix/tvec_L2.txt";
 				}
 				if(argv[1] == string("3")) 
 				{
-					path_rmatrix = "values/rmatrix_L3.txt";
-					path_tvec = "values/tvec_L3.txt";
+					path_rmatrix = "values/laser2cam_transformatrix/rmatrix_L3.txt";
+					path_tvec = "values/laser2cam_transformatrix/tvec_L3.txt";
 				}
 				if(argv[1] == string("4"))
 				{
-					path_rmatrix = "values/rmatrix_L4.txt";
-					path_tvec = "values/tvec_L4.txt";
+					path_rmatrix = "values/laser2cam_transformatrix/rmatrix_L4.txt";
+					path_tvec = "values/laser2cam_transformatrix/tvec_L4.txt";
 				}
 
 				// Calculate rotation vector and translation vector by a captured image of a pattern
