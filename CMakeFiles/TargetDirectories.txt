@@ -1,3 +1,4 @@
+/home/lingbo/Documents/GitHub/AssemblyGuidanceTool/CMakeFiles/laserverification.dir
 /home/lingbo/Documents/GitHub/AssemblyGuidanceTool/CMakeFiles/edit_cache.dir
 /home/lingbo/Documents/GitHub/AssemblyGuidanceTool/CMakeFiles/laserplaneguide.dir
 /home/lingbo/Documents/GitHub/AssemblyGuidanceTool/CMakeFiles/rebuild_cache.dir

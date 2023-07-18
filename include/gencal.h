@@ -25,16 +25,20 @@ struct laser_verification_return{
     Point3d delta_origin;
     Point3d delta_normalV;
 };
+struct arucoResult{
+    Mat rmatrix;
+    Mat rvec;
+    Mat tvec;
+    vector<Point3d> obj_corners;
+    vector<Point2d> found_corners;
+};
 
 // Point3d locationCam2Target(Point2d imagePoint, solvePnP_result solvePnP_result);
 Point3d locationCam2Target(Point2d imagePoint, Mat rmatrix, Mat tvec, vector<Point3d>obj_corners, vector<Point2d>found_corners);
 Point3d lineEquation(Point3d p1, Point3d p2, vector<double> tvec_laser_values);
 pair<Point2d, Point2d> extractLaserline2Points(Mat whiteline);
 void laserlineGUI(RotatedRect rect, Point2d cal_center, int cal_angle, uniformity_data uniformity1, Mat drawing);
-laser_beam_return callLaserBeamAlign(Mat image_captured, string path, string path_rmatrix, string path_tvec, Mat src, int min_size, int last_min_size, int size_array[10],vector<Point> center_rect_list, double center_rect_count);
-laser_plane_return callLaserPlaneAlign(Mat image_captured, string path, string path_rmatrix, string path_tvec, Mat src);
-laser_verification_return callLaserVerification(string path_rmatrix, string path, string path_tvec, string path_beam_verify, string path_plane_verify);
-void arucoLocate(Mat cvCamMat, Mat cvDistCoeffs);
+arucoResult readArucoResult();
 
 
 #endif // GENCAL_H

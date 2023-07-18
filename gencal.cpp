@@ -327,73 +327,69 @@ void flattenVector(std::vector<std::vector<cv::Point2f>> &objPoints, std::vector
     }
 }
 
-// void arucoLocate(Mat cvCamMat, Mat cvDistCoeffs)
-// {
-//     double tagSize = 0.02;
+arucoResult readArucoResult()
+{
+    arucoResult result;
+    vector<double> rvec_target2cam, tvec_target2cam;
+    // find target board plane in cam frame
+    double val;
+    ifstream rvec_t, tvec_t;
+    rvec_t.open("values/aruco_result/rvec_target2cam.txt"); 
+    while (rvec_t >> val)
+    {
+        rvec_target2cam.push_back(val);
+    }
+    // for(int i=0; i<rvec_target2cam.size(); i++)
+    // {cout<<endl<<rvec_target2cam[i]<<endl;}
 
-//     cv::Point3f tag0Pos(0, 0, 0);
-//     cv::Point3f tag1Pos(0.18, 0, 0);
-//     cv::Point3f tag2Pos(0, -0.12, 0);
-//     cv::Point3f tag3Pos(0.18, -0.12, 0);
+    tvec_t.open("values/aruco_result/tvec_target2cam.txt"); 
+    while (tvec_t >> val)
+    {
+        tvec_target2cam.push_back(val*1000);
+    }
+    // for(int i=0; i<tvec_target2cam.size(); i++)
+    // {cout<<endl<<tvec_target2cam[i]<<endl;}
 
-//     std::vector<std::vector<cv::Point3f>> objPoints;
-//     addTagPos(tag0Pos, tagSize, objPoints);
-//     addTagPos(tag1Pos, tagSize, objPoints);
-//     addTagPos(tag2Pos, tagSize, objPoints);
-//     addTagPos(tag3Pos, tagSize, objPoints);
-//     cv::Ptr<cv::aruco::Dictionary> boardDict = cv::aruco::getPredefinedDictionary(cv::aruco::DICT_4X4_100);
-//     Pylon::CGrabResultPtr grab_result;
-//     Pylon::CPylonImage pylon_image;
-//     Pylon::CImageFormatConverter converter;
-//     converter.OutputPixelFormat = Pylon::PixelType_BGR8packed;
+    Mat rvec = Mat(3, 1, CV_64FC1, rvec_target2cam.data());
+    Mat tvec = Mat(3, 1, CV_64FC1, tvec_target2cam.data());
+    Mat rmatrix;
+    Rodrigues(rvec, rmatrix);
 
-//     camera.StartGrabbing(Pylon::GrabStrategy_LatestImageOnly);
+    vector<Point3d> obj_corners;
+    vector<Point2d> found_corners;
+    ifstream obj ("values/aruco_result/corners_obj.txt");
+    ifstream found ("values/aruco_result/corners_img.txt");
+    vector<double> reg1, reg2;
+   
+    while (obj >> val)
+    {
+        reg1.push_back(val);
+    }
+    for(int i=0; i<reg1.size(); i=i+3)
+    {
+        Point3d pt;
+        pt.x = reg1[i];
+        pt.y = reg1[i+1];
+        pt.z = reg1[i+2];
+        obj_corners.push_back(pt);
+    }
 
-//     std::vector<cv::Point3f> flattenedObjPoints;
-
-//     flattenVector(objPoints, flattenedObjPoints);
-
-//     camera.RetrieveResult(1000, grab_result);
-//     converter.Convert(pylon_image, grab_result);
-//     Mat image = cv::Mat(grab_result->GetHeight(), grab_result->GetWidth(), CV_8UC3, (uint8_t *)pylon_image.GetBuffer());
-
-//     // cap.read(image);
-//     // // check if we succeeded
-//     // if (image.empty())
-//     // {
-//     //     std::cerr << "ERROR! blank frame grabbed\n";
-//     //     break;
-//     // }
-//     std::vector<int> ids;
-//     std::vector<cv::Point2f> flattenedMarkerCorners;
-//     std::vector<std::vector<cv::Point2f>> markerCorners;
-//     // std::cout << "HERE" << std::endl;
-//     cv::aruco::detectMarkers(image, boardDict, markerCorners, ids);
-//     flattenVector(markerCorners, flattenedMarkerCorners);
-//     if (ids.size() > 0)
-//     {
-//         cv::aruco::drawDetectedMarkers(image, markerCorners, ids);
-
-//         cv::Vec3d rvec, tvec;
-//         if (flattenedMarkerCorners.size() == flattenedObjPoints.size())
-//         {
-//             std::vector<cv::Point3f> fixedObjPoints;
-//             for (auto id : ids)
-//             {
-//                 if (id < objPoints.size())
-//                     fixedObjPoints.insert(end(fixedObjPoints), begin(objPoints.at(id)), end(objPoints.at(id)));
-//             }
-//             if (fixedObjPoints.size() == flattenedMarkerCorners.size())
-//             {
-//                 cv::solvePnP(fixedObjPoints, flattenedMarkerCorners, cvCamMat, cvDistCoeffs, rvec, tvec);
-//                 cv::aruco::drawAxis(image, cvCamMat, cvDistCoeffs, rvec, tvec, 0.1);
-//                 std::cout<<"rvec: "<<rvec<<std::endl<<"tvec: "<<tvec<<std::endl;
-
-//             }
-//         }
-//         cv::imshow("Output Window", image);
-
-//         // if (cv::waitKey(10) == 27)
-//         // break;
-//     }
-// }
+    while (found >> val)
+    {
+        reg2.push_back(val);
+    }			
+    for(int i=0; i<reg2.size(); i=i+2)
+    {
+        Point2d pt;
+        pt.x = reg2[i];
+        pt.y = reg2[i+1];
+        found_corners.push_back(pt);
+    }
+    
+    result.found_corners = found_corners;
+    result.obj_corners = obj_corners;
+    result.rmatrix = rmatrix;
+    result.rvec = rvec;
+    result.tvec = tvec;
+    return result;
+}

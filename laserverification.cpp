@@ -88,21 +88,62 @@ int main(int argc, char* argv[])
 	imgPoint_d3.x = imgPoint_d3_vector[0];
 	imgPoint_d3.y = imgPoint_d3_vector[1];
 
-	solvePnP_result solvePnP_result_d1,solvePnP_result_d2,solvePnP_result_d3;
-	Mat image_captured_d1, image_captured_d2, image_captured_d3;
-	image_captured_d1 = imread("images/pattern_d1.png", IMREAD_GRAYSCALE);
-	image_captured_d2 = imread("images/pattern_d2.png", IMREAD_GRAYSCALE);
-	image_captured_d3 = imread("images/pattern_d3.png", IMREAD_GRAYSCALE);
+	vector<double> rvec_target2cam, tvec_target2cam;
+	ifstream rvec_s, tvec_s;
+	rvec_s.open("values/aruco_result/rvec_target2cam.txt"); 
+	while (rvec_s >> val)
+	{
+		rvec_target2cam.push_back(val);
+	}
 
-	Size patternSize (7,4);
-	double squareSize = 7;
-	solvePnP_result_d2 = getRvecTvec(image_captured_d2,patternSize,squareSize);
-	solvePnP_result_d3 = getRvecTvec(image_captured_d3,patternSize,squareSize);
-	solvePnP_result_d1 = getRvecTvec(image_captured_d1,patternSize,squareSize);
+	tvec_s.open("values/aruco_result/tvec_target2cam.txt"); 
+	while (tvec_s >> val)
+	{
+		tvec_target2cam.push_back(val*1000);
+	}
 
-    Point3d p1 = locationCam2Target( imgPoint_d1, solvePnP_result_d1);
-	Point3d p2 = locationCam2Target( imgPoint_d2, solvePnP_result_d2);
-	Point3d p3 = locationCam2Target( imgPoint_d3, solvePnP_result_d3);
+	Mat rvec = Mat(3, 1, CV_64FC1, rvec_target2cam.data());
+	Mat tvec = Mat(3, 1, CV_64FC1, tvec_target2cam.data());
+	Mat rmatrix;
+	Rodrigues(rvec, rmatrix);
+	vector<Point3d> obj_corners;
+	vector<Point2d> found_corners;
+	ifstream obj ("values/aruco_result/corners_obj.txt");
+	vector<double> reg1;
+	while (obj >> val)
+	{
+		reg1.push_back(val);
+	}
+	for(int i=0; i<reg1.size(); i=i+3)
+	{
+		Point3d pt;
+		pt.x = reg1[i];
+		pt.y = reg1[i+1];
+		pt.z = reg1[i+2];
+		obj_corners.push_back(pt);
+	}
+
+	ifstream found ("values/aruco_result/corners_img.txt");
+	vector<double> reg2;
+	while (found >> val)
+	{
+		reg2.push_back(val);
+	}			
+	for(int i=0; i<reg2.size(); i=i+2)
+	{
+		Point2d pt;
+		pt.x = reg2[i];
+		pt.y = reg2[i+1];
+		found_corners.push_back(pt);
+	}
+
+    // Point3d p1 = locationCam2Target( imgPoint_d1, solvePnP_result_d1);
+	// Point3d p2 = locationCam2Target( imgPoint_d2, solvePnP_result_d2);
+	// Point3d p3 = locationCam2Target( imgPoint_d3, solvePnP_result_d3);
+	Point3d p1 = locationCam2Target( imgPoint_d1, rmatrix, tvec, obj_corners, found_corners);
+	Point3d p2 = locationCam2Target( imgPoint_d2, rmatrix, tvec, obj_corners, found_corners);
+	Point3d p3 = locationCam2Target( imgPoint_d3, rmatrix, tvec, obj_corners, found_corners);
+
 	// cout<<endl<<"3 points in camera frame:   " <<p1<<" "<<p2<<" "<<p3<<endl;
 	lineEquation(p1,p3,tvec_laser_values);
 	cout<<endl<<"ideal laser origin: "<<"("<<tvec_laser_values[0]<<", "<<tvec_laser_values[1]<<", "<<tvec_laser_values[2]<<")"<<endl;

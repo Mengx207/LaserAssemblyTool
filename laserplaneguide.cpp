@@ -102,6 +102,7 @@ int main(int argc, char* argv[])
 		Mat rvec, rmatrix, tvec;
 		vector<Point3d> obj_corners;
 		vector<Point2d> found_corners;
+		arucoResult aruco_result;
 
 		while(waitKey(10) != 'q')
 		{
@@ -195,30 +196,11 @@ int main(int argc, char* argv[])
 				{
 					tvec_laser_values.push_back(val*1000);
 				}
+
 				// find target board plane in cam frame
-				ifstream rvec_s, tvec_s;
-				rvec_s.open("values/aruco_result/rvec_target2cam.txt"); 
-				while (rvec_s >> val)
-				{
-					rvec_target2cam.push_back(val);
-				}
-				// for(int i=0; i<rvec_target2cam.size(); i++)
-				// {cout<<endl<<rvec_target2cam[i]<<endl;}
+				aruco_result = readArucoResult();
 
-				tvec_s.open("values/aruco_result/tvec_target2cam.txt"); 
-				while (tvec_s >> val)
-				{
-					tvec_target2cam.push_back(val*1000);
-				}
-				// for(int i=0; i<tvec_target2cam.size(); i++)
-				// {cout<<endl<<tvec_target2cam[i]<<endl;}
-
-				rvec = Mat(3, 1, CV_64FC1, rvec_target2cam.data());
-				tvec = Mat(3, 1, CV_64FC1, tvec_target2cam.data());
-
-				Rodrigues(rvec, rmatrix);
-
-				pair<vector<double>,vector<double>>target = targetBoardPlane(rmatrix, tvec);
+				pair<vector<double>,vector<double>>target = targetBoardPlane(aruco_result.rmatrix, aruco_result.tvec);
 
 				laser_plane laser_1;
 				laser_1 = laserPlane(rmatrix_laser_values, tvec_laser_values);
@@ -334,39 +316,10 @@ int main(int argc, char* argv[])
 			pair<Point2f,Point2f> laserline2Points = extractLaserline2Points(threshold_output);
 			cout<<"Pair of end points of actual laser line on image plane: "<< laserline2Points.first << ", " << laserline2Points.second<<endl;
 
-			ifstream obj ("values/aruco_result/corners_obj.txt");
-			vector<double> reg1;
-			double val;
-			while (obj >> val)
-			{
-				reg1.push_back(val);
-			}
-			for(int i=0; i<reg1.size(); i=i+3)
-			{
-				Point3d pt;
-				pt.x = reg1[i];
-				pt.y = reg1[i+1];
-				pt.z = reg1[i+2];
-				obj_corners.push_back(pt);
-			}
-
-			ifstream found ("values/aruco_result/corners_img.txt");
-			vector<double> reg2;
-			while (found >> val)
-			{
-				reg2.push_back(val);
-			}			
-			for(int i=0; i<reg2.size(); i=i+2)
-			{
-				Point2d pt;
-				pt.x = reg2[i];
-				pt.y = reg2[i+1];
-				found_corners.push_back(pt);
-			}
 			laserline2Points.first = Point2d(0,0);
 			laserline2Points.second = Point2d(1440,1080);
-			Point3d startCam = locationCam2Target( laserline2Points.first, rmatrix, tvec, obj_corners, found_corners);
-			Point3d endCam= locationCam2Target( laserline2Points.second, rmatrix, tvec, obj_corners, found_corners);
+			Point3d startCam = locationCam2Target( laserline2Points.first, aruco_result.rmatrix, aruco_result.tvec, aruco_result.obj_corners, aruco_result.found_corners);
+			Point3d endCam= locationCam2Target( laserline2Points.second, aruco_result.rmatrix, aruco_result.tvec, aruco_result.obj_corners, aruco_result.found_corners);
 		
 			if(argv[1] == string("1"))
 			{
