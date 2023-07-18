@@ -202,6 +202,7 @@ int main(int argc, char* argv[])
 				{
 					tvec_laser_values.push_back(val*1000);
 				}
+				
 				// find target board plane in cam frame
 				std::vector<double> rvec_target2cam, tvec_target2cam;
 				ifstream rvec_s, tvec_s;
