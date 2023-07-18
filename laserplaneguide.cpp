@@ -208,7 +208,7 @@ int main(int argc, char* argv[])
 				}
 				// find target board plane in cam frame
 				ifstream rvec_s, tvec_s;
-				rvec_s.open("rvec_target2cam.txt"); 
+				rvec_s.open("values/aruco_result/rvec_target2cam.txt"); 
 				while (rvec_s >> val)
 				{
 					rvec_target2cam.push_back(val);
@@ -216,7 +216,7 @@ int main(int argc, char* argv[])
 				// for(int i=0; i<rvec_target2cam.size(); i++)
 				// {cout<<endl<<rvec_target2cam[i]<<endl;}
 
-				tvec_s.open("tvec_target2cam.txt"); 
+				tvec_s.open("values/aruco_result/tvec_target2cam.txt"); 
 				while (tvec_s >> val)
 				{
 					tvec_target2cam.push_back(val*1000);
@@ -355,7 +355,7 @@ int main(int argc, char* argv[])
 			pair<Point2f,Point2f> laserline2Points = extractLaserline2Points(threshold_output);
 			cout<<"Pair of end points of actual laser line on image plane: "<< laserline2Points.first << ", " << laserline2Points.second<<endl;
 
-			ifstream obj ("obj_corners.txt");
+			ifstream obj ("values/aruco_result/corners_obj.txt");
 			vector<double> reg1;
 			double val;
 			while (obj >> val)
@@ -371,7 +371,7 @@ int main(int argc, char* argv[])
 				obj_corners.push_back(pt);
 			}
 
-			ifstream found ("found_corners.txt");
+			ifstream found ("values/aruco_result/corners_img.txt");
 			vector<double> reg2;
 			while (found >> val)
 			{

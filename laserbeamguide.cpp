@@ -206,7 +206,7 @@ int main(int argc, char* argv[])
 				// find target board plane in cam frame
 				std::vector<double> rvec_target2cam, tvec_target2cam;
 				ifstream rvec_s, tvec_s;
-				rvec_s.open("rvec_target2cam.txt"); 
+				rvec_s.open("values/aruco_result/rvec_target2cam.txt"); 
 				while (rvec_s >> val)
 				{
 					rvec_target2cam.push_back(val);
@@ -214,7 +214,7 @@ int main(int argc, char* argv[])
 				// for(int i=0; i<rvec_target2cam.size(); i++)
 				// {cout<<endl<<rvec_target2cam[i]<<endl;}
 
-				tvec_s.open("tvec_target2cam.txt"); 
+				tvec_s.open("values/aruco_result/tvec_target2cam.txt"); 
 				while (tvec_s >> val)
 				{
 					tvec_target2cam.push_back(val*1000);

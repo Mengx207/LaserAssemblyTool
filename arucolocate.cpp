@@ -33,6 +33,7 @@ void flattenVector(std::vector<std::vector<cv::Point2f>> &objPoints, std::vector
 
 int main(int argc, char *argv[])
 {
+    system("cd values && mkdir -p aruco_result");
     Pylon::PylonInitialize();
     Pylon::CTlFactory &tlFactory = Pylon::CTlFactory::GetInstance();
     Pylon::CInstantCamera camera(tlFactory.CreateFirstDevice());
@@ -157,19 +158,19 @@ int main(int argc, char *argv[])
 
         if (cv::waitKey(10) == 27)
         {
-			ofstream rvec_save("rvec_target2cam.txt");
+			ofstream rvec_save("values/aruco_result/rvec_target2cam.txt");
 			rvec_save << rvec[0]<<" "<<rvec[1]<<" "<<rvec[2];
-            ofstream rmatrix_save("rmatrix_target2cam.txt");
+            ofstream rmatrix_save("values/aruco_result/rmatrix_target2cam.txt");
 			rmatrix_save << rmatrix.at<double>(0,0)<<" "<<rmatrix.at<double>(0,1)<<" "<<rmatrix.at<double>(0,2)<<" "<<rmatrix.at<double>(1,0)<<" "<<rmatrix.at<double>(1,1)<<" "<<rmatrix.at<double>(1,2)<<" "<<rmatrix.at<double>(2,0)<<" "<<rmatrix.at<double>(2,1)<<" "<<rmatrix.at<double>(2,2);
 
-            ofstream tvec_save("tvec_target2cam.txt");
+            ofstream tvec_save("values/aruco_result/tvec_target2cam.txt");
 			tvec_save << tvec[0]<<" "<<tvec[1]<<" "<<tvec[2];
 
-            ofstream obj("obj_corners.txt");
+            ofstream obj("values/aruco_result/corners_obj.txt");
 			for(int i=0; i<fixedObjPoints.size(); i++)
             {obj << fixedObjPoints[i].x<<" "<<fixedObjPoints[i].y<<" "<<fixedObjPoints[i].z<<" ";}
 
-            ofstream found("found_corners.txt");
+            ofstream found("values/aruco_result/corners_img.txt");
 			for(int i=0; i<flattenedMarkerCorners.size(); i++)
             {found << flattenedMarkerCorners[i].x<<" "<< flattenedMarkerCorners[i].y<<" ";}
 
