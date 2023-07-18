@@ -135,27 +135,27 @@ int main(int argc, char* argv[])
 				Mat distCoeffs = Mat(5, 1, CV_64FC1, distCoeffs_values.data());
 
 				// gain rmatrix and tvec from target board to cam
-				string path_rmatrix = "values/rmatrix_1_newmount.txt";
-				string path_tvec = "values/tvec_1_newmount.txt";
+				string path_rmatrix = "values/rmatrix_L1.txt";
+				string path_tvec = "values/tvec_L1.txt";
 				if(argv[1] == string("1")) 
 				{
-					path_rmatrix = "values/rmatrix_1_newmount.txt";
-					path_tvec = "values/tvec_1_newmount.txt";
+					path_rmatrix = "values/rmatrix_L1.txt";
+					path_tvec = "values/tvec_L1.txt";
 				}
 				if(argv[1] == string("2")) 
 				{
-					path_rmatrix = "values/rmatrix_2_newmount.txt";
-					path_tvec = "values/tvec_2_newmount.txt";
+					path_rmatrix = "values/rmatrix_L2.txt";
+					path_tvec = "values/tvec_L2.txt";
 				}
 				if(argv[1] == string("3")) 
 				{
-					path_rmatrix = "values/rmatrix_3_newmount.txt";
-					path_tvec = "values/tvec_3_newmount.txt";
+					path_rmatrix = "values/rmatrix_L3.txt";
+					path_tvec = "values/tvec_L3.txt";
 				}
 				if(argv[1] == string("4"))
 				{
-					path_rmatrix = "values/rmatrix_4_newmount.txt";
-					path_tvec = "values/tvec_4_newmount.txt";
+					path_rmatrix = "values/rmatrix_L4.txt";
+					path_tvec = "values/tvec_L4.txt";
 				}
 
 				// Calculate rotation vector and translation vector by a captured image of a pattern

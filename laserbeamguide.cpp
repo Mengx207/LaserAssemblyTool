@@ -143,27 +143,27 @@ int main(int argc, char* argv[])
 				Mat distCoeffs = Mat(5, 1, CV_64FC1, distCoeffs_values.data());
 
 				// gain rmatrix and tvec from target board to cam
-				string path_rmatrix = "values/rmatrix_1_newmount.txt";
-				string path_tvec = "values/tvec_1_newmount.txt";
+				string path_rmatrix = "values/rmatrix_L1.txt";
+				string path_tvec = "values/tvec_L1.txt";
 				if(argv[1] == string("1")) 
 				{
-					path_rmatrix = "values/rmatrix_1_newmount.txt";
-					path_tvec = "values/tvec_1_newmount.txt";
+					path_rmatrix = "values/rmatrix_L1.txt";
+					path_tvec = "values/tvec_L1.txt";
 				}
 				if(argv[1] == string("2")) 
 				{
-					path_rmatrix = "values/rmatrix_2_newmount.txt";
-					path_tvec = "values/tvec_2_newmount.txt";
+					path_rmatrix = "values/rmatrix_L2.txt";
+					path_tvec = "values/tvec_L2.txt";
 				}
 				if(argv[1] == string("3")) 
 				{
-					path_rmatrix = "values/rmatrix_3_newmount.txt";
-					path_tvec = "values/tvec_3_newmount.txt";
+					path_rmatrix = "values/rmatrix_L3.txt";
+					path_tvec = "values/tvec_L3.txt";
 				}
 				if(argv[1] == string("4"))
 				{
-					path_rmatrix = "values/rmatrix_4_newmount.txt";
-					path_tvec = "values/tvec_4_newmount.txt";
+					path_rmatrix = "values/rmatrix_L4.txt";
+					path_tvec = "values/tvec_L4.txt";
 				}
 
 				// Calculate rotation vector and translation vector by a captured image of a pattern
@@ -196,13 +196,44 @@ int main(int argc, char* argv[])
 				{
 					rmatrix_laser_values.push_back(val);
 				}
+
 				ifstream tvecL(path_tvec);
 				while (tvecL >> val)
 				{
 					tvec_laser_values.push_back(val*1000);
 				}
 				// find target board plane in cam frame
+				std::vector<double> rvec_target2cam, tvec_target2cam;
+				ifstream rvec_s, tvec_s;
+				rvec_s.open("rvec_target2cam.txt"); 
+				while (rvec_s >> val)
+				{
+					rvec_target2cam.push_back(val);
+				}
+				for(int i=0; i<rvec_target2cam.size(); i++)
+				{cout<<endl<<rvec_target2cam[i]<<endl;}
+
+				tvec_s.open("tvec_target2cam.txt"); 
+				while (tvec_s >> val)
+				{
+					tvec_target2cam.push_back(val*1000);
+				}
+				for(int i=0; i<tvec_target2cam.size(); i++)
+				{cout<<endl<<tvec_target2cam[i]<<endl;}
+
+				Mat rvec, rmatrix, tvec;
+				rvec = Mat(3, 1, CV_64FC1, rvec_target2cam.data());
+				tvec = Mat(3, 1, CV_64FC1, tvec_target2cam.data());
+
+				Rodrigues(rvec, rmatrix);
+				cout<<endl<<tvec<<endl;
+				cout<<endl<<rmatrix<<endl;
+				cout<<endl<<solvePnP_result.tvec<<endl;
+				cout<<endl<<solvePnP_result.rmatrix<<endl;
+
 				pair<vector<double>,vector<double>>target = targetBoardPlane(solvePnP_result.rmatrix, solvePnP_result.tvec);
+				// pair<vector<double>,vector<double>>target = targetBoardPlane(rmatrix, tvec);
+
 				laser_plane laser_1;
 				laser_1 = laserPlane(rmatrix_laser_values, tvec_laser_values);
 				Point3f interPoint1;
@@ -353,7 +384,7 @@ int main(int argc, char* argv[])
 					//fill(center_list.begin(), center_list.end(), cv::Point(0,0));
 				}
 
-				Point3d point_1 = locationCam2Target(interPointsImage_vector[0], solvePnP_result);
+				// Point3d point_1 = locationCam2Target(interPointsImage_vector[0], solvePnP_result);
 
 				HMI(dot_img, size_avg, min_size, non_zero, nom_distance, center_distance);
 				GreenLight(dot_img, last_min_size, size_avg, nom_distance, center_distance);

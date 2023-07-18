@@ -120,6 +120,7 @@ int main(int argc, char *argv[])
         flattenVector(markerCorners, flattenedMarkerCorners);
 
         cv::Vec3d rvec, tvec;
+        cv::Mat rmatrix;
         if (ids.size() > 0)
         {
             std::cout<<std::endl<<ids[0]<<ids[1]<<ids[2]<<ids[3]<<ids[4]<<std::endl;
@@ -137,6 +138,7 @@ int main(int argc, char *argv[])
                 if (fixedObjPoints.size() == flattenedMarkerCorners.size())
                 {
                     cv::solvePnP(fixedObjPoints, flattenedMarkerCorners, cvCamMat, cvDistCoeffs, rvec, tvec);
+                    Rodrigues(rvec, rmatrix);
 
                     cv::aruco::drawAxis(image, cvCamMat, cvDistCoeffs, rvec, tvec, 0.05);
                     std::cout<<"rvec: "<<rvec<<std::endl<<"tvec: "<<tvec<<std::endl;
@@ -148,9 +150,12 @@ int main(int argc, char *argv[])
         if (cv::waitKey(10) == 27)
         {
 			ofstream rvec_save("rvec_target2cam.txt");
-			rvec_save << rvec;
+			rvec_save << rvec[0]<<" "<<rvec[1]<<" "<<rvec[2];
+            ofstream rmatrix_save("rmatrix_target2cam.txt");
+			rmatrix_save << rmatrix.at<double>(0,0)<<" "<<rmatrix.at<double>(0,1)<<" "<<rmatrix.at<double>(0,2)<<" "<<rmatrix.at<double>(1,0)<<" "<<rmatrix.at<double>(1,1)<<" "<<rmatrix.at<double>(1,2)<<" "<<rmatrix.at<double>(2,0)<<" "<<rmatrix.at<double>(2,1)<<" "<<rmatrix.at<double>(2,2);
+
             ofstream tvec_save("tvec_target2cam.txt");
-			tvec_save << tvec;
+			tvec_save << tvec[0]<<" "<<tvec[1]<<" "<<tvec[2];
 
             break;
         }

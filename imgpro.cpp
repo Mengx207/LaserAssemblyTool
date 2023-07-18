@@ -173,6 +173,8 @@ solvePnP_result getRvecTvec(Mat image_captured, Size patternsize, double squareS
     Mat distCoeffs = Mat(5, 1, CV_64FC1, distCoeffs_values.data());
     Mat rvec, tvec;
     solvePnP(corners_created, corners_found, cameraMatrix, distCoeffs, rvec, tvec);
+    // cout<<endl<<"rvec: "<<rvec<<endl;
+    // cout<<"tvec: "<<tvec<<endl;
     Mat rmatrix;
     Rodrigues(rvec, rmatrix);
     solvePnP_result result;
