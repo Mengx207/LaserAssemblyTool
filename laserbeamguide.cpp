@@ -210,29 +210,29 @@ int main(int argc, char* argv[])
 				{
 					rvec_target2cam.push_back(val);
 				}
-				for(int i=0; i<rvec_target2cam.size(); i++)
-				{cout<<endl<<rvec_target2cam[i]<<endl;}
+				// for(int i=0; i<rvec_target2cam.size(); i++)
+				// {cout<<endl<<rvec_target2cam[i]<<endl;}
 
 				tvec_s.open("tvec_target2cam.txt"); 
 				while (tvec_s >> val)
 				{
 					tvec_target2cam.push_back(val*1000);
 				}
-				for(int i=0; i<tvec_target2cam.size(); i++)
-				{cout<<endl<<tvec_target2cam[i]<<endl;}
+				// for(int i=0; i<tvec_target2cam.size(); i++)
+				// {cout<<endl<<tvec_target2cam[i]<<endl;}
 
 				Mat rvec, rmatrix, tvec;
 				rvec = Mat(3, 1, CV_64FC1, rvec_target2cam.data());
 				tvec = Mat(3, 1, CV_64FC1, tvec_target2cam.data());
 
 				Rodrigues(rvec, rmatrix);
-				cout<<endl<<tvec<<endl;
-				cout<<endl<<rmatrix<<endl;
-				cout<<endl<<solvePnP_result.tvec<<endl;
-				cout<<endl<<solvePnP_result.rmatrix<<endl;
+				// cout<<endl<<tvec<<endl;
+				// cout<<endl<<rmatrix<<endl;
+				// cout<<endl<<solvePnP_result.tvec<<endl;
+				// cout<<endl<<solvePnP_result.rmatrix<<endl;
 
-				pair<vector<double>,vector<double>>target = targetBoardPlane(solvePnP_result.rmatrix, solvePnP_result.tvec);
-				// pair<vector<double>,vector<double>>target = targetBoardPlane(rmatrix, tvec);
+				// pair<vector<double>,vector<double>>target = targetBoardPlane(solvePnP_result.rmatrix, solvePnP_result.tvec);
+				pair<vector<double>,vector<double>>target = targetBoardPlane(rmatrix, tvec);
 
 				laser_plane laser_1;
 				laser_1 = laserPlane(rmatrix_laser_values, tvec_laser_values);
