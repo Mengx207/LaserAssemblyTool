@@ -52,13 +52,13 @@ int main(int argc, char *argv[])
     cv::Point3f tag1Pos(0.09, 0, 0);
     cv::Point3f tag2Pos(0.09, 0.06, 0);
     cv::Point3f tag3Pos(0, 0.06, 0);
-    cv::Point3f tag4Pos(0, 0.04, 0);
+
 
     addTagPos(tag0Pos, tagSize, objPoints);
     addTagPos(tag1Pos, tagSize, objPoints);
     addTagPos(tag2Pos, tagSize, objPoints);
     addTagPos(tag3Pos, tagSize, objPoints);
-    addTagPos(tag4Pos, tagSize, objPoints);
+
 
     cv::Ptr<cv::aruco::Dictionary> boardDict = cv::aruco::getPredefinedDictionary(cv::aruco::DICT_4X4_100);
 
@@ -121,15 +121,15 @@ int main(int argc, char *argv[])
 
         cv::Vec3d rvec, tvec;
         cv::Mat rmatrix;
+        std::vector<cv::Point3f> fixedObjPoints;
         if (ids.size() > 0)
         {
-            std::cout<<std::endl<<ids[0]<<ids[1]<<ids[2]<<ids[3]<<ids[4]<<std::endl;
+            std::cout<<std::endl<<ids[0]<<ids[1]<<ids[2]<<ids[3]<<std::endl;
 
             cv::aruco::drawDetectedMarkers(image, markerCorners, ids);
 
             if (flattenedMarkerCorners.size() == flattenedObjPoints.size())
             {
-                std::vector<cv::Point3f> fixedObjPoints;
                 for (auto id : ids)
                 {
                     if (id < objPoints.size())
@@ -142,6 +142,14 @@ int main(int argc, char *argv[])
 
                     cv::aruco::drawAxis(image, cvCamMat, cvDistCoeffs, rvec, tvec, 0.05);
                     std::cout<<"rvec: "<<rvec<<std::endl<<"tvec: "<<tvec<<std::endl;
+                    cout<<endl<<"fixedObjPoints: "<<endl;
+                    for(int i=0; i<fixedObjPoints.size(); i++)
+                    {cout<<fixedObjPoints[i]<<endl;}
+
+                    cout<<endl<<"flattenedMarkerCorners: "<<endl;
+                    for(int i=0; i<flattenedMarkerCorners.size(); i++)
+                    {cout<<flattenedMarkerCorners[i]<<endl;}
+
                 }
             }
         }
@@ -156,6 +164,14 @@ int main(int argc, char *argv[])
 
             ofstream tvec_save("tvec_target2cam.txt");
 			tvec_save << tvec[0]<<" "<<tvec[1]<<" "<<tvec[2];
+
+            ofstream obj("obj_corners.txt");
+			for(int i=0; i<fixedObjPoints.size(); i++)
+            {obj << fixedObjPoints[i].x<<" "<<fixedObjPoints[i].y<<" "<<fixedObjPoints[i].z<<" ";}
+
+            ofstream found("found_corners.txt");
+			for(int i=0; i<flattenedMarkerCorners.size(); i++)
+            {found << flattenedMarkerCorners[i].x<<" "<< flattenedMarkerCorners[i].y<<" ";}
 
             break;
         }

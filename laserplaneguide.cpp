@@ -97,7 +97,12 @@ int main(int argc, char* argv[])
 			CBooleanParameter(nodemap0, "LineInverter").SetValue(false);
 		}
 
-		solvePnP_result solvePnP_result;
+
+		std::vector<double> rvec_target2cam, tvec_target2cam;
+		Mat rvec, rmatrix, tvec;
+		vector<Point3d> obj_corners;
+		vector<Point2d> found_corners;
+
 		while(waitKey(10) != 'q')
 		{
 			int max_imgs0 = 1;   
@@ -188,8 +193,6 @@ int main(int argc, char* argv[])
 				Size patternSize (7,4);
 				double squareSize = 7;
 
-				solvePnP_result = getRvecTvec(image_captured,patternSize,squareSize);
-
 				// read laser 1
 				ifstream rmatrixL(path_rmatrix);
 				vector<double> rmatrix_laser_values;
@@ -204,7 +207,29 @@ int main(int argc, char* argv[])
 					tvec_laser_values.push_back(val*1000);
 				}
 				// find target board plane in cam frame
-				pair<vector<double>,vector<double>>target = targetBoardPlane(solvePnP_result.rmatrix, solvePnP_result.tvec);
+				ifstream rvec_s, tvec_s;
+				rvec_s.open("rvec_target2cam.txt"); 
+				while (rvec_s >> val)
+				{
+					rvec_target2cam.push_back(val);
+				}
+				// for(int i=0; i<rvec_target2cam.size(); i++)
+				// {cout<<endl<<rvec_target2cam[i]<<endl;}
+
+				tvec_s.open("tvec_target2cam.txt"); 
+				while (tvec_s >> val)
+				{
+					tvec_target2cam.push_back(val*1000);
+				}
+				// for(int i=0; i<tvec_target2cam.size(); i++)
+				// {cout<<endl<<tvec_target2cam[i]<<endl;}
+
+				rvec = Mat(3, 1, CV_64FC1, rvec_target2cam.data());
+				tvec = Mat(3, 1, CV_64FC1, tvec_target2cam.data());
+
+				Rodrigues(rvec, rmatrix);
+
+				pair<vector<double>,vector<double>>target = targetBoardPlane(rmatrix, tvec);
 
 				laser_plane laser_1;
 				laser_1 = laserPlane(rmatrix_laser_values, tvec_laser_values);
@@ -287,9 +312,10 @@ int main(int argc, char* argv[])
 					uniformity_data uniformity1;
 					uniformity1 = cropImage(rotated_image);
 					// From pixel number to actual diameter on target board
-					uniformity1.width_avg = uniformity1.width_avg* 3.45 * (solvePnP_result.tvec.at<double>(0,2)/12)/1000;
-					uniformity1.width_max = uniformity1.width_max* 3.45 * (solvePnP_result.tvec.at<double>(0,2)/12)/1000;
-					uniformity1.width_min = uniformity1.width_min* 3.45 * (solvePnP_result.tvec.at<double>(0,2)/12)/1000;
+
+					uniformity1.width_avg = uniformity1.width_avg* 3.45 * (tvec.at<double>(0,2)/12)/1000;
+					uniformity1.width_max = uniformity1.width_max* 3.45 * (tvec.at<double>(0,2)/12)/1000;
+					uniformity1.width_min = uniformity1.width_min* 3.45 * (tvec.at<double>(0,2)/12)/1000;
 
 					laserlineGUI(minRect[0], projectedInterPoints[0], cal_angle, uniformity1, line_img);
 					// cv::imshow( "Rotated and Cropped laser line", uniformity1.image_BGR );
@@ -327,17 +353,42 @@ int main(int argc, char* argv[])
 			// system("touch start_l2_d1.txt && touch end_l2_d1.txt && touch start_l2_d2.txt && touch end_l2_d2.txt && touch start_l2_d3.txt && touch end_l2_d3.txt");
 			// system("touch start_l3_d1.txt && touch end_l3_d1.txt && touch start_l3_d2.txt && touch end_l3_d2.txt && touch start_l3_d3.txt && touch end_l3_d3.txt");
 			pair<Point2f,Point2f> laserline2Points = extractLaserline2Points(threshold_output);
-			cout<<"Pair of end points of actual laser line on image plane: "<< laserline2Points.first << ", " << laserline2Points.second;
-			Point3d startCam = locationCam2Target( laserline2Points.first, solvePnP_result);
-			Point3d endCam= locationCam2Target( laserline2Points.second, solvePnP_result);
-			/*record the start and end points of the laser line in camera frame*/
-			// ofstream start("values/laserlinetwopoints/start.txt");
-			// if(argv[3] == string("d1"))
-			// {start << startCam.x <<","<< startCam.y <<","<< startCam.z;}
-			// if(argv[3] == string("d2"))
-			// {start << endl << startCam.x <<","<< startCam.y <<","<< startCam.z;}
-			// if(argv[3] == string("d3"))
-			// {start << endl << endl << startCam.x <<","<< startCam.y <<","<< startCam.z;}
+			cout<<"Pair of end points of actual laser line on image plane: "<< laserline2Points.first << ", " << laserline2Points.second<<endl;
+
+			ifstream obj ("obj_corners.txt");
+			vector<double> reg1;
+			double val;
+			while (obj >> val)
+			{
+				reg1.push_back(val);
+			}
+			for(int i=0; i<reg1.size(); i=i+3)
+			{
+				Point3d pt;
+				pt.x = reg1[i];
+				pt.y = reg1[i+1];
+				pt.z = reg1[i+2];
+				obj_corners.push_back(pt);
+			}
+
+			ifstream found ("found_corners.txt");
+			vector<double> reg2;
+			while (found >> val)
+			{
+				reg2.push_back(val);
+			}			
+			for(int i=0; i<reg2.size(); i=i+2)
+			{
+				Point2d pt;
+				pt.x = reg2[i];
+				pt.y = reg2[i+1];
+				found_corners.push_back(pt);
+			}
+			laserline2Points.first = Point2d(0,0);
+			laserline2Points.second = Point2d(1440,1080);
+			Point3d startCam = locationCam2Target( laserline2Points.first, rmatrix, tvec, obj_corners, found_corners);
+			Point3d endCam= locationCam2Target( laserline2Points.second, rmatrix, tvec, obj_corners, found_corners);
+		
 			if(argv[1] == string("1"))
 			{
 				if(argv[3] == string("d1"))
