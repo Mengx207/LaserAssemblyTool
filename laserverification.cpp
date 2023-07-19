@@ -158,8 +158,8 @@ int main(int argc, char* argv[])
 
 	for(int i = 1; i<=3; i++)
 	{
-		path_start ="values/laserlinetwopoints/start_l" + string(argv[1]) + "_d" + to_string(i) + ".txt";
-		path_end = "values/laserlinetwopoints/end_l" + string(argv[1]) + "_d" + to_string(i) + ".txt";
+		path_start ="values/laserline_3Dpoints/start_l" + string(argv[1]) + "_d" + to_string(i) + ".txt";
+		path_end = "values/laserline_3Dpoints/end_l" + string(argv[1]) + "_d" + to_string(i) + ".txt";
 		if(i==1){start_d1.open(path_start); end_d1.open(path_end);}
 		else if(i==2){start_d2.open(path_start); end_d2.open(path_end);}
 		else if(i==3){start_d3.open(path_start); end_d3.open(path_end);}

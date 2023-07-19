@@ -76,7 +76,7 @@ int main(int argc, char *argv[])
     INodeMap& nodemap = camera.GetNodeMap();
 
     CEnumerationPtr(nodemap.GetNode("ExposureMode"))->FromString("Timed"); 
-    CFloatPtr(nodemap.GetNode("ExposureTime"))->SetValue(3000.0);
+    CFloatPtr(nodemap.GetNode("ExposureTime"))->SetValue(4000.0);
     CEnumParameter(nodemap, "LineSelector").SetValue("Line3");
     CEnumParameter(nodemap, "LineMode").SetValue("Output");
     CEnumParameter(nodemap, "LineSource").SetValue("UserOutput2");

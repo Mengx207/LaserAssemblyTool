@@ -169,26 +169,26 @@ int main(int argc, char* argv[])
 				// Calculate rotation vector and translation vector by a captured image of a pattern
 				solvePnP_result solvePnP_result;
 				Mat image_captured;
-				if(argc == 4)
-				{
-					if(argv[3] == string("d1"))
-					{
-						image_captured = imread("images/pattern_d1.png", IMREAD_GRAYSCALE);
-					}
-					if(argv[3] == string("d2"))
-					{
-						image_captured = imread("images/pattern_d2.png", IMREAD_GRAYSCALE);
-					}
-					if(argv[3] == string("d3"))
-					{
-						image_captured = imread("images/pattern_d3.png", IMREAD_GRAYSCALE);
-					}
-				}
-				else {image_captured = imread("images/pattern_d2.png", IMREAD_GRAYSCALE);}
+				// if(argc == 4)
+				// {
+				// 	if(argv[3] == string("d1"))
+				// 	{
+				// 		image_captured = imread("images/pattern_d1.png", IMREAD_GRAYSCALE);
+				// 	}
+				// 	if(argv[3] == string("d2"))
+				// 	{
+				// 		image_captured = imread("images/pattern_d2.png", IMREAD_GRAYSCALE);
+				// 	}
+				// 	if(argv[3] == string("d3"))
+				// 	{
+				// 		image_captured = imread("images/pattern_d3.png", IMREAD_GRAYSCALE);
+				// 	}
+				// }
+				// else {image_captured = imread("images/pattern_d2.png", IMREAD_GRAYSCALE);}
 
-				Size patternSize (7,4);
-				double squareSize = 7;
-				solvePnP_result = getRvecTvec(image_captured, patternSize, squareSize);
+				// Size patternSize (7,4);
+				// double squareSize = 7;
+				// solvePnP_result = getRvecTvec(image_captured, patternSize, squareSize);
 
 				// read laser 1
 				ifstream rmatrixL(path_rmatrix);
@@ -387,25 +387,25 @@ int main(int argc, char* argv[])
 			imwrite("images/saved_laser_beam/laser_" + string(argv[1]) + "_" + string(argv[2]) + "_" + string(argv[3]) + ".jpg", dot_img);	
 			
 			// save center_rect_avg for future use
-			system("cd values && mkdir -p intersections && cd intersections");
-			ofstream interpoint("values/intersections/intersections_l"+string(argv[1])+"_"+string(argv[3])+".txt");
+			system("cd values && mkdir -p beam_intersections && cd beam_intersections");
+			ofstream interpoint("values/beam_intersections/beam_intersections_l"+string(argv[1])+"_"+string(argv[3])+".txt");
 			interpoint << centerImage.x <<" ";
 			interpoint << centerImage.y;
 			// if(argv[3] == string("d1"))
 			// {
-			// 	ofstream interpoint("values/intersections/intersections_d1.txt");
+			// 	ofstream interpoint("values/beam_intersections/beam_intersections_d1.txt");
 			// 	interpoint << centerImage.x <<" ";
 			// 	interpoint << centerImage.y;
 			// }
 			// if(argv[3] == string("d2"))
 			// {
-			// 	ofstream interpoint("values/intersections/intersections_d2.txt");
+			// 	ofstream interpoint("values/beam_intersections/beam_intersections_d2.txt");
 			// 	interpoint << centerImage.x <<" ";
 			// 	interpoint << centerImage.y;
 			// }
 			// if(argv[3] == string("d3"))
 			// {
-			// 	ofstream interpoint("values/intersections/intersections_d3.txt");
+			// 	ofstream interpoint("values/beam_intersections/beam_intersections_d3.txt");
 			// 	interpoint << centerImage.x <<" ";
 			// 	interpoint << centerImage.y;
 			// }
