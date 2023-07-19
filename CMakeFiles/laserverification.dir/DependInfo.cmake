@@ -4,9 +4,9 @@ set(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_CXX
-  "/home/lingbo/Documents/GitHub/AssemblyGuidanceTool/gencal.cpp" "/home/lingbo/Documents/GitHub/AssemblyGuidanceTool/CMakeFiles/laserverification.dir/gencal.cpp.o"
-  "/home/lingbo/Documents/GitHub/AssemblyGuidanceTool/imgpro.cpp" "/home/lingbo/Documents/GitHub/AssemblyGuidanceTool/CMakeFiles/laserverification.dir/imgpro.cpp.o"
-  "/home/lingbo/Documents/GitHub/AssemblyGuidanceTool/laserverification.cpp" "/home/lingbo/Documents/GitHub/AssemblyGuidanceTool/CMakeFiles/laserverification.dir/laserverification.cpp.o"
+  "/home/lingbo/Documents/GitHub/AssemblyGuidanceTool/src/gencal.cpp" "/home/lingbo/Documents/GitHub/AssemblyGuidanceTool/CMakeFiles/laserverification.dir/src/gencal.cpp.o"
+  "/home/lingbo/Documents/GitHub/AssemblyGuidanceTool/src/imgpro.cpp" "/home/lingbo/Documents/GitHub/AssemblyGuidanceTool/CMakeFiles/laserverification.dir/src/imgpro.cpp.o"
+  "/home/lingbo/Documents/GitHub/AssemblyGuidanceTool/src/laserverification.cpp" "/home/lingbo/Documents/GitHub/AssemblyGuidanceTool/CMakeFiles/laserverification.dir/src/laserverification.cpp.o"
   )
 set(CMAKE_CXX_COMPILER_ID "GNU")
 

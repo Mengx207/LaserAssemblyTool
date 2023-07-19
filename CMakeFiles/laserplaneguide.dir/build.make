@@ -57,90 +57,90 @@ include CMakeFiles/laserplaneguide.dir/progress.make
 # Include the compile flags for this target's objects.
 include CMakeFiles/laserplaneguide.dir/flags.make
 
-CMakeFiles/laserplaneguide.dir/laserplaneguide.cpp.o: CMakeFiles/laserplaneguide.dir/flags.make
-CMakeFiles/laserplaneguide.dir/laserplaneguide.cpp.o: laserplaneguide.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/lingbo/Documents/GitHub/AssemblyGuidanceTool/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/laserplaneguide.dir/laserplaneguide.cpp.o"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/laserplaneguide.dir/laserplaneguide.cpp.o -c /home/lingbo/Documents/GitHub/AssemblyGuidanceTool/laserplaneguide.cpp
+CMakeFiles/laserplaneguide.dir/src/laserplaneguide.cpp.o: CMakeFiles/laserplaneguide.dir/flags.make
+CMakeFiles/laserplaneguide.dir/src/laserplaneguide.cpp.o: src/laserplaneguide.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/lingbo/Documents/GitHub/AssemblyGuidanceTool/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/laserplaneguide.dir/src/laserplaneguide.cpp.o"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/laserplaneguide.dir/src/laserplaneguide.cpp.o -c /home/lingbo/Documents/GitHub/AssemblyGuidanceTool/src/laserplaneguide.cpp
 
-CMakeFiles/laserplaneguide.dir/laserplaneguide.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/laserplaneguide.dir/laserplaneguide.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/lingbo/Documents/GitHub/AssemblyGuidanceTool/laserplaneguide.cpp > CMakeFiles/laserplaneguide.dir/laserplaneguide.cpp.i
+CMakeFiles/laserplaneguide.dir/src/laserplaneguide.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/laserplaneguide.dir/src/laserplaneguide.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/lingbo/Documents/GitHub/AssemblyGuidanceTool/src/laserplaneguide.cpp > CMakeFiles/laserplaneguide.dir/src/laserplaneguide.cpp.i
 
-CMakeFiles/laserplaneguide.dir/laserplaneguide.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/laserplaneguide.dir/laserplaneguide.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/lingbo/Documents/GitHub/AssemblyGuidanceTool/laserplaneguide.cpp -o CMakeFiles/laserplaneguide.dir/laserplaneguide.cpp.s
+CMakeFiles/laserplaneguide.dir/src/laserplaneguide.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/laserplaneguide.dir/src/laserplaneguide.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/lingbo/Documents/GitHub/AssemblyGuidanceTool/src/laserplaneguide.cpp -o CMakeFiles/laserplaneguide.dir/src/laserplaneguide.cpp.s
 
-CMakeFiles/laserplaneguide.dir/laserplaneguide.cpp.o.requires:
+CMakeFiles/laserplaneguide.dir/src/laserplaneguide.cpp.o.requires:
 
-.PHONY : CMakeFiles/laserplaneguide.dir/laserplaneguide.cpp.o.requires
+.PHONY : CMakeFiles/laserplaneguide.dir/src/laserplaneguide.cpp.o.requires
 
-CMakeFiles/laserplaneguide.dir/laserplaneguide.cpp.o.provides: CMakeFiles/laserplaneguide.dir/laserplaneguide.cpp.o.requires
-	$(MAKE) -f CMakeFiles/laserplaneguide.dir/build.make CMakeFiles/laserplaneguide.dir/laserplaneguide.cpp.o.provides.build
-.PHONY : CMakeFiles/laserplaneguide.dir/laserplaneguide.cpp.o.provides
+CMakeFiles/laserplaneguide.dir/src/laserplaneguide.cpp.o.provides: CMakeFiles/laserplaneguide.dir/src/laserplaneguide.cpp.o.requires
+	$(MAKE) -f CMakeFiles/laserplaneguide.dir/build.make CMakeFiles/laserplaneguide.dir/src/laserplaneguide.cpp.o.provides.build
+.PHONY : CMakeFiles/laserplaneguide.dir/src/laserplaneguide.cpp.o.provides
 
-CMakeFiles/laserplaneguide.dir/laserplaneguide.cpp.o.provides.build: CMakeFiles/laserplaneguide.dir/laserplaneguide.cpp.o
-
-
-CMakeFiles/laserplaneguide.dir/imgpro.cpp.o: CMakeFiles/laserplaneguide.dir/flags.make
-CMakeFiles/laserplaneguide.dir/imgpro.cpp.o: imgpro.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/lingbo/Documents/GitHub/AssemblyGuidanceTool/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/laserplaneguide.dir/imgpro.cpp.o"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/laserplaneguide.dir/imgpro.cpp.o -c /home/lingbo/Documents/GitHub/AssemblyGuidanceTool/imgpro.cpp
-
-CMakeFiles/laserplaneguide.dir/imgpro.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/laserplaneguide.dir/imgpro.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/lingbo/Documents/GitHub/AssemblyGuidanceTool/imgpro.cpp > CMakeFiles/laserplaneguide.dir/imgpro.cpp.i
-
-CMakeFiles/laserplaneguide.dir/imgpro.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/laserplaneguide.dir/imgpro.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/lingbo/Documents/GitHub/AssemblyGuidanceTool/imgpro.cpp -o CMakeFiles/laserplaneguide.dir/imgpro.cpp.s
-
-CMakeFiles/laserplaneguide.dir/imgpro.cpp.o.requires:
-
-.PHONY : CMakeFiles/laserplaneguide.dir/imgpro.cpp.o.requires
-
-CMakeFiles/laserplaneguide.dir/imgpro.cpp.o.provides: CMakeFiles/laserplaneguide.dir/imgpro.cpp.o.requires
-	$(MAKE) -f CMakeFiles/laserplaneguide.dir/build.make CMakeFiles/laserplaneguide.dir/imgpro.cpp.o.provides.build
-.PHONY : CMakeFiles/laserplaneguide.dir/imgpro.cpp.o.provides
-
-CMakeFiles/laserplaneguide.dir/imgpro.cpp.o.provides.build: CMakeFiles/laserplaneguide.dir/imgpro.cpp.o
+CMakeFiles/laserplaneguide.dir/src/laserplaneguide.cpp.o.provides.build: CMakeFiles/laserplaneguide.dir/src/laserplaneguide.cpp.o
 
 
-CMakeFiles/laserplaneguide.dir/gencal.cpp.o: CMakeFiles/laserplaneguide.dir/flags.make
-CMakeFiles/laserplaneguide.dir/gencal.cpp.o: gencal.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/lingbo/Documents/GitHub/AssemblyGuidanceTool/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/laserplaneguide.dir/gencal.cpp.o"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/laserplaneguide.dir/gencal.cpp.o -c /home/lingbo/Documents/GitHub/AssemblyGuidanceTool/gencal.cpp
+CMakeFiles/laserplaneguide.dir/src/imgpro.cpp.o: CMakeFiles/laserplaneguide.dir/flags.make
+CMakeFiles/laserplaneguide.dir/src/imgpro.cpp.o: src/imgpro.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/lingbo/Documents/GitHub/AssemblyGuidanceTool/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/laserplaneguide.dir/src/imgpro.cpp.o"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/laserplaneguide.dir/src/imgpro.cpp.o -c /home/lingbo/Documents/GitHub/AssemblyGuidanceTool/src/imgpro.cpp
 
-CMakeFiles/laserplaneguide.dir/gencal.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/laserplaneguide.dir/gencal.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/lingbo/Documents/GitHub/AssemblyGuidanceTool/gencal.cpp > CMakeFiles/laserplaneguide.dir/gencal.cpp.i
+CMakeFiles/laserplaneguide.dir/src/imgpro.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/laserplaneguide.dir/src/imgpro.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/lingbo/Documents/GitHub/AssemblyGuidanceTool/src/imgpro.cpp > CMakeFiles/laserplaneguide.dir/src/imgpro.cpp.i
 
-CMakeFiles/laserplaneguide.dir/gencal.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/laserplaneguide.dir/gencal.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/lingbo/Documents/GitHub/AssemblyGuidanceTool/gencal.cpp -o CMakeFiles/laserplaneguide.dir/gencal.cpp.s
+CMakeFiles/laserplaneguide.dir/src/imgpro.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/laserplaneguide.dir/src/imgpro.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/lingbo/Documents/GitHub/AssemblyGuidanceTool/src/imgpro.cpp -o CMakeFiles/laserplaneguide.dir/src/imgpro.cpp.s
 
-CMakeFiles/laserplaneguide.dir/gencal.cpp.o.requires:
+CMakeFiles/laserplaneguide.dir/src/imgpro.cpp.o.requires:
 
-.PHONY : CMakeFiles/laserplaneguide.dir/gencal.cpp.o.requires
+.PHONY : CMakeFiles/laserplaneguide.dir/src/imgpro.cpp.o.requires
 
-CMakeFiles/laserplaneguide.dir/gencal.cpp.o.provides: CMakeFiles/laserplaneguide.dir/gencal.cpp.o.requires
-	$(MAKE) -f CMakeFiles/laserplaneguide.dir/build.make CMakeFiles/laserplaneguide.dir/gencal.cpp.o.provides.build
-.PHONY : CMakeFiles/laserplaneguide.dir/gencal.cpp.o.provides
+CMakeFiles/laserplaneguide.dir/src/imgpro.cpp.o.provides: CMakeFiles/laserplaneguide.dir/src/imgpro.cpp.o.requires
+	$(MAKE) -f CMakeFiles/laserplaneguide.dir/build.make CMakeFiles/laserplaneguide.dir/src/imgpro.cpp.o.provides.build
+.PHONY : CMakeFiles/laserplaneguide.dir/src/imgpro.cpp.o.provides
 
-CMakeFiles/laserplaneguide.dir/gencal.cpp.o.provides.build: CMakeFiles/laserplaneguide.dir/gencal.cpp.o
+CMakeFiles/laserplaneguide.dir/src/imgpro.cpp.o.provides.build: CMakeFiles/laserplaneguide.dir/src/imgpro.cpp.o
+
+
+CMakeFiles/laserplaneguide.dir/src/gencal.cpp.o: CMakeFiles/laserplaneguide.dir/flags.make
+CMakeFiles/laserplaneguide.dir/src/gencal.cpp.o: src/gencal.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/lingbo/Documents/GitHub/AssemblyGuidanceTool/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/laserplaneguide.dir/src/gencal.cpp.o"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/laserplaneguide.dir/src/gencal.cpp.o -c /home/lingbo/Documents/GitHub/AssemblyGuidanceTool/src/gencal.cpp
+
+CMakeFiles/laserplaneguide.dir/src/gencal.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/laserplaneguide.dir/src/gencal.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/lingbo/Documents/GitHub/AssemblyGuidanceTool/src/gencal.cpp > CMakeFiles/laserplaneguide.dir/src/gencal.cpp.i
+
+CMakeFiles/laserplaneguide.dir/src/gencal.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/laserplaneguide.dir/src/gencal.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/lingbo/Documents/GitHub/AssemblyGuidanceTool/src/gencal.cpp -o CMakeFiles/laserplaneguide.dir/src/gencal.cpp.s
+
+CMakeFiles/laserplaneguide.dir/src/gencal.cpp.o.requires:
+
+.PHONY : CMakeFiles/laserplaneguide.dir/src/gencal.cpp.o.requires
+
+CMakeFiles/laserplaneguide.dir/src/gencal.cpp.o.provides: CMakeFiles/laserplaneguide.dir/src/gencal.cpp.o.requires
+	$(MAKE) -f CMakeFiles/laserplaneguide.dir/build.make CMakeFiles/laserplaneguide.dir/src/gencal.cpp.o.provides.build
+.PHONY : CMakeFiles/laserplaneguide.dir/src/gencal.cpp.o.provides
+
+CMakeFiles/laserplaneguide.dir/src/gencal.cpp.o.provides.build: CMakeFiles/laserplaneguide.dir/src/gencal.cpp.o
 
 
 # Object files for target laserplaneguide
 laserplaneguide_OBJECTS = \
-"CMakeFiles/laserplaneguide.dir/laserplaneguide.cpp.o" \
-"CMakeFiles/laserplaneguide.dir/imgpro.cpp.o" \
-"CMakeFiles/laserplaneguide.dir/gencal.cpp.o"
+"CMakeFiles/laserplaneguide.dir/src/laserplaneguide.cpp.o" \
+"CMakeFiles/laserplaneguide.dir/src/imgpro.cpp.o" \
+"CMakeFiles/laserplaneguide.dir/src/gencal.cpp.o"
 
 # External object files for target laserplaneguide
 laserplaneguide_EXTERNAL_OBJECTS =
 
-laserplaneguide: CMakeFiles/laserplaneguide.dir/laserplaneguide.cpp.o
-laserplaneguide: CMakeFiles/laserplaneguide.dir/imgpro.cpp.o
-laserplaneguide: CMakeFiles/laserplaneguide.dir/gencal.cpp.o
+laserplaneguide: CMakeFiles/laserplaneguide.dir/src/laserplaneguide.cpp.o
+laserplaneguide: CMakeFiles/laserplaneguide.dir/src/imgpro.cpp.o
+laserplaneguide: CMakeFiles/laserplaneguide.dir/src/gencal.cpp.o
 laserplaneguide: CMakeFiles/laserplaneguide.dir/build.make
 laserplaneguide: /usr/lib/x86_64-linux-gnu/libopencv_shape.so.3.2.0
 laserplaneguide: /usr/lib/x86_64-linux-gnu/libopencv_stitching.so.3.2.0
@@ -192,9 +192,9 @@ CMakeFiles/laserplaneguide.dir/build: laserplaneguide
 
 .PHONY : CMakeFiles/laserplaneguide.dir/build
 
-CMakeFiles/laserplaneguide.dir/requires: CMakeFiles/laserplaneguide.dir/laserplaneguide.cpp.o.requires
-CMakeFiles/laserplaneguide.dir/requires: CMakeFiles/laserplaneguide.dir/imgpro.cpp.o.requires
-CMakeFiles/laserplaneguide.dir/requires: CMakeFiles/laserplaneguide.dir/gencal.cpp.o.requires
+CMakeFiles/laserplaneguide.dir/requires: CMakeFiles/laserplaneguide.dir/src/laserplaneguide.cpp.o.requires
+CMakeFiles/laserplaneguide.dir/requires: CMakeFiles/laserplaneguide.dir/src/imgpro.cpp.o.requires
+CMakeFiles/laserplaneguide.dir/requires: CMakeFiles/laserplaneguide.dir/src/gencal.cpp.o.requires
 
 .PHONY : CMakeFiles/laserplaneguide.dir/requires
 

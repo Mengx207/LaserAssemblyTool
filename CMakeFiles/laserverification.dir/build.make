@@ -57,90 +57,90 @@ include CMakeFiles/laserverification.dir/progress.make
 # Include the compile flags for this target's objects.
 include CMakeFiles/laserverification.dir/flags.make
 
-CMakeFiles/laserverification.dir/laserverification.cpp.o: CMakeFiles/laserverification.dir/flags.make
-CMakeFiles/laserverification.dir/laserverification.cpp.o: laserverification.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/lingbo/Documents/GitHub/AssemblyGuidanceTool/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/laserverification.dir/laserverification.cpp.o"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/laserverification.dir/laserverification.cpp.o -c /home/lingbo/Documents/GitHub/AssemblyGuidanceTool/laserverification.cpp
+CMakeFiles/laserverification.dir/src/laserverification.cpp.o: CMakeFiles/laserverification.dir/flags.make
+CMakeFiles/laserverification.dir/src/laserverification.cpp.o: src/laserverification.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/lingbo/Documents/GitHub/AssemblyGuidanceTool/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/laserverification.dir/src/laserverification.cpp.o"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/laserverification.dir/src/laserverification.cpp.o -c /home/lingbo/Documents/GitHub/AssemblyGuidanceTool/src/laserverification.cpp
 
-CMakeFiles/laserverification.dir/laserverification.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/laserverification.dir/laserverification.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/lingbo/Documents/GitHub/AssemblyGuidanceTool/laserverification.cpp > CMakeFiles/laserverification.dir/laserverification.cpp.i
+CMakeFiles/laserverification.dir/src/laserverification.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/laserverification.dir/src/laserverification.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/lingbo/Documents/GitHub/AssemblyGuidanceTool/src/laserverification.cpp > CMakeFiles/laserverification.dir/src/laserverification.cpp.i
 
-CMakeFiles/laserverification.dir/laserverification.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/laserverification.dir/laserverification.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/lingbo/Documents/GitHub/AssemblyGuidanceTool/laserverification.cpp -o CMakeFiles/laserverification.dir/laserverification.cpp.s
+CMakeFiles/laserverification.dir/src/laserverification.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/laserverification.dir/src/laserverification.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/lingbo/Documents/GitHub/AssemblyGuidanceTool/src/laserverification.cpp -o CMakeFiles/laserverification.dir/src/laserverification.cpp.s
 
-CMakeFiles/laserverification.dir/laserverification.cpp.o.requires:
+CMakeFiles/laserverification.dir/src/laserverification.cpp.o.requires:
 
-.PHONY : CMakeFiles/laserverification.dir/laserverification.cpp.o.requires
+.PHONY : CMakeFiles/laserverification.dir/src/laserverification.cpp.o.requires
 
-CMakeFiles/laserverification.dir/laserverification.cpp.o.provides: CMakeFiles/laserverification.dir/laserverification.cpp.o.requires
-	$(MAKE) -f CMakeFiles/laserverification.dir/build.make CMakeFiles/laserverification.dir/laserverification.cpp.o.provides.build
-.PHONY : CMakeFiles/laserverification.dir/laserverification.cpp.o.provides
+CMakeFiles/laserverification.dir/src/laserverification.cpp.o.provides: CMakeFiles/laserverification.dir/src/laserverification.cpp.o.requires
+	$(MAKE) -f CMakeFiles/laserverification.dir/build.make CMakeFiles/laserverification.dir/src/laserverification.cpp.o.provides.build
+.PHONY : CMakeFiles/laserverification.dir/src/laserverification.cpp.o.provides
 
-CMakeFiles/laserverification.dir/laserverification.cpp.o.provides.build: CMakeFiles/laserverification.dir/laserverification.cpp.o
-
-
-CMakeFiles/laserverification.dir/imgpro.cpp.o: CMakeFiles/laserverification.dir/flags.make
-CMakeFiles/laserverification.dir/imgpro.cpp.o: imgpro.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/lingbo/Documents/GitHub/AssemblyGuidanceTool/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/laserverification.dir/imgpro.cpp.o"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/laserverification.dir/imgpro.cpp.o -c /home/lingbo/Documents/GitHub/AssemblyGuidanceTool/imgpro.cpp
-
-CMakeFiles/laserverification.dir/imgpro.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/laserverification.dir/imgpro.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/lingbo/Documents/GitHub/AssemblyGuidanceTool/imgpro.cpp > CMakeFiles/laserverification.dir/imgpro.cpp.i
-
-CMakeFiles/laserverification.dir/imgpro.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/laserverification.dir/imgpro.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/lingbo/Documents/GitHub/AssemblyGuidanceTool/imgpro.cpp -o CMakeFiles/laserverification.dir/imgpro.cpp.s
-
-CMakeFiles/laserverification.dir/imgpro.cpp.o.requires:
-
-.PHONY : CMakeFiles/laserverification.dir/imgpro.cpp.o.requires
-
-CMakeFiles/laserverification.dir/imgpro.cpp.o.provides: CMakeFiles/laserverification.dir/imgpro.cpp.o.requires
-	$(MAKE) -f CMakeFiles/laserverification.dir/build.make CMakeFiles/laserverification.dir/imgpro.cpp.o.provides.build
-.PHONY : CMakeFiles/laserverification.dir/imgpro.cpp.o.provides
-
-CMakeFiles/laserverification.dir/imgpro.cpp.o.provides.build: CMakeFiles/laserverification.dir/imgpro.cpp.o
+CMakeFiles/laserverification.dir/src/laserverification.cpp.o.provides.build: CMakeFiles/laserverification.dir/src/laserverification.cpp.o
 
 
-CMakeFiles/laserverification.dir/gencal.cpp.o: CMakeFiles/laserverification.dir/flags.make
-CMakeFiles/laserverification.dir/gencal.cpp.o: gencal.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/lingbo/Documents/GitHub/AssemblyGuidanceTool/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/laserverification.dir/gencal.cpp.o"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/laserverification.dir/gencal.cpp.o -c /home/lingbo/Documents/GitHub/AssemblyGuidanceTool/gencal.cpp
+CMakeFiles/laserverification.dir/src/imgpro.cpp.o: CMakeFiles/laserverification.dir/flags.make
+CMakeFiles/laserverification.dir/src/imgpro.cpp.o: src/imgpro.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/lingbo/Documents/GitHub/AssemblyGuidanceTool/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/laserverification.dir/src/imgpro.cpp.o"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/laserverification.dir/src/imgpro.cpp.o -c /home/lingbo/Documents/GitHub/AssemblyGuidanceTool/src/imgpro.cpp
 
-CMakeFiles/laserverification.dir/gencal.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/laserverification.dir/gencal.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/lingbo/Documents/GitHub/AssemblyGuidanceTool/gencal.cpp > CMakeFiles/laserverification.dir/gencal.cpp.i
+CMakeFiles/laserverification.dir/src/imgpro.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/laserverification.dir/src/imgpro.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/lingbo/Documents/GitHub/AssemblyGuidanceTool/src/imgpro.cpp > CMakeFiles/laserverification.dir/src/imgpro.cpp.i
 
-CMakeFiles/laserverification.dir/gencal.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/laserverification.dir/gencal.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/lingbo/Documents/GitHub/AssemblyGuidanceTool/gencal.cpp -o CMakeFiles/laserverification.dir/gencal.cpp.s
+CMakeFiles/laserverification.dir/src/imgpro.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/laserverification.dir/src/imgpro.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/lingbo/Documents/GitHub/AssemblyGuidanceTool/src/imgpro.cpp -o CMakeFiles/laserverification.dir/src/imgpro.cpp.s
 
-CMakeFiles/laserverification.dir/gencal.cpp.o.requires:
+CMakeFiles/laserverification.dir/src/imgpro.cpp.o.requires:
 
-.PHONY : CMakeFiles/laserverification.dir/gencal.cpp.o.requires
+.PHONY : CMakeFiles/laserverification.dir/src/imgpro.cpp.o.requires
 
-CMakeFiles/laserverification.dir/gencal.cpp.o.provides: CMakeFiles/laserverification.dir/gencal.cpp.o.requires
-	$(MAKE) -f CMakeFiles/laserverification.dir/build.make CMakeFiles/laserverification.dir/gencal.cpp.o.provides.build
-.PHONY : CMakeFiles/laserverification.dir/gencal.cpp.o.provides
+CMakeFiles/laserverification.dir/src/imgpro.cpp.o.provides: CMakeFiles/laserverification.dir/src/imgpro.cpp.o.requires
+	$(MAKE) -f CMakeFiles/laserverification.dir/build.make CMakeFiles/laserverification.dir/src/imgpro.cpp.o.provides.build
+.PHONY : CMakeFiles/laserverification.dir/src/imgpro.cpp.o.provides
 
-CMakeFiles/laserverification.dir/gencal.cpp.o.provides.build: CMakeFiles/laserverification.dir/gencal.cpp.o
+CMakeFiles/laserverification.dir/src/imgpro.cpp.o.provides.build: CMakeFiles/laserverification.dir/src/imgpro.cpp.o
+
+
+CMakeFiles/laserverification.dir/src/gencal.cpp.o: CMakeFiles/laserverification.dir/flags.make
+CMakeFiles/laserverification.dir/src/gencal.cpp.o: src/gencal.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/lingbo/Documents/GitHub/AssemblyGuidanceTool/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/laserverification.dir/src/gencal.cpp.o"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/laserverification.dir/src/gencal.cpp.o -c /home/lingbo/Documents/GitHub/AssemblyGuidanceTool/src/gencal.cpp
+
+CMakeFiles/laserverification.dir/src/gencal.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/laserverification.dir/src/gencal.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/lingbo/Documents/GitHub/AssemblyGuidanceTool/src/gencal.cpp > CMakeFiles/laserverification.dir/src/gencal.cpp.i
+
+CMakeFiles/laserverification.dir/src/gencal.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/laserverification.dir/src/gencal.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/lingbo/Documents/GitHub/AssemblyGuidanceTool/src/gencal.cpp -o CMakeFiles/laserverification.dir/src/gencal.cpp.s
+
+CMakeFiles/laserverification.dir/src/gencal.cpp.o.requires:
+
+.PHONY : CMakeFiles/laserverification.dir/src/gencal.cpp.o.requires
+
+CMakeFiles/laserverification.dir/src/gencal.cpp.o.provides: CMakeFiles/laserverification.dir/src/gencal.cpp.o.requires
+	$(MAKE) -f CMakeFiles/laserverification.dir/build.make CMakeFiles/laserverification.dir/src/gencal.cpp.o.provides.build
+.PHONY : CMakeFiles/laserverification.dir/src/gencal.cpp.o.provides
+
+CMakeFiles/laserverification.dir/src/gencal.cpp.o.provides.build: CMakeFiles/laserverification.dir/src/gencal.cpp.o
 
 
 # Object files for target laserverification
 laserverification_OBJECTS = \
-"CMakeFiles/laserverification.dir/laserverification.cpp.o" \
-"CMakeFiles/laserverification.dir/imgpro.cpp.o" \
-"CMakeFiles/laserverification.dir/gencal.cpp.o"
+"CMakeFiles/laserverification.dir/src/laserverification.cpp.o" \
+"CMakeFiles/laserverification.dir/src/imgpro.cpp.o" \
+"CMakeFiles/laserverification.dir/src/gencal.cpp.o"
 
 # External object files for target laserverification
 laserverification_EXTERNAL_OBJECTS =
 
-laserverification: CMakeFiles/laserverification.dir/laserverification.cpp.o
-laserverification: CMakeFiles/laserverification.dir/imgpro.cpp.o
-laserverification: CMakeFiles/laserverification.dir/gencal.cpp.o
+laserverification: CMakeFiles/laserverification.dir/src/laserverification.cpp.o
+laserverification: CMakeFiles/laserverification.dir/src/imgpro.cpp.o
+laserverification: CMakeFiles/laserverification.dir/src/gencal.cpp.o
 laserverification: CMakeFiles/laserverification.dir/build.make
 laserverification: /usr/lib/x86_64-linux-gnu/libopencv_shape.so.3.2.0
 laserverification: /usr/lib/x86_64-linux-gnu/libopencv_stitching.so.3.2.0
@@ -192,9 +192,9 @@ CMakeFiles/laserverification.dir/build: laserverification
 
 .PHONY : CMakeFiles/laserverification.dir/build
 
-CMakeFiles/laserverification.dir/requires: CMakeFiles/laserverification.dir/laserverification.cpp.o.requires
-CMakeFiles/laserverification.dir/requires: CMakeFiles/laserverification.dir/imgpro.cpp.o.requires
-CMakeFiles/laserverification.dir/requires: CMakeFiles/laserverification.dir/gencal.cpp.o.requires
+CMakeFiles/laserverification.dir/requires: CMakeFiles/laserverification.dir/src/laserverification.cpp.o.requires
+CMakeFiles/laserverification.dir/requires: CMakeFiles/laserverification.dir/src/imgpro.cpp.o.requires
+CMakeFiles/laserverification.dir/requires: CMakeFiles/laserverification.dir/src/gencal.cpp.o.requires
 
 .PHONY : CMakeFiles/laserverification.dir/requires
 

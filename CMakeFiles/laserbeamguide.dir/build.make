@@ -57,90 +57,90 @@ include CMakeFiles/laserbeamguide.dir/progress.make
 # Include the compile flags for this target's objects.
 include CMakeFiles/laserbeamguide.dir/flags.make
 
-CMakeFiles/laserbeamguide.dir/laserbeamguide.cpp.o: CMakeFiles/laserbeamguide.dir/flags.make
-CMakeFiles/laserbeamguide.dir/laserbeamguide.cpp.o: laserbeamguide.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/lingbo/Documents/GitHub/AssemblyGuidanceTool/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/laserbeamguide.dir/laserbeamguide.cpp.o"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/laserbeamguide.dir/laserbeamguide.cpp.o -c /home/lingbo/Documents/GitHub/AssemblyGuidanceTool/laserbeamguide.cpp
+CMakeFiles/laserbeamguide.dir/src/laserbeamguide.cpp.o: CMakeFiles/laserbeamguide.dir/flags.make
+CMakeFiles/laserbeamguide.dir/src/laserbeamguide.cpp.o: src/laserbeamguide.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/lingbo/Documents/GitHub/AssemblyGuidanceTool/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/laserbeamguide.dir/src/laserbeamguide.cpp.o"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/laserbeamguide.dir/src/laserbeamguide.cpp.o -c /home/lingbo/Documents/GitHub/AssemblyGuidanceTool/src/laserbeamguide.cpp
 
-CMakeFiles/laserbeamguide.dir/laserbeamguide.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/laserbeamguide.dir/laserbeamguide.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/lingbo/Documents/GitHub/AssemblyGuidanceTool/laserbeamguide.cpp > CMakeFiles/laserbeamguide.dir/laserbeamguide.cpp.i
+CMakeFiles/laserbeamguide.dir/src/laserbeamguide.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/laserbeamguide.dir/src/laserbeamguide.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/lingbo/Documents/GitHub/AssemblyGuidanceTool/src/laserbeamguide.cpp > CMakeFiles/laserbeamguide.dir/src/laserbeamguide.cpp.i
 
-CMakeFiles/laserbeamguide.dir/laserbeamguide.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/laserbeamguide.dir/laserbeamguide.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/lingbo/Documents/GitHub/AssemblyGuidanceTool/laserbeamguide.cpp -o CMakeFiles/laserbeamguide.dir/laserbeamguide.cpp.s
+CMakeFiles/laserbeamguide.dir/src/laserbeamguide.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/laserbeamguide.dir/src/laserbeamguide.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/lingbo/Documents/GitHub/AssemblyGuidanceTool/src/laserbeamguide.cpp -o CMakeFiles/laserbeamguide.dir/src/laserbeamguide.cpp.s
 
-CMakeFiles/laserbeamguide.dir/laserbeamguide.cpp.o.requires:
+CMakeFiles/laserbeamguide.dir/src/laserbeamguide.cpp.o.requires:
 
-.PHONY : CMakeFiles/laserbeamguide.dir/laserbeamguide.cpp.o.requires
+.PHONY : CMakeFiles/laserbeamguide.dir/src/laserbeamguide.cpp.o.requires
 
-CMakeFiles/laserbeamguide.dir/laserbeamguide.cpp.o.provides: CMakeFiles/laserbeamguide.dir/laserbeamguide.cpp.o.requires
-	$(MAKE) -f CMakeFiles/laserbeamguide.dir/build.make CMakeFiles/laserbeamguide.dir/laserbeamguide.cpp.o.provides.build
-.PHONY : CMakeFiles/laserbeamguide.dir/laserbeamguide.cpp.o.provides
+CMakeFiles/laserbeamguide.dir/src/laserbeamguide.cpp.o.provides: CMakeFiles/laserbeamguide.dir/src/laserbeamguide.cpp.o.requires
+	$(MAKE) -f CMakeFiles/laserbeamguide.dir/build.make CMakeFiles/laserbeamguide.dir/src/laserbeamguide.cpp.o.provides.build
+.PHONY : CMakeFiles/laserbeamguide.dir/src/laserbeamguide.cpp.o.provides
 
-CMakeFiles/laserbeamguide.dir/laserbeamguide.cpp.o.provides.build: CMakeFiles/laserbeamguide.dir/laserbeamguide.cpp.o
-
-
-CMakeFiles/laserbeamguide.dir/imgpro.cpp.o: CMakeFiles/laserbeamguide.dir/flags.make
-CMakeFiles/laserbeamguide.dir/imgpro.cpp.o: imgpro.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/lingbo/Documents/GitHub/AssemblyGuidanceTool/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/laserbeamguide.dir/imgpro.cpp.o"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/laserbeamguide.dir/imgpro.cpp.o -c /home/lingbo/Documents/GitHub/AssemblyGuidanceTool/imgpro.cpp
-
-CMakeFiles/laserbeamguide.dir/imgpro.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/laserbeamguide.dir/imgpro.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/lingbo/Documents/GitHub/AssemblyGuidanceTool/imgpro.cpp > CMakeFiles/laserbeamguide.dir/imgpro.cpp.i
-
-CMakeFiles/laserbeamguide.dir/imgpro.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/laserbeamguide.dir/imgpro.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/lingbo/Documents/GitHub/AssemblyGuidanceTool/imgpro.cpp -o CMakeFiles/laserbeamguide.dir/imgpro.cpp.s
-
-CMakeFiles/laserbeamguide.dir/imgpro.cpp.o.requires:
-
-.PHONY : CMakeFiles/laserbeamguide.dir/imgpro.cpp.o.requires
-
-CMakeFiles/laserbeamguide.dir/imgpro.cpp.o.provides: CMakeFiles/laserbeamguide.dir/imgpro.cpp.o.requires
-	$(MAKE) -f CMakeFiles/laserbeamguide.dir/build.make CMakeFiles/laserbeamguide.dir/imgpro.cpp.o.provides.build
-.PHONY : CMakeFiles/laserbeamguide.dir/imgpro.cpp.o.provides
-
-CMakeFiles/laserbeamguide.dir/imgpro.cpp.o.provides.build: CMakeFiles/laserbeamguide.dir/imgpro.cpp.o
+CMakeFiles/laserbeamguide.dir/src/laserbeamguide.cpp.o.provides.build: CMakeFiles/laserbeamguide.dir/src/laserbeamguide.cpp.o
 
 
-CMakeFiles/laserbeamguide.dir/gencal.cpp.o: CMakeFiles/laserbeamguide.dir/flags.make
-CMakeFiles/laserbeamguide.dir/gencal.cpp.o: gencal.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/lingbo/Documents/GitHub/AssemblyGuidanceTool/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/laserbeamguide.dir/gencal.cpp.o"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/laserbeamguide.dir/gencal.cpp.o -c /home/lingbo/Documents/GitHub/AssemblyGuidanceTool/gencal.cpp
+CMakeFiles/laserbeamguide.dir/src/imgpro.cpp.o: CMakeFiles/laserbeamguide.dir/flags.make
+CMakeFiles/laserbeamguide.dir/src/imgpro.cpp.o: src/imgpro.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/lingbo/Documents/GitHub/AssemblyGuidanceTool/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/laserbeamguide.dir/src/imgpro.cpp.o"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/laserbeamguide.dir/src/imgpro.cpp.o -c /home/lingbo/Documents/GitHub/AssemblyGuidanceTool/src/imgpro.cpp
 
-CMakeFiles/laserbeamguide.dir/gencal.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/laserbeamguide.dir/gencal.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/lingbo/Documents/GitHub/AssemblyGuidanceTool/gencal.cpp > CMakeFiles/laserbeamguide.dir/gencal.cpp.i
+CMakeFiles/laserbeamguide.dir/src/imgpro.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/laserbeamguide.dir/src/imgpro.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/lingbo/Documents/GitHub/AssemblyGuidanceTool/src/imgpro.cpp > CMakeFiles/laserbeamguide.dir/src/imgpro.cpp.i
 
-CMakeFiles/laserbeamguide.dir/gencal.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/laserbeamguide.dir/gencal.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/lingbo/Documents/GitHub/AssemblyGuidanceTool/gencal.cpp -o CMakeFiles/laserbeamguide.dir/gencal.cpp.s
+CMakeFiles/laserbeamguide.dir/src/imgpro.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/laserbeamguide.dir/src/imgpro.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/lingbo/Documents/GitHub/AssemblyGuidanceTool/src/imgpro.cpp -o CMakeFiles/laserbeamguide.dir/src/imgpro.cpp.s
 
-CMakeFiles/laserbeamguide.dir/gencal.cpp.o.requires:
+CMakeFiles/laserbeamguide.dir/src/imgpro.cpp.o.requires:
 
-.PHONY : CMakeFiles/laserbeamguide.dir/gencal.cpp.o.requires
+.PHONY : CMakeFiles/laserbeamguide.dir/src/imgpro.cpp.o.requires
 
-CMakeFiles/laserbeamguide.dir/gencal.cpp.o.provides: CMakeFiles/laserbeamguide.dir/gencal.cpp.o.requires
-	$(MAKE) -f CMakeFiles/laserbeamguide.dir/build.make CMakeFiles/laserbeamguide.dir/gencal.cpp.o.provides.build
-.PHONY : CMakeFiles/laserbeamguide.dir/gencal.cpp.o.provides
+CMakeFiles/laserbeamguide.dir/src/imgpro.cpp.o.provides: CMakeFiles/laserbeamguide.dir/src/imgpro.cpp.o.requires
+	$(MAKE) -f CMakeFiles/laserbeamguide.dir/build.make CMakeFiles/laserbeamguide.dir/src/imgpro.cpp.o.provides.build
+.PHONY : CMakeFiles/laserbeamguide.dir/src/imgpro.cpp.o.provides
 
-CMakeFiles/laserbeamguide.dir/gencal.cpp.o.provides.build: CMakeFiles/laserbeamguide.dir/gencal.cpp.o
+CMakeFiles/laserbeamguide.dir/src/imgpro.cpp.o.provides.build: CMakeFiles/laserbeamguide.dir/src/imgpro.cpp.o
+
+
+CMakeFiles/laserbeamguide.dir/src/gencal.cpp.o: CMakeFiles/laserbeamguide.dir/flags.make
+CMakeFiles/laserbeamguide.dir/src/gencal.cpp.o: src/gencal.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/lingbo/Documents/GitHub/AssemblyGuidanceTool/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/laserbeamguide.dir/src/gencal.cpp.o"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/laserbeamguide.dir/src/gencal.cpp.o -c /home/lingbo/Documents/GitHub/AssemblyGuidanceTool/src/gencal.cpp
+
+CMakeFiles/laserbeamguide.dir/src/gencal.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/laserbeamguide.dir/src/gencal.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/lingbo/Documents/GitHub/AssemblyGuidanceTool/src/gencal.cpp > CMakeFiles/laserbeamguide.dir/src/gencal.cpp.i
+
+CMakeFiles/laserbeamguide.dir/src/gencal.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/laserbeamguide.dir/src/gencal.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/lingbo/Documents/GitHub/AssemblyGuidanceTool/src/gencal.cpp -o CMakeFiles/laserbeamguide.dir/src/gencal.cpp.s
+
+CMakeFiles/laserbeamguide.dir/src/gencal.cpp.o.requires:
+
+.PHONY : CMakeFiles/laserbeamguide.dir/src/gencal.cpp.o.requires
+
+CMakeFiles/laserbeamguide.dir/src/gencal.cpp.o.provides: CMakeFiles/laserbeamguide.dir/src/gencal.cpp.o.requires
+	$(MAKE) -f CMakeFiles/laserbeamguide.dir/build.make CMakeFiles/laserbeamguide.dir/src/gencal.cpp.o.provides.build
+.PHONY : CMakeFiles/laserbeamguide.dir/src/gencal.cpp.o.provides
+
+CMakeFiles/laserbeamguide.dir/src/gencal.cpp.o.provides.build: CMakeFiles/laserbeamguide.dir/src/gencal.cpp.o
 
 
 # Object files for target laserbeamguide
 laserbeamguide_OBJECTS = \
-"CMakeFiles/laserbeamguide.dir/laserbeamguide.cpp.o" \
-"CMakeFiles/laserbeamguide.dir/imgpro.cpp.o" \
-"CMakeFiles/laserbeamguide.dir/gencal.cpp.o"
+"CMakeFiles/laserbeamguide.dir/src/laserbeamguide.cpp.o" \
+"CMakeFiles/laserbeamguide.dir/src/imgpro.cpp.o" \
+"CMakeFiles/laserbeamguide.dir/src/gencal.cpp.o"
 
 # External object files for target laserbeamguide
 laserbeamguide_EXTERNAL_OBJECTS =
 
-laserbeamguide: CMakeFiles/laserbeamguide.dir/laserbeamguide.cpp.o
-laserbeamguide: CMakeFiles/laserbeamguide.dir/imgpro.cpp.o
-laserbeamguide: CMakeFiles/laserbeamguide.dir/gencal.cpp.o
+laserbeamguide: CMakeFiles/laserbeamguide.dir/src/laserbeamguide.cpp.o
+laserbeamguide: CMakeFiles/laserbeamguide.dir/src/imgpro.cpp.o
+laserbeamguide: CMakeFiles/laserbeamguide.dir/src/gencal.cpp.o
 laserbeamguide: CMakeFiles/laserbeamguide.dir/build.make
 laserbeamguide: /usr/lib/x86_64-linux-gnu/libopencv_shape.so.3.2.0
 laserbeamguide: /usr/lib/x86_64-linux-gnu/libopencv_stitching.so.3.2.0
@@ -192,9 +192,9 @@ CMakeFiles/laserbeamguide.dir/build: laserbeamguide
 
 .PHONY : CMakeFiles/laserbeamguide.dir/build
 
-CMakeFiles/laserbeamguide.dir/requires: CMakeFiles/laserbeamguide.dir/laserbeamguide.cpp.o.requires
-CMakeFiles/laserbeamguide.dir/requires: CMakeFiles/laserbeamguide.dir/imgpro.cpp.o.requires
-CMakeFiles/laserbeamguide.dir/requires: CMakeFiles/laserbeamguide.dir/gencal.cpp.o.requires
+CMakeFiles/laserbeamguide.dir/requires: CMakeFiles/laserbeamguide.dir/src/laserbeamguide.cpp.o.requires
+CMakeFiles/laserbeamguide.dir/requires: CMakeFiles/laserbeamguide.dir/src/imgpro.cpp.o.requires
+CMakeFiles/laserbeamguide.dir/requires: CMakeFiles/laserbeamguide.dir/src/gencal.cpp.o.requires
 
 .PHONY : CMakeFiles/laserbeamguide.dir/requires
 

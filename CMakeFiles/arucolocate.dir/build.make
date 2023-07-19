@@ -57,38 +57,38 @@ include CMakeFiles/arucolocate.dir/progress.make
 # Include the compile flags for this target's objects.
 include CMakeFiles/arucolocate.dir/flags.make
 
-CMakeFiles/arucolocate.dir/arucolocate.cpp.o: CMakeFiles/arucolocate.dir/flags.make
-CMakeFiles/arucolocate.dir/arucolocate.cpp.o: arucolocate.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/lingbo/Documents/GitHub/AssemblyGuidanceTool/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/arucolocate.dir/arucolocate.cpp.o"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/arucolocate.dir/arucolocate.cpp.o -c /home/lingbo/Documents/GitHub/AssemblyGuidanceTool/arucolocate.cpp
+CMakeFiles/arucolocate.dir/src/arucolocate.cpp.o: CMakeFiles/arucolocate.dir/flags.make
+CMakeFiles/arucolocate.dir/src/arucolocate.cpp.o: src/arucolocate.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/lingbo/Documents/GitHub/AssemblyGuidanceTool/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/arucolocate.dir/src/arucolocate.cpp.o"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/arucolocate.dir/src/arucolocate.cpp.o -c /home/lingbo/Documents/GitHub/AssemblyGuidanceTool/src/arucolocate.cpp
 
-CMakeFiles/arucolocate.dir/arucolocate.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/arucolocate.dir/arucolocate.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/lingbo/Documents/GitHub/AssemblyGuidanceTool/arucolocate.cpp > CMakeFiles/arucolocate.dir/arucolocate.cpp.i
+CMakeFiles/arucolocate.dir/src/arucolocate.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/arucolocate.dir/src/arucolocate.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/lingbo/Documents/GitHub/AssemblyGuidanceTool/src/arucolocate.cpp > CMakeFiles/arucolocate.dir/src/arucolocate.cpp.i
 
-CMakeFiles/arucolocate.dir/arucolocate.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/arucolocate.dir/arucolocate.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/lingbo/Documents/GitHub/AssemblyGuidanceTool/arucolocate.cpp -o CMakeFiles/arucolocate.dir/arucolocate.cpp.s
+CMakeFiles/arucolocate.dir/src/arucolocate.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/arucolocate.dir/src/arucolocate.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/lingbo/Documents/GitHub/AssemblyGuidanceTool/src/arucolocate.cpp -o CMakeFiles/arucolocate.dir/src/arucolocate.cpp.s
 
-CMakeFiles/arucolocate.dir/arucolocate.cpp.o.requires:
+CMakeFiles/arucolocate.dir/src/arucolocate.cpp.o.requires:
 
-.PHONY : CMakeFiles/arucolocate.dir/arucolocate.cpp.o.requires
+.PHONY : CMakeFiles/arucolocate.dir/src/arucolocate.cpp.o.requires
 
-CMakeFiles/arucolocate.dir/arucolocate.cpp.o.provides: CMakeFiles/arucolocate.dir/arucolocate.cpp.o.requires
-	$(MAKE) -f CMakeFiles/arucolocate.dir/build.make CMakeFiles/arucolocate.dir/arucolocate.cpp.o.provides.build
-.PHONY : CMakeFiles/arucolocate.dir/arucolocate.cpp.o.provides
+CMakeFiles/arucolocate.dir/src/arucolocate.cpp.o.provides: CMakeFiles/arucolocate.dir/src/arucolocate.cpp.o.requires
+	$(MAKE) -f CMakeFiles/arucolocate.dir/build.make CMakeFiles/arucolocate.dir/src/arucolocate.cpp.o.provides.build
+.PHONY : CMakeFiles/arucolocate.dir/src/arucolocate.cpp.o.provides
 
-CMakeFiles/arucolocate.dir/arucolocate.cpp.o.provides.build: CMakeFiles/arucolocate.dir/arucolocate.cpp.o
+CMakeFiles/arucolocate.dir/src/arucolocate.cpp.o.provides.build: CMakeFiles/arucolocate.dir/src/arucolocate.cpp.o
 
 
 # Object files for target arucolocate
 arucolocate_OBJECTS = \
-"CMakeFiles/arucolocate.dir/arucolocate.cpp.o"
+"CMakeFiles/arucolocate.dir/src/arucolocate.cpp.o"
 
 # External object files for target arucolocate
 arucolocate_EXTERNAL_OBJECTS =
 
-arucolocate: CMakeFiles/arucolocate.dir/arucolocate.cpp.o
+arucolocate: CMakeFiles/arucolocate.dir/src/arucolocate.cpp.o
 arucolocate: CMakeFiles/arucolocate.dir/build.make
 arucolocate: /usr/lib/x86_64-linux-gnu/libopencv_shape.so.3.2.0
 arucolocate: /usr/lib/x86_64-linux-gnu/libopencv_stitching.so.3.2.0
@@ -140,7 +140,7 @@ CMakeFiles/arucolocate.dir/build: arucolocate
 
 .PHONY : CMakeFiles/arucolocate.dir/build
 
-CMakeFiles/arucolocate.dir/requires: CMakeFiles/arucolocate.dir/arucolocate.cpp.o.requires
+CMakeFiles/arucolocate.dir/requires: CMakeFiles/arucolocate.dir/src/arucolocate.cpp.o.requires
 
 .PHONY : CMakeFiles/arucolocate.dir/requires
 

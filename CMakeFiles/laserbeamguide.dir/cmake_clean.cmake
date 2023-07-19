@@ -1,7 +1,7 @@
 file(REMOVE_RECURSE
-  "CMakeFiles/laserbeamguide.dir/laserbeamguide.cpp.o"
-  "CMakeFiles/laserbeamguide.dir/imgpro.cpp.o"
-  "CMakeFiles/laserbeamguide.dir/gencal.cpp.o"
+  "CMakeFiles/laserbeamguide.dir/src/laserbeamguide.cpp.o"
+  "CMakeFiles/laserbeamguide.dir/src/imgpro.cpp.o"
+  "CMakeFiles/laserbeamguide.dir/src/gencal.cpp.o"
   "laserbeamguide.pdb"
   "laserbeamguide"
 )

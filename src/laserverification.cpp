@@ -6,9 +6,9 @@
 	Measure nomal distance between laser dot and calculated laser line
 	Meausre distance from the center of laser line to the laser dot along the line
 */
-#include "include/utility.h"
-#include "include/imgpro.h"
-#include "include/gencal.h"
+#include "utility.h"
+#include "imgpro.h"
+#include "gencal.h"
 
 using namespace Pylon;
 using namespace std;

@@ -1,5 +1,5 @@
 file(REMOVE_RECURSE
-  "CMakeFiles/arucolocate.dir/arucolocate.cpp.o"
+  "CMakeFiles/arucolocate.dir/src/arucolocate.cpp.o"
   "arucolocate.pdb"
   "arucolocate"
 )
