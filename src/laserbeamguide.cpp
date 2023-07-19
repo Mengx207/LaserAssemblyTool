@@ -10,7 +10,6 @@
 #include "include/utility.h"
 #include "include/imgpro.h"
 #include "include/gencal.h"
-#include <opencv2/aruco.hpp>
 
 using namespace Pylon;
 using namespace std;
@@ -107,25 +106,9 @@ int main(int argc, char* argv[])
 		vector<double> rmatrix_laser_values;
 		vector<double> tvec_laser_values;
 		Point centerImage;
-		ifstream intrin("values/intrinsic.txt");
-		vector<double> cameraMatrix_values;
-		double val;
-		while (intrin >> val)
-		{
-			cameraMatrix_values.push_back(val);
-		}
-		ifstream dist("values/distortion.txt");
-		vector<double> distCoeffs_values;
-		while (dist >> val)
-		{
-			distCoeffs_values.push_back(val);
-		}
-		Mat cameraMatrix = Mat(3, 3, CV_64FC1, cameraMatrix_values.data());
-		Mat distCoeffs = Mat(5, 1, CV_64FC1, distCoeffs_values.data());
 
 		while(waitKey(10) != 'q')
 		{
-
 			// cout<<endl<<"--------------------------------------------------------------------------------"<<endl;
 			int max_imgs0 = 1;   
 			int imgs_taken0 =0;
@@ -134,7 +117,6 @@ int main(int argc, char* argv[])
 			while (imgs_taken0 < max_imgs0) 
 			{	
 				CGrabResultPtr ptrGrabResult0;
-				CGrabResultPtr ptrGrabResult1;
 				while(camera0.WaitForFrameTriggerReady(1000,TimeoutHandling_ThrowException)==0);			
 				CCommandParameter(nodemap0, "TriggerSoftware").Execute();	
 				bool test0 = camera0.RetrieveResult(1000, ptrGrabResult0, TimeoutHandling_ThrowException);
@@ -143,53 +125,70 @@ int main(int argc, char* argv[])
 				cam_frame_temp0 = cv::Mat(ptrGrabResult0->GetHeight(), ptrGrabResult0->GetWidth(), CV_8UC3, (uint8_t *) pylonImage0.GetBuffer());
 				src = cam_frame_temp0.clone();
 
-				// gain rmatrix and tvec from lasers to cam
-				string path_rmatrix = "values/rmatrix_L1.txt";
-				string path_tvec = "values/tvec_L1.txt";
+			    // gain rmatrix and tvec from target board to cam
+				ifstream intrin("values/camera_matrix/intrinsic.txt");
+				vector<double> cameraMatrix_values;
+				double val;
+				while (intrin >> val)
+				{
+					cameraMatrix_values.push_back(val);
+				}
+				ifstream dist("values/camera_matrix/distortion.txt");
+				vector<double> distCoeffs_values;
+				while (dist >> val)
+				{
+					distCoeffs_values.push_back(val);
+				}
+				Mat cameraMatrix = Mat(3, 3, CV_64FC1, cameraMatrix_values.data());
+				Mat distCoeffs = Mat(5, 1, CV_64FC1, distCoeffs_values.data());
+
+				// gain rmatrix and tvec from target board to cam
+				string path_rmatrix = "values/laser2cam_transformatrix/rmatrix_L1.txt";
+				string path_tvec = "values/laser2cam_transformatrix/tvec_L1.txt";
 				if(argv[1] == string("1")) 
 				{
-					path_rmatrix = "values/rmatrix_L1.txt";
-					path_tvec = "values/tvec_L1.txt";
+					path_rmatrix = "values/laser2cam_transformatrix/rmatrix_L1.txt";
+					path_tvec = "values/laser2cam_transformatrix/tvec_L1.txt";
 				}
 				if(argv[1] == string("2")) 
 				{
-					path_rmatrix = "values/rmatrix_L2.txt";
-					path_tvec = "values/tvec_L2.txt";
+					path_rmatrix = "values/laser2cam_transformatrix/rmatrix_L2.txt";
+					path_tvec = "values/laser2cam_transformatrix/tvec_L2.txt";
 				}
 				if(argv[1] == string("3")) 
 				{
-					path_rmatrix = "values/rmatrix_L3.txt";
-					path_tvec = "values/tvec_L3.txt";
+					path_rmatrix = "values/laser2cam_transformatrix/rmatrix_L3.txt";
+					path_tvec = "values/laser2cam_transformatrix/tvec_L3.txt";
 				}
 				if(argv[1] == string("4"))
 				{
-					path_rmatrix = "values/rmatrix_L4.txt";
-					path_tvec = "values/tvec_L4.txt";
+					path_rmatrix = "values/laser2cam_transformatrix/rmatrix_L4.txt";
+					path_tvec = "values/laser2cam_transformatrix/tvec_L4.txt";
 				}
 
 				// Calculate rotation vector and translation vector by a captured image of a pattern
 				solvePnP_result solvePnP_result;
 				Mat image_captured;
-				if(argc == 4)
-				{
-					if(argv[3] == string("d1"))
-					{
-						image_captured = imread("images/pattern_d1.png", IMREAD_GRAYSCALE);
-					}
-					if(argv[3] == string("d2"))
-					{
-						image_captured = imread("images/pattern_d2.png", IMREAD_GRAYSCALE);
-					}
-					if(argv[3] == string("d3"))
-					{
-						image_captured = imread("images/pattern_d3.png", IMREAD_GRAYSCALE);
-					}
-				}
-				else {image_captured = imread("images/pattern_d2.png", IMREAD_GRAYSCALE);}
+				// if(argc == 4)
+				// {
+				// 	if(argv[3] == string("d1"))
+				// 	{
+				// 		image_captured = imread("images/pattern_d1.png", IMREAD_GRAYSCALE);
+				// 	}
+				// 	if(argv[3] == string("d2"))
+				// 	{
+				// 		image_captured = imread("images/pattern_d2.png", IMREAD_GRAYSCALE);
+				// 	}
+				// 	if(argv[3] == string("d3"))
+				// 	{
+				// 		image_captured = imread("images/pattern_d3.png", IMREAD_GRAYSCALE);
+				// 	}
+				// }
+				// else {image_captured = imread("images/pattern_d2.png", IMREAD_GRAYSCALE);}
 
-				Size patternSize (7,4);
-				double squareSize = 7;
-				solvePnP_result = getRvecTvec(image_captured, patternSize, squareSize);
+				// Size patternSize (7,4);
+				// double squareSize = 7;
+				// solvePnP_result = getRvecTvec(image_captured, patternSize, squareSize);
 
 				// read laser 1
 				ifstream rmatrixL(path_rmatrix);
@@ -197,13 +196,24 @@ int main(int argc, char* argv[])
 				{
 					rmatrix_laser_values.push_back(val);
 				}
+
 				ifstream tvecL(path_tvec);
 				while (tvecL >> val)
 				{
 					tvec_laser_values.push_back(val*1000);
 				}
+				
 				// find target board plane in cam frame
-				pair<vector<double>,vector<double>>target = targetBoardPlane(solvePnP_result.rmatrix, solvePnP_result.tvec);
+				arucoResult aruco_result = readArucoResult();
+
+				// cout<<endl<<tvec<<endl;
+				// cout<<endl<<rmatrix<<endl;
+				// cout<<endl<<solvePnP_result.tvec<<endl;
+				// cout<<endl<<solvePnP_result.rmatrix<<endl;
+
+				// pair<vector<double>,vector<double>>target = targetBoardPlane(solvePnP_result.rmatrix, solvePnP_result.tvec);
+				pair<vector<double>,vector<double>>target = targetBoardPlane(aruco_result.rmatrix, aruco_result.tvec);
+
 				laser_plane laser_1;
 				laser_1 = laserPlane(rmatrix_laser_values, tvec_laser_values);
 				Point3f interPoint1;
@@ -351,9 +361,10 @@ int main(int argc, char* argv[])
 					fill_n(size_array,10,0);
 					center_rect_count = 0;
 					center_rect_list.clear();
+					//fill(center_list.begin(), center_list.end(), cv::Point(0,0));
 				}
 
-				Point3d point_1 = locationCam2Target(interPointsImage_vector[0], solvePnP_result);
+				// Point3d point_1 = locationCam2Target(interPointsImage_vector[0], solvePnP_result);
 
 				HMI(dot_img, size_avg, min_size, non_zero, nom_distance, center_distance);
 				GreenLight(dot_img, last_min_size, size_avg, nom_distance, center_distance);
@@ -376,11 +387,28 @@ int main(int argc, char* argv[])
 			imwrite("images/saved_laser_beam/laser_" + string(argv[1]) + "_" + string(argv[2]) + "_" + string(argv[3]) + ".jpg", dot_img);	
 			
 			// save center_rect_avg for future use
-			system("cd values && mkdir -p intersections && cd intersections");
-			ofstream interpoint("values/intersections/intersections_l"+string(argv[1])+"_"+string(argv[3])+".txt");
+			system("cd values && mkdir -p beam_intersections && cd beam_intersections");
+			ofstream interpoint("values/beam_intersections/beam_intersections_l"+string(argv[1])+"_"+string(argv[3])+".txt");
 			interpoint << centerImage.x <<" ";
 			interpoint << centerImage.y;
-
+			// if(argv[3] == string("d1"))
+			// {
+			// 	ofstream interpoint("values/beam_intersections/beam_intersections_d1.txt");
+			// 	interpoint << centerImage.x <<" ";
+			// 	interpoint << centerImage.y;
+			// }
+			// if(argv[3] == string("d2"))
+			// {
+			// 	ofstream interpoint("values/beam_intersections/beam_intersections_d2.txt");
+			// 	interpoint << centerImage.x <<" ";
+			// 	interpoint << centerImage.y;
+			// }
+			// if(argv[3] == string("d3"))
+			// {
+			// 	ofstream interpoint("values/beam_intersections/beam_intersections_d3.txt");
+			// 	interpoint << centerImage.x <<" ";
+			// 	interpoint << centerImage.y;
+			// }
 		}
 		else {imwrite("images/saved_laser_beam/laser_" + string(argv[1]) + ".jpg", dot_img);}
 
