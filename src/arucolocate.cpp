@@ -42,17 +42,17 @@ int main(int argc, char *argv[])
 
     double camMat[3][3] = {3573.681082, 0, 733.98215, 0, 3572.916732, 576.44937, 0, 0, 1};
     double distCoeffs[5] = {-0.05969, -0.981368, -0.000368, -0.000843, 19.9579};
-
+   
     cv::Mat cvCamMat(3, 3, 6, camMat);
     cv::Mat cvDistCoeffs(1, 5, 6, distCoeffs);
 
     std::vector<std::vector<cv::Point3f>> objPoints;
-    double tagSize = 0.01;
+    double tagSize = 0.018;
 
     cv::Point3f tag0Pos(0, 0, 0);
-    cv::Point3f tag1Pos(0.09, 0, 0);
-    cv::Point3f tag2Pos(0.09, 0.06, 0);
-    cv::Point3f tag3Pos(0, 0.06, 0);
+    cv::Point3f tag1Pos(0.162, 0, 0);
+    cv::Point3f tag2Pos(0.162, 0.108, 0);
+    cv::Point3f tag3Pos(0, 0.108, 0);
 
 
     addTagPos(tag0Pos, tagSize, objPoints);
@@ -76,7 +76,7 @@ int main(int argc, char *argv[])
     INodeMap& nodemap = camera.GetNodeMap();
 
     CEnumerationPtr(nodemap.GetNode("ExposureMode"))->FromString("Timed"); 
-    CFloatPtr(nodemap.GetNode("ExposureTime"))->SetValue(4000.0);
+    CFloatPtr(nodemap.GetNode("ExposureTime"))->SetValue(30000.0);
     CEnumParameter(nodemap, "LineSelector").SetValue("Line3");
     CEnumParameter(nodemap, "LineMode").SetValue("Output");
     CEnumParameter(nodemap, "LineSource").SetValue("UserOutput2");
