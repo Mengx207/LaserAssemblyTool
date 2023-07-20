@@ -186,9 +186,9 @@ solvePnP_result getRvecTvec(Mat image_captured, Size patternsize, double squareS
     return result;
 }
 
-std::pair<vector<double>,vector<double>> targetBoardPlane(Mat rmatrix, Mat tvec)
+std::pair<vector<double>,vector<double>> targetBoardPlane(Mat &rmatrix, Mat &tvec)
     {
-        cout<<"tvec:" << tvec.at<double>(0,0)<<","<< tvec.at<double>(1,0)<<","<< tvec.at<double>(2,0)<<endl;
+        // cout<<"tvec:" << tvec.at<double>(0,0)<<","<< tvec.at<double>(1,0)<<","<< tvec.at<double>(2,0)<<endl;
         vector<double> p_000
         { tvec.at<double>(0,0), tvec.at<double>(1,0), tvec.at<double>(2,0) };
         vector<double> p_001
@@ -219,9 +219,9 @@ std::pair<vector<double>,vector<double>> targetBoardPlane(Mat rmatrix, Mat tvec)
         // cout <<endl<< "The Target Board: " << endl;
         // cout << "normal vector: " << endl
         //     << NormalV_B << endl;
-        cout<<"tvec:" << tvec.at<double>(0,0)<<","<< tvec.at<double>(1,0)<<","<< tvec.at<double>(2,0)<<endl;
+        // cout<<"tvec:" << tvec.at<double>(0,0)<<","<< tvec.at<double>(1,0)<<","<< tvec.at<double>(2,0)<<endl;
         // cout<<"tvec:" << tvec.at<float>(0)<<","<< tvec.at<float>(1)<<","<< tvec.at<float>(2)<<endl;
-        cout << "origin point: " << point_B_O << endl;
+        // cout << "origin point: " << point_B_O << endl;
 
         pair<vector<double>,vector<double>> target_board_values(N_B,p_000);
         return target_board_values;
@@ -440,7 +440,7 @@ uniformity_data cropImage(Mat image)
    }
 
    uniformity_data uniformity1;
-   uniformity1.image_BGR = image_BGR;
+   image_BGR.copyTo(uniformity1.image_BGR);
    double total = 0;
    double count = 0;
    double max = 0;

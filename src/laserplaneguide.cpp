@@ -28,22 +28,38 @@ int main(int argc, char* argv[])
      // Before using any pylon methods, the pylon runtime must be initialized.
      PylonInitialize();
      const char *err;
+	 Mat src, line_img, threshold_output;
 	try
 	{	
-		CTlFactory& tlFactory = CTlFactory::GetInstance();
-		CInstantCamera camera0( tlFactory.CreateFirstDevice() );
-        // Print the camera information.
-        cout << "Using device " << camera0.GetDeviceInfo().GetModelName() << endl;
-        cout << "SerialNumber : " << camera0.GetDeviceInfo().GetSerialNumber() << endl;
-        cout << endl;
-		cout << "Program is running, select image window and press 'q' to quit."<<endl;
-	
-		camera0.RegisterConfiguration(new CSoftwareTriggerConfiguration1,RegistrationMode_ReplaceAll, Cleanup_Delete);
+		// CTlFactory& tlFactory = CTlFactory::GetInstance();
+		// CInstantCamera camera0( tlFactory.CreateFirstDevice() );
+		CDeviceInfo info0, info1;
+		info0.SetSerialNumber("40172396");
+		info1.SetSerialNumber("40026626");
+		CInstantCamera camera0(CTlFactory::GetInstance().CreateDevice(info0));
+		CInstantCamera camera1(CTlFactory::GetInstance().CreateDevice(info1));
 
-		//Create a pylon image that will be used to create an opencv image
-		CPylonImage pylonImage0;
-		Mat src, cam_frame_temp0, line_img, threshold_output;
+		camera0.RegisterConfiguration(new CSoftwareTriggerConfiguration, RegistrationMode_ReplaceAll, Cleanup_Delete);
+
+		camera1.RegisterConfiguration(new CSoftwareTriggerConfiguration, RegistrationMode_ReplaceAll, Cleanup_Delete);
+		// CTlFactory& tlFactory = CTlFactory::GetInstance();
+		// CInstantCamera camera0( tlFactory.CreateFirstDevice() );
+		// // Print the camera information.
+		cout << "Using device0 " << camera0.GetDeviceInfo().GetModelName() << endl;
+		cout << "SerialNumber : " << camera0.GetDeviceInfo().GetSerialNumber() << endl;
+		cout << "Using device1 " << camera1.GetDeviceInfo().GetModelName() << endl;
+		cout << "SerialNumber : " << camera1.GetDeviceInfo().GetSerialNumber() << endl;
+
+		cout << endl
+			 << "Program is running, select image window and press 'q' to quit." << endl;
+
+		camera0.RegisterConfiguration(new CSoftwareTriggerConfiguration1, RegistrationMode_ReplaceAll, Cleanup_Delete);
+
+		// Create a pylon image that will be used to create an opencv image
+		CPylonImage pylonImage0, pylonImage1;
+		cv::Mat cam_frame_temp0, cam_frame_temp1;
 		camera0.Open();
+		camera1.Open();
 
 		// These allow us to convert from GrabResultPtr_t to cv::Mat
 		CImageFormatConverter formatConverter;
@@ -59,26 +75,42 @@ int main(int argc, char* argv[])
 		vector<cv::Point> center_list;
 		double center_total = 0;
 			
-		INodeMap& nodemap0 = camera0.GetNodeMap();
+		INodeMap &nodemap0 = camera0.GetNodeMap();
+		INodeMap &nodemap1 = camera1.GetNodeMap();
 
-		CEnumerationPtr(nodemap0.GetNode("ExposureMode"))->FromString("Timed"); 
+		CEnumerationPtr(nodemap0.GetNode("ExposureMode"))->FromString("Timed");
 		CFloatPtr(nodemap0.GetNode("ExposureTime"))->SetValue(200.0);
+		CEnumerationPtr(nodemap1.GetNode("ExposureMode"))->FromString("Timed");
+		CFloatPtr(nodemap1.GetNode("ExposureTime"))->SetValue(200.0);
 
 		CEnumParameter(nodemap0, "LineSelector").SetValue("Line3");
 		CEnumParameter(nodemap0, "LineMode").SetValue("Output");
 		CEnumParameter(nodemap0, "LineSource").SetValue("UserOutput2");
+		CEnumParameter(nodemap1, "LineSelector").SetValue("Line3");
+		CEnumParameter(nodemap1, "LineMode").SetValue("Output");
+		CEnumParameter(nodemap1, "LineSource").SetValue("UserOutput2");
 
 		CEnumParameter(nodemap0, "LineSelector").SetValue("Line4");
 		CEnumParameter(nodemap0, "LineMode").SetValue("Output");
 		CEnumParameter(nodemap0, "LineSource").SetValue("UserOutput3");
+		CEnumParameter(nodemap1, "LineSelector").SetValue("Line4");
+		CEnumParameter(nodemap1, "LineMode").SetValue("Output");
+		CEnumParameter(nodemap1, "LineSource").SetValue("UserOutput3");
 
 		CEnumParameter(nodemap0, "LineSelector").SetValue("Line3");
 		CBooleanParameter(nodemap0, "LineInverter").SetValue(false);
+		CEnumParameter(nodemap1, "LineSelector").SetValue("Line3");
+		CBooleanParameter(nodemap1, "LineInverter").SetValue(false);
 
-		CEnumParameter(nodemap0, "LineSelector").SetValue("Line4");			
+		CEnumParameter(nodemap0, "LineSelector").SetValue("Line4");
 		CBooleanParameter(nodemap0, "LineInverter").SetValue(false);
+		CEnumParameter(nodemap1, "LineSelector").SetValue("Line4");
+		CBooleanParameter(nodemap1, "LineInverter").SetValue(false);
+
 		CEnumParameter(nodemap0, "LineSelector").SetValue("Line2");
 		CEnumParameter(nodemap0, "LineSource").SetValue("ExposureActive");
+		CEnumParameter(nodemap1, "LineSelector").SetValue("Line2");
+		CEnumParameter(nodemap1, "LineSource").SetValue("ExposureActive");
 
 		if(argv[1] == string("1") || argv[1] == string("3")) 
 		{
@@ -99,7 +131,7 @@ int main(int argc, char* argv[])
 
 
 		std::vector<double> rvec_target2cam, tvec_target2cam;
-		Mat rvec, rmatrix, tvec;
+		// Mat rvec, rmatrix, tvec;
 		vector<Point3d> obj_corners;
 		vector<Point2d> found_corners;
 		arucoResult aruco_result;
@@ -110,18 +142,25 @@ int main(int argc, char* argv[])
 			int imgs_taken = 0;
 
 			camera0.StartGrabbing(max_imgs0*1);
+			camera1.StartGrabbing(max_imgs0*1);
 
 			while (imgs_taken < max_imgs0) 
 			{	
 				CGrabResultPtr ptrGrabResult0;
 				CGrabResultPtr ptrGrabResult1;
-				while(camera0.WaitForFrameTriggerReady(1000,TimeoutHandling_ThrowException)==0);			
-				CCommandParameter(nodemap0, "TriggerSoftware").Execute();	
+				while (camera0.WaitForFrameTriggerReady(10000, TimeoutHandling_ThrowException) == 0);
+				while (camera1.WaitForFrameTriggerReady(10000, TimeoutHandling_ThrowException) == 0);
+				CCommandParameter(nodemap0, "TriggerSoftware").Execute();
+				CCommandParameter(nodemap1, "TriggerSoftware").Execute();
 				bool test0 = camera0.RetrieveResult(1000, ptrGrabResult0, TimeoutHandling_ThrowException);
+				bool test1 = camera1.RetrieveResult(1000, ptrGrabResult1, TimeoutHandling_ThrowException);
+				formatConverter.Convert(pylonImage1, ptrGrabResult1);
 				formatConverter.Convert(pylonImage0, ptrGrabResult0);
-		
-				cam_frame_temp0 = cv::Mat(ptrGrabResult0->GetHeight(), ptrGrabResult0->GetWidth(), CV_8UC3, (uint8_t *) pylonImage0.GetBuffer());
+				cam_frame_temp0 = cv::Mat(ptrGrabResult0->GetHeight(), ptrGrabResult0->GetWidth(), CV_8UC3, (uint8_t *)pylonImage0.GetBuffer());
 				src = cam_frame_temp0.clone();
+				cam_frame_temp1 = cv::Mat(ptrGrabResult1->GetHeight(), ptrGrabResult1->GetWidth(), CV_8UC3, (uint8_t *) pylonImage1.GetBuffer());
+				Mat src1 = cam_frame_temp1.clone();
+				imshow ("cam2",src1);
 			    // gain rmatrix and tvec from target board to cam
 				ifstream intrin("values/camera_matrix/intrinsic.txt");
 				vector<double> cameraMatrix_values;
@@ -161,24 +200,6 @@ int main(int argc, char* argv[])
 					path_rmatrix = "values/laser2cam_transformatrix/rmatrix_L4.txt";
 					path_tvec = "values/laser2cam_transformatrix/tvec_L4.txt";
 				}
-				// Calculate rotation vector and translation vector by a captured image of a pattern
-				// Mat image_captured;
-				// if(argc == 4)
-				// {
-				// 	if(argv[3] == string("d1"))
-				// 	{
-				// 		image_captured = imread("images/pattern_d1.png", IMREAD_GRAYSCALE);
-				// 	}
-				// 	if(argv[3] == string("d2"))
-				// 	{
-				// 		image_captured = imread("images/pattern_d2.png", IMREAD_GRAYSCALE);
-				// 	}
-				// 	if(argv[3] == string("d3"))
-				// 	{
-				// 		image_captured = imread("images/pattern_d3.png", IMREAD_GRAYSCALE);
-				// 	}
-				// }
-				// else {image_captured = imread("images/pattern_d2.png", IMREAD_GRAYSCALE);}
 
 				// read laser 1
 				ifstream rmatrixL(path_rmatrix);
@@ -257,39 +278,40 @@ int main(int argc, char* argv[])
 				vector<vector<Point> > contours;
   				vector<Vec4i> hierarchy;
 				cv::threshold(img_grey,threshold_output,200,255,cv::THRESH_BINARY);
+				// Number of non_zero pixel
+				int non_zero = NonZero(threshold_output);
 
-				findContours( threshold_output, contours, hierarchy, RETR_TREE, CHAIN_APPROX_SIMPLE, Point(0, 0) );
-				vector<RotatedRect> minRect = findRectangle(contours,100);
-				Mat drawing = Mat::zeros( threshold_output.size(), CV_8UC3 );
-				Mat rotated_image = threshold_output.clone();
-
-				if (minRect.size() >= 1)
+				if (non_zero > 1000)
 				{
-					drawContourRectangle(drawing, contours, minRect);
-					circle(line_img, minRect[0].center, 5, Scalar(0,255,0), -1, 8, 0);
-					double angle = minRect[0].angle;
-					if (minRect[0].size.width < minRect[0].size.height) 
+					findContours( threshold_output, contours, hierarchy, RETR_TREE, CHAIN_APPROX_SIMPLE, Point(0, 0) );
+					vector<RotatedRect> minRect = findRectangle(contours,100);
+					Mat drawing = Mat::zeros( threshold_output.size(), CV_8UC3 );
+					Mat rotated_image = threshold_output.clone();
+
+					if (minRect.size() >= 1)
 					{
-						angle = 90 + angle;
+						drawContourRectangle(drawing, contours, minRect);
+						circle(line_img, minRect[0].center, 5, Scalar(0,255,0), -1, 8, 0);
+						double angle = minRect[0].angle;
+						if (minRect[0].size.width < minRect[0].size.height) 
+						{
+							angle = 90 + angle;
+						}
+						Mat rotation_matrix = getRotationMatrix2D(minRect[0].center, angle, 1.0);
+						warpAffine(threshold_output, rotated_image, rotation_matrix, threshold_output.size());;
+						uniformity_data uniformity1;
+						uniformity1 = cropImage(rotated_image);
+						// From pixel number to actual diameter on target board
+						uniformity1.width_avg = uniformity1.width_avg* 3.45 * (aruco_result.tvec.at<double>(0,2)/12)/1000;
+						uniformity1.width_max = uniformity1.width_max* 3.45 * (aruco_result.tvec.at<double>(0,2)/12)/1000;
+						uniformity1.width_min = uniformity1.width_min* 3.45 * (aruco_result.tvec.at<double>(0,2)/12)/1000;
+						laserlineGUI(minRect[0], projectedInterPoints[0], cal_angle, uniformity1, line_img);
+						// cv::imshow( "Rotated and Cropped laser line", uniformity1.image_BGR );
 					}
-
-					Mat rotation_matrix = getRotationMatrix2D(minRect[0].center, angle, 1.0);
-					warpAffine(threshold_output, rotated_image, rotation_matrix, threshold_output.size());
-					uniformity_data uniformity1;
-					uniformity1 = cropImage(rotated_image);
-					// From pixel number to actual diameter on target board
-
-					uniformity1.width_avg = uniformity1.width_avg* 3.45 * (tvec.at<double>(0,2)/12)/1000;
-					uniformity1.width_max = uniformity1.width_max* 3.45 * (tvec.at<double>(0,2)/12)/1000;
-					uniformity1.width_min = uniformity1.width_min* 3.45 * (tvec.at<double>(0,2)/12)/1000;
-
-					laserlineGUI(minRect[0], projectedInterPoints[0], cal_angle, uniformity1, line_img);
-					// cv::imshow( "Rotated and Cropped laser line", uniformity1.image_BGR );
 				}
-				
 				// cv::imshow( "Contour and Area", drawing );
 				// cv::imshow("threshold",threshold_output);
-				cv::imshow("Laser Plane Alignment GUI Window", line_img);	
+				cv::imshow("Laser Plane Alignment GUI Window", line_img);
 				imgs_taken ++;
 			}
 			camera0.StopGrabbing();	
@@ -432,46 +454,3 @@ int main(int argc, char* argv[])
    	return exitCode;
    
 }
-
-// void laserlineGUI(RotatedRect rect, Point2d cal_center, int cal_angle, uniformity_data uniformity1, Mat drawing)
-// {
-// 	std::string center_print_x, center_print_y, angle_print, width_print, cal_center_print_x, cal_center_print_y, cal_angle_print, width_avg_print, width_max_print, width_min_print, width_sd_print;
-// 	center_print_x = std::to_string(int(rect.center.x));
-// 	center_print_y = std::to_string(int(rect.center.y));
-// 	angle_print = std::to_string(int(rect.angle));
-
-// 	std::ostringstream streamObj;
-// 	streamObj << std::fixed;
-// 	streamObj << std::setprecision(2);
-
-// 	streamObj << uniformity1.width_max;
-// 	width_max_print = streamObj.str();
-// 	streamObj.str("");
-// 	streamObj << uniformity1.width_min;
-// 	width_min_print = streamObj.str();
-// 	streamObj.str("");
-// 	streamObj << uniformity1.width_sd;
-// 	width_sd_print = streamObj.str();
-// 	streamObj.str("");
-// 	streamObj << uniformity1.width_avg;
-// 	width_avg_print = streamObj.str();
-// 	streamObj.str("");
-
-// 	if(rect.size.width < rect.size.height)
-// 	{width_print = std::to_string(int(rect.size.width));}
-// 	else
-// 	{width_print = std::to_string(int(rect.size.height));}
-
-// 	cal_center_print_x = std::to_string(int(cal_center.x));
-// 	cal_center_print_y = std::to_string(int(cal_center.y));
-// 	cal_angle_print = std::to_string(cal_angle);
-
-// 	cv::putText(drawing, "Angle Designed: " + cal_angle_print, cv::Point(1000,600), cv::FONT_HERSHEY_SIMPLEX, 0.8, cv::Scalar(255, 255, 255),2);
-// 	cv::putText(drawing, "Angle Actual: " + angle_print, cv::Point(1000,630), cv::FONT_HERSHEY_SIMPLEX, 0.8, cv::Scalar(255, 255, 255),2);
-// 	cv::putText(drawing, "Width Average: " + width_avg_print + " mm", cv::Point(1000, 660), cv::FONT_HERSHEY_SIMPLEX, 0.8, cv::Scalar(255, 255, 255),2);
-// 	cv::putText(drawing, "Width Standard Deviation: " + width_sd_print, cv::Point(1000, 690), cv::FONT_HERSHEY_SIMPLEX, 0.8, cv::Scalar(255, 255, 255),2);
-// 	cv::putText(drawing, "Maximum Width: " + width_max_print + " mm", cv::Point(1000, 720), cv::FONT_HERSHEY_SIMPLEX, 0.6, cv::Scalar(255, 255, 255),2);
-// 	cv::putText(drawing, "Minimum Width: " + width_min_print + " mm", cv::Point(1000,740), cv::FONT_HERSHEY_SIMPLEX, 0.6, cv::Scalar(255, 255, 255),2);
-// 	cv::putText(drawing, "Designed Center: [" + cal_center_print_x + "," + cal_center_print_y + "]", cv::Point(1000, 760), cv::FONT_HERSHEY_SIMPLEX, 0.6, cv::Scalar(255, 255, 255),2);
-// 	// cv::putText(drawing, "Actual Center: [" + center_print_x + "," + center_print_y + "]", cv::Point(1000, 710), cv::FONT_HERSHEY_SIMPLEX, 0.6, cv::Scalar(255, 255, 255),2);
-// }

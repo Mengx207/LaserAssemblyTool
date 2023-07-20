@@ -35,7 +35,7 @@ pair<double,double> DotToLine(Mat img, Point start, Point end, Point center, Poi
 
 vector<Point3f> createChessBoardCorners(Size2i patternsize, double squareSize);
 solvePnP_result getRvecTvec(Mat image_captured, Size patternsize, double squareSize);
-pair<vector<double>,vector<double>> targetBoardPlane(Mat rmatrix, Mat tvec);
+pair<vector<double>,vector<double>> targetBoardPlane(Mat &rmatrix, Mat &tvec);
 laser_plane laserPlane(vector<double> rmatrix_laser_values, vector<double> tvec_laser_values);
 int dotProduct(double vect_A[], double vect_B[]);
 vector<double> crossProduct(vector<double> vect_A, vector<double> vect_B);
