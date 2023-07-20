@@ -334,24 +334,29 @@ arucoResult readArucoResult()
     vector<double> rvec_target2cam, tvec_target2cam;
     // find target board plane in cam frame
     double val;
-    ifstream rvec_t, tvec_t;
+    ifstream rvec_t;
     rvec_t.open("values/aruco_result/rvec_target2cam.txt"); 
     while (rvec_t >> val)
     {
         rvec_target2cam.push_back(val);
     }
+    rvec_t.close();
     // for(int i=0; i<rvec_target2cam.size(); i++)
     // {cout<<endl<<rvec_target2cam[i]<<endl;}
 
+    ifstream tvec_t;
     tvec_t.open("values/aruco_result/tvec_target2cam.txt"); 
     while (tvec_t >> val)
     {
-        tvec_target2cam.push_back(val*1000);
+        tvec_target2cam.push_back(val*1000.0);
     }
+    tvec_t.close();
     // for(int i=0; i<tvec_target2cam.size(); i++)
     // {cout<<endl<<tvec_target2cam[i]<<endl;}
+    // cout<<endl<<"tvec before transform: "<< tvec_target2cam[0]<<","<<tvec_target2cam[1]<<","<<tvec_target2cam[2]<<endl;
     rvec = Mat(3, 1, CV_64FC1, rvec_target2cam.data());
     tvec = Mat(3, 1, CV_64FC1, tvec_target2cam.data());
+    // cout<<"tvec in Mat format: "<< tvec<<endl;
     Rodrigues(rvec, rmatrix);
 
     vector<Point3d> obj_corners;
@@ -390,5 +395,6 @@ arucoResult readArucoResult()
     result.rmatrix = rmatrix;
     result.rvec = rvec;
     result.tvec = tvec;
+    cout<<"tvec in result: "<< result.tvec<<endl;
     return result;
 }

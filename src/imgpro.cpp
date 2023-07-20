@@ -188,8 +188,9 @@ solvePnP_result getRvecTvec(Mat image_captured, Size patternsize, double squareS
 
 std::pair<vector<double>,vector<double>> targetBoardPlane(Mat rmatrix, Mat tvec)
     {
+        cout<<"tvec:" << tvec.at<double>(0,0)<<","<< tvec.at<double>(1,0)<<","<< tvec.at<double>(2,0)<<endl;
         vector<double> p_000
-        { tvec.at<double>(0), tvec.at<double>(1), tvec.at<double>(2) };
+        { tvec.at<double>(0,0), tvec.at<double>(1,0), tvec.at<double>(2,0) };
         vector<double> p_001
         { rmatrix.at<double>(2)+tvec.at<double>(0), rmatrix.at<double>(5)+tvec.at<double>(1), rmatrix.at<double>(8)+tvec.at<double>(2) };
         //One point on the target board in camera frame
@@ -218,8 +219,9 @@ std::pair<vector<double>,vector<double>> targetBoardPlane(Mat rmatrix, Mat tvec)
         // cout <<endl<< "The Target Board: " << endl;
         // cout << "normal vector: " << endl
         //     << NormalV_B << endl;
-        // cout << "origin point: " << endl
-        //     << point_B_O << endl << endl;
+        cout<<"tvec:" << tvec.at<double>(0,0)<<","<< tvec.at<double>(1,0)<<","<< tvec.at<double>(2,0)<<endl;
+        // cout<<"tvec:" << tvec.at<float>(0)<<","<< tvec.at<float>(1)<<","<< tvec.at<float>(2)<<endl;
+        cout << "origin point: " << point_B_O << endl;
 
         pair<vector<double>,vector<double>> target_board_values(N_B,p_000);
         return target_board_values;

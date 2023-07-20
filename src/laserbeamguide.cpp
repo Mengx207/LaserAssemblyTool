@@ -31,19 +31,33 @@ int main(int argc, char* argv[])
    
 	try
 	{		
-		CTlFactory& tlFactory = CTlFactory::GetInstance();
-		CInstantCamera camera0( tlFactory.CreateFirstDevice() );
-        // Print the camera information.
-        cout << "Using device " << camera0.GetDeviceInfo().GetModelName() << endl;
+		CDeviceInfo info0, info1;
+		info0.SetSerialNumber("40172396");
+		info1.SetSerialNumber("40026626");
+    	CInstantCamera camera0( CTlFactory::GetInstance().CreateDevice(info0));	
+		CInstantCamera camera1( CTlFactory::GetInstance().CreateDevice(info1));
+
+			
+		camera0.RegisterConfiguration(new CSoftwareTriggerConfiguration,RegistrationMode_ReplaceAll, Cleanup_Delete);
+        
+		camera1.RegisterConfiguration(new CSoftwareTriggerConfiguration,RegistrationMode_ReplaceAll, Cleanup_Delete);   
+		// CTlFactory& tlFactory = CTlFactory::GetInstance();
+		// CInstantCamera camera0( tlFactory.CreateFirstDevice() );
+        // // Print the camera information.
+        cout << "Using device0 " << camera0.GetDeviceInfo().GetModelName() << endl;
         cout << "SerialNumber : " << camera0.GetDeviceInfo().GetSerialNumber() << endl;
+		cout << "Using device1 " << camera1.GetDeviceInfo().GetModelName() << endl;
+        cout << "SerialNumber : " << camera1.GetDeviceInfo().GetSerialNumber() << endl;
+
 		cout << endl << "Program is running, select image window and press 'q' to quit."<<endl;
 			
 		camera0.RegisterConfiguration(new CSoftwareTriggerConfiguration1,RegistrationMode_ReplaceAll, Cleanup_Delete);
 
 		//Create a pylon image that will be used to create an opencv image
-		CPylonImage pylonImage0;
-		cv::Mat cam_frame_temp0;
+		CPylonImage pylonImage0, pylonImage1;
+		cv::Mat cam_frame_temp0, cam_frame_temp1;
 		camera0.Open();
+		camera1.Open();
 		
 		cv::Point max_point;
 		cv::Mat canny_edge, canny_edge_blur, img_grey;
@@ -65,26 +79,41 @@ int main(int argc, char* argv[])
 		double center_rect_count = 0;
 			
 		INodeMap& nodemap0 = camera0.GetNodeMap();
+		INodeMap& nodemap1 = camera1.GetNodeMap();
 
 		CEnumerationPtr(nodemap0.GetNode("ExposureMode"))->FromString("Timed"); 
-		CFloatPtr(nodemap0.GetNode("ExposureTime"))->SetValue(30.0);
+		CFloatPtr(nodemap0.GetNode("ExposureTime"))->SetValue(200.0);
+		CEnumerationPtr(nodemap1.GetNode("ExposureMode"))->FromString("Timed"); 
+		CFloatPtr(nodemap1.GetNode("ExposureTime"))->SetValue(200.0);
 
 		CEnumParameter(nodemap0, "LineSelector").SetValue("Line3");
 		CEnumParameter(nodemap0, "LineMode").SetValue("Output");
 		CEnumParameter(nodemap0, "LineSource").SetValue("UserOutput2");
+		CEnumParameter(nodemap1, "LineSelector").SetValue("Line3");
+		CEnumParameter(nodemap1, "LineMode").SetValue("Output");
+		CEnumParameter(nodemap1, "LineSource").SetValue("UserOutput2");
 
 		CEnumParameter(nodemap0, "LineSelector").SetValue("Line4");
 		CEnumParameter(nodemap0, "LineMode").SetValue("Output");
 		CEnumParameter(nodemap0, "LineSource").SetValue("UserOutput3");
+		CEnumParameter(nodemap1, "LineSelector").SetValue("Line4");
+		CEnumParameter(nodemap1, "LineMode").SetValue("Output");
+		CEnumParameter(nodemap1, "LineSource").SetValue("UserOutput3");
 
 		CEnumParameter(nodemap0, "LineSelector").SetValue("Line3");
 		CBooleanParameter(nodemap0, "LineInverter").SetValue(false);
+		CEnumParameter(nodemap1, "LineSelector").SetValue("Line3");
+		CBooleanParameter(nodemap1, "LineInverter").SetValue(false);
 
 		CEnumParameter(nodemap0, "LineSelector").SetValue("Line4");			
 		CBooleanParameter(nodemap0, "LineInverter").SetValue(false);
+		CEnumParameter(nodemap1, "LineSelector").SetValue("Line4");			
+		CBooleanParameter(nodemap1, "LineInverter").SetValue(false);
 
 		CEnumParameter(nodemap0, "LineSelector").SetValue("Line2");
 		CEnumParameter(nodemap0, "LineSource").SetValue("ExposureActive");
+		CEnumParameter(nodemap1, "LineSelector").SetValue("Line2");
+		CEnumParameter(nodemap1, "LineSource").SetValue("ExposureActive");
 
 		if(argv[1] == string("1") || argv[1] == string("3")) 
 		{
@@ -109,21 +138,29 @@ int main(int argc, char* argv[])
 
 		while(waitKey(10) != 'q')
 		{
-			// cout<<endl<<"--------------------------------------------------------------------------------"<<endl;
+			cout<<endl<<"--------------------------------------------------------------------------------"<<endl;
 			int max_imgs0 = 1;   
 			int imgs_taken0 =0;
 			camera0.StartGrabbing(max_imgs0*1);
+			camera1.StartGrabbing(max_imgs0*1);
 
 			while (imgs_taken0 < max_imgs0) 
 			{	
 				CGrabResultPtr ptrGrabResult0;
-				while(camera0.WaitForFrameTriggerReady(1000,TimeoutHandling_ThrowException)==0);			
-				CCommandParameter(nodemap0, "TriggerSoftware").Execute();	
+				CGrabResultPtr ptrGrabResult1;
+				while(camera0.WaitForFrameTriggerReady(10000,TimeoutHandling_ThrowException)==0);	
+				while(camera1.WaitForFrameTriggerReady(10000,TimeoutHandling_ThrowException)==0);		
+				CCommandParameter(nodemap0, "TriggerSoftware").Execute();
+				CCommandParameter(nodemap1, "TriggerSoftware").Execute();	
 				bool test0 = camera0.RetrieveResult(1000, ptrGrabResult0, TimeoutHandling_ThrowException);
+				bool test1 = camera1.RetrieveResult(1000, ptrGrabResult1, TimeoutHandling_ThrowException);
+				formatConverter.Convert(pylonImage1, ptrGrabResult1);
 				formatConverter.Convert(pylonImage0, ptrGrabResult0);
-		
 				cam_frame_temp0 = cv::Mat(ptrGrabResult0->GetHeight(), ptrGrabResult0->GetWidth(), CV_8UC3, (uint8_t *) pylonImage0.GetBuffer());
 				src = cam_frame_temp0.clone();
+				// cam_frame_temp1 = cv::Mat(ptrGrabResult1->GetHeight(), ptrGrabResult1->GetWidth(), CV_8UC3, (uint8_t *) pylonImage1.GetBuffer());
+				// Mat src1 = cam_frame_temp1.clone();
+				// imshow ("cam2",src1);
 
 			    // gain rmatrix and tvec from target board to cam
 				ifstream intrin("values/camera_matrix/intrinsic.txt");
@@ -206,23 +243,20 @@ int main(int argc, char* argv[])
 				// find target board plane in cam frame
 				arucoResult aruco_result = readArucoResult();
 
-				// cout<<endl<<tvec<<endl;
-				// cout<<endl<<rmatrix<<endl;
-				// cout<<endl<<solvePnP_result.tvec<<endl;
-				// cout<<endl<<solvePnP_result.rmatrix<<endl;
-
-				// pair<vector<double>,vector<double>>target = targetBoardPlane(solvePnP_result.rmatrix, solvePnP_result.tvec);
 				pair<vector<double>,vector<double>>target = targetBoardPlane(aruco_result.rmatrix, aruco_result.tvec);
-
+				
 				laser_plane laser_1;
 				laser_1 = laserPlane(rmatrix_laser_values, tvec_laser_values);
 				Point3f interPoint1;
 				interPoint1 = intersectionPoint(laser_1.origin, laser_1.beam_dir, target.first, target.second);
+				// cout<<endl<<"intersection point: "<<interPoint1<<endl;
 				
 				// find intersection line between target board plane and laser plane in cam frame
 				std::vector<cv::Point3d> laserline_points_1, laserline_points_2, laserline_points_3;
 				intersection line1, line2, line3;
 				line1 = intersectionLine(target.first, laser_1.normalvector, target.second, vector<double>{interPoint1.x, interPoint1.y, interPoint1.z});
+				// cout<<endl<<"line equation para: "<< line1.x0 <<","<<line1.y0<<","<<line1.z0<<","<<line1.a<<","<<line1.b<<","<<line1.c<<endl;
+				
 				for(int t=-150; t<150;)
 				{
 					t = t+10;
@@ -253,7 +287,7 @@ int main(int argc, char* argv[])
 				cv::Mat img_grey_filtered_dot;
 				cv::threshold(img_grey,img_grey_filtered_dot,250,255,cv::THRESH_OTSU||cv::THRESH_TRIANGLE);	
 				line( dot_img, projectedlaserline_1[0], projectedlaserline_1[projectedlaserline_1.size()-2],Scalar(200,200,0), 5, LINE_AA );
-
+				cout<<"line ends: "<< projectedlaserline_1[0]<<","<<projectedlaserline_1[projectedlaserline_1.size()-2]<<endl;
 				
 				vector<Point3d> interPointArray;
 				vector<Point2d> interPointsImage_vector;
