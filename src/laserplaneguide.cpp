@@ -122,7 +122,6 @@ int main(int argc, char* argv[])
 		
 				cam_frame_temp0 = cv::Mat(ptrGrabResult0->GetHeight(), ptrGrabResult0->GetWidth(), CV_8UC3, (uint8_t *) pylonImage0.GetBuffer());
 				src = cam_frame_temp0.clone();
-
 			    // gain rmatrix and tvec from target board to cam
 				ifstream intrin("values/camera_matrix/intrinsic.txt");
 				vector<double> cameraMatrix_values;
@@ -139,7 +138,6 @@ int main(int argc, char* argv[])
 				}
 				Mat cameraMatrix = Mat(3, 3, CV_64FC1, cameraMatrix_values.data());
 				Mat distCoeffs = Mat(5, 1, CV_64FC1, distCoeffs_values.data());
-
 				// gain rmatrix and tvec from target board to cam
 				string path_rmatrix = "values/laser2cam_transformatrix/rmatrix_L1.txt";
 				string path_tvec = "values/laser2cam_transformatrix/tvec_L1.txt";
@@ -163,7 +161,6 @@ int main(int argc, char* argv[])
 					path_rmatrix = "values/laser2cam_transformatrix/rmatrix_L4.txt";
 					path_tvec = "values/laser2cam_transformatrix/tvec_L4.txt";
 				}
-
 				// Calculate rotation vector and translation vector by a captured image of a pattern
 				// Mat image_captured;
 				// if(argc == 4)
@@ -196,10 +193,8 @@ int main(int argc, char* argv[])
 				{
 					tvec_laser_values.push_back(val*1000);
 				}
-
 				// find target board plane in cam frame
 				aruco_result = readArucoResult();
-
 				pair<vector<double>,vector<double>>target = targetBoardPlane(aruco_result.rmatrix, aruco_result.tvec);
 
 				laser_plane laser_1;

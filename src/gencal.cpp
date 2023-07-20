@@ -330,6 +330,7 @@ void flattenVector(std::vector<std::vector<cv::Point2f>> &objPoints, std::vector
 arucoResult readArucoResult()
 {
     arucoResult result;
+    Mat rvec,tvec,rmatrix;
     vector<double> rvec_target2cam, tvec_target2cam;
     // find target board plane in cam frame
     double val;
@@ -349,10 +350,8 @@ arucoResult readArucoResult()
     }
     // for(int i=0; i<tvec_target2cam.size(); i++)
     // {cout<<endl<<tvec_target2cam[i]<<endl;}
-
-    Mat rvec = Mat(3, 1, CV_64FC1, rvec_target2cam.data());
-    Mat tvec = Mat(3, 1, CV_64FC1, tvec_target2cam.data());
-    Mat rmatrix;
+    rvec = Mat(3, 1, CV_64FC1, rvec_target2cam.data());
+    tvec = Mat(3, 1, CV_64FC1, tvec_target2cam.data());
     Rodrigues(rvec, rmatrix);
 
     vector<Point3d> obj_corners;
