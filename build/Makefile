@@ -56,17 +56,6 @@ CMAKE_BINARY_DIR = /home/lingbo/Documents/GitHub/AssemblyGuidanceTool/build
 #=============================================================================
 # Targets provided globally by CMake.
 
-# Special rule for the target edit_cache
-edit_cache:
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "No interactive CMake dialog available..."
-	/usr/bin/cmake -E echo No\ interactive\ CMake\ dialog\ available.
-.PHONY : edit_cache
-
-# Special rule for the target edit_cache
-edit_cache/fast: edit_cache
-
-.PHONY : edit_cache/fast
-
 # Special rule for the target rebuild_cache
 rebuild_cache:
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running CMake to regenerate build system..."
@@ -77,6 +66,17 @@ rebuild_cache:
 rebuild_cache/fast: rebuild_cache
 
 .PHONY : rebuild_cache/fast
+
+# Special rule for the target edit_cache
+edit_cache:
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "No interactive CMake dialog available..."
+	/usr/bin/cmake -E echo No\ interactive\ CMake\ dialog\ available.
+.PHONY : edit_cache
+
+# Special rule for the target edit_cache
+edit_cache/fast: edit_cache
+
+.PHONY : edit_cache/fast
 
 # The main all target
 all: cmake_check_build_system
@@ -111,30 +111,17 @@ depend:
 .PHONY : depend
 
 #=============================================================================
-# Target rules for targets named laserverification
+# Target rules for targets named laserbeamguide
 
 # Build rule for target.
-laserverification: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 laserverification
-.PHONY : laserverification
+laserbeamguide: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 laserbeamguide
+.PHONY : laserbeamguide
 
 # fast build rule for target.
-laserverification/fast:
-	$(MAKE) -f CMakeFiles/laserverification.dir/build.make CMakeFiles/laserverification.dir/build
-.PHONY : laserverification/fast
-
-#=============================================================================
-# Target rules for targets named laserplaneguide
-
-# Build rule for target.
-laserplaneguide: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 laserplaneguide
-.PHONY : laserplaneguide
-
-# fast build rule for target.
-laserplaneguide/fast:
-	$(MAKE) -f CMakeFiles/laserplaneguide.dir/build.make CMakeFiles/laserplaneguide.dir/build
-.PHONY : laserplaneguide/fast
+laserbeamguide/fast:
+	$(MAKE) -f CMakeFiles/laserbeamguide.dir/build.make CMakeFiles/laserbeamguide.dir/build
+.PHONY : laserbeamguide/fast
 
 #=============================================================================
 # Target rules for targets named arucolocate
@@ -150,17 +137,43 @@ arucolocate/fast:
 .PHONY : arucolocate/fast
 
 #=============================================================================
-# Target rules for targets named laserbeamguide
+# Target rules for targets named laserplaneguide
 
 # Build rule for target.
-laserbeamguide: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 laserbeamguide
-.PHONY : laserbeamguide
+laserplaneguide: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 laserplaneguide
+.PHONY : laserplaneguide
 
 # fast build rule for target.
-laserbeamguide/fast:
-	$(MAKE) -f CMakeFiles/laserbeamguide.dir/build.make CMakeFiles/laserbeamguide.dir/build
-.PHONY : laserbeamguide/fast
+laserplaneguide/fast:
+	$(MAKE) -f CMakeFiles/laserplaneguide.dir/build.make CMakeFiles/laserplaneguide.dir/build
+.PHONY : laserplaneguide/fast
+
+#=============================================================================
+# Target rules for targets named laserverification
+
+# Build rule for target.
+laserverification: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 laserverification
+.PHONY : laserverification
+
+# fast build rule for target.
+laserverification/fast:
+	$(MAKE) -f CMakeFiles/laserverification.dir/build.make CMakeFiles/laserverification.dir/build
+.PHONY : laserverification/fast
+
+#=============================================================================
+# Target rules for targets named save
+
+# Build rule for target.
+save: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 save
+.PHONY : save
+
+# fast build rule for target.
+save/fast:
+	$(MAKE) -f CMakeFiles/save.dir/build.make CMakeFiles/save.dir/build
+.PHONY : save/fast
 
 src/arucolocate.o: src/arucolocate.cpp.o
 
@@ -195,9 +208,10 @@ src/gencal.o: src/gencal.cpp.o
 
 # target to build an object file
 src/gencal.cpp.o:
-	$(MAKE) -f CMakeFiles/laserverification.dir/build.make CMakeFiles/laserverification.dir/src/gencal.cpp.o
-	$(MAKE) -f CMakeFiles/laserplaneguide.dir/build.make CMakeFiles/laserplaneguide.dir/src/gencal.cpp.o
 	$(MAKE) -f CMakeFiles/laserbeamguide.dir/build.make CMakeFiles/laserbeamguide.dir/src/gencal.cpp.o
+	$(MAKE) -f CMakeFiles/laserplaneguide.dir/build.make CMakeFiles/laserplaneguide.dir/src/gencal.cpp.o
+	$(MAKE) -f CMakeFiles/laserverification.dir/build.make CMakeFiles/laserverification.dir/src/gencal.cpp.o
+	$(MAKE) -f CMakeFiles/save.dir/build.make CMakeFiles/save.dir/src/gencal.cpp.o
 .PHONY : src/gencal.cpp.o
 
 src/gencal.i: src/gencal.cpp.i
@@ -206,9 +220,10 @@ src/gencal.i: src/gencal.cpp.i
 
 # target to preprocess a source file
 src/gencal.cpp.i:
-	$(MAKE) -f CMakeFiles/laserverification.dir/build.make CMakeFiles/laserverification.dir/src/gencal.cpp.i
-	$(MAKE) -f CMakeFiles/laserplaneguide.dir/build.make CMakeFiles/laserplaneguide.dir/src/gencal.cpp.i
 	$(MAKE) -f CMakeFiles/laserbeamguide.dir/build.make CMakeFiles/laserbeamguide.dir/src/gencal.cpp.i
+	$(MAKE) -f CMakeFiles/laserplaneguide.dir/build.make CMakeFiles/laserplaneguide.dir/src/gencal.cpp.i
+	$(MAKE) -f CMakeFiles/laserverification.dir/build.make CMakeFiles/laserverification.dir/src/gencal.cpp.i
+	$(MAKE) -f CMakeFiles/save.dir/build.make CMakeFiles/save.dir/src/gencal.cpp.i
 .PHONY : src/gencal.cpp.i
 
 src/gencal.s: src/gencal.cpp.s
@@ -217,9 +232,10 @@ src/gencal.s: src/gencal.cpp.s
 
 # target to generate assembly for a file
 src/gencal.cpp.s:
-	$(MAKE) -f CMakeFiles/laserverification.dir/build.make CMakeFiles/laserverification.dir/src/gencal.cpp.s
-	$(MAKE) -f CMakeFiles/laserplaneguide.dir/build.make CMakeFiles/laserplaneguide.dir/src/gencal.cpp.s
 	$(MAKE) -f CMakeFiles/laserbeamguide.dir/build.make CMakeFiles/laserbeamguide.dir/src/gencal.cpp.s
+	$(MAKE) -f CMakeFiles/laserplaneguide.dir/build.make CMakeFiles/laserplaneguide.dir/src/gencal.cpp.s
+	$(MAKE) -f CMakeFiles/laserverification.dir/build.make CMakeFiles/laserverification.dir/src/gencal.cpp.s
+	$(MAKE) -f CMakeFiles/save.dir/build.make CMakeFiles/save.dir/src/gencal.cpp.s
 .PHONY : src/gencal.cpp.s
 
 src/imgpro.o: src/imgpro.cpp.o
@@ -228,9 +244,10 @@ src/imgpro.o: src/imgpro.cpp.o
 
 # target to build an object file
 src/imgpro.cpp.o:
-	$(MAKE) -f CMakeFiles/laserverification.dir/build.make CMakeFiles/laserverification.dir/src/imgpro.cpp.o
-	$(MAKE) -f CMakeFiles/laserplaneguide.dir/build.make CMakeFiles/laserplaneguide.dir/src/imgpro.cpp.o
 	$(MAKE) -f CMakeFiles/laserbeamguide.dir/build.make CMakeFiles/laserbeamguide.dir/src/imgpro.cpp.o
+	$(MAKE) -f CMakeFiles/laserplaneguide.dir/build.make CMakeFiles/laserplaneguide.dir/src/imgpro.cpp.o
+	$(MAKE) -f CMakeFiles/laserverification.dir/build.make CMakeFiles/laserverification.dir/src/imgpro.cpp.o
+	$(MAKE) -f CMakeFiles/save.dir/build.make CMakeFiles/save.dir/src/imgpro.cpp.o
 .PHONY : src/imgpro.cpp.o
 
 src/imgpro.i: src/imgpro.cpp.i
@@ -239,9 +256,10 @@ src/imgpro.i: src/imgpro.cpp.i
 
 # target to preprocess a source file
 src/imgpro.cpp.i:
-	$(MAKE) -f CMakeFiles/laserverification.dir/build.make CMakeFiles/laserverification.dir/src/imgpro.cpp.i
-	$(MAKE) -f CMakeFiles/laserplaneguide.dir/build.make CMakeFiles/laserplaneguide.dir/src/imgpro.cpp.i
 	$(MAKE) -f CMakeFiles/laserbeamguide.dir/build.make CMakeFiles/laserbeamguide.dir/src/imgpro.cpp.i
+	$(MAKE) -f CMakeFiles/laserplaneguide.dir/build.make CMakeFiles/laserplaneguide.dir/src/imgpro.cpp.i
+	$(MAKE) -f CMakeFiles/laserverification.dir/build.make CMakeFiles/laserverification.dir/src/imgpro.cpp.i
+	$(MAKE) -f CMakeFiles/save.dir/build.make CMakeFiles/save.dir/src/imgpro.cpp.i
 .PHONY : src/imgpro.cpp.i
 
 src/imgpro.s: src/imgpro.cpp.s
@@ -250,9 +268,10 @@ src/imgpro.s: src/imgpro.cpp.s
 
 # target to generate assembly for a file
 src/imgpro.cpp.s:
-	$(MAKE) -f CMakeFiles/laserverification.dir/build.make CMakeFiles/laserverification.dir/src/imgpro.cpp.s
-	$(MAKE) -f CMakeFiles/laserplaneguide.dir/build.make CMakeFiles/laserplaneguide.dir/src/imgpro.cpp.s
 	$(MAKE) -f CMakeFiles/laserbeamguide.dir/build.make CMakeFiles/laserbeamguide.dir/src/imgpro.cpp.s
+	$(MAKE) -f CMakeFiles/laserplaneguide.dir/build.make CMakeFiles/laserplaneguide.dir/src/imgpro.cpp.s
+	$(MAKE) -f CMakeFiles/laserverification.dir/build.make CMakeFiles/laserverification.dir/src/imgpro.cpp.s
+	$(MAKE) -f CMakeFiles/save.dir/build.make CMakeFiles/save.dir/src/imgpro.cpp.s
 .PHONY : src/imgpro.cpp.s
 
 src/laserbeamguide.o: src/laserbeamguide.cpp.o
@@ -336,18 +355,46 @@ src/laserverification.cpp.s:
 	$(MAKE) -f CMakeFiles/laserverification.dir/build.make CMakeFiles/laserverification.dir/src/laserverification.cpp.s
 .PHONY : src/laserverification.cpp.s
 
+src/save.o: src/save.cpp.o
+
+.PHONY : src/save.o
+
+# target to build an object file
+src/save.cpp.o:
+	$(MAKE) -f CMakeFiles/save.dir/build.make CMakeFiles/save.dir/src/save.cpp.o
+.PHONY : src/save.cpp.o
+
+src/save.i: src/save.cpp.i
+
+.PHONY : src/save.i
+
+# target to preprocess a source file
+src/save.cpp.i:
+	$(MAKE) -f CMakeFiles/save.dir/build.make CMakeFiles/save.dir/src/save.cpp.i
+.PHONY : src/save.cpp.i
+
+src/save.s: src/save.cpp.s
+
+.PHONY : src/save.s
+
+# target to generate assembly for a file
+src/save.cpp.s:
+	$(MAKE) -f CMakeFiles/save.dir/build.make CMakeFiles/save.dir/src/save.cpp.s
+.PHONY : src/save.cpp.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
 	@echo "... all (the default if no target is provided)"
 	@echo "... clean"
 	@echo "... depend"
-	@echo "... laserverification"
-	@echo "... edit_cache"
-	@echo "... laserplaneguide"
 	@echo "... rebuild_cache"
-	@echo "... arucolocate"
 	@echo "... laserbeamguide"
+	@echo "... arucolocate"
+	@echo "... laserplaneguide"
+	@echo "... edit_cache"
+	@echo "... laserverification"
+	@echo "... save"
 	@echo "... src/arucolocate.o"
 	@echo "... src/arucolocate.i"
 	@echo "... src/arucolocate.s"
@@ -366,6 +413,9 @@ help:
 	@echo "... src/laserverification.o"
 	@echo "... src/laserverification.i"
 	@echo "... src/laserverification.s"
+	@echo "... src/save.o"
+	@echo "... src/save.i"
+	@echo "... src/save.s"
 .PHONY : help
 
 

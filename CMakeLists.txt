@@ -53,5 +53,11 @@ target_link_libraries( laserverification
 
 )
 
+add_executable( save src/save.cpp src/imgpro.cpp src/gencal.cpp)
+target_link_libraries( save
+		       ${OpenCV_LIBS}
+	               ${Pylon_LIBRARIES}
+                       ${pylon_camera_INCLUDE_DIRS}
 
+)
 
