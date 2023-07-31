@@ -44,6 +44,24 @@ int main(int argc, char* argv[])
 	CEnumerationPtr(nodemap0.GetNode("ExposureMode"))->FromString("Timed"); 
 	CFloatPtr(nodemap0.GetNode("ExposureTime"))->SetValue(7500.0);
 
+	// CBooleanParameter(nodemap0, "EnableAcquisitionFrameRate").SetValue(true);
+	// CFloatPtr(nodemap0.GetNode("AcquisitionFrameRate"))->SetValue(100.0);
+	int setnum = stoi(argv[1]);
+	int set = setnum % 3;
+	cout<<endl<<set<<endl;
+	switch(set)
+	{
+		case 0:
+			CBooleanParameter(nodemap0, "AcquisitionFrameRateEnable").SetValue(true);
+			CFloatParameter(nodemap0, "AcquisitionFrameRate").SetValue(100.0);
+		case 1:
+			CBooleanParameter(nodemap0, "AcquisitionFrameRateEnable").SetValue(true);
+			CFloatParameter(nodemap0, "AcquisitionFrameRate").SetValue(10.0);
+		case 2:
+			CBooleanParameter(nodemap0, "AcquisitionFrameRateEnable").SetValue(true);
+			CFloatParameter(nodemap0, "AcquisitionFrameRate").SetValue(50.0);
+	}
+	
 	CEnumParameter(nodemap0, "LineSelector").SetValue("Line3");
 	CEnumParameter(nodemap0, "LineMode").SetValue("Output");
 	CEnumParameter(nodemap0, "LineSource").SetValue("UserOutput2");
@@ -72,8 +90,8 @@ int main(int argc, char* argv[])
 		src = cam_frame_temp0.clone();
 		imgs_taken0 = imgs_taken0+1;
 		cout<<endl<<imgs_taken0<<endl;
-		system("cd images && mkdir -p saved_LED_image");
-		imwrite("images/saved_LED_image/set_" + string(argv[1]) + "_" + to_string(imgs_taken0) + ".jpg", src);
+		system("cd images && mkdir -p LED_imageset");
+		imwrite("images/LED_imageset/imageset_" + string(argv[1]) + "_" + to_string(imgs_taken0) + ".jpg", src);
 	}
 	camera0.StopGrabbing();
 
