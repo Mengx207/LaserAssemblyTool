@@ -169,26 +169,28 @@ int main(int argc, char* argv[])
 				// Calculate rotation vector and translation vector by a captured image of a pattern
 				solvePnP_result solvePnP_result;
 				Mat image_captured;
-				// if(argc == 4)
-				// {
-				// 	if(argv[3] == string("d1"))
-				// 	{
-				// 		image_captured = imread("images/pattern_d1.png", IMREAD_GRAYSCALE);
-				// 	}
-				// 	if(argv[3] == string("d2"))
-				// 	{
-				// 		image_captured = imread("images/pattern_d2.png", IMREAD_GRAYSCALE);
-				// 	}
-				// 	if(argv[3] == string("d3"))
-				// 	{
-				// 		image_captured = imread("images/pattern_d3.png", IMREAD_GRAYSCALE);
-				// 	}
-				// }
+				
+				if(argc == 4)
+				{
+					if(argv[3] == string("d1"))
+					{
+						image_captured = imread("images/pattern_d1.png", IMREAD_GRAYSCALE);
+					}
+					if(argv[3] == string("d2"))
+					{
+						image_captured = imread("images/pattern_d2.png", IMREAD_GRAYSCALE);
+					}
+					if(argv[3] == string("d3"))
+					{
+						image_captured = imread("images/pattern_d3.png", IMREAD_GRAYSCALE);
+					}
+				}
 				// else {image_captured = imread("images/pattern_d2.png", IMREAD_GRAYSCALE);}
-
-				// Size patternSize (7,4);
-				// double squareSize = 7;
-				// solvePnP_result = getRvecTvec(image_captured, patternSize, squareSize);
+				else {image_captured = imread("images/pattern.png", IMREAD_GRAYSCALE);}
+				
+				Size patternSize (7,4);
+				double squareSize = 7;
+				solvePnP_result = getRvecTvec(image_captured, patternSize, squareSize);
 
 				// read laser 1
 				ifstream rmatrixL(path_rmatrix);
@@ -208,11 +210,11 @@ int main(int argc, char* argv[])
 
 				// cout<<endl<<tvec<<endl;
 				// cout<<endl<<rmatrix<<endl;
-				// cout<<endl<<solvePnP_result.tvec<<endl;
-				// cout<<endl<<solvePnP_result.rmatrix<<endl;
+				cout<<endl<<solvePnP_result.tvec<<endl;
+				cout<<endl<<solvePnP_result.rmatrix<<endl;
 
-				// pair<vector<double>,vector<double>>target = targetBoardPlane(solvePnP_result.rmatrix, solvePnP_result.tvec);
-				pair<vector<double>,vector<double>>target = targetBoardPlane(aruco_result.rmatrix, aruco_result.tvec);
+				pair<vector<double>,vector<double>>target = targetBoardPlane(solvePnP_result.rmatrix, solvePnP_result.tvec);
+				// pair<vector<double>,vector<double>>target = targetBoardPlane(aruco_result.rmatrix, aruco_result.tvec);
 
 				laser_plane laser_1;
 				laser_1 = laserPlane(rmatrix_laser_values, tvec_laser_values);
@@ -227,7 +229,7 @@ int main(int argc, char* argv[])
 				{
 					t = t+10;
 					Point3d points((line1.x0+line1.a*t), (line1.y0+line1.b*t), (line1.z0+line1.c*t));
-					// cout<<"point: "<<points<<endl;
+					cout<<"point: "<<points<<endl;
 					laserline_points_1.push_back(points);
 				}
 				vector<Point2d> projectedlaserline_1;
@@ -244,7 +246,7 @@ int main(int argc, char* argv[])
 						i++;
 					}
 				}
-				// cout<<"two points on line: "<<projectedlaserline_1[0]<<projectedlaserline_1[projectedlaserline_1.size()-2]<<endl;
+				cout<<"two points on line: "<<projectedlaserline_1[0]<<projectedlaserline_1[projectedlaserline_1.size()-2]<<endl;
 
 			//----------raw image to greyscale, threshold filter
 				cv::cvtColor(src, img_grey, cv::COLOR_BGR2GRAY);
