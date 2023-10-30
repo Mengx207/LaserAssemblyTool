@@ -208,18 +208,21 @@ int main(int argc, char* argv[])
 				// find target board plane in cam frame
 				arucoResult aruco_result = readArucoResult();
 
-				// cout<<endl<<tvec<<endl;
-				// cout<<endl<<rmatrix<<endl;
-				cout<<endl<<solvePnP_result.tvec<<endl;
-				cout<<endl<<solvePnP_result.rmatrix<<endl;
+				// cout<<endl<<solvePnP_result.tvec<<endl;
+				// cout<<endl<<solvePnP_result.rmatrix<<endl;
 
 				pair<vector<double>,vector<double>>target = targetBoardPlane(solvePnP_result.rmatrix, solvePnP_result.tvec);
+				if(target.first[2]<0)
+				{target.first[0] = -target.first[0]; target.first[1] = -target.first[1]; target.first[2] = -target.first[2];}
+				// cout<<"target board normal vector: "<< target.first[0]<<target.first[1]<<target.first[2]<<endl;
 				// pair<vector<double>,vector<double>>target = targetBoardPlane(aruco_result.rmatrix, aruco_result.tvec);
-
+				
 				laser_plane laser_1;
 				laser_1 = laserPlane(rmatrix_laser_values, tvec_laser_values);
 				Point3f interPoint1;
+				// cout<<"laser beam dir:"<<laser_1.beam_dir[0]<<" "<<laser_1.beam_dir[1]<<" "<<laser_1.beam_dir[2]<<endl;
 				interPoint1 = intersectionPoint(laser_1.origin, laser_1.beam_dir, target.first, target.second);
+				// cout<<"laser interpoint: "<< interPoint1<<endl;
 				
 				// find intersection line between target board plane and laser plane in cam frame
 				std::vector<cv::Point3d> laserline_points_1, laserline_points_2, laserline_points_3;
@@ -229,7 +232,7 @@ int main(int argc, char* argv[])
 				{
 					t = t+10;
 					Point3d points((line1.x0+line1.a*t), (line1.y0+line1.b*t), (line1.z0+line1.c*t));
-					cout<<"point: "<<points<<endl;
+					// cout<<"point 3D: "<<points<<endl;
 					laserline_points_1.push_back(points);
 				}
 				vector<Point2d> projectedlaserline_1;
@@ -243,10 +246,11 @@ int main(int argc, char* argv[])
 					}
 					else
 					{
+						cout<<"points on image"<<projectedlaserline_1[i]<<endl;
 						i++;
 					}
 				}
-				cout<<"two points on line: "<<projectedlaserline_1[0]<<projectedlaserline_1[projectedlaserline_1.size()-2]<<endl;
+				// cout<<"two points on line: "<<projectedlaserline_1[0]<<projectedlaserline_1[projectedlaserline_1.size()-2]<<endl;
 
 			//----------raw image to greyscale, threshold filter
 				cv::cvtColor(src, img_grey, cv::COLOR_BGR2GRAY);

@@ -20,13 +20,13 @@ include_directories( include
  )
 
 
-add_executable( arucolocate src/arucolocate.cpp)
-target_link_libraries( arucolocate
-		       ${OpenCV_LIBS}
-	               ${Pylon_LIBRARIES}
-                       ${pylon_camera_INCLUDE_DIRS}
+# add_executable( arucolocate src/arucolocate.cpp)
+# target_link_libraries( arucolocate
+# 		       ${OpenCV_LIBS}
+# 	               ${Pylon_LIBRARIES}
+#                        ${pylon_camera_INCLUDE_DIRS}
 
-)
+# )
 
 
 add_executable( laserbeamguide src/laserbeamguide.cpp src/imgpro.cpp src/gencal.cpp)
@@ -37,27 +37,19 @@ target_link_libraries( laserbeamguide
 
 )
 
-add_executable( laserplaneguide src/laserplaneguide.cpp src/imgpro.cpp src/gencal.cpp)
-target_link_libraries( laserplaneguide
-		       ${OpenCV_LIBS}
-	               ${Pylon_LIBRARIES}
-                       ${pylon_camera_INCLUDE_DIRS}
+# add_executable( laserplaneguide src/laserplaneguide.cpp src/imgpro.cpp src/gencal.cpp)
+# target_link_libraries( laserplaneguide
+# 		       ${OpenCV_LIBS}
+# 	               ${Pylon_LIBRARIES}
+#                        ${pylon_camera_INCLUDE_DIRS}
 
-)
+# )
 
-add_executable( laserverification src/laserverification.cpp src/imgpro.cpp src/gencal.cpp)
-target_link_libraries( laserverification
-		       ${OpenCV_LIBS}
-	               ${Pylon_LIBRARIES}
-                       ${pylon_camera_INCLUDE_DIRS}
+# add_executable( laserverification src/laserverification.cpp src/imgpro.cpp src/gencal.cpp)
+# target_link_libraries( laserverification
+# 		       ${OpenCV_LIBS}
+# 	               ${Pylon_LIBRARIES}
+#                        ${pylon_camera_INCLUDE_DIRS}
 
-)
-
-add_executable( save src/save.cpp src/imgpro.cpp src/gencal.cpp)
-target_link_libraries( save
-		       ${OpenCV_LIBS}
-	               ${Pylon_LIBRARIES}
-                       ${pylon_camera_INCLUDE_DIRS}
-
-)
+# )
 
