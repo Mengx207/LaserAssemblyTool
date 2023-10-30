@@ -123,6 +123,19 @@ laserbeamguide/fast:
 	$(MAKE) -f CMakeFiles/laserbeamguide.dir/build.make CMakeFiles/laserbeamguide.dir/build
 .PHONY : laserbeamguide/fast
 
+#=============================================================================
+# Target rules for targets named laserplaneguide
+
+# Build rule for target.
+laserplaneguide: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 laserplaneguide
+.PHONY : laserplaneguide
+
+# fast build rule for target.
+laserplaneguide/fast:
+	$(MAKE) -f CMakeFiles/laserplaneguide.dir/build.make CMakeFiles/laserplaneguide.dir/build
+.PHONY : laserplaneguide/fast
+
 src/gencal.o: src/gencal.cpp.o
 
 .PHONY : src/gencal.o
@@ -130,6 +143,7 @@ src/gencal.o: src/gencal.cpp.o
 # target to build an object file
 src/gencal.cpp.o:
 	$(MAKE) -f CMakeFiles/laserbeamguide.dir/build.make CMakeFiles/laserbeamguide.dir/src/gencal.cpp.o
+	$(MAKE) -f CMakeFiles/laserplaneguide.dir/build.make CMakeFiles/laserplaneguide.dir/src/gencal.cpp.o
 .PHONY : src/gencal.cpp.o
 
 src/gencal.i: src/gencal.cpp.i
@@ -139,6 +153,7 @@ src/gencal.i: src/gencal.cpp.i
 # target to preprocess a source file
 src/gencal.cpp.i:
 	$(MAKE) -f CMakeFiles/laserbeamguide.dir/build.make CMakeFiles/laserbeamguide.dir/src/gencal.cpp.i
+	$(MAKE) -f CMakeFiles/laserplaneguide.dir/build.make CMakeFiles/laserplaneguide.dir/src/gencal.cpp.i
 .PHONY : src/gencal.cpp.i
 
 src/gencal.s: src/gencal.cpp.s
@@ -148,6 +163,7 @@ src/gencal.s: src/gencal.cpp.s
 # target to generate assembly for a file
 src/gencal.cpp.s:
 	$(MAKE) -f CMakeFiles/laserbeamguide.dir/build.make CMakeFiles/laserbeamguide.dir/src/gencal.cpp.s
+	$(MAKE) -f CMakeFiles/laserplaneguide.dir/build.make CMakeFiles/laserplaneguide.dir/src/gencal.cpp.s
 .PHONY : src/gencal.cpp.s
 
 src/imgpro.o: src/imgpro.cpp.o
@@ -157,6 +173,7 @@ src/imgpro.o: src/imgpro.cpp.o
 # target to build an object file
 src/imgpro.cpp.o:
 	$(MAKE) -f CMakeFiles/laserbeamguide.dir/build.make CMakeFiles/laserbeamguide.dir/src/imgpro.cpp.o
+	$(MAKE) -f CMakeFiles/laserplaneguide.dir/build.make CMakeFiles/laserplaneguide.dir/src/imgpro.cpp.o
 .PHONY : src/imgpro.cpp.o
 
 src/imgpro.i: src/imgpro.cpp.i
@@ -166,6 +183,7 @@ src/imgpro.i: src/imgpro.cpp.i
 # target to preprocess a source file
 src/imgpro.cpp.i:
 	$(MAKE) -f CMakeFiles/laserbeamguide.dir/build.make CMakeFiles/laserbeamguide.dir/src/imgpro.cpp.i
+	$(MAKE) -f CMakeFiles/laserplaneguide.dir/build.make CMakeFiles/laserplaneguide.dir/src/imgpro.cpp.i
 .PHONY : src/imgpro.cpp.i
 
 src/imgpro.s: src/imgpro.cpp.s
@@ -175,6 +193,7 @@ src/imgpro.s: src/imgpro.cpp.s
 # target to generate assembly for a file
 src/imgpro.cpp.s:
 	$(MAKE) -f CMakeFiles/laserbeamguide.dir/build.make CMakeFiles/laserbeamguide.dir/src/imgpro.cpp.s
+	$(MAKE) -f CMakeFiles/laserplaneguide.dir/build.make CMakeFiles/laserplaneguide.dir/src/imgpro.cpp.s
 .PHONY : src/imgpro.cpp.s
 
 src/laserbeamguide.o: src/laserbeamguide.cpp.o
@@ -204,6 +223,33 @@ src/laserbeamguide.cpp.s:
 	$(MAKE) -f CMakeFiles/laserbeamguide.dir/build.make CMakeFiles/laserbeamguide.dir/src/laserbeamguide.cpp.s
 .PHONY : src/laserbeamguide.cpp.s
 
+src/laserplaneguide.o: src/laserplaneguide.cpp.o
+
+.PHONY : src/laserplaneguide.o
+
+# target to build an object file
+src/laserplaneguide.cpp.o:
+	$(MAKE) -f CMakeFiles/laserplaneguide.dir/build.make CMakeFiles/laserplaneguide.dir/src/laserplaneguide.cpp.o
+.PHONY : src/laserplaneguide.cpp.o
+
+src/laserplaneguide.i: src/laserplaneguide.cpp.i
+
+.PHONY : src/laserplaneguide.i
+
+# target to preprocess a source file
+src/laserplaneguide.cpp.i:
+	$(MAKE) -f CMakeFiles/laserplaneguide.dir/build.make CMakeFiles/laserplaneguide.dir/src/laserplaneguide.cpp.i
+.PHONY : src/laserplaneguide.cpp.i
+
+src/laserplaneguide.s: src/laserplaneguide.cpp.s
+
+.PHONY : src/laserplaneguide.s
+
+# target to generate assembly for a file
+src/laserplaneguide.cpp.s:
+	$(MAKE) -f CMakeFiles/laserplaneguide.dir/build.make CMakeFiles/laserplaneguide.dir/src/laserplaneguide.cpp.s
+.PHONY : src/laserplaneguide.cpp.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -213,6 +259,7 @@ help:
 	@echo "... rebuild_cache"
 	@echo "... laserbeamguide"
 	@echo "... edit_cache"
+	@echo "... laserplaneguide"
 	@echo "... src/gencal.o"
 	@echo "... src/gencal.i"
 	@echo "... src/gencal.s"
@@ -222,6 +269,9 @@ help:
 	@echo "... src/laserbeamguide.o"
 	@echo "... src/laserbeamguide.i"
 	@echo "... src/laserbeamguide.s"
+	@echo "... src/laserplaneguide.o"
+	@echo "... src/laserplaneguide.i"
+	@echo "... src/laserplaneguide.s"
 .PHONY : help
 
 

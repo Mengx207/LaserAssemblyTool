@@ -37,13 +37,13 @@ target_link_libraries( laserbeamguide
 
 )
 
-# add_executable( laserplaneguide src/laserplaneguide.cpp src/imgpro.cpp src/gencal.cpp)
-# target_link_libraries( laserplaneguide
-# 		       ${OpenCV_LIBS}
-# 	               ${Pylon_LIBRARIES}
-#                        ${pylon_camera_INCLUDE_DIRS}
+add_executable( laserplaneguide src/laserplaneguide.cpp src/imgpro.cpp src/gencal.cpp)
+target_link_libraries( laserplaneguide
+		       ${OpenCV_LIBS}
+	               ${Pylon_LIBRARIES}
+                       ${pylon_camera_INCLUDE_DIRS}
 
-# )
+)
 
 # add_executable( laserverification src/laserverification.cpp src/imgpro.cpp src/gencal.cpp)
 # target_link_libraries( laserverification
