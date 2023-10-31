@@ -246,7 +246,7 @@ int main(int argc, char* argv[])
 					}
 					else
 					{
-						cout<<"points on image"<<projectedlaserline_1[i]<<endl;
+						// cout<<"points on image"<<projectedlaserline_1[i]<<endl;
 						i++;
 					}
 				}
