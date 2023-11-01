@@ -304,18 +304,19 @@ int main(int argc, char *argv[])
 
 				//---------Process when captured images are not empty
 				//---------Clear center list and size array is capture an empty image
-				double nom_distance, center_distance;
+				double nom_distance, center_distance = 200;
 				vector<cv::Vec3f> circles;
 				Mat threshold_output;
 				cv::threshold(img_grey, threshold_output, 200, 255, cv::THRESH_BINARY);
 				Mat drawing = Mat::zeros(threshold_output.size(), CV_8UC3);
+				Point center_rect_avg;
+				dot_distance_return distance_result;
 
 				if (non_zero > 50)
 				{
 					// Test another way of finding center of laser dot
 					vector<vector<Point>> contours;
 					vector<Vec4i> hierarchy;
-					Point center_rect_avg;
 					findContours(threshold_output, contours, hierarchy, RETR_TREE, CHAIN_APPROX_SIMPLE, Point(0, 0));
 					if (contours.size() > 0)
 					{
@@ -325,7 +326,6 @@ int main(int argc, char *argv[])
 							center_rect_list.push_back(minRect[0].center);
 							center_rect_count++;
 							drawContourRectangle(drawing, contours, minRect);
-							cv::circle(dot_img, minRect[0].center, 3, cv::Scalar(0, 0, 0), -1, 8, 0);
 							// cout<<endl<<"minRect center: "<< minRect[0].center<<endl;
 						}
 						if (center_rect_count > 30)
@@ -338,10 +338,8 @@ int main(int argc, char *argv[])
 							Point sum = accumulate(center_rect_list.begin(), center_rect_list.end(), Point(0, 0));
 							center_rect_avg = sum * (1.0 / center_rect_count);
 
-							circle(dot_img, center_rect_avg, 3, Scalar(214, 0, 255), -1, 8, 0);
-							std::pair<double, double> dist = DotToLine(dot_img, projectedlaserline_1[i_start], projectedlaserline_1[i_end], center_rect_avg, interPoints_projected[0]);
-							nom_distance = dist.first;
-							center_distance = dist.second;
+							circle(dot_img, center_rect_avg, 3, Scalar(0, 0, 255), -1, 8, 0);
+							distance_result = DotToLine(dot_img, projectedlaserline_1[i_start], projectedlaserline_1[i_end], center_rect_avg, interPoints_projected[0]);
 							centerImage = center_rect_avg;
 						}
 					}
@@ -352,22 +350,22 @@ int main(int argc, char *argv[])
 					fill_n(size_array, 10, 0);
 					center_rect_count = 0;
 					center_rect_list.clear();
-					// fill(center_list.begin(), center_list.end(), cv::Point(0,0));
 				}
 
-				// Point3d point_1 = locationCam2Target(interPoints_projected[0], solvePnP_result);
-
-				HMI(dot_img, size_avg, min_size, non_zero, nom_distance, center_distance);
-				// GreenLight(dot_img, last_min_size, size_avg, nom_distance, center_distance);
-				if (nom_distance < 2 && center_distance < 600) // Green line if it is good
+				if (distance_result.distance <= 2 && distance_result.segment_length <= 100) // Green line if it is good
 				{
-					line(dot_img, projectedlaserline_1[i_start], projectedlaserline_1[i_end], Scalar(45, 255, 65), 5, LINE_AA);
+					line(dot_img, projectedlaserline_1[i_start], projectedlaserline_1[i_end], Scalar(45, 255, 63), 5, LINE_AA); // green line
 				}
 				else
 				{
-					line(dot_img, projectedlaserline_1[i_start], projectedlaserline_1[i_end], Scalar(45, 65, 255), 5, LINE_AA);
+					line(dot_img, projectedlaserline_1[i_start], projectedlaserline_1[i_end], Scalar(248, 91, 255), 5, LINE_AA); // red line
 				}
-				cv::circle(dot_img, interPoints_projected[0], 5, cv::Scalar(214, 0, 255), -1, 8, 0);
+				line( dot_img, center_rect_avg, distance_result.point, cv::Scalar( 0,0,255 ), 3, 8 );
+       			line( dot_img, distance_result.point, interPoints_projected[0], cv::Scalar( 0,0,255 ), 3, 8 );
+
+				HMI(dot_img, size_avg, min_size, non_zero, distance_result.distance, distance_result.segment_length);
+				// GreenLight(dot_img, last_min_size, size_avg, nom_distance, center_distance);
+				cv::circle(dot_img, interPoints_projected[0], 5, cv::Scalar(110, 254, 255), -1, 8, 0); //yellow dot for designed laser dot
 
 				// cv::imshow("img_grey_filtered_dot", img_grey_filtered_dot);
 				// cv::imshow("threshold output", threshold_output);

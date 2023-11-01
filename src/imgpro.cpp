@@ -70,11 +70,11 @@ void HMI(cv::Mat img, int size, int min_size, int non_zero, int nom_distance, in
         }
         string a = "Laser Beam Focus";
         putText(img, a, cv::Point(10, 20), cv::FONT_HERSHEY_SIMPLEX, 0.8, cv::Scalar(255,184,0),2);
-        putText(img, "Laser Dot Size: "+size_print + " pixel", cv::Point(10, 60), cv::FONT_HERSHEY_SIMPLEX, 0.8, cv::Scalar(190,190,190),2);
-        putText(img, "Previous Min Dot Size: "+min_size_print + " pixel", cv::Point(10, 90), cv::FONT_HERSHEY_SIMPLEX, 0.8, cv::Scalar(190,190,190),2);
+        putText(img, "Dot Size: "+size_print + " pixel", cv::Point(10, 60), cv::FONT_HERSHEY_SIMPLEX, 0.8, cv::Scalar(205,134,0),2);
+        putText(img, "Captured Min Size: "+min_size_print + " pixel", cv::Point(10, 90), cv::FONT_HERSHEY_SIMPLEX, 0.8, cv::Scalar(205,134,0),2);
         putText(img, "Laser Beam Location", cv::Point(500, 20), cv::FONT_HERSHEY_SIMPLEX, 0.8, cv::Scalar(110,254,255),2);
-        putText(img, "Normal Distance: "+nom_distance_print+ " pixel", cv::Point(500, 60), cv::FONT_HERSHEY_SIMPLEX, 0.8, cv::Scalar(190,190,190),2);
-        putText(img, "Distance from Center: "+center_distance_print+ " pixel", cv::Point(500, 90), cv::FONT_HERSHEY_SIMPLEX, 0.8, cv::Scalar(190,190,190),2);
+        putText(img, "Perpendicular Distance: "+nom_distance_print+ " pixel", cv::Point(500, 60), cv::FONT_HERSHEY_SIMPLEX, 0.8, cv::Scalar(60,204,205),2);
+        putText(img, "Line Segment Length: "+center_distance_print+ " pixel", cv::Point(500, 90), cv::FONT_HERSHEY_SIMPLEX, 0.8, cv::Scalar(60,204,205),2);
     }
 
 void GreenLight(cv::Mat img, int last, int current, int nom_distance, int center_distance)
@@ -98,7 +98,7 @@ int ClearList(vector<cv::Point> center_list, int center_total, int size_array[],
     fill(center_list.begin(), center_list.end(), cv::Point(0,0));
     return last_min;
 }
-std::pair<double,double> DotToLine(cv::Mat img, cv::Point start, cv::Point end, cv::Point center, cv::Point interPoint)
+dot_distance_return DotToLine(cv::Mat img, cv::Point start, cv::Point end, cv::Point center, cv::Point interPoint)
    {
        cv::LineIterator laserline(img, start, end, 8);
        vector<cv::Vec3b> buf(laserline.count);
@@ -113,9 +113,13 @@ std::pair<double,double> DotToLine(cv::Mat img, cv::Point start, cv::Point end, 
        double min_distance = *min_element(distance_list.begin(), distance_list.end());
        vector<double>::iterator result = min_element(distance_list.begin(), distance_list.end());
        int num = distance(distance_list.begin(), result);
-       cv::line( img, center, point_list[num], cv::Scalar( 255, 255, 255 ), 1, 8 );
-       std::pair<double,double>dist(min_distance,norm(point_list[num]-interPoint)) ;
-       return dist;
+       dot_distance_return distance_result;
+       distance_result.distance = min_distance;
+       distance_result.segment_length = norm(point_list[num]-interPoint);
+       distance_result.point = point_list[num];
+       return distance_result;
+    //    std::pair<double,double>dist(min_distance,norm(point_list[num]-interPoint)) ;
+    //    return dist;
    }
 vector<Point3f> createChessBoardCorners(Size2i patternsize, double squareSize)
    {

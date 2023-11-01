@@ -24,6 +24,11 @@ struct uniformity_data{
         double width_avg, width_max, width_min, width_sd;
     };
 
+struct dot_distance_return{
+    double distance, segment_length;
+    Point2d point;
+};
+
 int PixelCounter(Mat img);
 int SizeAverage (int count, int size_avg, int size_array[10], int center_total);
 void Calculatedline(Mat img, Point start, Point end);
@@ -31,7 +36,7 @@ int NonZero(Mat img);
 void HMI(Mat img, int size, int min_size, int non_zero, int nom_distance, int center_distance);
 void GreenLight(Mat img, int last, int current, int nom_distance, int center_distance);
 int ClearList(vector<cv::Point> center_list, int center_total, int size_array[10], int min);
-pair<double,double> DotToLine(Mat img, Point start, Point end, Point center, Point interPoint);
+dot_distance_return DotToLine(Mat img, Point start, Point end, Point center, Point interPoint);
 
 vector<Point3f> createChessBoardCorners(Size2i patternsize, double squareSize);
 solvePnP_result getRvecTvec(Mat image_captured, Size patternsize, double squareSize);

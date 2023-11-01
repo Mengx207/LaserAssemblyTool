@@ -310,13 +310,13 @@ int laserlineGUI(RotatedRect rect, Point2d cal_center, int cal_angle, uniformity
     else
     {status = 0;}
 
-    cv::putText(drawing, "Angle Designed: " + cal_angle_print, cv::Point(1000,600), cv::FONT_HERSHEY_SIMPLEX, 0.8, cv::Scalar(190,190,190),2);
-    cv::putText(drawing, "Angle Actual: " + angle_print, cv::Point(1000,630), cv::FONT_HERSHEY_SIMPLEX, 0.8, cv::Scalar(190,190,190),2);
-    cv::putText(drawing, "Width Average: " + width_avg_print + " mm", cv::Point(1000, 680), cv::FONT_HERSHEY_SIMPLEX, 0.8, cv::Scalar(190,190,190),2);
-    cv::putText(drawing, "Width Standard Deviation: " + width_sd_print, cv::Point(1000, 710), cv::FONT_HERSHEY_SIMPLEX, 0.8, cv::Scalar(190,190,190),2);
-    cv::putText(drawing, "Maximum Width: " + width_max_print + " mm", cv::Point(1000, 740), cv::FONT_HERSHEY_SIMPLEX, 0.8, cv::Scalar(190,190,190),2);
-    cv::putText(drawing, "Minimum Width: " + width_min_print + " mm", cv::Point(1000,770), cv::FONT_HERSHEY_SIMPLEX, 0.8, cv::Scalar(190,190,190),2);
-    cv::putText(drawing, "Designed Center: [" + cal_center_print_x + "," + cal_center_print_y + "]", cv::Point(1000, 820), cv::FONT_HERSHEY_SIMPLEX, 0.8, cv::Scalar(190,190,190),2);
+    cv::putText(drawing, "Angle Designed: " + cal_angle_print, cv::Point(1000,600), cv::FONT_HERSHEY_SIMPLEX, 0.8, cv::Scalar(255,184,0),2);
+    cv::putText(drawing, "Angle Actual: " + angle_print, cv::Point(1000,630), cv::FONT_HERSHEY_SIMPLEX, 0.8, cv::Scalar(255,184,0),2);
+    cv::putText(drawing, "Width Average: " + width_avg_print + " mm", cv::Point(1000, 680), cv::FONT_HERSHEY_SIMPLEX, 0.8, cv::Scalar(198,189,10),2);
+    cv::putText(drawing, "Width Standard Deviation: " + width_sd_print, cv::Point(1000, 710), cv::FONT_HERSHEY_SIMPLEX, 0.8, cv::Scalar(198,189,10),2);
+    cv::putText(drawing, "Maximum Width: " + width_max_print + " mm", cv::Point(1000, 740), cv::FONT_HERSHEY_SIMPLEX, 0.8, cv::Scalar(198,189,10),2);
+    cv::putText(drawing, "Minimum Width: " + width_min_print + " mm", cv::Point(1000,770), cv::FONT_HERSHEY_SIMPLEX, 0.8, cv::Scalar(198,189,10),2);
+    cv::putText(drawing, "Designed Center: [" + cal_center_print_x + "," + cal_center_print_y + "]", cv::Point(1000, 820), cv::FONT_HERSHEY_SIMPLEX, 0.8, cv::Scalar(110,254,255),2);
     // cv::putText(drawing, "Actual Center: [" + center_print_x + "," + center_print_y + "]", cv::Point(1000, 850), cv::FONT_HERSHEY_SIMPLEX, 0.8, cv::Scalar(255, 255, 255),2);
     return status;
 }

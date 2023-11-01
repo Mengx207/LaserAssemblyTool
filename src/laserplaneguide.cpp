@@ -283,10 +283,6 @@ int main(int argc, char *argv[])
 				double delta_y = (projectedlaserline_1[i_end].y - projectedlaserline_1[i_start].y);
 				double delta_x = (projectedlaserline_1[i_end].x - projectedlaserline_1[i_start].x);
 				double cal_angle = atan(delta_y / delta_x) * 180 / CV_PI;
-				if (cal_angle < 0)
-				{
-					cal_angle = 90 + cal_angle;
-				}
 
 				Mat img_grey;
 				cv::cvtColor(src, img_grey, cv::COLOR_BGR2GRAY);
@@ -304,7 +300,7 @@ int main(int argc, char *argv[])
 				if (minRect.size() >= 1)
 				{
 					drawContourRectangle(drawing, contours, minRect);
-					circle(line_img, minRect[0].center, 5, Scalar(214,0,255), -1, 8, 0);
+					circle(line_img, minRect[0].center, 5, Scalar(0,0,255), -1, 8, 0);
 					double angle = minRect[0].angle;
 					if (minRect[0].size.width < minRect[0].size.height)
 					{
@@ -322,11 +318,11 @@ int main(int argc, char *argv[])
 					// cv::imshow( "Rotated and Cropped laser line", uniformity1.image_BGR );
 				}
 				if(status == 0)
-				{line(line_img, projectedlaserline_1[i_start], projectedlaserline_1[i_end], Scalar(45,65,255), 5, LINE_AA);}
+				{line(line_img, projectedlaserline_1[i_start], projectedlaserline_1[i_end], Scalar(248, 91, 255), 5, LINE_AA);}
 				else if(status == 1)
-				{line(line_img, projectedlaserline_1[i_start], projectedlaserline_1[i_end], Scalar(45,255,65), 5, LINE_AA);}
+				{line(line_img, projectedlaserline_1[i_start], projectedlaserline_1[i_end], Scalar(45, 255, 63), 5, LINE_AA);} // green line
 
-				cv::circle(line_img, projectedInterPoints[0], 5, cv::Scalar(214,0,255), -1, 8, 0);
+				cv::circle(line_img, projectedInterPoints[0], 5, cv::Scalar(110, 254, 255), -1, 8, 0); // yellow dot for designed laser dot location
 				// cout<<"one point: "<< projectedInterPoints[0]<<endl;
 
 				// cv::imshow( "Contour and Area", drawing );
