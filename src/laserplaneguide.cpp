@@ -203,15 +203,17 @@ int main(int argc, char *argv[])
 				}
 				// find target board plane in cam frame
 				pair<vector<double>, vector<double>> target = targetBoardPlane(solvePnP_result.rmatrix, solvePnP_result.tvec);
-				if (target.first[2] < 0)
-				{
-					target.first[0] = -target.first[0];
-					target.first[1] = -target.first[1];
-					target.first[2] = -target.first[2];
-				}
+				// if (target.first[2] < 0)
+				// {
+				// 	target.first[0] = -target.first[0];
+				// 	target.first[1] = -target.first[1];
+				// 	target.first[2] = -target.first[2];
+				// }
 
 				// aruco_result = readArucoResult();
 				// pair<vector<double>,vector<double>>target = targetBoardPlane(aruco_result.rmatrix, aruco_result.tvec);
+				// cout<<endl<<solvePnP_result.tvec<<endl;
+				// cout<<endl<<solvePnP_result.rmatrix<<endl;
 
 				laser_plane laser_1;
 				laser_1 = laserPlane(rmatrix_laser_values, tvec_laser_values);
@@ -264,9 +266,9 @@ int main(int argc, char *argv[])
 				cv::cvtColor(src, img_grey, cv::COLOR_BGR2GRAY);
 				line_img = src.clone();
 				// CalculatedLine( line_img, projectedlaserline_1[0], projectedlaserline_1[projectedlaserline_1.size()-2] );
-				line(line_img, projectedlaserline_1[0], projectedlaserline_1[projectedlaserline_1.size() - 2], Scalar(200, 200, 0), 5, LINE_AA);
+				line(line_img, projectedlaserline_1[0], projectedlaserline_1[projectedlaserline_1.size() - 2], Scalar(45,255,63), 5, LINE_AA);
 
-				cv::circle(line_img, projectedInterPoints[0], 5, cv::Scalar(200, 200, 0), -1, 8, 0);
+				cv::circle(line_img, projectedInterPoints[0], 7, cv::Scalar(214,0,255), -1, 8, 0);
 				// cout<<"one point: "<< projectedInterPoints[0]<<endl;
 
 				vector<vector<Point>> contours;
@@ -280,7 +282,7 @@ int main(int argc, char *argv[])
 				if (minRect.size() >= 1)
 				{
 					drawContourRectangle(drawing, contours, minRect);
-					circle(line_img, minRect[0].center, 5, Scalar(0, 255, 0), -1, 8, 0);
+					circle(line_img, minRect[0].center, 5, Scalar(214,0,255), -1, 8, 0);
 					double angle = minRect[0].angle;
 					if (minRect[0].size.width < minRect[0].size.height)
 					{

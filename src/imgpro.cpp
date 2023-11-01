@@ -69,15 +69,15 @@ void HMI(cv::Mat img, int size, int min_size, int non_zero, int nom_distance, in
             center_distance_print = std::to_string(center_distance);
         }
         string a = "Laser Beam Focus";
-        putText(img, a, cv::Point(10, 20), cv::FONT_HERSHEY_SIMPLEX, 0.8, cv::Scalar(255, 255, 255),2);
-        putText(img, "Laser Dot Size: "+size_print + " pixel", cv::Point(10, 60), cv::FONT_HERSHEY_SIMPLEX, 0.8, cv::Scalar(255, 255, 255),2);
-        putText(img, "Previous Min Dot Size: "+min_size_print + " pixel", cv::Point(10, 90), cv::FONT_HERSHEY_SIMPLEX, 0.8, cv::Scalar(255, 255, 255),2);
+        putText(img, a, cv::Point(10, 20), cv::FONT_HERSHEY_SIMPLEX, 0.8, cv::Scalar(255,184,0),2);
+        putText(img, "Laser Dot Size: "+size_print + " pixel", cv::Point(10, 60), cv::FONT_HERSHEY_SIMPLEX, 0.8, cv::Scalar(190,190,190),2);
+        putText(img, "Previous Min Dot Size: "+min_size_print + " pixel", cv::Point(10, 90), cv::FONT_HERSHEY_SIMPLEX, 0.8, cv::Scalar(190,190,190),2);
         // cv::putText(img, "Laser Focus Status: ", cv::Point(10, 120), cv::FONT_HERSHEY_SIMPLEX, 0.8, cv::Scalar(255, 255, 255),2);
 
-        putText(img, "Laser Beam Location", cv::Point(500, 20), cv::FONT_HERSHEY_SIMPLEX, 0.8, cv::Scalar(255, 255, 255),2);
-        putText(img, "Normal Distance: "+nom_distance_print+ " pixel", cv::Point(500, 60), cv::FONT_HERSHEY_SIMPLEX, 0.8, cv::Scalar(255, 255, 255),2);
-        putText(img, "Distance from Center: "+center_distance_print+ " pixel", cv::Point(500, 90), cv::FONT_HERSHEY_SIMPLEX, 0.8, cv::Scalar(255, 255, 255),2);
-        putText(img, "Dot Location Status: ", cv::Point(500, 120), cv::FONT_HERSHEY_SIMPLEX, 0.8, cv::Scalar(255, 255, 255),2);
+        putText(img, "Laser Beam Location", cv::Point(500, 20), cv::FONT_HERSHEY_SIMPLEX, 0.8, cv::Scalar(110,254,255),2);
+        putText(img, "Normal Distance: "+nom_distance_print+ " pixel", cv::Point(500, 60), cv::FONT_HERSHEY_SIMPLEX, 0.8, cv::Scalar(190,190,190),2);
+        putText(img, "Distance from Center: "+center_distance_print+ " pixel", cv::Point(500, 90), cv::FONT_HERSHEY_SIMPLEX, 0.8, cv::Scalar(190,190,190),2);
+        putText(img, "Dot Location Status: ", cv::Point(500, 120), cv::FONT_HERSHEY_SIMPLEX, 0.8, cv::Scalar(190,190,190),2);
 
     }
 
@@ -117,7 +117,7 @@ std::pair<double,double> DotToLine(cv::Mat img, cv::Point start, cv::Point end, 
        double min_distance = *min_element(distance_list.begin(), distance_list.end());
        vector<double>::iterator result = min_element(distance_list.begin(), distance_list.end());
        int num = distance(distance_list.begin(), result);
-       cv::line( img, center, point_list[num], cv::Scalar( 255, 255, 0 ), 1, 8 );
+       cv::line( img, center, point_list[num], cv::Scalar( 255, 255, 255 ), 1, 8 );
        std::pair<double,double>dist(min_distance,norm(point_list[num]-interPoint)) ;
        return dist;
    }
