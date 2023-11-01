@@ -241,21 +241,47 @@ int main(int argc, char *argv[])
 				vector<Point2d> projectedlaserline_1, projectedlaserline_2, projectedlaserline_3;
 				projectPoints(laserline_points_1, Mat::zeros(3, 1, CV_64FC1), Mat::zeros(3, 1, CV_64FC1), cameraMatrix, distCoeffs, projectedlaserline_1);
 
-				for (int i = 0; i < projectedlaserline_1.size() - 1;)
+				double x_max = 0;
+				double x_min = 1440;
+				int i_max, i_min, i_start, i_end;
+
+				//filter our the points that out of the image size and find the min and max value in points vector
+				for (int i = 0; i < projectedlaserline_1.size();)
 				{
-					if ((projectedlaserline_1[i].x > 1440.0) || (projectedlaserline_1[i].y > 1080.0) || (projectedlaserline_1[i].x < 0.0) || (projectedlaserline_1[i].y < 0.0))
+					if ((projectedlaserline_1[i].x > 1440) || (projectedlaserline_1[i].y > 1080) || (projectedlaserline_1[i].x < 0) || (projectedlaserline_1[i].y < 0))
 					{
 						projectedlaserline_1.erase(projectedlaserline_1.begin() + i);
 					}
 					else
 					{
+						if(projectedlaserline_1[i].x > x_max)
+						{
+							x_max = projectedlaserline_1[i].x;
+							i_max = i;
+						}
+						if(projectedlaserline_1[i].x < x_min)
+						{
+							x_min = projectedlaserline_1[i].x;
+							i_min = i;
+						}
 						i++;
 					}
 				}
-				// cout<<"two points on line: "<<projectedlaserline_1[0]<<projectedlaserline_1[projectedlaserline_1.size()-2]<<endl;
+
+				if (i_max > i_min)
+				{
+					i_start = i_min;
+					i_end = i_max;
+				}
+				else 
+				{
+					i_start = i_max;
+					i_end = i_min;
+				}
+	
 				// Calculated laser line angle
-				double delta_y = (projectedlaserline_1[projectedlaserline_1.size() - 2].y - projectedlaserline_1[1].y);
-				double delta_x = (projectedlaserline_1[projectedlaserline_1.size() - 2].x - projectedlaserline_1[1].x);
+				double delta_y = (projectedlaserline_1[i_end].y - projectedlaserline_1[i_start].y);
+				double delta_x = (projectedlaserline_1[i_end].x - projectedlaserline_1[i_start].x);
 				double cal_angle = atan(delta_y / delta_x) * 180 / CV_PI;
 				if (cal_angle < 0)
 				{
@@ -265,11 +291,6 @@ int main(int argc, char *argv[])
 				Mat img_grey;
 				cv::cvtColor(src, img_grey, cv::COLOR_BGR2GRAY);
 				line_img = src.clone();
-				// CalculatedLine( line_img, projectedlaserline_1[0], projectedlaserline_1[projectedlaserline_1.size()-2] );
-				line(line_img, projectedlaserline_1[0], projectedlaserline_1[projectedlaserline_1.size() - 2], Scalar(45,255,63), 5, LINE_AA);
-
-				cv::circle(line_img, projectedInterPoints[0], 7, cv::Scalar(214,0,255), -1, 8, 0);
-				// cout<<"one point: "<< projectedInterPoints[0]<<endl;
 
 				vector<vector<Point>> contours;
 				vector<Vec4i> hierarchy;
@@ -279,6 +300,7 @@ int main(int argc, char *argv[])
 				vector<RotatedRect> minRect = findRectangle(contours, 100);
 				Mat drawing = Mat::zeros(threshold_output.size(), CV_8UC3);
 				Mat rotated_image = threshold_output.clone();
+				int status = 0;
 				if (minRect.size() >= 1)
 				{
 					drawContourRectangle(drawing, contours, minRect);
@@ -296,10 +318,16 @@ int main(int argc, char *argv[])
 					uniformity1.width_avg = uniformity1.width_avg * 3.45 * (solvePnP_result.tvec.at<double>(0, 2) / 12) / 1000;
 					uniformity1.width_max = uniformity1.width_max * 3.45 * (solvePnP_result.tvec.at<double>(0, 2) / 12) / 1000;
 					uniformity1.width_min = uniformity1.width_min * 3.45 * (solvePnP_result.tvec.at<double>(0, 2) / 12) / 1000;
-
-					laserlineGUI(minRect[0], projectedInterPoints[0], cal_angle, uniformity1, line_img);
+					status = laserlineGUI(minRect[0], projectedInterPoints[0], cal_angle, uniformity1, line_img);
 					// cv::imshow( "Rotated and Cropped laser line", uniformity1.image_BGR );
 				}
+				if(status == 0)
+				{line(line_img, projectedlaserline_1[i_start], projectedlaserline_1[i_end], Scalar(45,65,255), 5, LINE_AA);}
+				else if(status == 1)
+				{line(line_img, projectedlaserline_1[i_start], projectedlaserline_1[i_end], Scalar(45,255,65), 5, LINE_AA);}
+
+				cv::circle(line_img, projectedInterPoints[0], 5, cv::Scalar(214,0,255), -1, 8, 0);
+				// cout<<"one point: "<< projectedInterPoints[0]<<endl;
 
 				// cv::imshow( "Contour and Area", drawing );
 				// cv::imshow("threshold",threshold_output);

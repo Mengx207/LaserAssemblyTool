@@ -109,7 +109,6 @@ int main(int argc, char *argv[])
 
 		while (waitKey(10) != 'q')
 		{
-			// cout<<endl<<"--------------------------------------------------------------------------------"<<endl;
 			int max_imgs0 = 1;
 			int imgs_taken0 = 0;
 			camera0.StartGrabbing(max_imgs0 * 1);
@@ -216,10 +215,6 @@ int main(int argc, char *argv[])
 				// cout<<endl<<solvePnP_result.rmatrix<<endl;
 
 				pair<vector<double>, vector<double>> target = targetBoardPlane(solvePnP_result.rmatrix, solvePnP_result.tvec);
-				// if(target.first[2]<0)
-				// {target.first[0] = -target.first[0]; target.first[1] = -target.first[1]; target.first[2] = -target.first[2];}
-				// cout<<"target board normal vector: "<< target.first[0]<<target.first[1]<<target.first[2]<<endl;
-				// pair<vector<double>,vector<double>>target = targetBoardPlane(aruco_result.rmatrix, aruco_result.tvec);
 
 				laser_plane laser_1;
 				laser_1 = laserPlane(rmatrix_laser_values, tvec_laser_values);
@@ -283,7 +278,7 @@ int main(int argc, char *argv[])
 					i_start = i_max;
 					i_end = i_min;
 				}
-				
+
 				//----------raw image to greyscale, threshold filter
 				cv::cvtColor(src, img_grey, cv::COLOR_BGR2GRAY);
 				dot_img = src.clone();
@@ -366,12 +361,13 @@ int main(int argc, char *argv[])
 				// GreenLight(dot_img, last_min_size, size_avg, nom_distance, center_distance);
 				if (nom_distance < 2 && center_distance < 600) // Green line if it is good
 				{
-					line(dot_img, projectedlaserline_1[i_start], projectedlaserline_1[i_end], Scalar(45, 255, 63), 1, LINE_AA);
+					line(dot_img, projectedlaserline_1[i_start], projectedlaserline_1[i_end], Scalar(45, 255, 65), 5, LINE_AA);
 				}
 				else
 				{
-					line(dot_img, projectedlaserline_1[i_start], projectedlaserline_1[i_end], Scalar(45, 60, 255), 1, LINE_AA);
+					line(dot_img, projectedlaserline_1[i_start], projectedlaserline_1[i_end], Scalar(45, 65, 255), 5, LINE_AA);
 				}
+				cv::circle(dot_img, interPoints_projected[0], 5, cv::Scalar(214, 0, 255), -1, 8, 0);
 
 				// cv::imshow("img_grey_filtered_dot", img_grey_filtered_dot);
 				// cv::imshow("threshold output", threshold_output);

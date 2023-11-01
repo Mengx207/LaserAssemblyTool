@@ -263,8 +263,9 @@ pair<Point2d, Point2d> extractLaserline2Points(Mat whiteline)
     return laserline2Points;
 }
 
-void laserlineGUI(RotatedRect rect, Point2d cal_center, int cal_angle, uniformity_data uniformity1, Mat drawing)
+int laserlineGUI(RotatedRect rect, Point2d cal_center, int cal_angle, uniformity_data uniformity1, Mat drawing)
 {
+    int status = 0;
     double angle;
     if (rect.size.width < rect.size.height)
     {
@@ -304,6 +305,10 @@ void laserlineGUI(RotatedRect rect, Point2d cal_center, int cal_angle, uniformit
     cal_center_print_x = std::to_string(int(cal_center.x));
     cal_center_print_y = std::to_string(int(cal_center.y));
     cal_angle_print = std::to_string(cal_angle);
+    if(int(cal_angle) == int(angle))
+    {status = 1;}
+    else
+    {status = 0;}
 
     cv::putText(drawing, "Angle Designed: " + cal_angle_print, cv::Point(1000,600), cv::FONT_HERSHEY_SIMPLEX, 0.8, cv::Scalar(190,190,190),2);
     cv::putText(drawing, "Angle Actual: " + angle_print, cv::Point(1000,630), cv::FONT_HERSHEY_SIMPLEX, 0.8, cv::Scalar(190,190,190),2);
@@ -313,6 +318,7 @@ void laserlineGUI(RotatedRect rect, Point2d cal_center, int cal_angle, uniformit
     cv::putText(drawing, "Minimum Width: " + width_min_print + " mm", cv::Point(1000,770), cv::FONT_HERSHEY_SIMPLEX, 0.8, cv::Scalar(190,190,190),2);
     cv::putText(drawing, "Designed Center: [" + cal_center_print_x + "," + cal_center_print_y + "]", cv::Point(1000, 820), cv::FONT_HERSHEY_SIMPLEX, 0.8, cv::Scalar(190,190,190),2);
     // cv::putText(drawing, "Actual Center: [" + center_print_x + "," + center_print_y + "]", cv::Point(1000, 850), cv::FONT_HERSHEY_SIMPLEX, 0.8, cv::Scalar(255, 255, 255),2);
+    return status;
 }
 
 void addTagPos(cv::Point3f position, double tagSize, std::vector<std::vector<cv::Point3f>>& objPoints) {
