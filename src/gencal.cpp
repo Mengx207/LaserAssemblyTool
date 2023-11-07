@@ -96,56 +96,56 @@
 // }
 
 
-Point3d locationCam2Target(Point2d imagePoint, Mat rmatrix, Mat tvec, vector<Point3f>corners_created, vector<Point2f>corners_found)
+Point3d locationCam2Target(Point2d imagePoint, solvePnP_result solvePnP_result)
 {
     cout<<endl<<"start of locationCam2Target"<<endl;
-    Point3f corner_created_max_x = corners_created[0];
-    Point3f corner_created_max_y = corners_created[0];
-    Point2f corner_found_max_x = corners_found[0];
-    Point2f corner_found_max_y = corners_found[0];
+    Point3f corner_created_max_x = solvePnP_result.corners_created[0];
+    Point3f corner_created_max_y = solvePnP_result.corners_created[0];
+    Point2f corner_found_max_x = solvePnP_result.corners_found[0];
+    Point2f corner_found_max_y = solvePnP_result.corners_found[0];
 
-    Point3f corner_created_min_x = corners_created[0];
-    Point3f corner_created_min_y = corners_created[0];
-    Point2f corner_found_min_x = corners_found[0];
-    Point2f corner_found_min_y = corners_found[0];
+    Point3f corner_created_min_x = solvePnP_result.corners_created[0];
+    Point3f corner_created_min_y = solvePnP_result.corners_created[0];
+    Point2f corner_found_min_x = solvePnP_result.corners_found[0];
+    Point2f corner_found_min_y = solvePnP_result.corners_found[0];
 
-    for(uint i = 1; i < corners_created.size(); i++)
+    for(uint i = 1; i < solvePnP_result.corners_created.size(); i++) // Find range of created and found corners
     {
-        if(corners_created[i].x > corner_created_max_x.x)
+        if(solvePnP_result.corners_created[i].x > corner_created_max_x.x)
         {
-            corner_created_max_x = corners_created[i];
+            corner_created_max_x = solvePnP_result.corners_created[i];
         }
 
-        if(corners_created[i].y > corner_created_max_y.y)
+        if(solvePnP_result.corners_created[i].y > corner_created_max_y.y)
         {
-            corner_created_max_y = corners_created[i];
+            corner_created_max_y = solvePnP_result.corners_created[i];
         }
 
-        if(corners_found[i].x > corner_found_max_x.x)
+        if(solvePnP_result.corners_found[i].x > corner_found_max_x.x)
         {
-            corner_found_max_x = corners_found[i];
+            corner_found_max_x = solvePnP_result.corners_found[i];
         }
 
-        if(corners_found[i].y > corner_found_max_y.y)
+        if(solvePnP_result.corners_found[i].y > corner_found_max_y.y)
         {
-            corner_found_max_y = corners_found[i];
+            corner_found_max_y = solvePnP_result.corners_found[i];
         }
 
-        if(corners_created[i].x < corner_created_min_x.x)
+        if(solvePnP_result.corners_created[i].x < corner_created_min_x.x)
         {
-            corner_created_min_x = corners_created[i];
+            corner_created_min_x = solvePnP_result.corners_created[i];
         }
-        if(corners_created[i].y < corner_created_min_y.y)
+        if(solvePnP_result.corners_created[i].y < corner_created_min_y.y)
         {
-            corner_created_min_y = corners_created[i];
+            corner_created_min_y = solvePnP_result.corners_created[i];
         }
-        if(corners_found[i].x < corner_found_min_x.x)
+        if(solvePnP_result.corners_found[i].x < corner_found_min_x.x)
         {
-            corner_found_min_x = corners_found[i];
+            corner_found_min_x = solvePnP_result.corners_found[i];
         }
-        if(corners_found[i].y < corner_found_min_y.y)
+        if(solvePnP_result.corners_found[i].y < corner_found_min_y.y)
         {
-            corner_found_min_y = corners_found[i];
+            corner_found_min_y = solvePnP_result.corners_found[i];
         }
     }
 
@@ -173,7 +173,7 @@ Point3d locationCam2Target(Point2d imagePoint, Mat rmatrix, Mat tvec, vector<Poi
     cout <<"Dot coordinates on target board (targetframe) in mm: "<<endl<<cornerTargetFrame <<endl;
 
     Mat transMatrix; // translation matrix from target board frame to image frame
-    hconcat(rmatrix, tvec, transMatrix);
+    hconcat(solvePnP_result.rmatrix, solvePnP_result.tvec, transMatrix);
     Mat arr = Mat::zeros(1,4,CV_64F);
     arr.at<double>(3) = 1;
     vconcat(transMatrix, arr, transMatrix);

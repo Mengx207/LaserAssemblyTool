@@ -148,7 +148,7 @@ int main(int argc, char* argv[])
 	squareSize = 7.9; // ~440mm
 	solvePnP_result_d3 = getRvecTvec(image_captured, patternSize, squareSize);
 
-    Point3d p1 = locationCam2Target( imgPoint_d1, solvePnP_result_d1.rmatrix, solvePnP_result_d1.tvec, solvePnP_result_d1.corners_created, solvePnP_result_d1.corners_found);
+    Point3d p1 = locationCam2Target( imgPoint_d1, solvePnP_result_d1);
 	Point3d p2 = locationCam2Target( imgPoint_d2, solvePnP_result_d2);
 	Point3d p3 = locationCam2Target( imgPoint_d3, solvePnP_result_d3);
 	// Point3d p1 = locationCam2Target( imgPoint_d1, rmatrix, tvec, obj_corners, found_corners);
