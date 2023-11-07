@@ -169,20 +169,23 @@ int main(int argc, char *argv[])
 				// Calculate rotation vector and translation vector by a captured image of a pattern
 				solvePnP_result solvePnP_result;
 				Mat image_captured;
+				Size patternSize(7, 4);
+				double squareSize = 7;
 
 				if (argc == 4)
 				{
+					image_captured = imread("images/pattern.png", IMREAD_GRAYSCALE);
 					if (argv[3] == string("d1"))
 					{
-						image_captured = imread("images/pattern_d1.png", IMREAD_GRAYSCALE);
+						squareSize = 7; // ~390mm
 					}
 					if (argv[3] == string("d2"))
 					{
-						image_captured = imread("images/pattern_d2.png", IMREAD_GRAYSCALE);
+						squareSize = 6.1; //~340mm
 					}
 					if (argv[3] == string("d3"))
 					{
-						image_captured = imread("images/pattern_d3.png", IMREAD_GRAYSCALE);
+						squareSize = 7.9; //~440mm
 					}
 				}
 				// else {image_captured = imread("images/pattern_d2.png", IMREAD_GRAYSCALE);}
@@ -191,8 +194,6 @@ int main(int argc, char *argv[])
 					image_captured = imread("images/pattern.png", IMREAD_GRAYSCALE);
 				}
 
-				Size patternSize(7, 4);
-				double squareSize = 7;
 				solvePnP_result = getRvecTvec(image_captured, patternSize, squareSize);
 
 				// read laser 1
@@ -382,6 +383,7 @@ int main(int argc, char *argv[])
 		}
 		else if (argc == 4)
 		{
+			cout<<endl<<"argc = 4"<<endl;
 			imwrite("images/saved_laser_beam/laser_" + string(argv[1]) + "_" + string(argv[2]) + "_" + string(argv[3]) + ".jpg", dot_img);
 
 			// save center_rect_avg for future use

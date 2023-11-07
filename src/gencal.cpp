@@ -96,8 +96,9 @@
 // }
 
 
-Point3d locationCam2Target(Point2d imagePoint, Mat rmatrix, Mat tvec, vector<Point3d>corners_created, vector<Point2d>corners_found)
+Point3d locationCam2Target(Point2d imagePoint, Mat rmatrix, Mat tvec, vector<Point3f>corners_created, vector<Point2f>corners_found)
 {
+    cout<<endl<<"start of locationCam2Target"<<endl;
     Point3f corner_created_max_x = corners_created[0];
     Point3f corner_created_max_y = corners_created[0];
     Point2f corner_found_max_x = corners_found[0];

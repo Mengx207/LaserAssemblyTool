@@ -45,11 +45,11 @@ target_link_libraries( laserplaneguide
 
 )
 
-# add_executable( laserverification src/laserverification.cpp src/imgpro.cpp src/gencal.cpp)
-# target_link_libraries( laserverification
-# 		       ${OpenCV_LIBS}
-# 	               ${Pylon_LIBRARIES}
-#                        ${pylon_camera_INCLUDE_DIRS}
+add_executable( laserverification src/laserverification.cpp src/imgpro.cpp src/gencal.cpp)
+target_link_libraries( laserverification
+		       ${OpenCV_LIBS}
+	               ${Pylon_LIBRARIES}
+                       ${pylon_camera_INCLUDE_DIRS}
 
-# )
+)
 

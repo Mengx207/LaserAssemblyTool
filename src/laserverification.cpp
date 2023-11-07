@@ -61,7 +61,7 @@ int main(int argc, char* argv[])
 	cout<<endl<<"beam verification-------------------------------------------"<<endl;
 	vector<double> imgPoint_d1_vector, imgPoint_d2_vector, imgPoint_d3_vector;
 
-	ifstream readPointd1("values/intersections/intersections_l"+string(argv[1])+"_d1.txt");
+	ifstream readPointd1("values/beam_intersections/beam_intersections_l"+string(argv[1])+"_d1.txt");
 	while (readPointd1 >> val)
 	{
 		imgPoint_d1_vector.push_back(val);
@@ -70,7 +70,7 @@ int main(int argc, char* argv[])
 	imgPoint_d1.x = imgPoint_d1_vector[0];
 	imgPoint_d1.y = imgPoint_d1_vector[1];
 
-	ifstream readPointd2("values/intersections/intersections_l"+string(argv[1])+"_d2.txt");
+	ifstream readPointd2("values/beam_intersections/beam_intersections_l"+string(argv[1])+"_d2.txt");
 	while (readPointd2 >> val)
 	{
 		imgPoint_d2_vector.push_back(val);
@@ -79,7 +79,7 @@ int main(int argc, char* argv[])
 	imgPoint_d2.x = imgPoint_d2_vector[0];
 	imgPoint_d2.y = imgPoint_d2_vector[1];
 
-	ifstream readPointd3("values/intersections/intersections_l"+string(argv[1])+"_d3.txt");
+	ifstream readPointd3("values/beam_intersections/beam_intersections_l"+string(argv[1])+"_d3.txt");
 	while (readPointd3 >> val)
 	{
 		imgPoint_d3_vector.push_back(val);
@@ -88,61 +88,72 @@ int main(int argc, char* argv[])
 	imgPoint_d3.x = imgPoint_d3_vector[0];
 	imgPoint_d3.y = imgPoint_d3_vector[1];
 
-	vector<double> rvec_target2cam, tvec_target2cam;
-	ifstream rvec_s, tvec_s;
-	rvec_s.open("values/aruco_result/rvec_target2cam.txt"); 
-	while (rvec_s >> val)
-	{
-		rvec_target2cam.push_back(val);
-	}
+	// vector<double> rvec_target2cam, tvec_target2cam;
+	// ifstream rvec_s, tvec_s;
+	// rvec_s.open("values/aruco_result/rvec_target2cam.txt"); 
+	// while (rvec_s >> val)
+	// {
+	// 	rvec_target2cam.push_back(val);
+	// }
 
-	tvec_s.open("values/aruco_result/tvec_target2cam.txt"); 
-	while (tvec_s >> val)
-	{
-		tvec_target2cam.push_back(val*1000);
-	}
+	// tvec_s.open("values/aruco_result/tvec_target2cam.txt"); 
+	// while (tvec_s >> val)
+	// {
+	// 	tvec_target2cam.push_back(val*1000);
+	// }
 
-	Mat rvec = Mat(3, 1, CV_64FC1, rvec_target2cam.data());
-	Mat tvec = Mat(3, 1, CV_64FC1, tvec_target2cam.data());
-	Mat rmatrix;
-	Rodrigues(rvec, rmatrix);
-	vector<Point3d> obj_corners;
-	vector<Point2d> found_corners;
-	ifstream obj ("values/aruco_result/corners_obj.txt");
-	vector<double> reg1;
-	while (obj >> val)
-	{
-		reg1.push_back(val);
-	}
-	for(int i=0; i<reg1.size(); i=i+3)
-	{
-		Point3d pt;
-		pt.x = reg1[i];
-		pt.y = reg1[i+1];
-		pt.z = reg1[i+2];
-		obj_corners.push_back(pt);
-	}
+	// Mat rvec = Mat(3, 1, CV_64FC1, rvec_target2cam.data());
+	// Mat tvec = Mat(3, 1, CV_64FC1, tvec_target2cam.data());
+	// Mat rmatrix;
+	// Rodrigues(rvec, rmatrix);
+	// vector<Point3d> obj_corners;
+	// vector<Point2d> found_corners;
+	// ifstream obj ("values/aruco_result/corners_obj.txt");
+	// vector<double> reg1;
+	// while (obj >> val)
+	// {
+	// 	reg1.push_back(val);
+	// }
+	// for(int i=0; i<reg1.size(); i=i+3)
+	// {
+	// 	Point3d pt;
+	// 	pt.x = reg1[i];
+	// 	pt.y = reg1[i+1];
+	// 	pt.z = reg1[i+2];
+	// 	obj_corners.push_back(pt);
+	// }
 
-	ifstream found ("values/aruco_result/corners_img.txt");
-	vector<double> reg2;
-	while (found >> val)
-	{
-		reg2.push_back(val);
-	}			
-	for(int i=0; i<reg2.size(); i=i+2)
-	{
-		Point2d pt;
-		pt.x = reg2[i];
-		pt.y = reg2[i+1];
-		found_corners.push_back(pt);
-	}
+	// ifstream found ("values/aruco_result/corners_img.txt");
+	// vector<double> reg2;
+	// while (found >> val)
+	// {
+	// 	reg2.push_back(val);
+	// }			
+	// for(int i=0; i<reg2.size(); i=i+2)
+	// {
+	// 	Point2d pt;
+	// 	pt.x = reg2[i];
+	// 	pt.y = reg2[i+1];
+	// 	found_corners.push_back(pt);
+	// }
 
-    // Point3d p1 = locationCam2Target( imgPoint_d1, solvePnP_result_d1);
-	// Point3d p2 = locationCam2Target( imgPoint_d2, solvePnP_result_d2);
-	// Point3d p3 = locationCam2Target( imgPoint_d3, solvePnP_result_d3);
-	Point3d p1 = locationCam2Target( imgPoint_d1, rmatrix, tvec, obj_corners, found_corners);
-	Point3d p2 = locationCam2Target( imgPoint_d2, rmatrix, tvec, obj_corners, found_corners);
-	Point3d p3 = locationCam2Target( imgPoint_d3, rmatrix, tvec, obj_corners, found_corners);
+	Mat image_captured = imread("images/pattern.png", IMREAD_GRAYSCALE);
+	Size patternSize(7, 4);
+	double squareSize;
+	solvePnP_result solvePnP_result_d1, solvePnP_result_d2, solvePnP_result_d3;
+	squareSize = 7; // ~390mm
+	solvePnP_result_d1 = getRvecTvec(image_captured, patternSize, squareSize);
+	squareSize = 6.1; // ~340mm
+	solvePnP_result_d2 = getRvecTvec(image_captured, patternSize, squareSize);
+	squareSize = 7.9; // ~440mm
+	solvePnP_result_d3 = getRvecTvec(image_captured, patternSize, squareSize);
+
+    Point3d p1 = locationCam2Target( imgPoint_d1, solvePnP_result_d1.rmatrix, solvePnP_result_d1.tvec, solvePnP_result_d1.corners_created, solvePnP_result_d1.corners_found);
+	Point3d p2 = locationCam2Target( imgPoint_d2, solvePnP_result_d2);
+	Point3d p3 = locationCam2Target( imgPoint_d3, solvePnP_result_d3);
+	// Point3d p1 = locationCam2Target( imgPoint_d1, rmatrix, tvec, obj_corners, found_corners);
+	// Point3d p2 = locationCam2Target( imgPoint_d2, rmatrix, tvec, obj_corners, found_corners);
+	// Point3d p3 = locationCam2Target( imgPoint_d3, rmatrix, tvec, obj_corners, found_corners);
 
 	// cout<<endl<<"3 points in camera frame:   " <<p1<<" "<<p2<<" "<<p3<<endl;
 	lineEquation(p1,p3,tvec_laser_values);
