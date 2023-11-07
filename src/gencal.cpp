@@ -168,7 +168,7 @@ Point3d locationCam2Target(Point2d imagePoint, solvePnP_result solvePnP_result)
     float corners_found_center_y = corner_found_min_y.y;
     cout<<endl<<"center point of pattern (pixel) on image plane: "<<corners_found_center_x<<","<<corners_found_center_y<<endl;
     // Origin of the target frame is the center of the pattern, /magnifier transfer pixel to mm
-    Point3d cornerTargetFrame = Point3d(1000*(oneCorner.x-corners_found_center_x) / magnifier, 1000*(oneCorner.y-corners_found_center_y) / magnifier, 0);
+    Point3d cornerTargetFrame = Point3d((oneCorner.x-corners_found_center_x) / magnifier, (oneCorner.y-corners_found_center_y) / magnifier, 0);
     // Point3d cornerTargetFrame = Point3d(-(oneCorner.y-corners_found_center_y)/magnifier,-(oneCorner.x-corners_found_center_x)/magnifier, 0);
     cout <<"Dot coordinates on target board (targetframe) in mm: "<<endl<<cornerTargetFrame <<endl;
 
