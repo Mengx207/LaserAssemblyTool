@@ -137,27 +137,27 @@ int main(int argc, char *argv[])
 				Mat cameraMatrix = Mat(3, 3, CV_64FC1, cameraMatrix_values.data());
 				Mat distCoeffs = Mat(5, 1, CV_64FC1, distCoeffs_values.data());
 				// gain rmatrix and tvec from target board to cam
-				string path_rmatrix = "values/laser2cam_transformatrix/rmatrix_L1.txt";
-				string path_tvec = "values/laser2cam_transformatrix/tvec_L1.txt";
+				string path_rmatrix = "values/laser_transform/rmatrix_L1.txt";
+				string path_tvec = "values/laser_transform/tvec_L1.txt";
 				if (argv[1] == string("1"))
 				{
-					path_rmatrix = "values/laser2cam_transformatrix/rmatrix_L1.txt";
-					path_tvec = "values/laser2cam_transformatrix/tvec_L1.txt";
+					path_rmatrix = "values/laser_transform/rmatrix_L1.txt";
+					path_tvec = "values/laser_transform/tvec_L1.txt";
 				}
 				if (argv[1] == string("2"))
 				{
-					path_rmatrix = "values/laser2cam_transformatrix/rmatrix_L2.txt";
-					path_tvec = "values/laser2cam_transformatrix/tvec_L2.txt";
+					path_rmatrix = "values/laser_transform/rmatrix_L2.txt";
+					path_tvec = "values/laser_transform/tvec_L2.txt";
 				}
 				if (argv[1] == string("3"))
 				{
-					path_rmatrix = "values/laser2cam_transformatrix/rmatrix_L3.txt";
-					path_tvec = "values/laser2cam_transformatrix/tvec_L3.txt";
+					path_rmatrix = "values/laser_transform/rmatrix_L3.txt";
+					path_tvec = "values/laser_transform/tvec_L3.txt";
 				}
 				if (argv[1] == string("4"))
 				{
-					path_rmatrix = "values/laser2cam_transformatrix/rmatrix_L4.txt";
-					path_tvec = "values/laser2cam_transformatrix/tvec_L4.txt";
+					path_rmatrix = "values/laser_transform/rmatrix_L4.txt";
+					path_tvec = "values/laser_transform/tvec_L4.txt";
 				}
 				// Calculate rotation vector and translation vector by a captured image of a pattern
 				Mat image_captured;
@@ -331,7 +331,7 @@ int main(int argc, char *argv[])
 			imwrite("images/saved_laser_plane/laser_" + string(argv[1]) + "_" + string(argv[2]) + "_" + string(argv[3]) + "_MD.jpg", line_img);
 			imwrite("images/saved_laser_plane/laser_plane_" + string(argv[1]) + "_" + string(argv[2]) + "_" + string(argv[3]) + "_threshold.jpg", threshold_output);
 
-			system("cd values && mkdir -p laserline_3Dpoints && cd laserline_3Dpoints");
+			system("cd values && mkdir -p real_laserline_ends && cd real_laserline_ends");
 
 			pair<Point2f, Point2f> laserline2Points = extractLaserline2Points(threshold_output);
 			cout << "Pair of end points of actual laser line on image plane: " << laserline2Points.first << ", " << laserline2Points.second << endl;
@@ -345,16 +345,16 @@ int main(int argc, char *argv[])
 			{
 				if (argv[3] == string("d1"))
 				{
-					ofstream start_d1("values/laserline_3Dpoints/start_l1_d1.txt");
+					ofstream start_d1("values/real_laserline_ends/start_l1_d1.txt");
 					start_d1 << startCam.x << "," << startCam.y << "," << startCam.z;
-					ofstream end_d1("values/laserline_3Dpoints/end_l1_d1.txt");
+					ofstream end_d1("values/real_laserline_ends/end_l1_d1.txt");
 					end_d1 << endCam.x << "," << endCam.y << "," << endCam.z;
 				}
 				else if (argv[3] == string("d2"))
 				{
-					ofstream start_d2("values/laserline_3Dpoints/start_l1_d2.txt");
+					ofstream start_d2("values/real_laserline_ends/start_l1_d2.txt");
 					start_d2 << startCam.x << "," << startCam.y << "," << startCam.z;
-					ofstream end_d2("values/laserline_3Dpoints/end_l1_d2.txt");
+					ofstream end_d2("values/real_laserline_ends/end_l1_d2.txt");
 					end_d2 << endCam.x << "," << endCam.y << "," << endCam.z;
 				}
 			}
@@ -362,16 +362,16 @@ int main(int argc, char *argv[])
 			{
 				if (argv[3] == string("d1"))
 				{
-					ofstream start_d1("values/laserline_3Dpoints/start_l2_d1.txt");
+					ofstream start_d1("values/real_laserline_ends/start_l2_d1.txt");
 					start_d1 << startCam.x << "," << startCam.y << "," << startCam.z;
-					ofstream end_d1("values/laserline_3Dpoints/end_l2_d1.txt");
+					ofstream end_d1("values/real_laserline_ends/end_l2_d1.txt");
 					end_d1 << endCam.x << "," << endCam.y << "," << endCam.z;
 				}
 				else if (argv[3] == string("d2"))
 				{
-					ofstream start_d2("values/laserline_3Dpoints/start_l2_d2.txt");
+					ofstream start_d2("values/real_laserline_ends/start_l2_d2.txt");
 					start_d2 << startCam.x << "," << startCam.y << "," << startCam.z;
-					ofstream end_d2("values/laserline_3Dpoints/end_l2_d2.txt");
+					ofstream end_d2("values/real_laserline_ends/end_l2_d2.txt");
 					end_d2 << endCam.x << "," << endCam.y << "," << endCam.z;
 				}
 			}
@@ -379,16 +379,16 @@ int main(int argc, char *argv[])
 			{
 				if (argv[3] == string("d1"))
 				{
-					ofstream start_d1("values/laserline_3Dpoints/start_l3_d1.txt");
+					ofstream start_d1("values/real_laserline_ends/start_l3_d1.txt");
 					start_d1 << startCam.x << "," << startCam.y << "," << startCam.z;
-					ofstream end_d1("values/laserline_3Dpoints/end_l3_d1.txt");
+					ofstream end_d1("values/real_laserline_ends/end_l3_d1.txt");
 					end_d1 << endCam.x << "," << endCam.y << "," << endCam.z;
 				}
 				else if (argv[3] == string("d2"))
 				{
-					ofstream start_d2("values/laserline_3Dpoints/start_l3_d2.txt");
+					ofstream start_d2("values/real_laserline_ends/start_l3_d2.txt");
 					start_d2 << startCam.x << "," << startCam.y << "," << startCam.z;
-					ofstream end_d2("values/laserline_3Dpoints/end_l3_d2.txt");
+					ofstream end_d2("values/real_laserline_ends/end_l3_d2.txt");
 					end_d2 << endCam.x << "," << endCam.y << "," << endCam.z;
 				}
 			}
@@ -396,16 +396,16 @@ int main(int argc, char *argv[])
 			{
 				if (argv[3] == string("d1"))
 				{
-					ofstream start_d1("values/laserline_3Dpoints/start_l4_d1.txt");
+					ofstream start_d1("values/real_laserline_ends/start_l4_d1.txt");
 					start_d1 << startCam.x << "," << startCam.y << "," << startCam.z;
-					ofstream end_d1("values/laserline_3Dpoints/end_l4_d1.txt");
+					ofstream end_d1("values/real_laserline_ends/end_l4_d1.txt");
 					end_d1 << endCam.x << "," << endCam.y << "," << endCam.z;
 				}
 				else if (argv[3] == string("d2"))
 				{
-					ofstream start_d2("values/laserline_3Dpoints/start_l4_d2.txt");
+					ofstream start_d2("values/real_laserline_ends/start_l4_d2.txt");
 					start_d2 << startCam.x << "," << startCam.y << "," << startCam.z;
-					ofstream end_d2("values/laserline_3Dpoints/end_l4_d2.txt");
+					ofstream end_d2("values/real_laserline_ends/end_l4_d2.txt");
 					end_d2 << endCam.x << "," << endCam.y << "," << endCam.z;
 				}
 			}

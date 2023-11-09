@@ -21,27 +21,27 @@ using namespace GENAPI_NAMESPACE;
 
 int main(int argc, char* argv[])
 {
-	string path_rmatrix = "values/laser2cam_transformatrix/rmatrix_L1.txt";
-	string path_tvec = "values/laser2cam_transformatrix/tvec_L1.txt";
+	string path_rmatrix = "values/laser_transform/rmatrix_L1.txt";
+	string path_tvec = "values/laser_transform/tvec_L1.txt";
 	if(argv[1] == string("1")) 
 	{
-		path_rmatrix = "values/laser2cam_transformatrix/rmatrix_L1.txt";
-		path_tvec = "values/laser2cam_transformatrix/tvec_L1.txt";
+		path_rmatrix = "values/laser_transform/rmatrix_L1.txt";
+		path_tvec = "values/laser_transform/tvec_L1.txt";
 	}
 	if(argv[1] == string("2")) 
 	{
-		path_rmatrix = "values/laser2cam_transformatrix/rmatrix_L2.txt";
-		path_tvec = "values/laser2cam_transformatrix/tvec_L2.txt";
+		path_rmatrix = "values/laser_transform/rmatrix_L2.txt";
+		path_tvec = "values/laser_transform/tvec_L2.txt";
 	}
 	if(argv[1] == string("3")) 
 	{
-		path_rmatrix = "values/laser2cam_transformatrix/rmatrix_L3.txt";
-		path_tvec = "values/laser2cam_transformatrix/tvec_L3.txt";
+		path_rmatrix = "values/laser_transform/rmatrix_L3.txt";
+		path_tvec = "values/laser_transform/tvec_L3.txt";
 	}
 	if(argv[1] == string("4"))
 	{
-		path_rmatrix = "values/laser2cam_transformatrix/rmatrix_L4.txt";
-		path_tvec = "values/laser2cam_transformatrix/tvec_L4.txt";
+		path_rmatrix = "values/laser_transform/rmatrix_L4.txt";
+		path_tvec = "values/laser_transform/tvec_L4.txt";
 	}
 
 	vector<double> tvec_laser_values;
@@ -61,7 +61,7 @@ int main(int argc, char* argv[])
 	cout<<endl<<"beam verification-------------------------------------------"<<endl;
 	vector<double> imgPoint_d1_vector, imgPoint_d2_vector, imgPoint_d3_vector;
 
-	ifstream readPointd1("values/beam_intersections/beam_intersections_l"+string(argv[1])+"_d1.txt");
+	ifstream readPointd1("values/real_laserdot/real_laserdot_l"+string(argv[1])+"_d1.txt");
 	while (readPointd1 >> val)
 	{
 		imgPoint_d1_vector.push_back(val);
@@ -70,7 +70,7 @@ int main(int argc, char* argv[])
 	imgPoint_d1.x = imgPoint_d1_vector[0];
 	imgPoint_d1.y = imgPoint_d1_vector[1];
 
-	ifstream readPointd2("values/beam_intersections/beam_intersections_l"+string(argv[1])+"_d2.txt");
+	ifstream readPointd2("values/real_laserdot/real_laserdot_l"+string(argv[1])+"_d2.txt");
 	while (readPointd2 >> val)
 	{
 		imgPoint_d2_vector.push_back(val);
@@ -107,8 +107,8 @@ int main(int argc, char* argv[])
 
 	for(int i = 1; i<=2; i++)
 	{
-		path_start ="values/laserline_3Dpoints/start_l" + string(argv[1]) + "_d" + to_string(i) + ".txt";
-		path_end = "values/laserline_3Dpoints/end_l" + string(argv[1]) + "_d" + to_string(i) + ".txt";
+		path_start ="values/real_laserline_ends/start_l" + string(argv[1]) + "_d" + to_string(i) + ".txt";
+		path_end = "values/real_laserline_ends/end_l" + string(argv[1]) + "_d" + to_string(i) + ".txt";
 		if(i==1){start_d1.open(path_start); end_d1.open(path_end);}
 		else if(i==2){start_d2.open(path_start); end_d2.open(path_end);}
 	}
@@ -143,7 +143,6 @@ int main(int argc, char* argv[])
 
 	for(int s=0; s<2; s++)
 	{
-		vector<double> v1;
 		for(int e=0; e<2; e++)
 		{
 			vector<double> v1;
@@ -154,44 +153,41 @@ int main(int argc, char* argv[])
 			vect3D_collection.push_back(v1);
 		}
 	}
-	cout<<endl<<"1"<<endl;
-	double min;
+
+	vector<double> NV;
 	vector<vector<double>> normalVector_collection;
-	for(int i=0; i<2; i++)
+	// collect unit normal vectors between different vectors on the actual laser plane
+	for(int i=1; i<=3; i++)
 	{
-		vector<double> NV = crossProduct(vect3D_collection[2*i],vect3D_collection[2*i+1]);
-		double d = sqrt(NV[0]*NV[0] + NV[1]*NV[1]);
-		NV[0] = NV[0]/d; NV[1] = NV[1]/d;
+		NV = crossProduct(vect3D_collection[0],vect3D_collection[i]);
+		double d = sqrt(NV[0]*NV[0] + NV[1]*NV[1] + NV[2]*NV[2]);
+		NV[0] = NV[0]/d; NV[1] = NV[1]/d; NV[2] = NV[2]/d;
 		normalVector_collection.push_back(NV);
-
-		NV = crossProduct(vect3D_collection[2*i],vect3D_collection[2*i+2]);
-		d = sqrt(NV[0]*NV[0] + NV[1]*NV[1]);
-		NV[0] = NV[0]/d; NV[1] = NV[1]/d;
-		normalVector_collection.push_back(NV);
-
-		NV = crossProduct(vect3D_collection[2*i+1],vect3D_collection[2*i+2]);
-		d = sqrt(NV[0]*NV[0] + NV[1]*NV[1]);
-		NV[0] = NV[0]/d; NV[1] = NV[1]/d;
-		normalVector_collection.push_back(NV);
-
-		// normalVector_collection.push_back(crossProduct(vect3D_collection[3*i+1],vect3D_collection[3*i+2]));
-		// min = *min_element(normalVector_collection[3*i+2].begin(), normalVector_collection[3*i+2].end());
-		// transform(normalVector_collection[3*i+2].begin(), normalVector_collection[3*i+2].end(), normalVector_collection[3*i+2].begin(), [min](double &c){ return c/min; });
 	}
-	cout<<endl<<"2"<<endl;
+	for(int i=2; i<=3; i++)
+	{
+		NV = crossProduct(vect3D_collection[1],vect3D_collection[i]);
+		double d = sqrt(NV[0]*NV[0] + NV[1]*NV[1] + NV[2]*NV[2]);
+		NV[0] = NV[0]/d; NV[1] = NV[1]/d; NV[2] = NV[2]/d;
+		normalVector_collection.push_back(NV);
+	}
+	NV = crossProduct(vect3D_collection[2],vect3D_collection[3]);
+	double d = sqrt(NV[0]*NV[0] + NV[1]*NV[1] + NV[2]*NV[2]);
+	NV[0] = NV[0]/d; NV[1] = NV[1]/d; NV[2] = NV[2]/d;
+	normalVector_collection.push_back(NV);
+
 	double xSum = 0; double ySum = 0; double zSum = 0;
 	Point3d norm_avg;
-	for(int i=0; i<4; i++)
+	for(int i=0; i<6; i++)
 	{
 		// cout << endl << "The actual normal vectors: " << normalVector_collection[i][0] << "," << normalVector_collection[i][1] << "," << normalVector_collection[i][2]<< endl;
 		xSum = xSum + normalVector_collection[i][0];
 		ySum = ySum + normalVector_collection[i][1];
 		zSum = zSum + normalVector_collection[i][2];
 	}
-	cout<<endl<<"3"<<endl;
-	norm_avg.x = xSum/4;
-	norm_avg.y = ySum/4;
-	norm_avg.z = zSum/4;
+	norm_avg.x = xSum/6;
+	norm_avg.y = ySum/6;
+	norm_avg.z = zSum/6;
 	cout<<endl<<"The actual normal vector average: "<< norm_avg<<endl;
 
 	laser_plane laser_plane;
