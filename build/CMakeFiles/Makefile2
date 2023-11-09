@@ -60,6 +60,43 @@ CMAKE_SOURCE_DIR = /home/lingbo/Documents/GitHub/AssemblyGuidanceTool
 CMAKE_BINARY_DIR = /home/lingbo/Documents/GitHub/AssemblyGuidanceTool/build
 
 #=============================================================================
+# Target rules for target CMakeFiles/laserverification.dir
+
+# All Build rule for target.
+CMakeFiles/laserverification.dir/all:
+	$(MAKE) -f CMakeFiles/laserverification.dir/build.make CMakeFiles/laserverification.dir/depend
+	$(MAKE) -f CMakeFiles/laserverification.dir/build.make CMakeFiles/laserverification.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/lingbo/Documents/GitHub/AssemblyGuidanceTool/build/CMakeFiles --progress-num=9,10,11,12 "Built target laserverification"
+.PHONY : CMakeFiles/laserverification.dir/all
+
+# Include target in all.
+all: CMakeFiles/laserverification.dir/all
+
+.PHONY : all
+
+# Build rule for subdir invocation for target.
+CMakeFiles/laserverification.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/lingbo/Documents/GitHub/AssemblyGuidanceTool/build/CMakeFiles 4
+	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/laserverification.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/lingbo/Documents/GitHub/AssemblyGuidanceTool/build/CMakeFiles 0
+.PHONY : CMakeFiles/laserverification.dir/rule
+
+# Convenience name for target.
+laserverification: CMakeFiles/laserverification.dir/rule
+
+.PHONY : laserverification
+
+# clean rule for target.
+CMakeFiles/laserverification.dir/clean:
+	$(MAKE) -f CMakeFiles/laserverification.dir/build.make CMakeFiles/laserverification.dir/clean
+.PHONY : CMakeFiles/laserverification.dir/clean
+
+# clean rule for target.
+clean: CMakeFiles/laserverification.dir/clean
+
+.PHONY : clean
+
+#=============================================================================
 # Target rules for target CMakeFiles/laserbeamguide.dir
 
 # All Build rule for target.
@@ -97,39 +134,39 @@ clean: CMakeFiles/laserbeamguide.dir/clean
 .PHONY : clean
 
 #=============================================================================
-# Target rules for target CMakeFiles/laserverification.dir
+# Target rules for target CMakeFiles/laserplaneguide.dir
 
 # All Build rule for target.
-CMakeFiles/laserverification.dir/all:
-	$(MAKE) -f CMakeFiles/laserverification.dir/build.make CMakeFiles/laserverification.dir/depend
-	$(MAKE) -f CMakeFiles/laserverification.dir/build.make CMakeFiles/laserverification.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/lingbo/Documents/GitHub/AssemblyGuidanceTool/build/CMakeFiles --progress-num=5,6,7,8 "Built target laserverification"
-.PHONY : CMakeFiles/laserverification.dir/all
+CMakeFiles/laserplaneguide.dir/all:
+	$(MAKE) -f CMakeFiles/laserplaneguide.dir/build.make CMakeFiles/laserplaneguide.dir/depend
+	$(MAKE) -f CMakeFiles/laserplaneguide.dir/build.make CMakeFiles/laserplaneguide.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/lingbo/Documents/GitHub/AssemblyGuidanceTool/build/CMakeFiles --progress-num=5,6,7,8 "Built target laserplaneguide"
+.PHONY : CMakeFiles/laserplaneguide.dir/all
 
 # Include target in all.
-all: CMakeFiles/laserverification.dir/all
+all: CMakeFiles/laserplaneguide.dir/all
 
 .PHONY : all
 
 # Build rule for subdir invocation for target.
-CMakeFiles/laserverification.dir/rule: cmake_check_build_system
+CMakeFiles/laserplaneguide.dir/rule: cmake_check_build_system
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/lingbo/Documents/GitHub/AssemblyGuidanceTool/build/CMakeFiles 4
-	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/laserverification.dir/all
+	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/laserplaneguide.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/lingbo/Documents/GitHub/AssemblyGuidanceTool/build/CMakeFiles 0
-.PHONY : CMakeFiles/laserverification.dir/rule
+.PHONY : CMakeFiles/laserplaneguide.dir/rule
 
 # Convenience name for target.
-laserverification: CMakeFiles/laserverification.dir/rule
+laserplaneguide: CMakeFiles/laserplaneguide.dir/rule
 
-.PHONY : laserverification
-
-# clean rule for target.
-CMakeFiles/laserverification.dir/clean:
-	$(MAKE) -f CMakeFiles/laserverification.dir/build.make CMakeFiles/laserverification.dir/clean
-.PHONY : CMakeFiles/laserverification.dir/clean
+.PHONY : laserplaneguide
 
 # clean rule for target.
-clean: CMakeFiles/laserverification.dir/clean
+CMakeFiles/laserplaneguide.dir/clean:
+	$(MAKE) -f CMakeFiles/laserplaneguide.dir/build.make CMakeFiles/laserplaneguide.dir/clean
+.PHONY : CMakeFiles/laserplaneguide.dir/clean
+
+# clean rule for target.
+clean: CMakeFiles/laserplaneguide.dir/clean
 
 .PHONY : clean
 

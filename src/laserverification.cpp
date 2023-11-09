@@ -79,55 +79,6 @@ int main(int argc, char* argv[])
 	imgPoint_d2.x = imgPoint_d2_vector[0];
 	imgPoint_d2.y = imgPoint_d2_vector[1];
 
-	// vector<double> rvec_target2cam, tvec_target2cam;
-	// ifstream rvec_s, tvec_s;
-	// rvec_s.open("values/aruco_result/rvec_target2cam.txt"); 
-	// while (rvec_s >> val)
-	// {
-	// 	rvec_target2cam.push_back(val);
-	// }
-
-	// tvec_s.open("values/aruco_result/tvec_target2cam.txt"); 
-	// while (tvec_s >> val)
-	// {
-	// 	tvec_target2cam.push_back(val*1000);
-	// }
-
-	// Mat rvec = Mat(3, 1, CV_64FC1, rvec_target2cam.data());
-	// Mat tvec = Mat(3, 1, CV_64FC1, tvec_target2cam.data());
-	// Mat rmatrix;
-	// Rodrigues(rvec, rmatrix);
-	// vector<Point3d> obj_corners;
-	// vector<Point2d> found_corners;
-	// ifstream obj ("values/aruco_result/corners_obj.txt");
-	// vector<double> reg1;
-	// while (obj >> val)
-	// {
-	// 	reg1.push_back(val);
-	// }
-	// for(int i=0; i<reg1.size(); i=i+3)
-	// {
-	// 	Point3d pt;
-	// 	pt.x = reg1[i];
-	// 	pt.y = reg1[i+1];
-	// 	pt.z = reg1[i+2];
-	// 	obj_corners.push_back(pt);
-	// }
-
-	// ifstream found ("values/aruco_result/corners_img.txt");
-	// vector<double> reg2;
-	// while (found >> val)
-	// {
-	// 	reg2.push_back(val);
-	// }			
-	// for(int i=0; i<reg2.size(); i=i+2)
-	// {
-	// 	Point2d pt;
-	// 	pt.x = reg2[i];
-	// 	pt.y = reg2[i+1];
-	// 	found_corners.push_back(pt);
-	// }
-
 	Mat image_captured = imread("images/pattern.png", IMREAD_GRAYSCALE);
 	Size patternSize(7, 4);
 	double squareSize;
@@ -141,9 +92,6 @@ int main(int argc, char* argv[])
 
     Point3d p1 = locationCam2Target( imgPoint_d1, solvePnP_result_d1);
 	Point3d p2 = locationCam2Target( imgPoint_d2, solvePnP_result_d2);
-	// Point3d p1 = locationCam2Target( imgPoint_d1, rmatrix, tvec, obj_corners, found_corners);
-	// Point3d p2 = locationCam2Target( imgPoint_d2, rmatrix, tvec, obj_corners, found_corners);
-	// Point3d p3 = locationCam2Target( imgPoint_d3, rmatrix, tvec, obj_corners, found_corners);
 
 	// cout<<endl<<"3 points in camera frame:   " <<p1<<" "<<p2<<" "<<endl;
 	lineEquation(p1,p2,tvec_laser_values);
@@ -185,10 +133,10 @@ int main(int argc, char* argv[])
 		end_vector.push_back(Point3d(x,y,z));
 	}
 
-	// cout<<endl<< "start_d1: "<< start_vector[0]<<endl;
-	// cout<<endl<< "start_d2: "<< start_vector[1]<<endl;
-	// cout<<endl<< "end_d1: "<< end_vector[0]<<endl;
-	// cout<<endl<< "end_d2: "<< end_vector[1]<<endl;
+	cout<<endl<< "start_d1: "<< start_vector[0]<<endl;
+	cout<<endl<< "end_d1: "<< end_vector[0]<<endl;
+	cout<<endl<< "start_d2: "<< start_vector[1]<<endl;
+	cout<<endl<< "end_d2: "<< end_vector[1]<<endl;
 	
 	// Vector for vectors in 3D space from start to end points
 	vector<vector<double>> vect3D_collection;
@@ -206,42 +154,44 @@ int main(int argc, char* argv[])
 			vect3D_collection.push_back(v1);
 		}
 	}
+	cout<<endl<<"1"<<endl;
 	double min;
 	vector<vector<double>> normalVector_collection;
-	for(int i=0; i<3; i++)
+	for(int i=0; i<2; i++)
 	{
-		vector<double> NV = crossProduct(vect3D_collection[3*i],vect3D_collection[3*i+1]);
-		double d = sqrt(NV[0]*NV[0] + NV[1]*NV[1] + NV[2]*NV[2]);
-		NV[0] = NV[0]/d; NV[1] = NV[1]/d; NV[2] = NV[2]/d;
+		vector<double> NV = crossProduct(vect3D_collection[2*i],vect3D_collection[2*i+1]);
+		double d = sqrt(NV[0]*NV[0] + NV[1]*NV[1]);
+		NV[0] = NV[0]/d; NV[1] = NV[1]/d;
 		normalVector_collection.push_back(NV);
 
-		NV = crossProduct(vect3D_collection[3*i],vect3D_collection[3*i+2]);
-		d = sqrt(NV[0]*NV[0] + NV[1]*NV[1] + NV[2]*NV[2]);
-		NV[0] = NV[0]/d; NV[1] = NV[1]/d; NV[2] = NV[2]/d;
+		NV = crossProduct(vect3D_collection[2*i],vect3D_collection[2*i+2]);
+		d = sqrt(NV[0]*NV[0] + NV[1]*NV[1]);
+		NV[0] = NV[0]/d; NV[1] = NV[1]/d;
 		normalVector_collection.push_back(NV);
 
-		NV = crossProduct(vect3D_collection[3*i+1],vect3D_collection[3*i+2]);
-		d = sqrt(NV[0]*NV[0] + NV[1]*NV[1] + NV[2]*NV[2]);
-		NV[0] = NV[0]/d; NV[1] = NV[1]/d; NV[2] = NV[2]/d;
+		NV = crossProduct(vect3D_collection[2*i+1],vect3D_collection[2*i+2]);
+		d = sqrt(NV[0]*NV[0] + NV[1]*NV[1]);
+		NV[0] = NV[0]/d; NV[1] = NV[1]/d;
 		normalVector_collection.push_back(NV);
 
 		// normalVector_collection.push_back(crossProduct(vect3D_collection[3*i+1],vect3D_collection[3*i+2]));
 		// min = *min_element(normalVector_collection[3*i+2].begin(), normalVector_collection[3*i+2].end());
 		// transform(normalVector_collection[3*i+2].begin(), normalVector_collection[3*i+2].end(), normalVector_collection[3*i+2].begin(), [min](double &c){ return c/min; });
 	}
-
+	cout<<endl<<"2"<<endl;
 	double xSum = 0; double ySum = 0; double zSum = 0;
 	Point3d norm_avg;
-	for(int i=0; i<9; i++)
+	for(int i=0; i<4; i++)
 	{
 		// cout << endl << "The actual normal vectors: " << normalVector_collection[i][0] << "," << normalVector_collection[i][1] << "," << normalVector_collection[i][2]<< endl;
 		xSum = xSum + normalVector_collection[i][0];
 		ySum = ySum + normalVector_collection[i][1];
 		zSum = zSum + normalVector_collection[i][2];
 	}
-	norm_avg.x = xSum/9;
-	norm_avg.y = ySum/9;
-	norm_avg.z = zSum/9;
+	cout<<endl<<"3"<<endl;
+	norm_avg.x = xSum/4;
+	norm_avg.y = ySum/4;
+	norm_avg.z = zSum/4;
 	cout<<endl<<"The actual normal vector average: "<< norm_avg<<endl;
 
 	laser_plane laser_plane;

@@ -49,6 +49,7 @@ set(CMAKE_MAKEFILE_PRODUCTS
 
 # Dependency information for all targets:
 set(CMAKE_DEPEND_INFO_FILES
-  "CMakeFiles/laserbeamguide.dir/DependInfo.cmake"
   "CMakeFiles/laserverification.dir/DependInfo.cmake"
+  "CMakeFiles/laserbeamguide.dir/DependInfo.cmake"
+  "CMakeFiles/laserplaneguide.dir/DependInfo.cmake"
   )
