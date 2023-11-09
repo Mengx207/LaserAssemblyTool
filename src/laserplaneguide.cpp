@@ -164,28 +164,26 @@ int main(int argc, char *argv[])
 				// Calculate rotation vector and translation vector by a captured image of a pattern
 				Mat image_captured;
 				solvePnP_result solvePnP_result;
+				double squareSize = 7;
 				if (argc == 4)
 				{
+					image_captured = imread("images/pattern.png", IMREAD_GRAYSCALE);
 					if (argv[3] == string("d1"))
 					{
-						image_captured = imread("images/pattern_d1.png", IMREAD_GRAYSCALE);
+						squareSize = 7; // ~390mm
 					}
-					if (argv[3] == string("d2"))
+					else if (argv[3] == string("d2"))
 					{
-						image_captured = imread("images/pattern_d2.png", IMREAD_GRAYSCALE);
+						squareSize = 6.1; //~340mm
 					}
-					if (argv[3] == string("d3"))
-					{
-						image_captured = imread("images/pattern_d3.png", IMREAD_GRAYSCALE);
+					else{
+						cout<<endl<<"Invalid Distance"<<endl;
 					}
 				}
 				else
 				{
 					image_captured = imread("images/pattern.png", IMREAD_GRAYSCALE);
 				}
-
-				Size patternSize(7, 4);
-				double squareSize = 7;
 				solvePnP_result = getRvecTvec(image_captured, patternSize, squareSize);
 
 				// read laser 1
@@ -203,17 +201,6 @@ int main(int argc, char *argv[])
 				}
 				// find target board plane in cam frame
 				pair<vector<double>, vector<double>> target = targetBoardPlane(solvePnP_result.rmatrix, solvePnP_result.tvec);
-				// if (target.first[2] < 0)
-				// {
-				// 	target.first[0] = -target.first[0];
-				// 	target.first[1] = -target.first[1];
-				// 	target.first[2] = -target.first[2];
-				// }
-
-				// aruco_result = readArucoResult();
-				// pair<vector<double>,vector<double>>target = targetBoardPlane(aruco_result.rmatrix, aruco_result.tvec);
-				// cout<<endl<<solvePnP_result.tvec<<endl;
-				// cout<<endl<<solvePnP_result.rmatrix<<endl;
 
 				laser_plane laser_1;
 				laser_1 = laserPlane(rmatrix_laser_values, tvec_laser_values);
@@ -221,14 +208,14 @@ int main(int argc, char *argv[])
 				// find intersection between laser beam and target board
 				Point3f interPoint1;
 				interPoint1 = intersectionPoint(laser_1.origin, laser_1.beam_dir, target.first, target.second);
-				vector<Point3d> interPointArray;
-				vector<Point2d> projectedInterPoints;
-				interPointArray.push_back(interPoint1);
-				projectPoints(interPointArray, Mat::zeros(3, 1, CV_64FC1), Mat::zeros(3, 1, CV_64FC1), cameraMatrix, distCoeffs, projectedInterPoints);
-				// cout<<endl<<"Intersection between laser beam and target board on camera image: "<<endl<<projectedInterPoints<<endl;
+				vector<Point3d> interPoint3D;
+				vector<Point2d> interPoint_projected;
+				interPoint3D.push_back(interPoint1);
+				projectPoints(interPoint3D, Mat::zeros(3, 1, CV_64FC1), Mat::zeros(3, 1, CV_64FC1), cameraMatrix, distCoeffs, interPoint_projected);
+				// cout<<endl<<"Intersection between laser beam and target board on camera image: "<<endl<<interPoint_projected<<endl;
 
 				// find intersection line between target board plane and laser plane in cam frame
-				std::vector<cv::Point3d> laserline_points_1;
+				std::vector<cv::Point3d> laserlinepoints_1;
 				intersection line1, line2, line3;
 				line1 = intersectionLine(target.first, laser_1.normalvector, target.second, vector<double>{interPoint1.x, interPoint1.y, interPoint1.z});
 				for (int t = -150; t < 150;)
@@ -314,7 +301,7 @@ int main(int argc, char *argv[])
 					uniformity1.width_avg = uniformity1.width_avg * 3.45 * (solvePnP_result.tvec.at<double>(0, 2) / 12) / 1000;
 					uniformity1.width_max = uniformity1.width_max * 3.45 * (solvePnP_result.tvec.at<double>(0, 2) / 12) / 1000;
 					uniformity1.width_min = uniformity1.width_min * 3.45 * (solvePnP_result.tvec.at<double>(0, 2) / 12) / 1000;
-					status = laserlineGUI(minRect[0], projectedInterPoints[0], cal_angle, uniformity1, line_img);
+					status = laserlineGUI(minRect[0], interPoint_projected[0], cal_angle, uniformity1, line_img);
 					// cv::imshow( "Rotated and Cropped laser line", uniformity1.image_BGR );
 				}
 				if(status == 0)
@@ -322,8 +309,8 @@ int main(int argc, char *argv[])
 				else if(status == 1)
 				{line(line_img, projectedlaserline_1[i_start], projectedlaserline_1[i_end], Scalar(45, 255, 63), 5, LINE_AA);} // green line
 
-				cv::circle(line_img, projectedInterPoints[0], 5, cv::Scalar(110, 254, 255), -1, 8, 0); // yellow dot for designed laser dot location
-				// cout<<"one point: "<< projectedInterPoints[0]<<endl;
+				cv::circle(line_img, interPoint_projected[0], 5, cv::Scalar(110, 254, 255), -1, 8, 0); // yellow dot for designed laser dot location
+				// cout<<"one point: "<< interPoint_projected[0]<<endl;
 
 				// cv::imshow( "Contour and Area", drawing );
 				// cv::imshow("threshold",threshold_output);
