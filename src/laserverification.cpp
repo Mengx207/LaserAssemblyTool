@@ -79,15 +79,6 @@ int main(int argc, char* argv[])
 	imgPoint_d2.x = imgPoint_d2_vector[0];
 	imgPoint_d2.y = imgPoint_d2_vector[1];
 
-	ifstream readPointd3("values/beam_intersections/beam_intersections_l"+string(argv[1])+"_d3.txt");
-	while (readPointd3 >> val)
-	{
-		imgPoint_d3_vector.push_back(val);
-	}
-	Point2d imgPoint_d3;
-	imgPoint_d3.x = imgPoint_d3_vector[0];
-	imgPoint_d3.y = imgPoint_d3_vector[1];
-
 	// vector<double> rvec_target2cam, tvec_target2cam;
 	// ifstream rvec_s, tvec_s;
 	// rvec_s.open("values/aruco_result/rvec_target2cam.txt"); 
@@ -144,20 +135,19 @@ int main(int argc, char* argv[])
 	squareSize = 7; // ~390mm
 	solvePnP_result_d1 = getRvecTvec(image_captured, patternSize, squareSize);
 	squareSize = 6.1; // ~340mm
+	// squareSize = 5.65; //~315mm
+	// squareSize = 5.2; // ~290mm
 	solvePnP_result_d2 = getRvecTvec(image_captured, patternSize, squareSize);
-	squareSize = 7.9; // ~440mm
-	solvePnP_result_d3 = getRvecTvec(image_captured, patternSize, squareSize);
 
     Point3d p1 = locationCam2Target( imgPoint_d1, solvePnP_result_d1);
 	Point3d p2 = locationCam2Target( imgPoint_d2, solvePnP_result_d2);
-	Point3d p3 = locationCam2Target( imgPoint_d3, solvePnP_result_d3);
 	// Point3d p1 = locationCam2Target( imgPoint_d1, rmatrix, tvec, obj_corners, found_corners);
 	// Point3d p2 = locationCam2Target( imgPoint_d2, rmatrix, tvec, obj_corners, found_corners);
 	// Point3d p3 = locationCam2Target( imgPoint_d3, rmatrix, tvec, obj_corners, found_corners);
 
-	// cout<<endl<<"3 points in camera frame:   " <<p1<<" "<<p2<<" "<<p3<<endl;
-	lineEquation(p1,p3,tvec_laser_values);
-	cout<<endl<<"ideal laser origin: "<<"("<<tvec_laser_values[0]<<", "<<tvec_laser_values[1]<<", "<<tvec_laser_values[2]<<")"<<endl;
+	// cout<<endl<<"3 points in camera frame:   " <<p1<<" "<<p2<<" "<<endl;
+	lineEquation(p1,p2,tvec_laser_values);
+	cout<<endl<<"designed laser origin: "<<"("<<tvec_laser_values[0]<<", "<<tvec_laser_values[1]<<", "<<tvec_laser_values[2]<<")"<<endl;
 
 	/*Laser plane verification----------------------------------------------------------------------------------------------------*/
 	cout<<endl<<endl<<"plane verification-------------------------------------------"<<endl;
@@ -167,13 +157,12 @@ int main(int argc, char* argv[])
 	std::ostringstream oss;
 	std::string path_start, path_end;
 
-	for(int i = 1; i<=3; i++)
+	for(int i = 1; i<=2; i++)
 	{
 		path_start ="values/laserline_3Dpoints/start_l" + string(argv[1]) + "_d" + to_string(i) + ".txt";
 		path_end = "values/laserline_3Dpoints/end_l" + string(argv[1]) + "_d" + to_string(i) + ".txt";
 		if(i==1){start_d1.open(path_start); end_d1.open(path_end);}
 		else if(i==2){start_d2.open(path_start); end_d2.open(path_end);}
-		else if(i==3){start_d3.open(path_start); end_d3.open(path_end);}
 	}
 
 	double x, y, z;
@@ -187,10 +176,6 @@ int main(int argc, char* argv[])
 	{
 		start_vector.push_back(Point3d(x,y,z));
 	}
-	while (start_d3 >> x >> comma >> y >> comma >> z)
-	{
-		start_vector.push_back(Point3d(x,y,z));
-	}
 	while (end_d1 >> x >> comma >> y >> comma >> z)
 	{
 		end_vector.push_back(Point3d(x,y,z));
@@ -199,25 +184,19 @@ int main(int argc, char* argv[])
 	{
 		end_vector.push_back(Point3d(x,y,z));
 	}
-	while (end_d3 >> x >> comma >> y >> comma >> z)
-	{
-		end_vector.push_back(Point3d(x,y,z));
-	}
 
 	// cout<<endl<< "start_d1: "<< start_vector[0]<<endl;
 	// cout<<endl<< "start_d2: "<< start_vector[1]<<endl;
-	// cout<<endl<< "start_d3: "<< start_vector[2]<<endl;
 	// cout<<endl<< "end_d1: "<< end_vector[0]<<endl;
 	// cout<<endl<< "end_d2: "<< end_vector[1]<<endl;
-	// cout<<endl<< "end_d3: "<< end_vector[2]<<endl;
 	
 	// Vector for vectors in 3D space from start to end points
 	vector<vector<double>> vect3D_collection;
 
-	for(int s=0; s<3; s++)
+	for(int s=0; s<2; s++)
 	{
 		vector<double> v1;
-		for(int e=0; e<3; e++)
+		for(int e=0; e<2; e++)
 		{
 			vector<double> v1;
 			v1.push_back(end_vector[e].x-start_vector[s].x);

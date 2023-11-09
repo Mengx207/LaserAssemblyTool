@@ -1,104 +1,7 @@
 #include "gencal.h"
 
-// Point3d locationCam2Target(Point2d imagePoint, solvePnP_result solvePnP_result)
-// {
-//     Point3f corner_created_max_x = solvePnP_result.corners_created[0];
-//     Point3f corner_created_max_y = solvePnP_result.corners_created[0];
-//     Point2f corner_found_max_x = solvePnP_result.corners_found[0];
-//     Point2f corner_found_max_y = solvePnP_result.corners_found[0];
-
-//     Point3f corner_created_min_x = solvePnP_result.corners_created[0];
-//     Point3f corner_created_min_y = solvePnP_result.corners_created[0];
-//     Point2f corner_found_min_x = solvePnP_result.corners_found[0];
-//     Point2f corner_found_min_y = solvePnP_result.corners_found[0];
-
-//     for(uint i = 1; i < solvePnP_result.corners_created.size(); i++)
-//     {
-//         if(solvePnP_result.corners_created[i].x > corner_created_max_x.x)
-//         {
-//             corner_created_max_x = solvePnP_result.corners_created[i];
-//         }
-
-//         if(solvePnP_result.corners_created[i].y > corner_created_max_y.y)
-//         {
-//             corner_created_max_y = solvePnP_result.corners_created[i];
-//         }
-
-//         if(solvePnP_result.corners_found[i].x > corner_found_max_x.x)
-//         {
-//             corner_found_max_x = solvePnP_result.corners_found[i];
-//         }
-
-//         if(solvePnP_result.corners_found[i].y > corner_found_max_y.y)
-//         {
-//             corner_found_max_y = solvePnP_result.corners_found[i];
-//         }
-
-//         if(solvePnP_result.corners_created[i].x < corner_created_min_x.x)
-//         {
-//             corner_created_min_x = solvePnP_result.corners_created[i];
-//         }
-//         if(solvePnP_result.corners_created[i].y < corner_created_min_y.y)
-//         {
-//             corner_created_min_y = solvePnP_result.corners_created[i];
-//         }
-//         if(solvePnP_result.corners_found[i].x < corner_found_min_x.x)
-//         {
-//             corner_found_min_x = solvePnP_result.corners_found[i];
-//         }
-//         if(solvePnP_result.corners_found[i].y < corner_found_min_y.y)
-//         {
-//             corner_found_min_y = solvePnP_result.corners_found[i];
-//         }
-//     }
-
-//     float xRange_created = corner_created_max_x.x - corner_created_min_x.x;
-//     float yRange_created = corner_created_max_y.y - corner_created_min_y.y;
-//     float xRange_found = corner_found_max_x.x - corner_found_min_x.x;
-//     float yRange_found = corner_found_max_y.y - corner_found_min_y.y;
-//     // cout<< endl<<"magnifier calculation: "<<endl<<xRange_created<< endl << yRange_created<< endl<< xRange_found<<endl<<yRange_found<<endl;
-//     float magnifier = (xRange_found + yRange_found)/(xRange_created+yRange_created); //pattern is square
-//     // cout<<endl<<"magnifier: "<< magnifier<<endl;
-
-//     Point oneCorner = imagePoint;
-//     // cout<<endl<<"Dot coordinates on image plane (imageframe) in pixel: "<<endl<<oneCorner<<endl;
-
-//     // float corners_found_center_x = (corner_found_max_x.x + corner_found_min_x.x)/2;
-//     // float corners_found_center_y = (corner_found_max_y.y + corner_found_min_y.y)/2;
-//     float corners_found_center_x = solvePnP_result.corners_found[9].x;
-//     float corners_found_center_y = solvePnP_result.corners_found[9].y;
-//     // cout<<endl<<"center point of pattern (pixel) on image plane: "<<corners_found_center_x<<","<<corners_found_center_y<<endl;
-//     // Origin of the target frame is the center of the pattern, /magnifier transfer pixel to mm
-//     // Point3d cornerTargetFrame = Point3d((oneCorner.x-corners_found_center_x) / magnifier, (oneCorner.y-corners_found_center_y) / magnifier, 0);
-//     Point3d cornerTargetFrame = Point3d(-(oneCorner.y-corners_found_center_y)/magnifier,-(oneCorner.x-corners_found_center_x)/magnifier, 0);
-//     // cout <<"Dot coordinates on target board (targetframe) in mm: "<<endl<<cornerTargetFrame <<endl;
-
-//     Mat transMatrix; // translation matrix from target board frame to image frame
-//     hconcat(solvePnP_result.rmatrix, solvePnP_result.tvec, transMatrix);
-//     Mat arr = Mat::zeros(1,4,CV_64F);
-//     arr.at<double>(3) = 1;
-//     vconcat(transMatrix, arr, transMatrix);
-//     // cout<<endl<<"transform matrix: "<<endl<<transMatrix<<endl;
-
-//     Mat cornerTF = Mat(4,1,CV_64F); //Translate Point3d into 4x1 matrix
-//     cornerTF.at<double>(0,0) = cornerTargetFrame.x;
-//     cornerTF.at<double>(1,0) = cornerTargetFrame.y;
-//     cornerTF.at<double>(2,0) = cornerTargetFrame.z;
-//     cornerTF.at<double>(3,0) = 1;
-//     Mat cornerCamFrame = transMatrix*cornerTF; //Same dot expressed in Cam Frame
-//     // cout<<"Dot coordinates on target board (cam frame)"<<endl<<cornerCamFrame<<endl;
-//     Point3d pointCamFrame;
-//     pointCamFrame.x = cornerCamFrame.at<double>(0);
-//     pointCamFrame.y = cornerCamFrame.at<double>(1);
-//     pointCamFrame.z = cornerCamFrame.at<double>(2);
-//     return pointCamFrame;
-
-// }
-
-
 Point3d locationCam2Target(Point2d imagePoint, solvePnP_result solvePnP_result)
 {
-    cout<<endl<<"start of locationCam2Target"<<endl;
     Point3f corner_created_max_x = solvePnP_result.corners_created[0];
     Point3f corner_created_max_y = solvePnP_result.corners_created[0];
     Point2f corner_found_max_x = solvePnP_result.corners_found[0];
@@ -109,7 +12,7 @@ Point3d locationCam2Target(Point2d imagePoint, solvePnP_result solvePnP_result)
     Point2f corner_found_min_x = solvePnP_result.corners_found[0];
     Point2f corner_found_min_y = solvePnP_result.corners_found[0];
 
-    for(uint i = 1; i < solvePnP_result.corners_created.size(); i++) // Find range of created and found corners
+    for(uint i = 1; i < solvePnP_result.corners_created.size(); i++)
     {
         if(solvePnP_result.corners_created[i].x > corner_created_max_x.x)
         {
@@ -155,22 +58,21 @@ Point3d locationCam2Target(Point2d imagePoint, solvePnP_result solvePnP_result)
     float yRange_found = corner_found_max_y.y - corner_found_min_y.y;
     // cout<< endl<<"magnifier calculation: "<<endl<<xRange_created<< endl << yRange_created<< endl<< xRange_found<<endl<<yRange_found<<endl;
     float magnifier = (xRange_found + yRange_found)/(xRange_created+yRange_created); //pattern is square
-    cout<<endl<<"magnifier: "<< magnifier<<endl;
+    // cout<<endl<<"magnifier: "<< magnifier<<endl;
 
     Point oneCorner = imagePoint;
     // cout<<endl<<"Dot coordinates on image plane (imageframe) in pixel: "<<endl<<oneCorner<<endl;
 
     // float corners_found_center_x = (corner_found_max_x.x + corner_found_min_x.x)/2;
     // float corners_found_center_y = (corner_found_max_y.y + corner_found_min_y.y)/2;
-    // float corners_found_center_x = corners_found[9].x;
-    // float corners_found_center_y = corners_found[9].y;
-    float corners_found_center_x = corner_found_min_x.x;
-    float corners_found_center_y = corner_found_min_y.y;
-    cout<<endl<<"center point of pattern (pixel) on image plane: "<<corners_found_center_x<<","<<corners_found_center_y<<endl;
+    float corners_found_center_x = solvePnP_result.corners_found[9].x;
+    float corners_found_center_y = solvePnP_result.corners_found[9].y;
+    // cout<<endl<<solvePnP_result.corners_found<<endl;
+    // cout<<endl<<"center point of pattern (pixel) on image plane: "<<corners_found_center_x<<","<<corners_found_center_y<<endl;
     // Origin of the target frame is the center of the pattern, /magnifier transfer pixel to mm
-    Point3d cornerTargetFrame = Point3d((oneCorner.x-corners_found_center_x) / magnifier, (oneCorner.y-corners_found_center_y) / magnifier, 0);
-    // Point3d cornerTargetFrame = Point3d(-(oneCorner.y-corners_found_center_y)/magnifier,-(oneCorner.x-corners_found_center_x)/magnifier, 0);
-    cout <<"Dot coordinates on target board (targetframe) in mm: "<<endl<<cornerTargetFrame <<endl;
+    // Point3d cornerTargetFrame = Point3d((oneCorner.x-corners_found_center_x) / magnifier, (oneCorner.y-corners_found_center_y) / magnifier, 0);
+    Point3d cornerTargetFrame = Point3d(-(oneCorner.y-corners_found_center_y)/magnifier,-(oneCorner.x-corners_found_center_x)/magnifier, 0);
+    // cout <<"Dot coordinates on target board (targetframe) in mm: "<<endl<<cornerTargetFrame <<endl;
 
     Mat transMatrix; // translation matrix from target board frame to image frame
     hconcat(solvePnP_result.rmatrix, solvePnP_result.tvec, transMatrix);
@@ -193,6 +95,104 @@ Point3d locationCam2Target(Point2d imagePoint, solvePnP_result solvePnP_result)
     return pointCamFrame;
 
 }
+
+
+// Point3d locationCam2Target(Point2d imagePoint, solvePnP_result solvePnP_result)
+// {
+//     Point3f corner_created_max_x = solvePnP_result.corners_created[0];
+//     Point3f corner_created_max_y = solvePnP_result.corners_created[0];
+//     Point2f corner_found_max_x = solvePnP_result.corners_found[0];
+//     Point2f corner_found_max_y = solvePnP_result.corners_found[0];
+
+//     Point3f corner_created_min_x = solvePnP_result.corners_created[0];
+//     Point3f corner_created_min_y = solvePnP_result.corners_created[0];
+//     Point2f corner_found_min_x = solvePnP_result.corners_found[0];
+//     Point2f corner_found_min_y = solvePnP_result.corners_found[0];
+
+//     for(uint i = 1; i < solvePnP_result.corners_created.size(); i++) // Find range of created and found corners
+//     {
+//         if(solvePnP_result.corners_created[i].x > corner_created_max_x.x)
+//         {
+//             corner_created_max_x = solvePnP_result.corners_created[i];
+//         }
+
+//         if(solvePnP_result.corners_created[i].y > corner_created_max_y.y)
+//         {
+//             corner_created_max_y = solvePnP_result.corners_created[i];
+//         }
+
+//         if(solvePnP_result.corners_found[i].x > corner_found_max_x.x)
+//         {
+//             corner_found_max_x = solvePnP_result.corners_found[i];
+//         }
+
+//         if(solvePnP_result.corners_found[i].y > corner_found_max_y.y)
+//         {
+//             corner_found_max_y = solvePnP_result.corners_found[i];
+//         }
+
+//         if(solvePnP_result.corners_created[i].x < corner_created_min_x.x)
+//         {
+//             corner_created_min_x = solvePnP_result.corners_created[i];
+//         }
+//         if(solvePnP_result.corners_created[i].y < corner_created_min_y.y)
+//         {
+//             corner_created_min_y = solvePnP_result.corners_created[i];
+//         }
+//         if(solvePnP_result.corners_found[i].x < corner_found_min_x.x)
+//         {
+//             corner_found_min_x = solvePnP_result.corners_found[i];
+//         }
+//         if(solvePnP_result.corners_found[i].y < corner_found_min_y.y)
+//         {
+//             corner_found_min_y = solvePnP_result.corners_found[i];
+//         }
+//     }
+
+//     float xRange_created = corner_created_max_x.x - corner_created_min_x.x;
+//     float yRange_created = corner_created_max_y.y - corner_created_min_y.y;
+//     float xRange_found = corner_found_max_x.x - corner_found_min_x.x;
+//     float yRange_found = corner_found_max_y.y - corner_found_min_y.y;
+//     cout<< endl<<"magnifier calculation: "<<endl<<xRange_created<< endl << yRange_created<< endl<< xRange_found<<endl<<yRange_found<<endl;
+//     float magnifier = (xRange_found + yRange_found)/(xRange_created+yRange_created); //pattern is square
+//     cout<<endl<<"magnifier: "<< magnifier<<endl;
+
+//     Point oneCorner = imagePoint;
+//     cout<<endl<<"Dot coordinates on image plane (imageframe) in pixel: "<<endl<<oneCorner<<endl;
+
+//     // float corners_found_center_x = (corner_found_max_x.x + corner_found_min_x.x)/2;
+//     // float corners_found_center_y = (corner_found_max_y.y + corner_found_min_y.y)/2;
+//     float corners_found_center_x = solvePnP_result.corners_found[9].x;
+//     float corners_found_center_y = solvePnP_result.corners_found[9].y;
+//     // float corners_found_center_x = corner_found_min_x.x;
+//     // float corners_found_center_y = corner_found_min_y.y;
+//     cout<<endl<<"center point of pattern (pixel) on image plane: "<<corners_found_center_x<<","<<corners_found_center_y<<endl;
+//     // Origin of the target frame is the center of the pattern, /magnifier transfer pixel to mm
+//     Point3d cornerTargetFrame = Point3d((oneCorner.x-corners_found_center_x) / magnifier, (oneCorner.y-corners_found_center_y) / magnifier, 0);
+//     // Point3d cornerTargetFrame = Point3d(-(oneCorner.y-corners_found_center_y)/magnifier,-(oneCorner.x-corners_found_center_x)/magnifier, 0);
+//     cout <<"Dot coordinates on target board (targetframe) in mm: "<<endl<<cornerTargetFrame <<endl;
+
+//     Mat transMatrix; // translation matrix from target board frame to image frame
+//     hconcat(solvePnP_result.rmatrix, solvePnP_result.tvec, transMatrix);
+//     Mat arr = Mat::zeros(1,4,CV_64F);
+//     arr.at<double>(3) = 1;
+//     vconcat(transMatrix, arr, transMatrix);
+//     // cout<<endl<<"transform matrix: "<<endl<<transMatrix<<endl;
+
+//     Mat cornerTF = Mat(4,1,CV_64F); //Translate Point3d into 4x1 matrix
+//     cornerTF.at<double>(0,0) = cornerTargetFrame.x;
+//     cornerTF.at<double>(1,0) = cornerTargetFrame.y;
+//     cornerTF.at<double>(2,0) = cornerTargetFrame.z;
+//     cornerTF.at<double>(3,0) = 1;
+//     Mat cornerCamFrame = transMatrix*cornerTF; //Same dot expressed in Cam Frame
+//     // cout<<"Dot coordinates on target board (cam frame)"<<endl<<cornerCamFrame<<endl;
+//     Point3d pointCamFrame;
+//     pointCamFrame.x = cornerCamFrame.at<double>(0);
+//     pointCamFrame.y = cornerCamFrame.at<double>(1);
+//     pointCamFrame.z = cornerCamFrame.at<double>(2);
+//     return pointCamFrame;
+
+// }
 
 Point3d lineEquation(Point3d p1, Point3d p2, vector<double> tvec_laser_values)
 {

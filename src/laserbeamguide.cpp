@@ -179,13 +179,14 @@ int main(int argc, char *argv[])
 					{
 						squareSize = 7; // ~390mm
 					}
-					if (argv[3] == string("d2"))
+					else if (argv[3] == string("d2"))
 					{
 						squareSize = 6.1; //~340mm
+						// squareSize = 5.65; //~315mm
+						// squareSize = 5.2; //~290mm
 					}
-					if (argv[3] == string("d3"))
-					{
-						squareSize = 7.9; //~440mm
+					else{
+						cout<<endl<<"Invalid Distance"<<endl;
 					}
 				}
 				// else {image_captured = imread("images/pattern_d2.png", IMREAD_GRAYSCALE);}
@@ -193,7 +194,6 @@ int main(int argc, char *argv[])
 				{
 					image_captured = imread("images/pattern.png", IMREAD_GRAYSCALE);
 				}
-
 				solvePnP_result = getRvecTvec(image_captured, patternSize, squareSize);
 
 				// read laser 1
@@ -210,7 +210,7 @@ int main(int argc, char *argv[])
 				}
 
 				// find target board plane in cam frame
-				arucoResult aruco_result = readArucoResult();
+				// arucoResult aruco_result = readArucoResult();
 
 				// cout<<endl<<solvePnP_result.tvec<<endl;
 				// cout<<endl<<solvePnP_result.rmatrix<<endl;
@@ -219,13 +219,15 @@ int main(int argc, char *argv[])
 
 				laser_plane laser_1;
 				laser_1 = laserPlane(rmatrix_laser_values, tvec_laser_values);
+
+				// find intersection between laser beam and target board
 				Point3f interPoint1;
 				// cout<<"laser beam dir:"<<laser_1.beam_dir[0]<<" "<<laser_1.beam_dir[1]<<" "<<laser_1.beam_dir[2]<<endl;
 				interPoint1 = intersectionPoint(laser_1.origin, laser_1.beam_dir, target.first, target.second);
 				// cout<<"laser interpoint: "<< interPoint1<<endl;
 
 				// find intersection line between target board plane and laser plane in cam frame
-				std::vector<cv::Point3d> laserline_points_1, laserline_points_2, laserline_points_3;
+				std::vector<cv::Point3d> laserline_points_1;
 				intersection line1, line2, line3;
 				line1 = intersectionLine(target.first, laser_1.normalvector, target.second, vector<double>{interPoint1.x, interPoint1.y, interPoint1.z});
 				for (int t = -150; t < 150;)
@@ -383,7 +385,7 @@ int main(int argc, char *argv[])
 		}
 		else if (argc == 4)
 		{
-			cout<<endl<<"argc = 4"<<endl;
+			// cout<<endl<<"argc = 4"<<endl;
 			imwrite("images/saved_laser_beam/laser_" + string(argv[1]) + "_" + string(argv[2]) + "_" + string(argv[3]) + ".jpg", dot_img);
 
 			// save center_rect_avg for future use
