@@ -143,27 +143,27 @@ int main(int argc, char *argv[])
 				Mat distCoeffs = Mat(5, 1, CV_64FC1, distCoeffs_values.data());
 
 				// gain rmatrix and tvec from target board to cam
-				string path_rmatrix = "values/laser2cam_transformatrix/rmatrix_L1.txt";
-				string path_tvec = "values/laser2cam_transformatrix/tvec_L1.txt";
+				string path_rmatrix = "values/laser_transform/rmatrix_L1.txt";
+				string path_tvec = "values/laser_transform/tvec_L1.txt";
 				if (argv[1] == string("1"))
 				{
-					path_rmatrix = "values/laser2cam_transformatrix/rmatrix_L1.txt";
-					path_tvec = "values/laser2cam_transformatrix/tvec_L1.txt";
+					path_rmatrix = "values/laser_transform/rmatrix_L1.txt";
+					path_tvec = "values/laser_transform/tvec_L1.txt";
 				}
 				if (argv[1] == string("2"))
 				{
-					path_rmatrix = "values/laser2cam_transformatrix/rmatrix_L2.txt";
-					path_tvec = "values/laser2cam_transformatrix/tvec_L2.txt";
+					path_rmatrix = "values/laser_transform/rmatrix_L2.txt";
+					path_tvec = "values/laser_transform/tvec_L2.txt";
 				}
 				if (argv[1] == string("3"))
 				{
-					path_rmatrix = "values/laser2cam_transformatrix/rmatrix_L3.txt";
-					path_tvec = "values/laser2cam_transformatrix/tvec_L3.txt";
+					path_rmatrix = "values/laser_transform/rmatrix_L3.txt";
+					path_tvec = "values/laser_transform/tvec_L3.txt";
 				}
 				if (argv[1] == string("4"))
 				{
-					path_rmatrix = "values/laser2cam_transformatrix/rmatrix_L4.txt";
-					path_tvec = "values/laser2cam_transformatrix/tvec_L4.txt";
+					path_rmatrix = "values/laser_transform/rmatrix_L4.txt";
+					path_tvec = "values/laser_transform/tvec_L4.txt";
 				}
 
 				// Calculate rotation vector and translation vector by a captured image of a pattern
@@ -389,25 +389,25 @@ int main(int argc, char *argv[])
 			imwrite("images/saved_laser_beam/laser_" + string(argv[1]) + "_" + string(argv[2]) + "_" + string(argv[3]) + ".jpg", dot_img);
 
 			// save center_rect_avg for future use
-			system("cd values && mkdir -p beam_intersections && cd beam_intersections");
-			ofstream interpoint("values/beam_intersections/beam_intersections_l" + string(argv[1]) + "_" + string(argv[3]) + ".txt");
+			system("cd values && mkdir -p real_laserdot && cd real_laserdot");
+			ofstream interpoint("values/real_laserdot/real_laserdot_l" + string(argv[1]) + "_" + string(argv[3]) + ".txt");
 			interpoint << centerImage.x << " ";
 			interpoint << centerImage.y;
 			// if(argv[3] == string("d1"))
 			// {
-			// 	ofstream interpoint("values/beam_intersections/beam_intersections_d1.txt");
+			// 	ofstream interpoint("values/real_laserdot/real_laserdot_d1.txt");
 			// 	interpoint << centerImage.x <<" ";
 			// 	interpoint << centerImage.y;
 			// }
 			// if(argv[3] == string("d2"))
 			// {
-			// 	ofstream interpoint("values/beam_intersections/beam_intersections_d2.txt");
+			// 	ofstream interpoint("values/real_laserdot/real_laserdot_d2.txt");
 			// 	interpoint << centerImage.x <<" ";
 			// 	interpoint << centerImage.y;
 			// }
 			// if(argv[3] == string("d3"))
 			// {
-			// 	ofstream interpoint("values/beam_intersections/beam_intersections_d3.txt");
+			// 	ofstream interpoint("values/real_laserdot/real_laserdot_d3.txt");
 			// 	interpoint << centerImage.x <<" ";
 			// 	interpoint << centerImage.y;
 			// }
