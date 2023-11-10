@@ -210,10 +210,9 @@ int main(int argc, char *argv[])
 				}
 
 				// find target board plane in cam frame
-				// arucoResult aruco_result = readArucoResult();
 
-				// cout<<endl<<solvePnP_result.tvec<<endl;
-				// cout<<endl<<solvePnP_result.rmatrix<<endl;
+				cout<<endl<<"tvec:"<<endl<<solvePnP_result.tvec<<endl;
+				cout<<endl<<"rvec:"<<endl<<solvePnP_result.rvec<<endl;
 
 				pair<vector<double>, vector<double>> target = targetBoardPlane(solvePnP_result.rmatrix, solvePnP_result.tvec);
 
@@ -385,7 +384,6 @@ int main(int argc, char *argv[])
 		}
 		else if (argc == 4)
 		{
-			// cout<<endl<<"argc = 4"<<endl;
 			imwrite("images/saved_laser_beam/laser_" + string(argv[1]) + "_" + string(argv[2]) + "_" + string(argv[3]) + ".jpg", dot_img);
 
 			// save center_rect_avg for future use

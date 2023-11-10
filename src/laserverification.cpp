@@ -94,7 +94,8 @@ int main(int argc, char* argv[])
 	Point3d p2 = locationCam2Target( imgPoint_d2, solvePnP_result_d2);
 
 	// cout<<endl<<"3 points in camera frame:   " <<p1<<" "<<p2<<" "<<endl;
-	lineEquation(p1,p2,tvec_laser_values);
+	Point3d real_origin = lineEquation(p1,p2,tvec_laser_values);
+	cout<<endl<<"real laser origin: " << real_origin <<endl;
 	cout<<endl<<"designed laser origin: "<<"("<<tvec_laser_values[0]<<", "<<tvec_laser_values[1]<<", "<<tvec_laser_values[2]<<")"<<endl;
 
 	/*Laser plane verification----------------------------------------------------------------------------------------------------*/
@@ -193,5 +194,15 @@ int main(int argc, char* argv[])
 	laser_plane laser_plane;
 	laser_plane = laserPlane(rmatrix_laser_values, tvec_laser_values);
 	cout<<endl<<"The ideal normal vector of ideal laser plane: "<<"["<< laser_plane.normalvector[0]<<","<<laser_plane.normalvector[1]<<","<<laser_plane.normalvector[2]<<"]"<<endl;
+
+	system("cd values && mkdir -p verification");
+	if(argc == 3)
+	{
+			ofstream verification ("values/verification/L" + string(argv[1]) + ".txt");
+			verification <<"The design origin: "<<"["<<tvec_laser_values[0]<<", "<<tvec_laser_values[1]<<", "<<tvec_laser_values[2]<<"]"<<endl
+			<<"The real origin: "<<real_origin<<endl
+			<<"The design NV of laser plane: "<<"["<< laser_plane.normalvector[0]<<","<<laser_plane.normalvector[1]<<","<<laser_plane.normalvector[2]<<"]"<<endl
+			<<"The real NV of laser plane: "<<norm_avg<<endl;
+	}
 
 }
