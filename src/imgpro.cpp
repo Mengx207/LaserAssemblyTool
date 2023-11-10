@@ -143,11 +143,21 @@ solvePnP_result getRvecTvec(Mat image_captured, Size patternsize, double squareS
     }
     // Size patternsize(7, 4);
     vector<Point2f> corners_found;
+    vector<Point2f> corners_found_refined;
     SimpleBlobDetector::Params params;
     params.maxArea = 10e4;
     Ptr<FeatureDetector> blobDetector = SimpleBlobDetector::create(params);
     bool patternfound = findChessboardCorners(image_captured, patternsize, corners_found, CALIB_CB_ASYMMETRIC_GRID);
-//    cout <<endl<<endl<< "Corners found: " << endl << corners_found << endl << endl;
+    cout <<endl<<endl<< "Corners found: " << endl << corners_found << endl;
+    if(patternfound)
+    {
+        Size tWinSize  = Size ( 50, 50 );
+        Size tZeroZone = Size ( -1, -1 );
+        TermCriteria  tCriteria = TermCriteria ( CV_TERMCRIT_EPS + CV_TERMCRIT_ITER, 40, 0.001 );
+        cornerSubPix (image_captured, corners_found, tWinSize, tZeroZone, tCriteria );
+        cout <<endl<<endl<< "Corners found refined: " << endl << corners_found << endl;
+    }
+
     drawChessboardCorners(image_corners, patternsize, Mat(corners_found), patternfound);
 
     // create chessboard pattern
