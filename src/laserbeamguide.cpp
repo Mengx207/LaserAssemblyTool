@@ -170,7 +170,7 @@ int main(int argc, char *argv[])
 				solvePnP_result solvePnP_result;
 				Mat image_captured;
 				Size patternSize(7, 4);
-				double squareSize = 7;
+				double squareSize = 7.05;
 
 				if (argc == 4)
 				{

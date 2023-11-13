@@ -326,7 +326,7 @@ int main(int argc, char *argv[])
 		{
 			imwrite("images/saved_laser_plane/laser_" + string(argv[1]) + "_" + string(argv[2]) + ".jpg", line_img);
 		}
-		else if (argc == 4)
+		else if (argc == 4) // save data to folder for future verification and record
 		{
 			imwrite("images/saved_laser_plane/laser_" + string(argv[1]) + "_" + string(argv[2]) + "_" + string(argv[3]) + "_MD.jpg", line_img);
 			imwrite("images/saved_laser_plane/laser_plane_" + string(argv[1]) + "_" + string(argv[2]) + "_" + string(argv[3]) + "_threshold.jpg", threshold_output);
@@ -428,46 +428,3 @@ int main(int argc, char *argv[])
 	PylonTerminate();
 	return exitCode;
 }
-
-// void laserlineGUI(RotatedRect rect, Point2d cal_center, int cal_angle, uniformity_data uniformity1, Mat drawing)
-// {
-// 	std::string center_print_x, center_print_y, angle_print, width_print, cal_center_print_x, cal_center_print_y, cal_angle_print, width_avg_print, width_max_print, width_min_print, width_sd_print;
-// 	center_print_x = std::to_string(int(rect.center.x));
-// 	center_print_y = std::to_string(int(rect.center.y));
-// 	angle_print = std::to_string(int(rect.angle));
-
-// 	std::ostringstream streamObj;
-// 	streamObj << std::fixed;
-// 	streamObj << std::setprecision(2);
-
-// 	streamObj << uniformity1.width_max;
-// 	width_max_print = streamObj.str();
-// 	streamObj.str("");
-// 	streamObj << uniformity1.width_min;
-// 	width_min_print = streamObj.str();
-// 	streamObj.str("");
-// 	streamObj << uniformity1.width_sd;
-// 	width_sd_print = streamObj.str();
-// 	streamObj.str("");
-// 	streamObj << uniformity1.width_avg;
-// 	width_avg_print = streamObj.str();
-// 	streamObj.str("");
-
-// 	if(rect.size.width < rect.size.height)
-// 	{width_print = std::to_string(int(rect.size.width));}
-// 	else
-// 	{width_print = std::to_string(int(rect.size.height));}
-
-// 	cal_center_print_x = std::to_string(int(cal_center.x));
-// 	cal_center_print_y = std::to_string(int(cal_center.y));
-// 	cal_angle_print = std::to_string(cal_angle);
-
-// 	cv::putText(drawing, "Angle Designed: " + cal_angle_print, cv::Point(1000,600), cv::FONT_HERSHEY_SIMPLEX, 0.8, cv::Scalar(255, 255, 255),2);
-// 	cv::putText(drawing, "Angle Actual: " + angle_print, cv::Point(1000,630), cv::FONT_HERSHEY_SIMPLEX, 0.8, cv::Scalar(255, 255, 255),2);
-// 	cv::putText(drawing, "Width Average: " + width_avg_print + " mm", cv::Point(1000, 660), cv::FONT_HERSHEY_SIMPLEX, 0.8, cv::Scalar(255, 255, 255),2);
-// 	cv::putText(drawing, "Width Standard Deviation: " + width_sd_print, cv::Point(1000, 690), cv::FONT_HERSHEY_SIMPLEX, 0.8, cv::Scalar(255, 255, 255),2);
-// 	cv::putText(drawing, "Maximum Width: " + width_max_print + " mm", cv::Point(1000, 720), cv::FONT_HERSHEY_SIMPLEX, 0.6, cv::Scalar(255, 255, 255),2);
-// 	cv::putText(drawing, "Minimum Width: " + width_min_print + " mm", cv::Point(1000,740), cv::FONT_HERSHEY_SIMPLEX, 0.6, cv::Scalar(255, 255, 255),2);
-// 	cv::putText(drawing, "Designed Center: [" + cal_center_print_x + "," + cal_center_print_y + "]", cv::Point(1000, 760), cv::FONT_HERSHEY_SIMPLEX, 0.6, cv::Scalar(255, 255, 255),2);
-// 	// cv::putText(drawing, "Actual Center: [" + center_print_x + "," + center_print_y + "]", cv::Point(1000, 710), cv::FONT_HERSHEY_SIMPLEX, 0.6, cv::Scalar(255, 255, 255),2);
-// }
