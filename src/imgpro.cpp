@@ -134,10 +134,9 @@ vector<Point3f> createChessBoardCorners(Size2i patternsize, double squareSize)
 
        return centered_board_corners;
    }
+
 solvePnP_result getRvecTvec(Mat image_captured, Size patternsize, double squareSize)
 {
-    Mat image_corners(image_captured.rows, image_captured.cols, IMREAD_GRAYSCALE);
-   
     if (image_captured.empty())
     {
         cout << "Error opening image" << endl;
@@ -150,22 +149,17 @@ solvePnP_result getRvecTvec(Mat image_captured, Size patternsize, double squareS
     Ptr<FeatureDetector> blobDetector = SimpleBlobDetector::create(params);
     
     bool patternfound = findChessboardCorners(image_captured, patternsize, corners_found, CALIB_CB_ASYMMETRIC_GRID);
-    // cout <<endl<<endl<< "Corners found: " << endl << corners_found << endl;
     if(patternfound)
     {
-        Size tWinSize  = Size ( 50, 50 );
+        Size tWinSize  = Size ( 30, 30 );
         Size tZeroZone = Size ( -1, -1 );
         TermCriteria  tCriteria = TermCriteria ( CV_TERMCRIT_EPS + CV_TERMCRIT_ITER, 40, 0.001 );
         cornerSubPix (image_captured, corners_found, tWinSize, tZeroZone, tCriteria );
-        // cout <<endl<<endl<< "Corners found refined: " << endl << corners_found << endl;
     }
+    // Mat image_corners(image_captured.rows, image_captured.cols, IMREAD_GRAYSCALE);
+    // drawChessboardCorners(image_corners, patternsize, Mat(corners_found), patternfound);
     
-    drawChessboardCorners(image_corners, patternsize, Mat(corners_found), patternfound);
-    
-    // create chessboard pattern
-    // double squareSize = 7;
     vector<Point3f> corners_created = createChessBoardCorners(patternsize, squareSize);
-//    cout << "created pattern corners in mm: " << endl << corners_created << endl;
 
     // import camera matrix and distortion coefficients from txt file
     ifstream intrin("/home/lingbo/Documents/GitHub/AssemblyGuidanceTool/values/camera_matrix/intrinsic.txt");
@@ -183,12 +177,10 @@ solvePnP_result getRvecTvec(Mat image_captured, Size patternsize, double squareS
     }
     Mat cameraMatrix = Mat(3, 3, CV_64FC1, cameraMatrix_values.data());
     Mat distCoeffs = Mat(5, 1, CV_64FC1, distCoeffs_values.data());
-    Mat rvec, tvec;
+    Mat rvec, tvec, rmatrix;
     solvePnP(corners_created, corners_found, cameraMatrix, distCoeffs, rvec, tvec);
-    // cout<<endl<<"rvec: "<<rvec<<endl;
-    // cout<<"tvec: "<<tvec<<endl;
-    Mat rmatrix;
     Rodrigues(rvec, rmatrix);
+    
     solvePnP_result result;
     result.rmatrix = rmatrix;
     result.rvec = rvec;

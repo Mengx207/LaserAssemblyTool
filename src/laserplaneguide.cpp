@@ -137,27 +137,27 @@ int main(int argc, char *argv[])
 				Mat cameraMatrix = Mat(3, 3, CV_64FC1, cameraMatrix_values.data());
 				Mat distCoeffs = Mat(5, 1, CV_64FC1, distCoeffs_values.data());
 				// gain rmatrix and tvec from target board to cam
-				string path_rmatrix = "values/laser_transform/rmatrix_L1.txt";
-				string path_tvec = "values/laser_transform/tvec_L1.txt";
+				string path_L_rmatrix = "values/laser_transform/rmatrix_L1.txt";
+				string path_L_tvec = "values/laser_transform/tvec_L1.txt";
 				if (argv[1] == string("1"))
 				{
-					path_rmatrix = "values/laser_transform/rmatrix_L1.txt";
-					path_tvec = "values/laser_transform/tvec_L1.txt";
+					path_L_rmatrix = "values/laser_transform/rmatrix_L1.txt";
+					path_L_tvec = "values/laser_transform/tvec_L1.txt";
 				}
 				if (argv[1] == string("2"))
 				{
-					path_rmatrix = "values/laser_transform/rmatrix_L2.txt";
-					path_tvec = "values/laser_transform/tvec_L2.txt";
+					path_L_rmatrix = "values/laser_transform/rmatrix_L2.txt";
+					path_L_tvec = "values/laser_transform/tvec_L2.txt";
 				}
 				if (argv[1] == string("3"))
 				{
-					path_rmatrix = "values/laser_transform/rmatrix_L3.txt";
-					path_tvec = "values/laser_transform/tvec_L3.txt";
+					path_L_rmatrix = "values/laser_transform/rmatrix_L3.txt";
+					path_L_tvec = "values/laser_transform/tvec_L3.txt";
 				}
 				if (argv[1] == string("4"))
 				{
-					path_rmatrix = "values/laser_transform/rmatrix_L4.txt";
-					path_tvec = "values/laser_transform/tvec_L4.txt";
+					path_L_rmatrix = "values/laser_transform/rmatrix_L4.txt";
+					path_L_tvec = "values/laser_transform/tvec_L4.txt";
 				}
 				// Calculate rotation vector and translation vector by a captured image of a pattern
 				Mat image_captured;
@@ -186,13 +186,13 @@ int main(int argc, char *argv[])
 				solvePnP_result = getRvecTvec(image_captured, patternSize, squareSize);
 
 				// read laser 1
-				ifstream rmatrixL(path_rmatrix);
+				ifstream rmatrixL(path_L_rmatrix);
 				vector<double> rmatrix_laser_values;
 				while (rmatrixL >> val)
 				{
 					rmatrix_laser_values.push_back(val);
 				}
-				ifstream tvecL(path_tvec);
+				ifstream tvecL(path_L_tvec);
 				vector<double> tvec_laser_values;
 				while (tvecL >> val)
 				{
@@ -201,53 +201,52 @@ int main(int argc, char *argv[])
 				// find target board plane in cam frame
 				pair<vector<double>, vector<double>> target = targetBoardPlane(solvePnP_result.rmatrix, solvePnP_result.tvec);
 
-				laser_plane laser_1;
-				laser_1 = laserPlane(rmatrix_laser_values, tvec_laser_values);
+				laser_plane laser_plane_result;
+				laser_plane_result = laserPlane(rmatrix_laser_values, tvec_laser_values);
 
 				// find intersection between laser beam and target board
-				Point3f interPoint1;
-				interPoint1 = intersectionPoint(laser_1.origin, laser_1.beam_dir, target.first, target.second);
-				vector<Point3d> interPoint3D;
-				vector<Point2d> interPoint_projected;
-				interPoint3D.push_back(interPoint1);
-				projectPoints(interPoint3D, Mat::zeros(3, 1, CV_64FC1), Mat::zeros(3, 1, CV_64FC1), cameraMatrix, distCoeffs, interPoint_projected);
-				// cout<<endl<<"Intersection between laser beam and target board on camera image: "<<endl<<interPoint_projected<<endl;
+				Point3f intersection_point;
+				intersection_point = intersectionPoint(laser_plane_result.origin, laser_plane_result.beam_dir, target.first, target.second);
+				vector<Point3d> intersection_point_vector;
+				vector<Point2d> intersection_point_projected;
+				intersection_point_vector.push_back(intersection_point);
+				projectPoints(intersection_point_vector, Mat::zeros(3, 1, CV_64FC1), Mat::zeros(3, 1, CV_64FC1), cameraMatrix, distCoeffs, intersection_point_projected);
+				// cout<<endl<<"Intersection between laser beam and target board on camera image: "<<endl<<intersection_point_projected<<endl;
 
 				// find intersection line between target board plane and laser plane in cam frame
-				std::vector<cv::Point3d> laserlinepoints_1;
+				std::vector<cv::Point3d> laserlinepoints_vector;
 				intersection line1, line2, line3;
-				line1 = intersectionLine(target.first, laser_1.normalvector, target.second, vector<double>{interPoint1.x, interPoint1.y, interPoint1.z});
+				line1 = intersectionLine(target.first, laser_plane_result.normalvector, target.second, vector<double>{intersection_point.x, intersection_point.y, intersection_point.z});
 				for (int t = -150; t < 150;)
 				{
 					t = t + 10;
 					Point3d points((line1.x0 + line1.a * t), (line1.y0 + line1.b * t), (line1.z0 + line1.c * t));
 					// cout<<"point: "<<points<<endl;
-					laserlinepoints_1.push_back(points);
+					laserlinepoints_vector.push_back(points);
 				}
-				vector<Point2d> projectedlaserline_1, projectedlaserline_2, projectedlaserline_3;
-				projectPoints(laserlinepoints_1, Mat::zeros(3, 1, CV_64FC1), Mat::zeros(3, 1, CV_64FC1), cameraMatrix, distCoeffs, projectedlaserline_1);
+				vector<Point2d> laserlinepoints_projected;
+				projectPoints(laserlinepoints_vector, Mat::zeros(3, 1, CV_64FC1), Mat::zeros(3, 1, CV_64FC1), cameraMatrix, distCoeffs, laserlinepoints_projected);
 
 				double x_max = 0;
 				double x_min = 1440;
 				int i_max, i_min, i_start, i_end;
-
 				//filter our the points that out of the image size and find the min and max value in points vector
-				for (int i = 0; i < projectedlaserline_1.size();)
+				for (int i = 0; i < laserlinepoints_projected.size();)
 				{
-					if ((projectedlaserline_1[i].x > 1440) || (projectedlaserline_1[i].y > 1080) || (projectedlaserline_1[i].x < 0) || (projectedlaserline_1[i].y < 0))
+					if ((laserlinepoints_projected[i].x > 1440) || (laserlinepoints_projected[i].y > 1080) || (laserlinepoints_projected[i].x < 0) || (laserlinepoints_projected[i].y < 0))
 					{
-						projectedlaserline_1.erase(projectedlaserline_1.begin() + i);
+						laserlinepoints_projected.erase(laserlinepoints_projected.begin() + i);
 					}
 					else
 					{
-						if(projectedlaserline_1[i].x > x_max)
+						if(laserlinepoints_projected[i].x > x_max)
 						{
-							x_max = projectedlaserline_1[i].x;
+							x_max = laserlinepoints_projected[i].x;
 							i_max = i;
 						}
-						if(projectedlaserline_1[i].x < x_min)
+						if(laserlinepoints_projected[i].x < x_min)
 						{
-							x_min = projectedlaserline_1[i].x;
+							x_min = laserlinepoints_projected[i].x;
 							i_min = i;
 						}
 						i++;
@@ -266,8 +265,8 @@ int main(int argc, char *argv[])
 				}
 	
 				// Calculated laser line angle
-				double delta_y = (projectedlaserline_1[i_end].y - projectedlaserline_1[i_start].y);
-				double delta_x = (projectedlaserline_1[i_end].x - projectedlaserline_1[i_start].x);
+				double delta_y = (laserlinepoints_projected[i_end].y - laserlinepoints_projected[i_start].y);
+				double delta_x = (laserlinepoints_projected[i_end].x - laserlinepoints_projected[i_start].x);
 				double cal_angle = atan(delta_y / delta_x) * 180 / CV_PI;
 
 				Mat img_grey;
@@ -300,16 +299,15 @@ int main(int argc, char *argv[])
 					uniformity1.width_avg = uniformity1.width_avg * 3.45 * (solvePnP_result.tvec.at<double>(0, 2) / 12) / 1000;
 					uniformity1.width_max = uniformity1.width_max * 3.45 * (solvePnP_result.tvec.at<double>(0, 2) / 12) / 1000;
 					uniformity1.width_min = uniformity1.width_min * 3.45 * (solvePnP_result.tvec.at<double>(0, 2) / 12) / 1000;
-					status = laserlineGUI(minRect[0], interPoint_projected[0], cal_angle, uniformity1, line_img);
+					status = laserlineGUI(minRect[0], intersection_point_projected[0], cal_angle, uniformity1, line_img);
 					// cv::imshow( "Rotated and Cropped laser line", uniformity1.image_BGR );
 				}
 				if(status == 0)
-				{line(line_img, projectedlaserline_1[i_start], projectedlaserline_1[i_end], Scalar(248, 91, 255), 5, LINE_AA);}
+				{line(line_img, laserlinepoints_projected[i_start], laserlinepoints_projected[i_end], Scalar(248, 91, 255), 5, LINE_AA);}
 				else if(status == 1)
-				{line(line_img, projectedlaserline_1[i_start], projectedlaserline_1[i_end], Scalar(45, 255, 63), 5, LINE_AA);} // green line
+				{line(line_img, laserlinepoints_projected[i_start], laserlinepoints_projected[i_end], Scalar(45, 255, 63), 5, LINE_AA);} // green line
 
-				cv::circle(line_img, interPoint_projected[0], 5, cv::Scalar(110, 254, 255), -1, 8, 0); // yellow dot for designed laser dot location
-				// cout<<"one point: "<< interPoint_projected[0]<<endl;
+				cv::circle(line_img, intersection_point_projected[0], 5, cv::Scalar(110, 254, 255), -1, 8, 0); // yellow dot for designed laser dot location
 
 				// cv::imshow( "Contour and Area", drawing );
 				// cv::imshow("threshold",threshold_output);

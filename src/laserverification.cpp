@@ -79,15 +79,13 @@ int main(int argc, char* argv[])
 	imgPoint_d2.x = imgPoint_d2_vector[0];
 	imgPoint_d2.y = imgPoint_d2_vector[1];
 
-	Mat image_captured = imread("images/pattern.png", IMREAD_GRAYSCALE);
+	Mat image_captured = imread("images/pattern_1.png", IMREAD_GRAYSCALE);
 	Size patternSize(7, 4);
-	double squareSize;
+	double squareSize = 7;
 	solvePnP_result solvePnP_result_d1, solvePnP_result_d2, solvePnP_result_d3;
 	squareSize = 7; // ~390mm
 	solvePnP_result_d1 = getRvecTvec(image_captured, patternSize, squareSize);
-	squareSize = 6.1; // ~340mm
-	// squareSize = 5.65; //~315mm
-	// squareSize = 5.2; // ~290mm
+	image_captured = imread("images/pattern_2.png", IMREAD_GRAYSCALE);
 	solvePnP_result_d2 = getRvecTvec(image_captured, patternSize, squareSize);
 
     Point3d p1 = locationCam2Target( imgPoint_d1, solvePnP_result_d1);

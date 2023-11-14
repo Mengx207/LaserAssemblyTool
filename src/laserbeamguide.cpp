@@ -143,27 +143,27 @@ int main(int argc, char *argv[])
 				Mat distCoeffs = Mat(5, 1, CV_64FC1, distCoeffs_values.data());
 
 				// gain rmatrix and tvec from target board to cam
-				string path_rmatrix = "values/laser_transform/rmatrix_L1.txt";
-				string path_tvec = "values/laser_transform/tvec_L1.txt";
+				string path_L_rmatrix = "values/laser_transform/rmatrix_L1.txt";
+				string path_L_tvec = "values/laser_transform/tvec_L1.txt";
 				if (argv[1] == string("1"))
 				{
-					path_rmatrix = "values/laser_transform/rmatrix_L1.txt";
-					path_tvec = "values/laser_transform/tvec_L1.txt";
+					path_L_rmatrix = "values/laser_transform/rmatrix_L1.txt";
+					path_L_tvec = "values/laser_transform/tvec_L1.txt";
 				}
 				if (argv[1] == string("2"))
 				{
-					path_rmatrix = "values/laser_transform/rmatrix_L2.txt";
-					path_tvec = "values/laser_transform/tvec_L2.txt";
+					path_L_rmatrix = "values/laser_transform/rmatrix_L2.txt";
+					path_L_tvec = "values/laser_transform/tvec_L2.txt";
 				}
 				if (argv[1] == string("3"))
 				{
-					path_rmatrix = "values/laser_transform/rmatrix_L3.txt";
-					path_tvec = "values/laser_transform/tvec_L3.txt";
+					path_L_rmatrix = "values/laser_transform/rmatrix_L3.txt";
+					path_L_tvec = "values/laser_transform/tvec_L3.txt";
 				}
 				if (argv[1] == string("4"))
 				{
-					path_rmatrix = "values/laser_transform/rmatrix_L4.txt";
-					path_tvec = "values/laser_transform/tvec_L4.txt";
+					path_L_rmatrix = "values/laser_transform/rmatrix_L4.txt";
+					path_L_tvec = "values/laser_transform/tvec_L4.txt";
 				}
 
 				// Calculate rotation vector and translation vector by a captured image of a pattern
@@ -193,52 +193,49 @@ int main(int argc, char *argv[])
 					image_captured = imread("images/pattern_1.png", IMREAD_GRAYSCALE);
 				}
 				solvePnP_result = getRvecTvec(image_captured, patternSize, squareSize);
+				cout<<endl<<"tvec:"<<endl<<solvePnP_result.tvec<<endl;
+				cout<<endl<<"rvec:"<<endl<<solvePnP_result.rvec<<endl;	
+				// Find the target board plane bases on solvePnP result
+				// First value: normal vector  Second value: origin point
+				pair<vector<double>, vector<double>> target = targetBoardPlane(solvePnP_result.rmatrix, solvePnP_result.tvec);
 
 				// read laser 1
-				ifstream rmatrixL(path_rmatrix);
+				ifstream rmatrixL(path_L_rmatrix);
 				while (rmatrixL >> val)
 				{
 					rmatrix_laser_values.push_back(val);
 				}
 
-				ifstream tvecL(path_tvec);
+				ifstream tvecL(path_L_tvec);
 				while (tvecL >> val)
 				{
-					tvec_laser_values.push_back(val * 1000);
+					tvec_laser_values.push_back(val * 1000); //tvec was given in unit of meter
 				}
-
-				// find target board plane in cam frame
-
-				cout<<endl<<"tvec:"<<endl<<solvePnP_result.tvec<<endl;
-				cout<<endl<<"rvec:"<<endl<<solvePnP_result.rvec<<endl;
-
-				pair<vector<double>, vector<double>> target = targetBoardPlane(solvePnP_result.rmatrix, solvePnP_result.tvec);
-
-				laser_plane laser_1;
-				laser_1 = laserPlane(rmatrix_laser_values, tvec_laser_values);
+				laser_plane laser_plane_result;
+				laser_plane_result = laserPlane(rmatrix_laser_values, tvec_laser_values);
 
 				// find intersection between laser beam and target board
-				Point3f interPoint1;
-				// cout<<"laser beam dir:"<<laser_1.beam_dir[0]<<" "<<laser_1.beam_dir[1]<<" "<<laser_1.beam_dir[2]<<endl;
-				interPoint1 = intersectionPoint(laser_1.origin, laser_1.beam_dir, target.first, target.second);
-				// cout<<"laser interpoint: "<< interPoint1<<endl;
+				Point3f intersection_point;
+				// cout<<"laser beam dir:"<<laser_plane_result.beam_dir[0]<<" "<<laser_plane_result.beam_dir[1]<<" "<<laser_plane_result.beam_dir[2]<<endl;
+				intersection_point = intersectionPoint(laser_plane_result.origin, laser_plane_result.beam_dir, target.first, target.second);
+				// cout<<"laser interpoint: "<< intersection_point<<endl;
 
 				// find intersection line between target board plane and laser plane in cam frame
-				std::vector<cv::Point3d> laserline_points_1;
-				intersection line1, line2, line3;
-				line1 = intersectionLine(target.first, laser_1.normalvector, target.second, vector<double>{interPoint1.x, interPoint1.y, interPoint1.z});
+				std::vector<cv::Point3d> laserline_points;
+				intersection intersection_line;
+				intersection_line = intersectionLine(target.first, laser_plane_result.normalvector, target.second, vector<double>{intersection_point.x, intersection_point.y, intersection_point.z});
 				for (int t = -150; t < 150;)
 				{
 					t = t + 10;
-					Point3d points((line1.x0 + line1.a * t), (line1.y0 + line1.b * t), (line1.z0 + line1.c * t));
-					laserline_points_1.push_back(points);
+					Point3d points((intersection_line.x0 + intersection_line.a * t), (intersection_line.y0 + intersection_line.b * t), (intersection_line.z0 + intersection_line.c * t));
+					laserline_points.push_back(points);
 				}
-				vector<Point2d> projectedlaserline_1;
-				projectPoints(laserline_points_1, Mat::zeros(3, 1, CV_64FC1), Mat::zeros(3, 1, CV_64FC1), cameraMatrix, distCoeffs, projectedlaserline_1);
+				vector<Point2d> projectedlaserline;
+				projectPoints(laserline_points, Mat::zeros(3, 1, CV_64FC1), Mat::zeros(3, 1, CV_64FC1), cameraMatrix, distCoeffs, projectedlaserline);
 
 				vector<Point3d> interPoint3D;
 				vector<Point2d> interPoints_projected;
-				interPoint3D.push_back(interPoint1);
+				interPoint3D.push_back(intersection_point);
 				projectPoints(interPoint3D, Mat::zeros(3, 1, CV_64FC1), Mat::zeros(3, 1, CV_64FC1), cameraMatrix, distCoeffs, interPoints_projected);
 
 				double x_max = 0;
@@ -246,22 +243,22 @@ int main(int argc, char *argv[])
 				int i_max, i_min, i_start, i_end;
 
 				//filter our the points that out of the image size and find the min and max value in points vector
-				for (int i = 0; i < projectedlaserline_1.size();)
+				for (int i = 0; i < projectedlaserline.size();)
 				{
-					if ((projectedlaserline_1[i].x > 1440) || (projectedlaserline_1[i].y > 1080) || (projectedlaserline_1[i].x < 0) || (projectedlaserline_1[i].y < 0))
+					if ((projectedlaserline[i].x > 1440) || (projectedlaserline[i].y > 1080) || (projectedlaserline[i].x < 0) || (projectedlaserline[i].y < 0))
 					{
-						projectedlaserline_1.erase(projectedlaserline_1.begin() + i);
+						projectedlaserline.erase(projectedlaserline.begin() + i);
 					}
 					else
 					{
-						if(projectedlaserline_1[i].x > x_max)
+						if(projectedlaserline[i].x > x_max)
 						{
-							x_max = projectedlaserline_1[i].x;
+							x_max = projectedlaserline[i].x;
 							i_max = i;
 						}
-						if(projectedlaserline_1[i].x < x_min)
+						if(projectedlaserline[i].x < x_min)
 						{
-							x_min = projectedlaserline_1[i].x;
+							x_min = projectedlaserline[i].x;
 							i_min = i;
 						}
 						i++;
@@ -339,7 +336,7 @@ int main(int argc, char *argv[])
 							center_rect_avg = sum * (1.0 / center_rect_count);
 
 							circle(dot_img, center_rect_avg, 3, Scalar(0, 0, 255), -1, 8, 0);
-							distance_result = DotToLine(dot_img, projectedlaserline_1[i_start], projectedlaserline_1[i_end], center_rect_avg, interPoints_projected[0]);
+							distance_result = DotToLine(dot_img, projectedlaserline[i_start], projectedlaserline[i_end], center_rect_avg, interPoints_projected[0]);
 							centerImage = center_rect_avg;
 						}
 					}
@@ -354,11 +351,11 @@ int main(int argc, char *argv[])
 
 				if (distance_result.distance <= 2 && distance_result.segment_length <= 100) // Green line if it is good
 				{
-					line(dot_img, projectedlaserline_1[i_start], projectedlaserline_1[i_end], Scalar(45, 255, 63), 5, LINE_AA); // green line
+					line(dot_img, projectedlaserline[i_start], projectedlaserline[i_end], Scalar(45, 255, 63), 5, LINE_AA); // green line
 				}
 				else
 				{
-					line(dot_img, projectedlaserline_1[i_start], projectedlaserline_1[i_end], Scalar(248, 91, 255), 5, LINE_AA); // red line
+					line(dot_img, projectedlaserline[i_start], projectedlaserline[i_end], Scalar(248, 91, 255), 5, LINE_AA); // red line
 				}
 				line( dot_img, center_rect_avg, distance_result.point, cv::Scalar( 0,0,255 ), 3, 8 );
        			line( dot_img, distance_result.point, interPoints_projected[0], cv::Scalar( 0,0,255 ), 3, 8 );
