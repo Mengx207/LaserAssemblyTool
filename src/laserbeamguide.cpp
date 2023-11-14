@@ -170,20 +170,18 @@ int main(int argc, char *argv[])
 				solvePnP_result solvePnP_result;
 				Mat image_captured;
 				Size patternSize(7, 4);
-				double squareSize = 7.05;
+				double squareSize = 7;
+				image_captured = imread("images/pattern_1.png", IMREAD_GRAYSCALE);
 
 				if (argc == 4)
 				{
-					image_captured = imread("images/pattern.png", IMREAD_GRAYSCALE);
 					if (argv[3] == string("d1"))
 					{
-						squareSize = 7; // ~390mm
+						image_captured = imread("images/pattern_1.png", IMREAD_GRAYSCALE);
 					}
 					else if (argv[3] == string("d2"))
 					{
-						squareSize = 6.1; //~340mm
-						// squareSize = 5.65; //~315mm
-						// squareSize = 5.2; //~290mm
+						image_captured = imread("images/pattern_2.png", IMREAD_GRAYSCALE);
 					}
 					else{
 						cout<<endl<<"Invalid Distance"<<endl;
@@ -192,7 +190,7 @@ int main(int argc, char *argv[])
 				// else {image_captured = imread("images/pattern_d2.png", IMREAD_GRAYSCALE);}
 				else
 				{
-					image_captured = imread("images/pattern.png", IMREAD_GRAYSCALE);
+					image_captured = imread("images/pattern_1.png", IMREAD_GRAYSCALE);
 				}
 				solvePnP_result = getRvecTvec(image_captured, patternSize, squareSize);
 

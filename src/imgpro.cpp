@@ -137,6 +137,7 @@ vector<Point3f> createChessBoardCorners(Size2i patternsize, double squareSize)
 solvePnP_result getRvecTvec(Mat image_captured, Size patternsize, double squareSize)
 {
     Mat image_corners(image_captured.rows, image_captured.cols, IMREAD_GRAYSCALE);
+   
     if (image_captured.empty())
     {
         cout << "Error opening image" << endl;
@@ -147,6 +148,7 @@ solvePnP_result getRvecTvec(Mat image_captured, Size patternsize, double squareS
     SimpleBlobDetector::Params params;
     params.maxArea = 10e4;
     Ptr<FeatureDetector> blobDetector = SimpleBlobDetector::create(params);
+    
     bool patternfound = findChessboardCorners(image_captured, patternsize, corners_found, CALIB_CB_ASYMMETRIC_GRID);
     // cout <<endl<<endl<< "Corners found: " << endl << corners_found << endl;
     if(patternfound)
@@ -157,23 +159,23 @@ solvePnP_result getRvecTvec(Mat image_captured, Size patternsize, double squareS
         cornerSubPix (image_captured, corners_found, tWinSize, tZeroZone, tCriteria );
         // cout <<endl<<endl<< "Corners found refined: " << endl << corners_found << endl;
     }
-
+    
     drawChessboardCorners(image_corners, patternsize, Mat(corners_found), patternfound);
-
+    
     // create chessboard pattern
     // double squareSize = 7;
     vector<Point3f> corners_created = createChessBoardCorners(patternsize, squareSize);
 //    cout << "created pattern corners in mm: " << endl << corners_created << endl;
 
     // import camera matrix and distortion coefficients from txt file
-    ifstream intrin("/home/lingbo/AG_GUI//values/intrinsic.txt");
+    ifstream intrin("/home/lingbo/Documents/GitHub/AssemblyGuidanceTool/values/camera_matrix/intrinsic.txt");
     vector<double> cameraMatrix_values;
     double val;
     while (intrin >> val)
     {
         cameraMatrix_values.push_back(val);
     }
-    ifstream dist("/home/lingbo/AG_GUI/values/distortion.txt");
+    ifstream dist("/home/lingbo/Documents/GitHub/AssemblyGuidanceTool/values/camera_matrix/distortion.txt");
     vector<double> distCoeffs_values;
     while (dist >> val)
     {
