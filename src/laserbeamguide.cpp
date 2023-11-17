@@ -392,43 +392,32 @@ int main(int argc, char *argv[])
 			}
 			camera0.StopGrabbing();
 		}
-		system("cd images && mkdir -p saved_laser_beam");
-		if (argc == 3)
+		char command = waitKey();
+		if(command == 's')
 		{
-			imwrite("images/saved_laser_beam/laser_" + string(argv[1]) + "_" + string(argv[2]) + ".jpg", dot_img);
-		}
-		else if (argc == 4)
-		{
-			imwrite("images/saved_laser_beam/laser_" + string(argv[1]) + "_" + string(argv[2]) + "_" + string(argv[3]) + ".jpg", dot_img);
+			system("cd images && mkdir -p saved_laser_beam");
+			if (argc == 3)
+			{
+				imwrite("images/saved_laser_beam/laser_" + string(argv[1]) + "_" + string(argv[2]) + ".jpg", dot_img);
+			}
+			else if (argc == 4)
+			{
+				imwrite("images/saved_laser_beam/laser_" + string(argv[1]) + "_" + string(argv[2]) + "_" + string(argv[3]) + ".jpg", dot_img);
 
-			// save center_rect_avg for future use
-			system("cd values && mkdir -p real_laserdot && cd real_laserdot");
-			ofstream interpoint("values/real_laserdot/real_laserdot_l" + string(argv[1]) + "_" + string(argv[3]) + ".txt");
-			interpoint << centerImage.x << " ";
-			interpoint << centerImage.y;
-			// if(argv[3] == string("d1"))
-			// {
-			// 	ofstream interpoint("values/real_laserdot/real_laserdot_d1.txt");
-			// 	interpoint << centerImage.x <<" ";
-			// 	interpoint << centerImage.y;
-			// }
-			// if(argv[3] == string("d2"))
-			// {
-			// 	ofstream interpoint("values/real_laserdot/real_laserdot_d2.txt");
-			// 	interpoint << centerImage.x <<" ";
-			// 	interpoint << centerImage.y;
-			// }
-			// if(argv[3] == string("d3"))
-			// {
-			// 	ofstream interpoint("values/real_laserdot/real_laserdot_d3.txt");
-			// 	interpoint << centerImage.x <<" ";
-			// 	interpoint << centerImage.y;
-			// }
+				// save center_rect_avg for future use
+				system("cd values && mkdir -p real_laserdot && cd real_laserdot");
+				ofstream interpoint("values/real_laserdot/real_laserdot_l" + string(argv[1]) + "_" + string(argv[3]) + ".txt");
+				interpoint << centerImage.x << " ";
+				interpoint << centerImage.y;
+			}
+			else
+			{
+				imwrite("images/saved_laser_beam/laser_" + string(argv[1]) + ".jpg", dot_img);
+			}
+			cout<<endl<<"Save and Quit"<<endl;
 		}
-		else
-		{
-			imwrite("images/saved_laser_beam/laser_" + string(argv[1]) + ".jpg", dot_img);
-		}
+		else if (command == 'q')
+		{cout<<endl<<"Quit without saving"<<endl;}
 	}
 
 	catch (const GenericException &e)
