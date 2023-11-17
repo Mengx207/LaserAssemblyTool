@@ -68,13 +68,17 @@ void HMI(cv::Mat img, int size, int min_size, int non_zero, int nom_distance, in
             nom_distance_print = std::to_string(nom_distance);
             center_distance_print = std::to_string(center_distance);
         }
-        string a = "Laser Beam Focus";
-        putText(img, a, cv::Point(10, 20), cv::FONT_HERSHEY_SIMPLEX, 0.8, cv::Scalar(255,184,0),2);
-        putText(img, "Dot Size: "+size_print + " pixel", cv::Point(10, 60), cv::FONT_HERSHEY_SIMPLEX, 0.8, cv::Scalar(205,134,0),2);
-        putText(img, "Captured Min Size: "+min_size_print + " pixel", cv::Point(10, 90), cv::FONT_HERSHEY_SIMPLEX, 0.8, cv::Scalar(205,134,0),2);
-        putText(img, "Laser Beam Location", cv::Point(500, 20), cv::FONT_HERSHEY_SIMPLEX, 0.8, cv::Scalar(110,254,255),2);
-        putText(img, "Perpendicular Distance: "+nom_distance_print+ " pixel", cv::Point(500, 60), cv::FONT_HERSHEY_SIMPLEX, 0.8, cv::Scalar(60,204,205),2);
-        putText(img, "Line Segment Length: "+center_distance_print+ " pixel", cv::Point(500, 90), cv::FONT_HERSHEY_SIMPLEX, 0.8, cv::Scalar(60,204,205),2);
+        line(img,Point(0,30), Point(800,30), Scalar(0, 250, 0), 1, 16);
+        line(img,Point(0,60), Point(800,60), Scalar(0, 250, 0), 1, 16);
+        line(img,Point(0,90), Point(800,90), Scalar(0, 250, 0), 1, 16);
+        line(img,Point(380,0), Point(380,90), Scalar(0, 250, 0), 1, 16);
+        line(img,Point(800,0), Point(800,90), Scalar(0, 250, 0), 1, 16);
+        putText(img, "Laser Beam Focus", cv::Point(20, 20), cv::FONT_HERSHEY_SIMPLEX, 0.8, cv::Scalar(0,250,0),1);
+        putText(img, "Dot Size: "+size_print + " pixel", cv::Point(20, 50), cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(0,250,0),1);
+        putText(img, "Captured Min Size: "+min_size_print + " pixel", cv::Point(20, 80), cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(0,250,0),1);
+        putText(img, "Laser Beam Location", cv::Point(400, 20), cv::FONT_HERSHEY_SIMPLEX, 0.8, cv::Scalar(0,250,0),1);
+        putText(img, "Perpendicular Distance: "+nom_distance_print+ " pixel", cv::Point(400, 50), cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(0,250,0),1);
+        putText(img, "Line Segment Length: "+center_distance_print+ " pixel", cv::Point(400, 80), cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(0,250,0),1);
     }
 
 void GreenLight(cv::Mat img, int last, int current, int nom_distance, int center_distance)
@@ -180,7 +184,7 @@ solvePnP_result getRvecTvec(Mat image_captured, Size patternsize, double squareS
     Mat rvec, tvec, rmatrix;
     solvePnP(corners_created, corners_found, cameraMatrix, distCoeffs, rvec, tvec);
     Rodrigues(rvec, rmatrix);
-    
+
     solvePnP_result result;
     result.rmatrix = rmatrix;
     result.rvec = rvec;

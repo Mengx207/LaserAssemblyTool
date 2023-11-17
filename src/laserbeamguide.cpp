@@ -183,6 +183,18 @@ int main(int argc, char *argv[])
 					{
 						image_captured = imread("images/pattern_2.png", IMREAD_GRAYSCALE);
 					}
+					else if (argv[3] == string("d3"))
+					{
+						image_captured = imread("images/pattern_3.png", IMREAD_GRAYSCALE);
+					}
+					else if (argv[3] == string("d4"))
+					{
+						image_captured = imread("images/pattern_4.png", IMREAD_GRAYSCALE);
+					}
+					else if (argv[3] == string("d5"))
+					{
+						image_captured = imread("images/pattern_5.png", IMREAD_GRAYSCALE);
+					}
 					else{
 						cout<<endl<<"Invalid Distance"<<endl;
 					}
@@ -351,19 +363,27 @@ int main(int argc, char *argv[])
 
 				if (distance_result.distance <= 2 && distance_result.segment_length <= 100) // Green line if it is good
 				{
-					line(dot_img, projectedlaserline[i_start], projectedlaserline[i_end], Scalar(45, 255, 63), 5, LINE_AA); // green line
+					if (center_rect_count < 10)
+					{
+						cv::circle(dot_img, interPoints_projected[0], 5, cv::Scalar(0,0,250), -1, 16, 0); 
+						line(dot_img, projectedlaserline[i_start], projectedlaserline[i_end], Scalar(0, 0, 250), 3, 16); // red line
+					}
+					else{
+						cv::circle(dot_img, interPoints_projected[0], 5, cv::Scalar(0,250,0), -1, 16, 0); 
+						line(dot_img, projectedlaserline[i_start], projectedlaserline[i_end], Scalar(0, 250, 0), 3, 16); // green line
+					}
 				}
 				else
 				{
-					line(dot_img, projectedlaserline[i_start], projectedlaserline[i_end], Scalar(248, 91, 255), 5, LINE_AA); // red line
+					line(dot_img, projectedlaserline[i_start], projectedlaserline[i_end], Scalar(0, 0, 250), 3, 16); // red line
 				}
-				line( dot_img, center_rect_avg, distance_result.point, cv::Scalar( 0,0,255 ), 3, 8 );
-       			line( dot_img, distance_result.point, interPoints_projected[0], cv::Scalar( 0,0,255 ), 3, 8 );
-
+				if (center_rect_count >= 10)
+				{
+					line( dot_img, center_rect_avg, distance_result.point, cv::Scalar( 0,250,0 ), 1, 16 );
+					line( dot_img, distance_result.point, interPoints_projected[0], cv::Scalar( 0,250,0 ), 1, 16 );
+				}
 				HMI(dot_img, size_avg, min_size, non_zero, distance_result.distance, distance_result.segment_length);
 				// GreenLight(dot_img, last_min_size, size_avg, nom_distance, center_distance);
-				cv::circle(dot_img, interPoints_projected[0], 5, cv::Scalar(110, 254, 255), -1, 8, 0); //yellow dot for designed laser dot
-
 				// cv::imshow("img_grey_filtered_dot", img_grey_filtered_dot);
 				// cv::imshow("threshold output", threshold_output);
 				// cv::imshow("Contour and Rectangle", drawing);
