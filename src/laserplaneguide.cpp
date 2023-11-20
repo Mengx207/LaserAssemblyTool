@@ -284,7 +284,7 @@ int main(int argc, char *argv[])
 				if (minRect.size() >= 1)
 				{
 					drawContourRectangle(drawing, contours, minRect);
-					circle(line_img, minRect[0].center, 5, Scalar(0,0,255), -1, 8, 0);
+					circle(line_img, minRect[0].center, 5, Scalar(0,0,250), -1, 8, 0);
 					double angle = minRect[0].angle;
 					if (minRect[0].size.width < minRect[0].size.height)
 					{
@@ -302,11 +302,11 @@ int main(int argc, char *argv[])
 					// cv::imshow( "Rotated and Cropped laser line", uniformity1.image_BGR );
 				}
 				if(status == 0)
-				{line(line_img, laserlinepoints_projected[i_start], laserlinepoints_projected[i_end], Scalar(248, 91, 255), 5, LINE_AA);}
+				{line(line_img, laserlinepoints_projected[i_start], laserlinepoints_projected[i_end], Scalar(0, 0, 250), 3, LINE_AA);}
 				else if(status == 1)
-				{line(line_img, laserlinepoints_projected[i_start], laserlinepoints_projected[i_end], Scalar(45, 255, 63), 5, LINE_AA);} // green line
+				{line(line_img, laserlinepoints_projected[i_start], laserlinepoints_projected[i_end], Scalar(0, 250, 0), 3, LINE_AA);} // green line
 
-				cv::circle(line_img, intersection_point_projected[0], 5, cv::Scalar(110, 254, 255), -1, 8, 0); // yellow dot for designed laser dot location
+				cv::circle(line_img, intersection_point_projected[0], 5, cv::Scalar(0, 0, 250), -1, 8, 0); // yellow dot for designed laser dot location
 
 				// cv::imshow( "Contour and Area", drawing );
 				// cv::imshow("threshold",threshold_output);
