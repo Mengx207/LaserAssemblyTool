@@ -33,10 +33,9 @@ int main(int argc, char *argv[])
 		CTlFactory &tlFactory = CTlFactory::GetInstance();
 		CInstantCamera camera0(tlFactory.CreateFirstDevice());
 		// Print the camera information.
-		cout << "Using device " << camera0.GetDeviceInfo().GetModelName() << endl;
+		cout <<endl<< "Using device " << camera0.GetDeviceInfo().GetModelName() << endl;
 		cout << "SerialNumber : " << camera0.GetDeviceInfo().GetSerialNumber() << endl;
-		cout << endl;
-		cout << "Program is running, select image window and press 'q' to quit." << endl;
+		cout << "Double tap q to quit without saving."<<endl<<"Tap q then s to quit and save." << endl;
 
 		camera0.RegisterConfiguration(new CSoftwareTriggerConfiguration1, RegistrationMode_ReplaceAll, Cleanup_Delete);
 
@@ -316,103 +315,107 @@ int main(int argc, char *argv[])
 			}
 			camera0.StopGrabbing();
 		}
-		std::cout << std::endl
-				  << "Saving images" << std::endl;
-		system("cd images && mkdir -p saved_laser_plane");
-
-		if (argc == 3)
+		char command = waitKey();
+		if(command == 's')
 		{
-			imwrite("images/saved_laser_plane/laser_" + string(argv[1]) + "_" + string(argv[2]) + ".jpg", line_img);
+			system("cd images && mkdir -p saved_laser_plane");
+			if (argc == 3)
+			{
+				imwrite("images/saved_laser_plane/laser_" + string(argv[1]) + "_" + string(argv[2]) + ".jpg", line_img);
+			}
+			else if (argc == 4) // save data to folder for future verification and record
+			{
+				imwrite("images/saved_laser_plane/laser_" + string(argv[1]) + "_" + string(argv[2]) + "_" + string(argv[3]) + "_MD.jpg", line_img);
+				imwrite("images/saved_laser_plane/laser_plane_" + string(argv[1]) + "_" + string(argv[2]) + "_" + string(argv[3]) + "_threshold.jpg", threshold_output);
+
+				system("cd values && mkdir -p real_laserline_ends && cd real_laserline_ends");
+
+				pair<Point2f, Point2f> laserline2Points = extractLaserline2Points(threshold_output);
+				cout << "Pair of end points of actual laser line on image plane: " << laserline2Points.first << ", " << laserline2Points.second << endl;
+
+				laserline2Points.first = Point2d(0, 0);
+				laserline2Points.second = Point2d(1440, 1080);
+				Point3d startCam = locationCam2Target(laserline2Points.first, solvePnP_result);
+				Point3d endCam = locationCam2Target(laserline2Points.second, solvePnP_result);
+
+				if (argv[1] == string("1"))
+				{
+					if (argv[3] == string("d1"))
+					{
+						ofstream start_d1("values/real_laserline_ends/start_l1_d1.txt");
+						start_d1 << startCam.x << "," << startCam.y << "," << startCam.z;
+						ofstream end_d1("values/real_laserline_ends/end_l1_d1.txt");
+						end_d1 << endCam.x << "," << endCam.y << "," << endCam.z;
+					}
+					else if (argv[3] == string("d2"))
+					{
+						ofstream start_d2("values/real_laserline_ends/start_l1_d2.txt");
+						start_d2 << startCam.x << "," << startCam.y << "," << startCam.z;
+						ofstream end_d2("values/real_laserline_ends/end_l1_d2.txt");
+						end_d2 << endCam.x << "," << endCam.y << "," << endCam.z;
+					}
+				}
+				if (argv[1] == string("2"))
+				{
+					if (argv[3] == string("d1"))
+					{
+						ofstream start_d1("values/real_laserline_ends/start_l2_d1.txt");
+						start_d1 << startCam.x << "," << startCam.y << "," << startCam.z;
+						ofstream end_d1("values/real_laserline_ends/end_l2_d1.txt");
+						end_d1 << endCam.x << "," << endCam.y << "," << endCam.z;
+					}
+					else if (argv[3] == string("d2"))
+					{
+						ofstream start_d2("values/real_laserline_ends/start_l2_d2.txt");
+						start_d2 << startCam.x << "," << startCam.y << "," << startCam.z;
+						ofstream end_d2("values/real_laserline_ends/end_l2_d2.txt");
+						end_d2 << endCam.x << "," << endCam.y << "," << endCam.z;
+					}
+				}
+				if (argv[1] == string("3"))
+				{
+					if (argv[3] == string("d1"))
+					{
+						ofstream start_d1("values/real_laserline_ends/start_l3_d1.txt");
+						start_d1 << startCam.x << "," << startCam.y << "," << startCam.z;
+						ofstream end_d1("values/real_laserline_ends/end_l3_d1.txt");
+						end_d1 << endCam.x << "," << endCam.y << "," << endCam.z;
+					}
+					else if (argv[3] == string("d2"))
+					{
+						ofstream start_d2("values/real_laserline_ends/start_l3_d2.txt");
+						start_d2 << startCam.x << "," << startCam.y << "," << startCam.z;
+						ofstream end_d2("values/real_laserline_ends/end_l3_d2.txt");
+						end_d2 << endCam.x << "," << endCam.y << "," << endCam.z;
+					}
+				}
+				if (argv[1] == string("4"))
+				{
+					if (argv[3] == string("d1"))
+					{
+						ofstream start_d1("values/real_laserline_ends/start_l4_d1.txt");
+						start_d1 << startCam.x << "," << startCam.y << "," << startCam.z;
+						ofstream end_d1("values/real_laserline_ends/end_l4_d1.txt");
+						end_d1 << endCam.x << "," << endCam.y << "," << endCam.z;
+					}
+					else if (argv[3] == string("d2"))
+					{
+						ofstream start_d2("values/real_laserline_ends/start_l4_d2.txt");
+						start_d2 << startCam.x << "," << startCam.y << "," << startCam.z;
+						ofstream end_d2("values/real_laserline_ends/end_l4_d2.txt");
+						end_d2 << endCam.x << "," << endCam.y << "," << endCam.z;
+					}
+				}
+			}
+			else
+			{
+				imwrite("images/saved_laser_plane/laser_" + string(argv[1]) + ".jpg", line_img);
+			}
+			cout<<endl<<"Save and Quit"<<endl;
 		}
-		else if (argc == 4) // save data to folder for future verification and record
-		{
-			imwrite("images/saved_laser_plane/laser_" + string(argv[1]) + "_" + string(argv[2]) + "_" + string(argv[3]) + "_MD.jpg", line_img);
-			imwrite("images/saved_laser_plane/laser_plane_" + string(argv[1]) + "_" + string(argv[2]) + "_" + string(argv[3]) + "_threshold.jpg", threshold_output);
-
-			system("cd values && mkdir -p real_laserline_ends && cd real_laserline_ends");
-
-			pair<Point2f, Point2f> laserline2Points = extractLaserline2Points(threshold_output);
-			cout << "Pair of end points of actual laser line on image plane: " << laserline2Points.first << ", " << laserline2Points.second << endl;
-
-			laserline2Points.first = Point2d(0, 0);
-			laserline2Points.second = Point2d(1440, 1080);
-			Point3d startCam = locationCam2Target(laserline2Points.first, solvePnP_result);
-			Point3d endCam = locationCam2Target(laserline2Points.second, solvePnP_result);
-
-			if (argv[1] == string("1"))
-			{
-				if (argv[3] == string("d1"))
-				{
-					ofstream start_d1("values/real_laserline_ends/start_l1_d1.txt");
-					start_d1 << startCam.x << "," << startCam.y << "," << startCam.z;
-					ofstream end_d1("values/real_laserline_ends/end_l1_d1.txt");
-					end_d1 << endCam.x << "," << endCam.y << "," << endCam.z;
-				}
-				else if (argv[3] == string("d2"))
-				{
-					ofstream start_d2("values/real_laserline_ends/start_l1_d2.txt");
-					start_d2 << startCam.x << "," << startCam.y << "," << startCam.z;
-					ofstream end_d2("values/real_laserline_ends/end_l1_d2.txt");
-					end_d2 << endCam.x << "," << endCam.y << "," << endCam.z;
-				}
-			}
-			if (argv[1] == string("2"))
-			{
-				if (argv[3] == string("d1"))
-				{
-					ofstream start_d1("values/real_laserline_ends/start_l2_d1.txt");
-					start_d1 << startCam.x << "," << startCam.y << "," << startCam.z;
-					ofstream end_d1("values/real_laserline_ends/end_l2_d1.txt");
-					end_d1 << endCam.x << "," << endCam.y << "," << endCam.z;
-				}
-				else if (argv[3] == string("d2"))
-				{
-					ofstream start_d2("values/real_laserline_ends/start_l2_d2.txt");
-					start_d2 << startCam.x << "," << startCam.y << "," << startCam.z;
-					ofstream end_d2("values/real_laserline_ends/end_l2_d2.txt");
-					end_d2 << endCam.x << "," << endCam.y << "," << endCam.z;
-				}
-			}
-			if (argv[1] == string("3"))
-			{
-				if (argv[3] == string("d1"))
-				{
-					ofstream start_d1("values/real_laserline_ends/start_l3_d1.txt");
-					start_d1 << startCam.x << "," << startCam.y << "," << startCam.z;
-					ofstream end_d1("values/real_laserline_ends/end_l3_d1.txt");
-					end_d1 << endCam.x << "," << endCam.y << "," << endCam.z;
-				}
-				else if (argv[3] == string("d2"))
-				{
-					ofstream start_d2("values/real_laserline_ends/start_l3_d2.txt");
-					start_d2 << startCam.x << "," << startCam.y << "," << startCam.z;
-					ofstream end_d2("values/real_laserline_ends/end_l3_d2.txt");
-					end_d2 << endCam.x << "," << endCam.y << "," << endCam.z;
-				}
-			}
-			if (argv[1] == string("4"))
-			{
-				if (argv[3] == string("d1"))
-				{
-					ofstream start_d1("values/real_laserline_ends/start_l4_d1.txt");
-					start_d1 << startCam.x << "," << startCam.y << "," << startCam.z;
-					ofstream end_d1("values/real_laserline_ends/end_l4_d1.txt");
-					end_d1 << endCam.x << "," << endCam.y << "," << endCam.z;
-				}
-				else if (argv[3] == string("d2"))
-				{
-					ofstream start_d2("values/real_laserline_ends/start_l4_d2.txt");
-					start_d2 << startCam.x << "," << startCam.y << "," << startCam.z;
-					ofstream end_d2("values/real_laserline_ends/end_l4_d2.txt");
-					end_d2 << endCam.x << "," << endCam.y << "," << endCam.z;
-				}
-			}
-		}
-		else
-		{
-			imwrite("images/saved_laser_plane/laser_" + string(argv[1]) + ".jpg", line_img);
-		}
-		std::cout << "Finish saving" << std::endl;
+		else if (command == 'q')
+		{cout<<endl<<"Quit without saving"<<endl;}
+		
 	}
 
 	catch (const GenericException &e)
