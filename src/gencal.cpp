@@ -264,9 +264,10 @@ pair<Point2d, Point2d> extractLaserline2Points(Mat whiteline)
 }
 
 int laserlineGUI(RotatedRect rect, Point2d cal_center, int cal_angle, uniformity_data uniformity1, Mat drawing)
-{
+{   
     int status = 0;
     double angle;
+    std::string center_print_x, center_print_y, angle_print, width_print, cal_center_print_x, cal_center_print_y, cal_angle_print, width_avg_print, width_max_print, width_min_print, width_sd_print;
     if (rect.size.width < rect.size.height)
     {
         angle = 90 + rect.angle;
@@ -274,7 +275,6 @@ int laserlineGUI(RotatedRect rect, Point2d cal_center, int cal_angle, uniformity
     else{
         angle = rect.angle;
     }
-    std::string center_print_x, center_print_y, angle_print, width_print, cal_center_print_x, cal_center_print_y, cal_angle_print, width_avg_print, width_max_print, width_min_print, width_sd_print;
     center_print_x = std::to_string(int(rect.center.x));
     center_print_y = std::to_string(int(rect.center.y));
     // angle_print = std::to_string(int(rect.angle));
@@ -309,7 +309,6 @@ int laserlineGUI(RotatedRect rect, Point2d cal_center, int cal_angle, uniformity
     {status = 1;}
     else
     {status = 0;}
-
     cv::putText(drawing, "Angle Designed: " + cal_angle_print, cv::Point(1000,600), cv::FONT_HERSHEY_SIMPLEX, 0.8, cv::Scalar(255,184,0),2);
     cv::putText(drawing, "Angle Actual: " + angle_print, cv::Point(1000,630), cv::FONT_HERSHEY_SIMPLEX, 0.8, cv::Scalar(255,184,0),2);
     cv::putText(drawing, "Width Average: " + width_avg_print + " mm", cv::Point(1000, 680), cv::FONT_HERSHEY_SIMPLEX, 0.8, cv::Scalar(198,189,10),2);

@@ -347,7 +347,7 @@ int main(int argc, char *argv[])
 							Point sum = accumulate(center_rect_list.begin(), center_rect_list.end(), Point(0, 0));
 							center_rect_avg = sum * (1.0 / center_rect_count);
 
-							circle(dot_img, center_rect_avg, 3, Scalar(0, 0, 255), -1, 8, 0);
+							circle(dot_img, center_rect_avg, 3, Scalar(0, 0, 250), -1, 8, 0);
 							distance_result = DotToLine(dot_img, projectedlaserline[i_start], projectedlaserline[i_end], center_rect_avg, interPoints_projected[0]);
 							centerImage = center_rect_avg;
 						}
@@ -392,6 +392,7 @@ int main(int argc, char *argv[])
 			}
 			camera0.StopGrabbing();
 		}
+
 		char command = waitKey();
 		if(command == 's')
 		{
