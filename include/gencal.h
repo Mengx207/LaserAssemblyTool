@@ -37,7 +37,7 @@ Point3d locationCam2Target(Point2d imagePoint, solvePnP_result solvePnP_result);
 // Point3d locationCam2Target(Point2d imagePoint, Mat rmatrix, Mat tvec, vector<Point3d>obj_corners, vector<Point2d>found_corners);
 Point3d lineEquation(Point3d p1, Point3d p2, vector<double> tvec_laser_values);
 pair<Point2d, Point2d> extractLaserline2Points(Mat whiteline);
-int laserlineGUI(RotatedRect rect, Point2d cal_center, int cal_angle, uniformity_data uniformity1, Mat drawing);
+int laserlineGUI(vector<RotatedRect> rect_vector, Point2d cal_center, int cal_angle, uniformity_data uniformity1, Mat drawing);
 arucoResult readArucoResult();
 
 

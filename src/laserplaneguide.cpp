@@ -277,30 +277,37 @@ int main(int argc, char *argv[])
 				cv::threshold(img_grey, threshold_output, 200, 255, cv::THRESH_BINARY);
 
 				findContours(threshold_output, contours, hierarchy, RETR_TREE, CHAIN_APPROX_SIMPLE, Point(0, 0));
-				vector<RotatedRect> minRect = findRectangle(contours, 100);
+				vector<RotatedRect> Rect_vector = findRectangle(contours, 100);
 				Mat drawing = Mat::zeros(threshold_output.size(), CV_8UC3);
 				Mat rotated_image = threshold_output.clone();
+				uniformity_data uniformity1;
 				int status = 0;
-				if (minRect.size() >= 1)
+				if (Rect_vector.size() >= 1)
 				{
-					drawContourRectangle(drawing, contours, minRect);
-					circle(line_img, minRect[0].center, 5, Scalar(0,0,250), -1, 8, 0);
-					double angle = minRect[0].angle;
-					if (minRect[0].size.width < minRect[0].size.height)
+					drawContourRectangle(drawing, contours, Rect_vector);
+					circle(line_img, Rect_vector[0].center, 5, Scalar(0,0,250), -1, 8, 0);
+					double angle = Rect_vector[0].angle;
+					if (Rect_vector[0].size.width < Rect_vector[0].size.height)
 					{
 						angle = 90 + angle;
 					}
-					Mat rotation_matrix = getRotationMatrix2D(minRect[0].center, angle, 1.0);
+					Mat rotation_matrix = getRotationMatrix2D(Rect_vector[0].center, angle, 1.0);
 					warpAffine(threshold_output, rotated_image, rotation_matrix, threshold_output.size());
-					uniformity_data uniformity1;
 					uniformity1 = cropImage(rotated_image);
 					// From pixel number to actual diameter on target board
 					uniformity1.width_avg = uniformity1.width_avg * 3.45 * (solvePnP_result.tvec.at<double>(0, 2) / 12) / 1000;
 					uniformity1.width_max = uniformity1.width_max * 3.45 * (solvePnP_result.tvec.at<double>(0, 2) / 12) / 1000;
 					uniformity1.width_min = uniformity1.width_min * 3.45 * (solvePnP_result.tvec.at<double>(0, 2) / 12) / 1000;
-					status = laserlineGUI(minRect[0], intersection_point_projected[0], cal_angle, uniformity1, line_img);
 					// cv::imshow( "Rotated and Cropped laser line", uniformity1.image_BGR );
 				}
+				else
+				{
+					Rect_vector.empty();
+					RotatedRect fake_rect = RotatedRect((Point2f(0,0)), Size2f(1,1), float (0));
+					Rect_vector.push_back(fake_rect);
+				}
+				status = laserlineGUI(Rect_vector, intersection_point_projected[0], cal_angle, uniformity1, line_img);
+
 				if(status == 0)
 				{line(line_img, laserlinepoints_projected[i_start], laserlinepoints_projected[i_end], Scalar(0, 0, 250), 3, LINE_AA);}
 				else if(status == 1)
