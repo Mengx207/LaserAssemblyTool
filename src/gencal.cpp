@@ -310,11 +310,11 @@ int laserlineGUI(vector<RotatedRect> rect_vector, Point2d cal_center, int cal_an
         {status = 0;}
     }
     else{
-        angle_print = "No Value";
-        width_avg_print = "No Value";
-        width_sd_print = "No Value";
-        width_max_print = "No Value";
-        width_min_print = "No Value";
+        angle_print = "N/A";
+        width_avg_print = "N/A";
+        width_sd_print = "N/A";
+        width_max_print = "N/A";
+        width_min_print = "N/A";
     }
     cal_center_print_x = std::to_string(int(cal_center.x));
     cal_center_print_y = std::to_string(int(cal_center.y));
