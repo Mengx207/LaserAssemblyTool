@@ -162,7 +162,7 @@ int main(int argc, char *argv[])
 				Mat image_captured;
 				Size patternSize(7, 4);
 				double squareSize = 7;
-				image_captured = imread("images/pattern_1.png", IMREAD_GRAYSCALE);
+				image_captured = imread("images/pattern0.png", IMREAD_GRAYSCALE);
 	
 				if (argc == 4)
 				{
@@ -180,7 +180,7 @@ int main(int argc, char *argv[])
 				}
 				else
 				{
-					image_captured = imread("images/pattern_1.png", IMREAD_GRAYSCALE);
+					image_captured = imread("images/pattern0.png", IMREAD_GRAYSCALE);
 				}
 				solvePnP_result = getRvecTvec(image_captured, patternSize, squareSize);
 
@@ -285,7 +285,7 @@ int main(int argc, char *argv[])
 				if (Rect_vector.size() >= 1)
 				{
 					drawContourRectangle(drawing, contours, Rect_vector);
-					circle(line_img, Rect_vector[0].center, 5, Scalar(0,0,250), -1, 8, 0);
+					// circle(line_img, Rect_vector[0].center, 5, Scalar(0,0,250), -1, 8, 0);
 					double angle = Rect_vector[0].angle;
 					if (Rect_vector[0].size.width < Rect_vector[0].size.height)
 					{

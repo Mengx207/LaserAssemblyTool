@@ -171,38 +171,38 @@ int main(int argc, char *argv[])
 				Mat image_captured;
 				Size patternSize(7, 4);
 				double squareSize = 7;
-				image_captured = imread("images/pattern_1.png", IMREAD_GRAYSCALE);
+				image_captured = imread("images/pattern0.png", IMREAD_GRAYSCALE);
 
 				if (argc == 4)
 				{
 					if (argv[3] == string("d1"))
 					{
-						image_captured = imread("images/pattern_1.png", IMREAD_GRAYSCALE);
+						image_captured = imread("images/pattern_d1.png", IMREAD_GRAYSCALE);
 					}
 					else if (argv[3] == string("d2"))
 					{
-						image_captured = imread("images/pattern_2.png", IMREAD_GRAYSCALE);
+						image_captured = imread("images/pattern_d2.png", IMREAD_GRAYSCALE);
 					}
 					else if (argv[3] == string("d3"))
 					{
-						image_captured = imread("images/pattern_3.png", IMREAD_GRAYSCALE);
+						image_captured = imread("images/pattern_d3.png", IMREAD_GRAYSCALE);
 					}
 					else if (argv[3] == string("d4"))
 					{
-						image_captured = imread("images/pattern_4.png", IMREAD_GRAYSCALE);
+						image_captured = imread("images/pattern_d4.png", IMREAD_GRAYSCALE);
 					}
 					else if (argv[3] == string("d5"))
 					{
-						image_captured = imread("images/pattern_5.png", IMREAD_GRAYSCALE);
+						image_captured = imread("images/pattern_d5.png", IMREAD_GRAYSCALE);
 					}
 					else{
 						cout<<endl<<"Invalid Distance"<<endl;
 					}
 				}
-				// else {image_captured = imread("images/pattern_d2.png", IMREAD_GRAYSCALE);}
+				// else {image_captured = imread("images/pattern_dd2.png", IMREAD_GRAYSCALE);}
 				else
 				{
-					image_captured = imread("images/pattern_1.png", IMREAD_GRAYSCALE);
+					image_captured = imread("images/pattern0.png", IMREAD_GRAYSCALE);
 				}
 				solvePnP_result = getRvecTvec(image_captured, patternSize, squareSize);
 				cout<<endl<<"tvec:"<<endl<<solvePnP_result.tvec<<endl;
@@ -375,6 +375,7 @@ int main(int argc, char *argv[])
 				}
 				else
 				{
+					cv::circle(dot_img, interPoints_projected[0], 5, cv::Scalar(0,0,250), -1, 16, 0); 
 					line(dot_img, projectedlaserline[i_start], projectedlaserline[i_end], Scalar(0, 0, 250), 3, 16); // red line
 				}
 				if (center_rect_count >= 10)
