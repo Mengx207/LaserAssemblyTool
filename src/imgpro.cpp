@@ -55,30 +55,41 @@ int NonZero(cv::Mat img)
         int count = cv::countNonZero(canny_edge_blur);
         return count;
     }
-void HMI(cv::Mat img, int size, int min_size, int non_zero, int nom_distance, int center_distance)
+void HMI(cv::Mat img, int size, int min_size, int non_zero, int nom_distance, int center_distance, Point2d center_designed, Point center_real)
     {
-        string size_print = "No value";
-        string min_size_print = "No value";
-        string nom_distance_print = "No value";
-        string center_distance_print = "No value";
+        string size_print = "N/A";
+        string min_size_print = "N/A";
+        string nom_distance_print = "N/A";
+        string center_distance_print = "N/A";
+        string center_designed_x_str = std::to_string(int(center_designed.x));
+        string center_designed_y_str = std::to_string(int(center_designed.y));
+        string center_real_x_str = "N/A";
+        string center_real_y_str = "N/A";
+        
         if(non_zero >20)
         {
             size_print = std::to_string(size);
             min_size_print = std::to_string(min_size);
             nom_distance_print = std::to_string(nom_distance);
             center_distance_print = std::to_string(center_distance);
+            center_real_x_str = std::to_string(int(center_real.x));
+            center_real_y_str = std::to_string(int(center_real.y));
         }
         line(img,Point(0,30), Point(800,30), Scalar(0, 250, 0), 1, 16);
         line(img,Point(0,60), Point(800,60), Scalar(0, 250, 0), 1, 16);
         line(img,Point(0,90), Point(800,90), Scalar(0, 250, 0), 1, 16);
-        line(img,Point(380,0), Point(380,90), Scalar(0, 250, 0), 1, 16);
-        line(img,Point(800,0), Point(800,90), Scalar(0, 250, 0), 1, 16);
+        line(img,Point(380,120), Point(800,120), Scalar(0, 250, 0), 1, 16);
+        line(img,Point(380,150), Point(800,150), Scalar(0, 250, 0), 1, 16);
+        line(img,Point(380,0), Point(380,150), Scalar(0, 250, 0), 1, 16);
+        line(img,Point(800,0), Point(800,150), Scalar(0, 250, 0), 1, 16);
         putText(img, "Laser Beam Focus", cv::Point(20, 20), cv::FONT_HERSHEY_SIMPLEX, 0.8, cv::Scalar(0,250,0),1);
         putText(img, "Dot Size: "+size_print + " pixel", cv::Point(20, 50), cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(0,250,0),1);
         putText(img, "Captured Min Size: "+min_size_print + " pixel", cv::Point(20, 80), cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(0,250,0),1);
         putText(img, "Laser Beam Location", cv::Point(400, 20), cv::FONT_HERSHEY_SIMPLEX, 0.8, cv::Scalar(0,250,0),1);
         putText(img, "Perpendicular Distance: "+nom_distance_print+ " pixel", cv::Point(400, 50), cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(0,250,0),1);
         putText(img, "Line Segment Length: "+center_distance_print+ " pixel", cv::Point(400, 80), cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(0,250,0),1);
+        putText(img, "Designed Center: ("+center_designed_x_str+" , "+center_designed_y_str+")", cv::Point(400, 110), cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(0,250,0),1);
+        putText(img, "Real Center: ("+center_real_x_str+" , "+center_real_y_str+")", cv::Point(400, 140), cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(0,250,0),1);
     }
 
 void GreenLight(cv::Mat img, int last, int current, int nom_distance, int center_distance)

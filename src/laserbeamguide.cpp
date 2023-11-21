@@ -382,7 +382,7 @@ int main(int argc, char *argv[])
 					line( dot_img, center_rect_avg, distance_result.point, cv::Scalar( 0,250,0 ), 1, 16 );
 					line( dot_img, distance_result.point, interPoints_projected[0], cv::Scalar( 0,250,0 ), 1, 16 );
 				}
-				HMI(dot_img, size_avg, min_size, non_zero, distance_result.distance, distance_result.segment_length);
+				HMI(dot_img, size_avg, min_size, non_zero, distance_result.distance, distance_result.segment_length, interPoints_projected[0], center_rect_avg);
 				// GreenLight(dot_img, last_min_size, size_avg, nom_distance, center_distance);
 				// cv::imshow("img_grey_filtered_dot", img_grey_filtered_dot);
 				// cv::imshow("threshold output", threshold_output);

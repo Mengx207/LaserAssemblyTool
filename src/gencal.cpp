@@ -319,14 +319,21 @@ int laserlineGUI(vector<RotatedRect> rect_vector, Point2d cal_center, int cal_an
     cal_center_print_x = std::to_string(int(cal_center.x));
     cal_center_print_y = std::to_string(int(cal_center.y));
     cal_angle_print = std::to_string(cal_angle);
-    
-    cv::putText(drawing, "Angle Designed: " + cal_angle_print, cv::Point(1000,600), cv::FONT_HERSHEY_SIMPLEX, 0.8, cv::Scalar(255,184,0),2);
-    cv::putText(drawing, "Angle Actual: " + angle_print, cv::Point(1000,630), cv::FONT_HERSHEY_SIMPLEX, 0.8, cv::Scalar(255,184,0),2);
-    cv::putText(drawing, "Width Average: " + width_avg_print + " mm", cv::Point(1000, 680), cv::FONT_HERSHEY_SIMPLEX, 0.8, cv::Scalar(198,189,10),2);
-    cv::putText(drawing, "Width Standard Deviation: " + width_sd_print, cv::Point(1000, 710), cv::FONT_HERSHEY_SIMPLEX, 0.8, cv::Scalar(198,189,10),2);
-    cv::putText(drawing, "Maximum Width: " + width_max_print + " mm", cv::Point(1000, 740), cv::FONT_HERSHEY_SIMPLEX, 0.8, cv::Scalar(198,189,10),2);
-    cv::putText(drawing, "Minimum Width: " + width_min_print + " mm", cv::Point(1000,770), cv::FONT_HERSHEY_SIMPLEX, 0.8, cv::Scalar(198,189,10),2);
-    cv::putText(drawing, "Designed Center: [" + cal_center_print_x + "," + cal_center_print_y + "]", cv::Point(1000, 820), cv::FONT_HERSHEY_SIMPLEX, 0.8, cv::Scalar(110,254,255),2);
+    line(drawing,Point(0,30), Point(800,30), Scalar(0, 250, 0), 1, 16);
+    line(drawing,Point(0,60), Point(800,60), Scalar(0, 250, 0), 1, 16);
+    line(drawing,Point(0,90), Point(800,90), Scalar(0, 250, 0), 1, 16);
+    line(drawing,Point(380,120), Point(800,120), Scalar(0, 250, 0), 1, 16);
+    line(drawing,Point(380,150), Point(800,150), Scalar(0, 250, 0), 1, 16);
+    line(drawing,Point(380,0), Point(380,150), Scalar(0, 250, 0), 1, 16);
+    line(drawing,Point(800,0), Point(800,150), Scalar(0, 250, 0), 1, 16);
+    cv::putText(drawing, "Laser Line Angle", cv::Point(20,20), cv::FONT_HERSHEY_SIMPLEX, 0.8, cv::Scalar(0,250,0),1);
+    cv::putText(drawing, "Angle Designed: " + cal_angle_print, cv::Point(20,50), cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(0,250,0),1);
+    cv::putText(drawing, "Angle Now: " + angle_print, cv::Point(20,80), cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(0,250,0),1);
+    cv::putText(drawing, "Laser Line Width", cv::Point(400,20), cv::FONT_HERSHEY_SIMPLEX, 0.8, cv::Scalar(0,250,0),1);
+    cv::putText(drawing, "Width Average: " + width_avg_print + " mm", cv::Point(400, 50), cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(0,250,0),1);
+    cv::putText(drawing, "Maximum Width: " + width_max_print + " mm", cv::Point(400, 80), cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(0,250,0),1);
+    cv::putText(drawing, "Minimum Width: " + width_min_print + " mm", cv::Point(400,110), cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(0,250,0),1);
+    cv::putText(drawing, "Width SD: " + width_sd_print, cv::Point(400, 140), cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(0,250,0),1);
     return status;
 }
 

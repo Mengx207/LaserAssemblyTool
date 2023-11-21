@@ -33,7 +33,7 @@ int PixelCounter(Mat img);
 int SizeAverage (int count, int size_avg, int size_array[10], int center_total);
 void Calculatedline(Mat img, Point start, Point end);
 int NonZero(Mat img);
-void HMI(Mat img, int size, int min_size, int non_zero, int nom_distance, int center_distance);
+void HMI(Mat img, int size, int min_size, int non_zero, int nom_distance, int center_distance, Point2d center_designed, Point center_real);
 void GreenLight(Mat img, int last, int current, int nom_distance, int center_distance);
 int ClearList(vector<cv::Point> center_list, int center_total, int size_array[10], int min);
 dot_distance_return DotToLine(Mat img, Point start, Point end, Point center, Point interPoint);
