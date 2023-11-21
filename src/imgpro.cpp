@@ -84,12 +84,12 @@ void HMI(cv::Mat img, int size, int min_size, int non_zero, int nom_distance, in
         line(img,Point(800,0), Point(800,150), Scalar(0, 250, 0), 1, 16);
         putText(img, "Laser Beam Focus", cv::Point(20, 20), cv::FONT_HERSHEY_SIMPLEX, 0.8, cv::Scalar(0,250,0),1);
         putText(img, "Dot Size: "+size_print + " pixel", cv::Point(20, 50), cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(0,250,0),1);
-        putText(img, "Captured Min Size: "+min_size_print + " pixel", cv::Point(20, 80), cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(0,250,0),1);
+        putText(img, "Previous Min Size: "+min_size_print + " pixel", cv::Point(20, 80), cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(0,250,0),1);
         putText(img, "Laser Beam Location", cv::Point(400, 20), cv::FONT_HERSHEY_SIMPLEX, 0.8, cv::Scalar(0,250,0),1);
         putText(img, "Perpendicular Distance: "+nom_distance_print+ " pixel", cv::Point(400, 50), cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(0,250,0),1);
         putText(img, "Line Segment Length: "+center_distance_print+ " pixel", cv::Point(400, 80), cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(0,250,0),1);
-        putText(img, "Designed Center: ("+center_designed_x_str+" , "+center_designed_y_str+")", cv::Point(400, 110), cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(0,250,0),1);
-        putText(img, "Real Center: ("+center_real_x_str+" , "+center_real_y_str+")", cv::Point(400, 140), cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(0,250,0),1);
+        putText(img, "Center Designed: ("+center_designed_x_str+","+center_designed_y_str+")", cv::Point(400, 110), cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(0,250,0),1);
+        putText(img, "Center Now: ("+center_real_x_str+","+center_real_y_str+")", cv::Point(400, 140), cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(0,250,0),1);
     }
 
 void GreenLight(cv::Mat img, int last, int current, int nom_distance, int center_distance)
