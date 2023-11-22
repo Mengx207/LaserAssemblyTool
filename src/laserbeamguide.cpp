@@ -378,12 +378,18 @@ int main(int argc, char *argv[])
 					cv::circle(dot_img, interPoints_projected[0], 5, cv::Scalar(0,0,250), -1, 16, 0); 
 					line(dot_img, projectedlaserline[i_start], projectedlaserline[i_end], Scalar(0, 0, 250), 3, 16); // red line
 				}
+
 				if (center_rect_count >= 10)
 				{
 					line( dot_img, center_rect_avg, distance_result.point, cv::Scalar( 0,250,0 ), 1, 16 );
 					line( dot_img, distance_result.point, interPoints_projected[0], cv::Scalar( 0,250,0 ), 1, 16 );
 				}
+
 				HMI(dot_img, size_avg, min_size, non_zero, distance_result.distance, distance_result.segment_length, interPoints_projected[0], center_rect_avg);
+				if (argv[3] == string("d2"))
+				{
+					putText(dot_img, "Do not adjust the laser", cv::Point(500, 500), cv::FONT_HERSHEY_SIMPLEX, 1, cv::Scalar(250,250,250),3);
+				}
 				// GreenLight(dot_img, last_min_size, size_avg, nom_distance, center_distance);
 				// cv::imshow("img_grey_filtered_dot", img_grey_filtered_dot);
 				// cv::imshow("threshold output", threshold_output);

@@ -206,8 +206,8 @@ Point3d lineEquation(Point3d p1, Point3d p2, vector<double> tvec_laser_values)
     cout<< "Vector equation from two 3D points: (" << l<<"*t + "<<p2.x<<", "<<m<<"*t + "<<p2.y<<", "<<n<<"*t + "<<p2.z<<")"<<endl;
     Mat tvec_L = Mat(3, 1, CV_64FC1, tvec_laser_values.data());
     double t = (tvec_L.at<double>(2) - p2.z)/n;
-    Point3d actual_origin = Point3d(p2.x + t*l,p2.y + t*m,p2.z + t*n);
-    return actual_origin;
+    Point3d real_origin = Point3d(p2.x + t*l,p2.y + t*m,p2.z + t*n);
+    return real_origin;
 }
 
 pair<Point2d, Point2d> extractLaserline2Points(Mat whiteline)

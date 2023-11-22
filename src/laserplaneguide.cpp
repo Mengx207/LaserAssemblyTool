@@ -168,11 +168,11 @@ int main(int argc, char *argv[])
 				{
 					if (argv[3] == string("d1"))
 					{
-						image_captured = imread("images/pattern_1.png", IMREAD_GRAYSCALE);
+						image_captured = imread("images/pattern_d1.png", IMREAD_GRAYSCALE);
 					}
 					else if (argv[3] == string("d2"))
 					{
-						image_captured = imread("images/pattern_2.png", IMREAD_GRAYSCALE);
+						image_captured = imread("images/pattern_d2.png", IMREAD_GRAYSCALE);
 					}
 					else{
 						cout<<endl<<"Invalid Distance"<<endl;
@@ -307,6 +307,10 @@ int main(int argc, char *argv[])
 					Rect_vector.push_back(fake_rect);
 				}
 				status = laserlineGUI(Rect_vector, intersection_point_projected[0], cal_angle, uniformity1, line_img);
+				if (argv[3] == string("d2"))
+				{
+					putText(line_img, "Do not adjust the laser", cv::Point(500, 500), cv::FONT_HERSHEY_SIMPLEX, 1, cv::Scalar(250,250,250),3);
+				}
 
 				if(status == 0)
 				{line(line_img, laserlinepoints_projected[i_start], laserlinepoints_projected[i_end], Scalar(0, 0, 250), 3, LINE_AA);}

@@ -1,6 +1,6 @@
 #-------------------------------------------------
 #
-# Project created by QtCreator 2023-06-21T11:06:08
+# Project created by QtCreator 2023-11-22T14:31:05
 #
 #-------------------------------------------------
 
@@ -8,12 +8,9 @@ QT       += core gui
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
-TARGET = LAT_GUI
+TARGET = LAT_UI
 TEMPLATE = app
 
-INCLUDEPATH += .
-QT += gui
-QT += widgets
 # The following define makes your compiler emit warnings if you use
 # any feature of Qt which has been marked as deprecated (the exact warnings
 # depend on your compiler). Please consult the documentation of the

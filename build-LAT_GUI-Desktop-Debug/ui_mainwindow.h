@@ -22,6 +22,7 @@
 #include <QtWidgets/QPushButton>
 #include <QtWidgets/QRadioButton>
 #include <QtWidgets/QStatusBar>
+#include <QtWidgets/QTextEdit>
 #include <QtWidgets/QToolBar>
 #include <QtWidgets/QWidget>
 
@@ -52,6 +53,7 @@ public:
     QLineEdit *lineEdit_F3;
     QLineEdit *lineEdit_F2;
     QLineEdit *lineEdit_F1;
+    QTextEdit *textEdit;
     QMenuBar *menuBar;
     QMenu *menuLaser_Alignment_Tool;
     QToolBar *mainToolBar;
@@ -62,7 +64,7 @@ public:
         if (MainWindow->objectName().isEmpty())
             MainWindow->setObjectName(QStringLiteral("MainWindow"));
         MainWindow->setEnabled(true);
-        MainWindow->resize(832, 379);
+        MainWindow->resize(832, 593);
         centralWidget = new QWidget(MainWindow);
         centralWidget->setObjectName(QStringLiteral("centralWidget"));
         pushButton_LaserBeam = new QPushButton(centralWidget);
@@ -138,6 +140,9 @@ public:
         lineEdit_F1 = new QLineEdit(groupBox_SerialNum_2);
         lineEdit_F1->setObjectName(QStringLiteral("lineEdit_F1"));
         lineEdit_F1->setGeometry(QRect(30, 40, 71, 25));
+        textEdit = new QTextEdit(centralWidget);
+        textEdit->setObjectName(QStringLiteral("textEdit"));
+        textEdit->setGeometry(QRect(70, 320, 721, 211));
         MainWindow->setCentralWidget(centralWidget);
         pushButton_LaserBeam->raise();
         pushButton_LaserPlane->raise();
@@ -146,6 +151,7 @@ public:
         groupBox_SerialNum->raise();
         groupBox_SerialNum_2->raise();
         pushButton_LaserVerification->raise();
+        textEdit->raise();
         menuBar = new QMenuBar(MainWindow);
         menuBar->setObjectName(QStringLiteral("menuBar"));
         menuBar->setEnabled(true);
@@ -183,6 +189,24 @@ public:
         radioButton_D2->setText(QApplication::translate("MainWindow", "D2", Q_NULLPTR));
         groupBox_SerialNum->setTitle(QApplication::translate("MainWindow", "Laser Serial Number", Q_NULLPTR));
         groupBox_SerialNum_2->setTitle(QApplication::translate("MainWindow", "Fixture Number", Q_NULLPTR));
+        textEdit->setHtml(QApplication::translate("MainWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
+"p, li { white-space: pre-wrap; }\n"
+"</style></head><body style=\" font-family:'Sans Serif'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">Process steps:</p>\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">1. Input serial num and fixutre num</p>\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">2. Select laser and distance D1</p>\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">3. Finish laserbeam alignment at D1, apply loctite, quit and save</p>\n"
+"<p style=\" margin-top:"
+                        "0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">4. Move target to D2, open laserbeam alignment at D2, no adjustment is needed. Quit and save</p>\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">5. Move target to D1. Put the Powell lens on and finish laserplane alignment at D1. Apply loctite. Quit and save</p>\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">6. Move target to D2, open laserplane alignment at D2, no adjustment is needed. Quit and save</p>\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">7. Click laserverification button before moving to next laser</p>\n"
+"<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p>\n"
+"<p style="
+                        "\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">Double tab &quot;q&quot; to quit without saving</p>\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">Tab &quot;q&quot; then &quot;s&quot; to quit and save</p>\n"
+"<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p></body></html>", Q_NULLPTR));
         menuLaser_Alignment_Tool->setTitle(QApplication::translate("MainWindow", "Laser Assembly Tool", Q_NULLPTR));
     } // retranslateUi
 
