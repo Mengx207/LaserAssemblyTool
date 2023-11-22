@@ -79,20 +79,20 @@ int main(int argc, char* argv[])
 	imgPoint_d2.x = imgPoint_d2_vector[0];
 	imgPoint_d2.y = imgPoint_d2_vector[1];
 
-	Mat image_captured = imread("images/pattern_1.png", IMREAD_GRAYSCALE);
+	Mat image_captured;
 	Size patternSize(7, 4);
 	double squareSize = 7;
 	solvePnP_result solvePnP_result_d1, solvePnP_result_d2, solvePnP_result_d3;
-	squareSize = 7; // ~390mm
+	image_captured = imread("images/pattern_d1.png", IMREAD_GRAYSCALE);
 	solvePnP_result_d1 = getRvecTvec(image_captured, patternSize, squareSize);
-	image_captured = imread("images/pattern_2.png", IMREAD_GRAYSCALE);
+	image_captured = imread("images/pattern_d2.png", IMREAD_GRAYSCALE);
 	solvePnP_result_d2 = getRvecTvec(image_captured, patternSize, squareSize);
 
     Point3d p1 = locationCam2Target( imgPoint_d1, solvePnP_result_d1);
 	Point3d p2 = locationCam2Target( imgPoint_d2, solvePnP_result_d2);
 
-	// cout<<endl<<"3 points in camera frame:   " <<p1<<" "<<p2<<" "<<endl;
 	Point3d real_origin = lineEquation(p1,p2,tvec_laser_values);
+
 	cout<<endl<<"real laser origin: " << real_origin <<endl;
 	cout<<endl<<"designed laser origin: "<<"("<<tvec_laser_values[0]<<", "<<tvec_laser_values[1]<<", "<<tvec_laser_values[2]<<")"<<endl;
 
@@ -119,26 +119,27 @@ int main(int argc, char* argv[])
 	{
 		start_vector.push_back(Point3d(x,y,z));
 	}
+		while (end_d1 >> x >> comma >> y >> comma >> z)
+	{
+		end_vector.push_back(Point3d(x,y,z));
+	}
 	while (start_d2 >> x >> comma >> y >> comma >> z)
 	{
 		start_vector.push_back(Point3d(x,y,z));
-	}
-	while (end_d1 >> x >> comma >> y >> comma >> z)
-	{
-		end_vector.push_back(Point3d(x,y,z));
 	}
 	while (end_d2 >> x >> comma >> y >> comma >> z)
 	{
 		end_vector.push_back(Point3d(x,y,z));
 	}
-
-	cout<<endl<< "start_d1: "<< start_vector[0]<<endl;
-	cout<<endl<< "end_d1: "<< end_vector[0]<<endl;
-	cout<<endl<< "start_d2: "<< start_vector[1]<<endl;
-	cout<<endl<< "end_d2: "<< end_vector[1]<<endl;
 	
+	// Point3d real_origin1 = lineEquation(end_vector[0],end_vector[1],tvec_laser_values);
+	// cout<<endl<<"real laser origin: " << real_origin1 <<endl;
+	// Point3d real_origin2 = lineEquation(start_vector[0],start_vector[1],tvec_laser_values);
+	// cout<<endl<<"real laser origin: " << real_origin2 <<endl;
+
 	// Vector for vectors in 3D space from start to end points
 	vector<vector<double>> vect3D_collection;
+	
 
 	for(int s=0; s<2; s++)
 	{
@@ -187,11 +188,11 @@ int main(int argc, char* argv[])
 	norm_avg.x = xSum/6;
 	norm_avg.y = ySum/6;
 	norm_avg.z = zSum/6;
-	cout<<endl<<"The actual normal vector average: "<< norm_avg<<endl;
+	cout<<endl<<"The real plane normal vector: "<< norm_avg<<endl;
 
 	laser_plane laser_plane;
 	laser_plane = laserPlane(rmatrix_laser_values, tvec_laser_values);
-	cout<<endl<<"The ideal normal vector of ideal laser plane: "<<"["<< laser_plane.normalvector[0]<<","<<laser_plane.normalvector[1]<<","<<laser_plane.normalvector[2]<<"]"<<endl;
+	cout<<endl<<"The designed plane normal vector: "<<"["<< laser_plane.normalvector[0]<<","<<laser_plane.normalvector[1]<<","<<laser_plane.normalvector[2]<<"]"<<endl;
 
 	system("cd values && mkdir -p verification");
 	if(argc == 3)
