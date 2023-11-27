@@ -136,27 +136,27 @@ int main(int argc, char *argv[])
 				Mat cameraMatrix = Mat(3, 3, CV_64FC1, cameraMatrix_values.data());
 				Mat distCoeffs = Mat(5, 1, CV_64FC1, distCoeffs_values.data());
 				// gain rmatrix and tvec from target board to cam
-				string path_L_rmatrix = "values/laser_transform/rmatrix_L1.txt";
-				string path_L_tvec = "values/laser_transform/tvec_L1.txt";
+				string path_L_rmatrix = "values/laser_transform/rmatrix_L1_V3.txt";
+				string path_L_tvec = "values/laser_transform/tvec_L1_V3.txt";
 				if (argv[1] == string("1"))
 				{
-					path_L_rmatrix = "values/laser_transform/rmatrix_L1.txt";
-					path_L_tvec = "values/laser_transform/tvec_L1.txt";
+					path_L_rmatrix = "values/laser_transform/rmatrix_L1_V3.txt";
+					path_L_tvec = "values/laser_transform/tvec_L1_V3.txt";
 				}
 				if (argv[1] == string("2"))
 				{
-					path_L_rmatrix = "values/laser_transform/rmatrix_L2.txt";
-					path_L_tvec = "values/laser_transform/tvec_L2.txt";
+					path_L_rmatrix = "values/laser_transform/rmatrix_L2_V3.txt";
+					path_L_tvec = "values/laser_transform/tvec_L2_V3.txt";
 				}
 				if (argv[1] == string("3"))
 				{
-					path_L_rmatrix = "values/laser_transform/rmatrix_L3.txt";
-					path_L_tvec = "values/laser_transform/tvec_L3.txt";
+					path_L_rmatrix = "values/laser_transform/rmatrix_L3_V3.txt";
+					path_L_tvec = "values/laser_transform/tvec_L3_V3.txt";
 				}
 				if (argv[1] == string("4"))
 				{
-					path_L_rmatrix = "values/laser_transform/rmatrix_L4.txt";
-					path_L_tvec = "values/laser_transform/tvec_L4.txt";
+					path_L_rmatrix = "values/laser_transform/rmatrix_L4_V3.txt";
+					path_L_tvec = "values/laser_transform/tvec_L4_V3.txt";
 				}
 				// Calculate rotation vector and translation vector by a captured image of a pattern
 				Mat image_captured;

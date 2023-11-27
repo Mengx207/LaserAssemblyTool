@@ -86,7 +86,7 @@ int main(int argc, char *argv[])
 		CEnumParameter(nodemap0, "LineSelector").SetValue("Line2");
 		CEnumParameter(nodemap0, "LineSource").SetValue("ExposureActive");
 
-		if (argv[1] == string("1") || argv[1] == string("3"))
+		if (argv[2] == string("1") || argv[2] == string("3"))
 		{
 			CEnumParameter(nodemap0, "LineSelector").SetValue("Line3");
 			CBooleanParameter(nodemap0, "LineInverter").SetValue(false);
@@ -94,7 +94,7 @@ int main(int argc, char *argv[])
 			CEnumParameter(nodemap0, "LineSelector").SetValue("Line4");
 			CBooleanParameter(nodemap0, "LineInverter").SetValue(true);
 		}
-		if (argv[1] == string("2") || argv[1] == string("4"))
+		if (argv[2] == string("2") || argv[2] == string("4"))
 		{
 			CEnumParameter(nodemap0, "LineSelector").SetValue("Line3");
 			CBooleanParameter(nodemap0, "LineInverter").SetValue(true);
@@ -143,27 +143,53 @@ int main(int argc, char *argv[])
 				Mat distCoeffs = Mat(5, 1, CV_64FC1, distCoeffs_values.data());
 
 				// gain rmatrix and tvec from target board to cam
-				string path_L_rmatrix = "values/laser_transform/rmatrix_L1.txt";
-				string path_L_tvec = "values/laser_transform/tvec_L1.txt";
-				if (argv[1] == string("1"))
+				string path_L_rmatrix;
+				string path_L_tvec;
+				if(argv[1] == string("V3"))
 				{
-					path_L_rmatrix = "values/laser_transform/rmatrix_L1.txt";
-					path_L_tvec = "values/laser_transform/tvec_L1.txt";
+					if (argv[2] == string("1"))
+					{
+						path_L_rmatrix = "values/laser_transform/rmatrix_L1_V3.txt";
+						path_L_tvec = "values/laser_transform/tvec_L1_V3.txt";
+					}
+					if (argv[2] == string("2"))
+					{
+						path_L_rmatrix = "values/laser_transform/rmatrix_L2_V3.txt";
+						path_L_tvec = "values/laser_transform/tvec_L2_V3.txt";
+					}
+					if (argv[2] == string("3"))
+					{
+						path_L_rmatrix = "values/laser_transform/rmatrix_L3_V3.txt";
+						path_L_tvec = "values/laser_transform/tvec_L3_V3.txt";
+					}
+					if (argv[2] == string("4"))
+					{
+						path_L_rmatrix = "values/laser_transform/rmatrix_L4_V3.txt";
+						path_L_tvec = "values/laser_transform/tvec_L4_V3.txt";
+					}
 				}
-				if (argv[1] == string("2"))
+				else if(argv[1] == string("V4"))
 				{
-					path_L_rmatrix = "values/laser_transform/rmatrix_L2.txt";
-					path_L_tvec = "values/laser_transform/tvec_L2.txt";
-				}
-				if (argv[1] == string("3"))
-				{
-					path_L_rmatrix = "values/laser_transform/rmatrix_L3.txt";
-					path_L_tvec = "values/laser_transform/tvec_L3.txt";
-				}
-				if (argv[1] == string("4"))
-				{
-					path_L_rmatrix = "values/laser_transform/rmatrix_L4.txt";
-					path_L_tvec = "values/laser_transform/tvec_L4.txt";
+					if (argv[2] == string("1"))
+					{
+						path_L_rmatrix = "values/laser_transform/rmatrix_L1_V4.txt";
+						path_L_tvec = "values/laser_transform/tvec_L1_V4.txt";
+					}
+					if (argv[2] == string("2"))
+					{
+						path_L_rmatrix = "values/laser_transform/rmatrix_L2_V4.txt";
+						path_L_tvec = "values/laser_transform/tvec_L2_V4.txt";
+					}
+					if (argv[2] == string("3"))
+					{
+						path_L_rmatrix = "values/laser_transform/rmatrix_L3_V4.txt";
+						path_L_tvec = "values/laser_transform/tvec_L3_V4.txt";
+					}
+					if (argv[2] == string("4"))
+					{
+						path_L_rmatrix = "values/laser_transform/rmatrix_L4_V4.txt";
+						path_L_tvec = "values/laser_transform/tvec_L4_V4.txt";
+					}
 				}
 
 				// Calculate rotation vector and translation vector by a captured image of a pattern
@@ -173,25 +199,25 @@ int main(int argc, char *argv[])
 				double squareSize = 7;
 				image_captured = imread("images/pattern0.png", IMREAD_GRAYSCALE);
 
-				if (argc == 4)
+				if (argc == 5)
 				{
-					if (argv[3] == string("d1"))
+					if (argv[4] == string("d1"))
 					{
 						image_captured = imread("images/pattern_d1.png", IMREAD_GRAYSCALE);
 					}
-					else if (argv[3] == string("d2"))
+					else if (argv[4] == string("d2"))
 					{
 						image_captured = imread("images/pattern_d2.png", IMREAD_GRAYSCALE);
 					}
-					else if (argv[3] == string("d3"))
+					else if (argv[4] == string("d3"))
 					{
 						image_captured = imread("images/pattern_d3.png", IMREAD_GRAYSCALE);
 					}
-					else if (argv[3] == string("d4"))
+					else if (argv[4] == string("d4"))
 					{
 						image_captured = imread("images/pattern_d4.png", IMREAD_GRAYSCALE);
 					}
-					else if (argv[3] == string("d5"))
+					else if (argv[4] == string("d5"))
 					{
 						image_captured = imread("images/pattern_d5.png", IMREAD_GRAYSCALE);
 					}
@@ -202,7 +228,7 @@ int main(int argc, char *argv[])
 				// else {image_captured = imread("images/pattern_dd2.png", IMREAD_GRAYSCALE);}
 				else
 				{
-					image_captured = imread("images/pattern0.png", IMREAD_GRAYSCALE);
+					image_captured = imread("images/pattern_d1.png", IMREAD_GRAYSCALE);
 				}
 				solvePnP_result = getRvecTvec(image_captured, patternSize, squareSize);
 				cout<<endl<<"tvec:"<<endl<<solvePnP_result.tvec<<endl;
@@ -386,7 +412,7 @@ int main(int argc, char *argv[])
 				}
 
 				HMI(dot_img, size_avg, min_size, non_zero, distance_result.distance, distance_result.segment_length, interPoints_projected[0], center_rect_avg);
-				if (argv[3] == string("d2"))
+				if (argv[4] == string("d2"))
 				{
 					putText(dot_img, "Do not adjust the laser", cv::Point(500, 500), cv::FONT_HERSHEY_SIMPLEX, 1, cv::Scalar(250,250,250),3);
 				}
@@ -406,21 +432,21 @@ int main(int argc, char *argv[])
 			system("cd images && mkdir -p saved_laser_beam");
 			if (argc == 3)
 			{
-				imwrite("images/saved_laser_beam/laser_" + string(argv[1]) + "_" + string(argv[2]) + ".jpg", dot_img);
+				imwrite("images/saved_laser_beam/laser_" + string(argv[2]) + "_" + string(argv[3]) + ".jpg", dot_img);
 			}
 			else if (argc == 4)
 			{
-				imwrite("images/saved_laser_beam/laser_" + string(argv[1]) + "_" + string(argv[2]) + "_" + string(argv[3]) + ".jpg", dot_img);
+				imwrite("images/saved_laser_beam/laser_" + string(argv[2]) + "_" + string(argv[3]) + "_" + string(argv[4]) + ".jpg", dot_img);
 
 				// save center_rect_avg for future use
 				system("cd values && mkdir -p real_laserdot && cd real_laserdot");
-				ofstream interpoint("values/real_laserdot/real_laserdot_l" + string(argv[1]) + "_" + string(argv[3]) + ".txt");
+				ofstream interpoint("values/real_laserdot/real_laserdot_l" + string(argv[2]) + "_" + string(argv[4]) + ".txt");
 				interpoint << centerImage.x << " ";
 				interpoint << centerImage.y;
 			}
 			else
 			{
-				imwrite("images/saved_laser_beam/laser_" + string(argv[1]) + ".jpg", dot_img);
+				imwrite("images/saved_laser_beam/laser_" + string(argv[2]) + ".jpg", dot_img);
 			}
 			cout<<endl<<"Save and Quit"<<endl;
 		}
