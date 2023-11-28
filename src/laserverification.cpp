@@ -21,27 +21,53 @@ using namespace GENAPI_NAMESPACE;
 
 int main(int argc, char* argv[])
 {
-	string path_rmatrix = "values/laser_transform/rmatrix_L1_V3.txt";
-	string path_tvec = "values/laser_transform/tvec_L1_V3.txt";
-	if(argv[1] == string("1")) 
+	string path_rmatrix;
+	string path_tvec;
+	if(argv[1] == string("V3"))
 	{
-		path_rmatrix = "values/laser_transform/rmatrix_L1_V3.txt";
-		path_tvec = "values/laser_transform/tvec_L1_V3.txt";
+		if(argv[2] == string("1")) 
+		{
+			path_rmatrix = "values/laser_transform/rmatrix_L1_V3.txt";
+			path_tvec = "values/laser_transform/tvec_L1_V3.txt";
+		}
+		if(argv[2] == string("2")) 
+		{
+			path_rmatrix = "values/laser_transform/rmatrix_L2_V3.txt";
+			path_tvec = "values/laser_transform/tvec_L2_V3.txt";
+		}
+		if(argv[2] == string("3")) 
+		{
+			path_rmatrix = "values/laser_transform/rmatrix_L3_V3.txt";
+			path_tvec = "values/laser_transform/tvec_L3_V3.txt";
+		}
+		if(argv[2] == string("4"))
+		{
+			path_rmatrix = "values/laser_transform/rmatrix_L4_V3.txt";
+			path_tvec = "values/laser_transform/tvec_L4_V3.txt";
+		}
 	}
-	if(argv[1] == string("2")) 
+	if(argv[1] == string("V4"))
 	{
-		path_rmatrix = "values/laser_transform/rmatrix_L2_V3.txt";
-		path_tvec = "values/laser_transform/tvec_L2_V3.txt";
-	}
-	if(argv[1] == string("3")) 
-	{
-		path_rmatrix = "values/laser_transform/rmatrix_L3_V3.txt";
-		path_tvec = "values/laser_transform/tvec_L3_V3.txt";
-	}
-	if(argv[1] == string("4"))
-	{
-		path_rmatrix = "values/laser_transform/rmatrix_L4_V3.txt";
-		path_tvec = "values/laser_transform/tvec_L4_V3.txt";
+		if(argv[2] == string("1")) 
+		{
+			path_rmatrix = "values/laser_transform/rmatrix_L1_V4.txt";
+			path_tvec = "values/laser_transform/tvec_L1_V4.txt";
+		}
+		if(argv[2] == string("2")) 
+		{
+			path_rmatrix = "values/laser_transform/rmatrix_L2_V4.txt";
+			path_tvec = "values/laser_transform/tvec_L2_V4.txt";
+		}
+		if(argv[2] == string("3")) 
+		{
+			path_rmatrix = "values/laser_transform/rmatrix_L3_V4.txt";
+			path_tvec = "values/laser_transform/tvec_L3_V4.txt";
+		}
+		if(argv[2] == string("4"))
+		{
+			path_rmatrix = "values/laser_transform/rmatrix_L4_V4.txt";
+			path_tvec = "values/laser_transform/tvec_L4_V4.txt";
+		}
 	}
 
 	vector<double> tvec_laser_values;
@@ -61,7 +87,7 @@ int main(int argc, char* argv[])
 	cout<<endl<<"beam verification-------------------------------------------"<<endl;
 	vector<double> imgPoint_d1_vector, imgPoint_d2_vector, imgPoint_d3_vector;
 
-	ifstream readPointd1("values/real_laserdot/real_laserdot_l"+string(argv[1])+"_d1.txt");
+	ifstream readPointd1("values/real_laserdot/real_laserdot_l"+string(argv[2])+"_d1.txt");
 	while (readPointd1 >> val)
 	{
 		imgPoint_d1_vector.push_back(val);
@@ -70,7 +96,7 @@ int main(int argc, char* argv[])
 	imgPoint_d1.x = imgPoint_d1_vector[0];
 	imgPoint_d1.y = imgPoint_d1_vector[1];
 
-	ifstream readPointd2("values/real_laserdot/real_laserdot_l"+string(argv[1])+"_d2.txt");
+	ifstream readPointd2("values/real_laserdot/real_laserdot_l"+string(argv[2])+"_d2.txt");
 	while (readPointd2 >> val)
 	{
 		imgPoint_d2_vector.push_back(val);
@@ -106,8 +132,8 @@ int main(int argc, char* argv[])
 
 	for(int i = 1; i<=2; i++)
 	{
-		path_start ="values/real_laserline_ends/start_l" + string(argv[1]) + "_d" + to_string(i) + ".txt";
-		path_end = "values/real_laserline_ends/end_l" + string(argv[1]) + "_d" + to_string(i) + ".txt";
+		path_start ="values/real_laserline_ends/start_l" + string(argv[2]) + "_d" + to_string(i) + ".txt";
+		path_end = "values/real_laserline_ends/end_l" + string(argv[2]) + "_d" + to_string(i) + ".txt";
 		if(i==1){start_d1.open(path_start); end_d1.open(path_end);}
 		else if(i==2){start_d2.open(path_start); end_d2.open(path_end);}
 	}
@@ -195,9 +221,9 @@ int main(int argc, char* argv[])
 	cout<<endl<<"The designed plane normal vector: "<<"["<< laser_plane.normalvector[0]<<","<<laser_plane.normalvector[1]<<","<<laser_plane.normalvector[2]<<"]"<<endl;
 
 	system("cd values && mkdir -p verification");
-	if(argc == 3)
+	if(argc == 4)
 	{
-			ofstream verification ("values/verification/L" + string(argv[1]) + ".txt");
+			ofstream verification ("values/verification/L" + string(argv[2]) + "_" + string(argv[3]) + ".txt");
 			verification <<"The design origin: "<<"["<<tvec_laser_values[0]<<", "<<tvec_laser_values[1]<<", "<<tvec_laser_values[2]<<"]"<<endl
 			<<"The real origin: "<<real_origin<<endl
 			<<"The design NV of laser plane: "<<"["<< laser_plane.normalvector[0]<<","<<laser_plane.normalvector[1]<<","<<laser_plane.normalvector[2]<<"]"<<endl

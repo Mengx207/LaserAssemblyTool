@@ -225,7 +225,7 @@ int main(int argc, char *argv[])
 						cout<<endl<<"Invalid Distance"<<endl;
 					}
 				}
-				// else {image_captured = imread("images/pattern_dd2.png", IMREAD_GRAYSCALE);}
+				// else {image_captured = imread("images/pattern_d2.png", IMREAD_GRAYSCALE);}
 				else
 				{
 					image_captured = imread("images/pattern_d1.png", IMREAD_GRAYSCALE);
@@ -414,7 +414,8 @@ int main(int argc, char *argv[])
 				HMI(dot_img, size_avg, min_size, non_zero, distance_result.distance, distance_result.segment_length, interPoints_projected[0], center_rect_avg);
 				if (argv[4] == string("d2"))
 				{
-					putText(dot_img, "Do not adjust the laser", cv::Point(500, 500), cv::FONT_HERSHEY_SIMPLEX, 1, cv::Scalar(250,250,250),3);
+					putText(dot_img, "THIS TARGET POSSITION IS FOR MEASUREMENT ONLY", cv::Point(300, 500), cv::FONT_HERSHEY_SIMPLEX, 1, cv::Scalar(250,250,250),2);
+					putText(dot_img, "DO NOT ADJUST THE LASER", cv::Point(300, 550), cv::FONT_HERSHEY_SIMPLEX, 1, cv::Scalar(250,250,250),2);
 				}
 				// GreenLight(dot_img, last_min_size, size_avg, nom_distance, center_distance);
 				// cv::imshow("img_grey_filtered_dot", img_grey_filtered_dot);
@@ -430,11 +431,11 @@ int main(int argc, char *argv[])
 		if(command == 's')
 		{
 			system("cd images && mkdir -p saved_laser_beam");
-			if (argc == 3)
+			if (argc == 4)
 			{
 				imwrite("images/saved_laser_beam/laser_" + string(argv[2]) + "_" + string(argv[3]) + ".jpg", dot_img);
 			}
-			else if (argc == 4)
+			else if (argc == 5)
 			{
 				imwrite("images/saved_laser_beam/laser_" + string(argv[2]) + "_" + string(argv[3]) + "_" + string(argv[4]) + ".jpg", dot_img);
 
