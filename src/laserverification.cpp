@@ -167,18 +167,43 @@ int main(int argc, char* argv[])
 	vector<vector<double>> vect3D_collection;
 	
 
-	for(int s=0; s<2; s++)
-	{
-		for(int e=0; e<2; e++)
-		{
-			vector<double> v1;
-			v1.push_back(end_vector[e].x-start_vector[s].x);
-			v1.push_back(end_vector[e].y-start_vector[s].y);
-			v1.push_back(end_vector[e].z-start_vector[s].z);
-			// cout<<endl<<v1[0]<<" "<<v1[1]<<" "<<v1[2]<<endl;
-			vect3D_collection.push_back(v1);
-		}
-	}
+	// for(int s=0; s<2; s++)
+	// {
+	// 	for(int e=0; e<2; e++)
+	// 	{
+	// 		vector<double> v1;
+	// 		v1.push_back(end_vector[e].x-start_vector[s].x);
+	// 		v1.push_back(end_vector[e].y-start_vector[s].y);
+	// 		v1.push_back(end_vector[e].z-start_vector[s].z);
+	// 		// cout<<endl<<v1[0]<<" "<<v1[1]<<" "<<v1[2]<<endl;
+	// 		vect3D_collection.push_back(v1);
+	// 	}
+	// }
+
+
+	vector<double> v1,v2,v3,v4;
+	//vector 1
+	v1.push_back(end_vector[0].x-p2.x);
+	v1.push_back(end_vector[0].y-p2.y);
+	v1.push_back(end_vector[0].z-p2.z);
+	//vector 2
+	v2.push_back(start_vector[0].x-p2.x);
+	v2.push_back(start_vector[0].y-p2.y);
+	v2.push_back(start_vector[0].z-p2.z);
+	//vector 3
+	v3.push_back(end_vector[1].x-p1.x);
+	v3.push_back(end_vector[1].y-p1.y);
+	v3.push_back(end_vector[1].z-p1.z);
+	//vector 4
+	v4.push_back(start_vector[1].x-p1.x);
+	v4.push_back(start_vector[1].y-p1.y);
+	v4.push_back(start_vector[1].z-p1.z);
+	// cout<<endl<<v1[0]<<" "<<v1[1]<<" "<<v1[2]<<endl;
+	vect3D_collection.push_back(v1);
+	vect3D_collection.push_back(v2);
+	vect3D_collection.push_back(v3);
+	vect3D_collection.push_back(v4);
+
 
 	vector<double> NV;
 	vector<vector<double>> normalVector_collection;

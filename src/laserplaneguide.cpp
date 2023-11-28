@@ -99,6 +99,7 @@ int main(int argc, char *argv[])
 		std::vector<double> rvec_target2cam, tvec_target2cam;
 		Mat rvec, rmatrix, tvec;
 		solvePnP_result solvePnP_result;
+		bool rect_find_flag = false;
 
 		while (waitKey(10) != 'q')
 		{
@@ -310,6 +311,7 @@ int main(int argc, char *argv[])
 				int status = 0;
 				if (Rect_vector.size() >= 1)
 				{
+					rect_find_flag = true;
 					drawContourRectangle(drawing, contours, Rect_vector);
 					// circle(line_img, Rect_vector[0].center, 5, Scalar(0,0,250), -1, 8, 0);
 					double angle = Rect_vector[0].angle;
@@ -328,6 +330,7 @@ int main(int argc, char *argv[])
 				}
 				else
 				{
+					rect_find_flag = false;
 					Rect_vector.empty();
 					RotatedRect fake_rect = RotatedRect((Point2f(0,0)), Size2f(1,1), float (0));
 					Rect_vector.push_back(fake_rect);
@@ -335,7 +338,8 @@ int main(int argc, char *argv[])
 				status = laserlineGUI(Rect_vector, intersection_point_projected[0], cal_angle, uniformity1, line_img);
 				if (argv[4] == string("d2"))
 				{
-					putText(line_img, "Do not adjust the laser", cv::Point(500, 500), cv::FONT_HERSHEY_SIMPLEX, 1, cv::Scalar(250,250,250),3);
+					putText(line_img, "THIS TARGET POSSITION IS FOR MEASUREMENT ONLY", cv::Point(300, 500), cv::FONT_HERSHEY_SIMPLEX, 1, cv::Scalar(250,250,250),2);
+					putText(line_img, "DO NOT ADJUST THE LASER", cv::Point(300, 550), cv::FONT_HERSHEY_SIMPLEX, 1, cv::Scalar(250,250,250),2);
 				}
 
 				if(status == 0)
@@ -367,13 +371,18 @@ int main(int argc, char *argv[])
 
 				system("cd values && mkdir -p real_laserline_ends && cd real_laserline_ends");
 
-				pair<Point2f, Point2f> laserline2Points = extractLaserline2Points(threshold_output);
-				cout << "Pair of end points of actual laser line on image plane: " << laserline2Points.first << ", " << laserline2Points.second << endl;
-
-				laserline2Points.first = Point2d(0, 0);
-				laserline2Points.second = Point2d(1440, 1080);
-				Point3d startCam = locationCam2Target(laserline2Points.first, solvePnP_result);
-				Point3d endCam = locationCam2Target(laserline2Points.second, solvePnP_result);
+				pair<Point2f, Point2f> laserline2Points;
+				Point3d startCam(0,0,0);
+				Point3d endCam(0,0,0);
+				if(rect_find_flag == true)
+				{
+					laserline2Points = extractLaserline2Points(threshold_output);
+					cout << "Pair of end points of actual laser line on image plane: " << laserline2Points.first << ", " << laserline2Points.second << endl;
+					laserline2Points.first = Point2d(0, 0);
+					laserline2Points.second = Point2d(1440, 1080);
+					startCam = locationCam2Target(laserline2Points.first, solvePnP_result);
+					endCam = locationCam2Target(laserline2Points.second, solvePnP_result);
+				}
 
 				if (argv[2] == string("1"))
 				{
