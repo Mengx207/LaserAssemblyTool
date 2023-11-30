@@ -1,11 +1,3 @@
-/* 
-	Assembly guidance tool - Laser dot alignment
-	Help user achieve an accurate result of laser focus and laser location
-
-	Measure laser dot's size for focusing 
-	Measure nomal distance between laser dot and calculated laser line
-	Meausre distance from the center of laser line to the laser dot along the line
-*/
 #include "utility.h"
 #include "imgpro.h"
 #include "gencal.h"
@@ -116,22 +108,13 @@ int main(int argc, char* argv[])
 	image_captured = imread("images/pattern_d1.png", IMREAD_GRAYSCALE);
 	solvePnP_result_d1 = getRvecTvec(image_captured, patternSize, squareSize);
 	image_captured = imread("images/pattern_d2.png", IMREAD_GRAYSCALE);
-	solvePnP_result_d2 = getRvecTvec(image_captured, patternSize, squareSize);	
+	solvePnP_result_d2 = getRvecTvec(image_captured, patternSize, squareSize);
 
-	// solvePnP_result_d1.rvec.at<double>(0, 0) = 0;
-	// solvePnP_result_d2.rvec.at<double>(0, 0) = 0;
+	// Intersection point between laser beam and target borad in camera frame
+    Point3d point_d1 = locationCam2Target( imgPoint_d1, solvePnP_result_d1, version_V4 ); 
+	Point3d point_d2 = locationCam2Target( imgPoint_d2, solvePnP_result_d2, version_V4 );
 
-	cout<<endl<<"tvec_d1:"<<endl<<solvePnP_result_d1.tvec<<endl;
-	cout<<endl<<"rvec_d1:"<<endl<<solvePnP_result_d1.rvec<<endl;	
-	cout<<endl<<"tvec_d2:"<<endl<<solvePnP_result_d2.tvec<<endl;
-	cout<<endl<<"rvec_d2:"<<endl<<solvePnP_result_d2.rvec<<endl;
-
-    Point3d p1 = locationCam2Target( imgPoint_d1, solvePnP_result_d1, version_V4);
-	Point3d p2 = locationCam2Target( imgPoint_d2, solvePnP_result_d2, version_V4);
-	// p1.x = -p1.x; p1.y = -p1.y; p2.x = -p2.x; p2.y = -p2.y;
-	cout<<endl<<"p1 at d1: " << p1 <<endl;		
-	cout<<endl<<"p2 at d2: " << p2 <<endl;
-	Point3d real_origin = lineEquation(p1,p2,tvec_laser_values);
+	Point3d real_origin = lineEquation(point_d1,point_d2,tvec_laser_values);
 
 	cout<<endl<<"real laser origin: " << real_origin <<endl;
 	cout<<endl<<"designed laser origin: "<<"("<<tvec_laser_values[0]<<", "<<tvec_laser_values[1]<<", "<<tvec_laser_values[2]<<")"<<endl;
@@ -171,53 +154,9 @@ int main(int argc, char* argv[])
 	{
 		end_vector.push_back(Point3d(x,y,z));
 	}
-	
-	// Point3d real_origin1 = lineEquation(end_vector[0],end_vector[1],tvec_laser_values);
-	// cout<<endl<<"real laser origin: " << real_origin1 <<endl;
-	// Point3d real_origin2 = lineEquation(start_vector[0],start_vector[1],tvec_laser_values);
-	// cout<<endl<<"real laser origin: " << real_origin2 <<endl;
 
 	// Vector for vectors in 3D space from start to end points
 	vector<vector<double>> vect3D_collection;
-	
-
-	// for(int s=0; s<2; s++)
-	// {
-	// 	for(int e=0; e<2; e++)
-	// 	{
-	// 		vector<double> v1;
-	// 		v1.push_back(end_vector[e].x-start_vector[s].x);
-	// 		v1.push_back(end_vector[e].y-start_vector[s].y);
-	// 		v1.push_back(end_vector[e].z-start_vector[s].z);
-	// 		// cout<<endl<<v1[0]<<" "<<v1[1]<<" "<<v1[2]<<endl;
-	// 		vect3D_collection.push_back(v1);
-	// 	}
-	// }
-
-
-	// vector<double> v1,v2,v3,v4;
-	// //vector 1
-	// v1.push_back(end_vector[0].x-p2.x);
-	// v1.push_back(end_vector[0].y-p2.y);
-	// v1.push_back(end_vector[0].z-p2.z);
-	// //vector 2
-	// v2.push_back(start_vector[0].x-p2.x);
-	// v2.push_back(start_vector[0].y-p2.y);
-	// v2.push_back(start_vector[0].z-p2.z);
-	// //vector 3
-	// v3.push_back(end_vector[1].x-p1.x);
-	// v3.push_back(end_vector[1].y-p1.y);
-	// v3.push_back(end_vector[1].z-p1.z);
-	// //vector 4
-	// v4.push_back(start_vector[1].x-p1.x);
-	// v4.push_back(start_vector[1].y-p1.y);
-	// v4.push_back(start_vector[1].z-p1.z);
-	// // cout<<endl<<v1[0]<<" "<<v1[1]<<" "<<v1[2]<<endl;
-	// vect3D_collection.push_back(v1);
-	// vect3D_collection.push_back(v2);
-	// vect3D_collection.push_back(v3);
-	// vect3D_collection.push_back(v4);
-
 	vector<double> v1,v2,v3;
 	//vector 1
 	v1.push_back(end_vector[0].x-real_origin.x);
@@ -228,9 +167,9 @@ int main(int argc, char* argv[])
 	v2.push_back(start_vector[0].y-real_origin.y);
 	v2.push_back(start_vector[0].z-real_origin.z);
 	//vector 3
-	v3.push_back(p1.x-real_origin.x);
-	v3.push_back(p1.y-real_origin.y);
-	v3.push_back(p1.z-real_origin.z);
+	v3.push_back(point_d1.x-real_origin.x);
+	v3.push_back(point_d1.y-real_origin.y);
+	v3.push_back(point_d1.z-real_origin.z);
 	vect3D_collection.push_back(v1);
 	vect3D_collection.push_back(v2);
 	vect3D_collection.push_back(v3);
