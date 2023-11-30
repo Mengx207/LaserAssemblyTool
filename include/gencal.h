@@ -33,7 +33,7 @@ struct arucoResult{
     vector<Point2d> found_corners;
 };
 
-Point3d locationCam2Target(Point2d imagePoint, solvePnP_result solvePnP_result);
+Point3d locationCam2Target(Point2d imagePoint, solvePnP_result solvePnP_result, bool version_V4);
 // Point3d locationCam2Target(Point2d imagePoint, Mat rmatrix, Mat tvec, vector<Point3d>obj_corners, vector<Point2d>found_corners);
 Point3d lineEquation(Point3d p1, Point3d p2, vector<double> tvec_laser_values);
 pair<Point2d, Point2d> extractLaserline2Points(Mat whiteline);

@@ -1,6 +1,6 @@
 #include "gencal.h"
 
-Point3d locationCam2Target(Point2d imagePoint, solvePnP_result solvePnP_result)
+Point3d locationCam2Target(Point2d imagePoint, solvePnP_result solvePnP_result, bool version_V4)
 {
     Point3f corner_created_max_x = solvePnP_result.corners_created[0];
     Point3f corner_created_max_y = solvePnP_result.corners_created[0];
@@ -70,8 +70,16 @@ Point3d locationCam2Target(Point2d imagePoint, solvePnP_result solvePnP_result)
     // cout<<endl<<solvePnP_result.corners_found<<endl;
     // cout<<endl<<"center point of pattern (pixel) on image plane: "<<corners_found_center_x<<","<<corners_found_center_y<<endl;
     // Origin of the target frame is the center of the pattern, /magnifier transfer pixel to mm
-    // Point3d cornerTargetFrame = Point3d((oneCorner.x-corners_found_center_x) / magnifier, (oneCorner.y-corners_found_center_y) / magnifier, 0);
-    Point3d cornerTargetFrame = Point3d(-(oneCorner.y-corners_found_center_y)/magnifier,-(oneCorner.x-corners_found_center_x)/magnifier, 0);
+    Point3d cornerTargetFrame;
+    if(version_V4 == true) //Camera right side up
+    {
+        cornerTargetFrame = Point3d((oneCorner.x-corners_found_center_x) / magnifier, -(oneCorner.y-corners_found_center_y) / magnifier, 0);
+    }
+    else if(version_V4 == false) //Camera rotated 90 CW
+    {
+       cornerTargetFrame = Point3d(-(oneCorner.y-corners_found_center_y)/magnifier,-(oneCorner.x-corners_found_center_x)/magnifier, 0);
+    }
+    
     // cout <<"Dot coordinates on target board (targetframe) in mm: "<<endl<<cornerTargetFrame <<endl;
 
     Mat transMatrix; // translation matrix from target board frame to image frame
@@ -237,7 +245,7 @@ pair<Point2d, Point2d> extractLaserline2Points(Mat whiteline)
         start_y_total = start_y_total + pt1.y;
         end_x_total = end_x_total + pt2.x;
         end_y_total = end_y_total + pt2.y;
-        // cout<<"ends of line: "<<pt1<<", "<<pt2<<endl;
+        cout<<"ends of line: "<<pt1<<", "<<pt2<<endl;
         // line( findline, pt1, pt2, Scalar(0,0,255), 1, LINE_AA);
         // line( whiteline_color, pt1, pt2, Scalar(150,100,0), 1, LINE_AA);
         // circle( whiteline_color, pt1, 5, cv::Scalar(0,0,255), -1, 8, 0 );

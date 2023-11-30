@@ -54,6 +54,7 @@ int main(int argc, char *argv[])
 		int last_size_avg;
 		int last_min_size = 0;
 		cv::Point center_avg;
+		bool version_V4 = false;
 
 		vector<cv::Point> center_list;
 		double center_total = 0;
@@ -139,8 +140,10 @@ int main(int argc, char *argv[])
 				// gain rmatrix and tvec from target board to cam
 				string path_L_rmatrix;
 				string path_L_tvec;
+				
 				if (argv[1] == string("V3"))
 				{
+					version_V4 = false;
 					if (argv[2] == string("1"))
 					{
 						path_L_rmatrix = "values/laser_transform/rmatrix_L1_V3.txt";
@@ -164,6 +167,7 @@ int main(int argc, char *argv[])
 				}
 				else if (argv[1] == string("V4"))
 				{
+					version_V4 = true;
 					if (argv[2] == string("1"))
 					{
 						path_L_rmatrix = "values/laser_transform/rmatrix_L1_V4.txt";
@@ -189,7 +193,7 @@ int main(int argc, char *argv[])
 				Mat image_captured;
 				Size patternSize(7, 4);
 				double squareSize = 7;
-				image_captured = imread("images/pattern0.png", IMREAD_GRAYSCALE);
+				image_captured = imread("images/pattern_d1.png", IMREAD_GRAYSCALE);
 	
 				if (argc == 5)
 				{
@@ -205,10 +209,7 @@ int main(int argc, char *argv[])
 						cout<<endl<<"Invalid Distance"<<endl;
 					}
 				}
-				else
-				{
-					image_captured = imread("images/pattern0.png", IMREAD_GRAYSCALE);
-				}
+
 				solvePnP_result = getRvecTvec(image_captured, patternSize, squareSize);
 
 				// read laser 1
@@ -327,6 +328,7 @@ int main(int argc, char *argv[])
 					uniformity1.width_max = uniformity1.width_max * 3.45 * (solvePnP_result.tvec.at<double>(0, 2) / 12) / 1000;
 					uniformity1.width_min = uniformity1.width_min * 3.45 * (solvePnP_result.tvec.at<double>(0, 2) / 12) / 1000;
 					// cv::imshow( "Rotated and Cropped laser line", uniformity1.image_BGR );
+					extractLaserline2Points(threshold_output);
 				}
 				else
 				{
@@ -350,7 +352,7 @@ int main(int argc, char *argv[])
 				cv::circle(line_img, intersection_point_projected[0], 5, cv::Scalar(0, 0, 250), -1, 8, 0); // yellow dot for designed laser dot location
 
 				// cv::imshow( "Contour and Area", drawing );
-				// cv::imshow("threshold",threshold_output);
+				cv::imshow("threshold",threshold_output);
 				cv::imshow("Laser Plane Alignment GUI Window", line_img);
 				imgs_taken++;
 			}
@@ -372,16 +374,17 @@ int main(int argc, char *argv[])
 				system("cd values && mkdir -p real_laserline_ends && cd real_laserline_ends");
 
 				pair<Point2f, Point2f> laserline2Points;
+				// laserline2Points.first = Point2d(0, 0);
+				// laserline2Points.second = Point2d(1440, 1080);
 				Point3d startCam(0,0,0);
 				Point3d endCam(0,0,0);
+
 				if(rect_find_flag == true)
 				{
 					laserline2Points = extractLaserline2Points(threshold_output);
 					cout << "Pair of end points of actual laser line on image plane: " << laserline2Points.first << ", " << laserline2Points.second << endl;
-					laserline2Points.first = Point2d(0, 0);
-					laserline2Points.second = Point2d(1440, 1080);
-					startCam = locationCam2Target(laserline2Points.first, solvePnP_result);
-					endCam = locationCam2Target(laserline2Points.second, solvePnP_result);
+					startCam = locationCam2Target(laserline2Points.first, solvePnP_result, version_V4);
+					endCam = locationCam2Target(laserline2Points.second, solvePnP_result, version_V4);
 				}
 
 				if (argv[2] == string("1"))

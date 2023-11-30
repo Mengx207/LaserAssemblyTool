@@ -23,8 +23,11 @@ int main(int argc, char* argv[])
 {
 	string path_rmatrix;
 	string path_tvec;
+	bool version_V4 = false;
+
 	if(argv[1] == string("V3"))
 	{
+		version_V4 = false;
 		if(argv[2] == string("1")) 
 		{
 			path_rmatrix = "values/laser_transform/rmatrix_L1_V3.txt";
@@ -48,6 +51,7 @@ int main(int argc, char* argv[])
 	}
 	if(argv[1] == string("V4"))
 	{
+		version_V4 = true;
 		if(argv[2] == string("1")) 
 		{
 			path_rmatrix = "values/laser_transform/rmatrix_L1_V4.txt";
@@ -108,15 +112,25 @@ int main(int argc, char* argv[])
 	Mat image_captured;
 	Size patternSize(7, 4);
 	double squareSize = 7;
-	solvePnP_result solvePnP_result_d1, solvePnP_result_d2, solvePnP_result_d3;
+	solvePnP_result solvePnP_result_d1, solvePnP_result_d2;
 	image_captured = imread("images/pattern_d1.png", IMREAD_GRAYSCALE);
 	solvePnP_result_d1 = getRvecTvec(image_captured, patternSize, squareSize);
 	image_captured = imread("images/pattern_d2.png", IMREAD_GRAYSCALE);
-	solvePnP_result_d2 = getRvecTvec(image_captured, patternSize, squareSize);
+	solvePnP_result_d2 = getRvecTvec(image_captured, patternSize, squareSize);	
 
-    Point3d p1 = locationCam2Target( imgPoint_d1, solvePnP_result_d1);
-	Point3d p2 = locationCam2Target( imgPoint_d2, solvePnP_result_d2);
+	// solvePnP_result_d1.rvec.at<double>(0, 0) = 0;
+	// solvePnP_result_d2.rvec.at<double>(0, 0) = 0;
 
+	cout<<endl<<"tvec_d1:"<<endl<<solvePnP_result_d1.tvec<<endl;
+	cout<<endl<<"rvec_d1:"<<endl<<solvePnP_result_d1.rvec<<endl;	
+	cout<<endl<<"tvec_d2:"<<endl<<solvePnP_result_d2.tvec<<endl;
+	cout<<endl<<"rvec_d2:"<<endl<<solvePnP_result_d2.rvec<<endl;
+
+    Point3d p1 = locationCam2Target( imgPoint_d1, solvePnP_result_d1, version_V4);
+	Point3d p2 = locationCam2Target( imgPoint_d2, solvePnP_result_d2, version_V4);
+	// p1.x = -p1.x; p1.y = -p1.y; p2.x = -p2.x; p2.y = -p2.y;
+	cout<<endl<<"p1 at d1: " << p1 <<endl;		
+	cout<<endl<<"p2 at d2: " << p2 <<endl;
 	Point3d real_origin = lineEquation(p1,p2,tvec_laser_values);
 
 	cout<<endl<<"real laser origin: " << real_origin <<endl;
@@ -181,64 +195,77 @@ int main(int argc, char* argv[])
 	// }
 
 
-	vector<double> v1,v2,v3,v4;
+	// vector<double> v1,v2,v3,v4;
+	// //vector 1
+	// v1.push_back(end_vector[0].x-p2.x);
+	// v1.push_back(end_vector[0].y-p2.y);
+	// v1.push_back(end_vector[0].z-p2.z);
+	// //vector 2
+	// v2.push_back(start_vector[0].x-p2.x);
+	// v2.push_back(start_vector[0].y-p2.y);
+	// v2.push_back(start_vector[0].z-p2.z);
+	// //vector 3
+	// v3.push_back(end_vector[1].x-p1.x);
+	// v3.push_back(end_vector[1].y-p1.y);
+	// v3.push_back(end_vector[1].z-p1.z);
+	// //vector 4
+	// v4.push_back(start_vector[1].x-p1.x);
+	// v4.push_back(start_vector[1].y-p1.y);
+	// v4.push_back(start_vector[1].z-p1.z);
+	// // cout<<endl<<v1[0]<<" "<<v1[1]<<" "<<v1[2]<<endl;
+	// vect3D_collection.push_back(v1);
+	// vect3D_collection.push_back(v2);
+	// vect3D_collection.push_back(v3);
+	// vect3D_collection.push_back(v4);
+
+	vector<double> v1,v2,v3;
 	//vector 1
-	v1.push_back(end_vector[0].x-p2.x);
-	v1.push_back(end_vector[0].y-p2.y);
-	v1.push_back(end_vector[0].z-p2.z);
+	v1.push_back(end_vector[0].x-real_origin.x);
+	v1.push_back(end_vector[0].y-real_origin.y);
+	v1.push_back(end_vector[0].z-real_origin.z);
 	//vector 2
-	v2.push_back(start_vector[0].x-p2.x);
-	v2.push_back(start_vector[0].y-p2.y);
-	v2.push_back(start_vector[0].z-p2.z);
+	v2.push_back(start_vector[0].x-real_origin.x);
+	v2.push_back(start_vector[0].y-real_origin.y);
+	v2.push_back(start_vector[0].z-real_origin.z);
 	//vector 3
-	v3.push_back(end_vector[1].x-p1.x);
-	v3.push_back(end_vector[1].y-p1.y);
-	v3.push_back(end_vector[1].z-p1.z);
-	//vector 4
-	v4.push_back(start_vector[1].x-p1.x);
-	v4.push_back(start_vector[1].y-p1.y);
-	v4.push_back(start_vector[1].z-p1.z);
-	// cout<<endl<<v1[0]<<" "<<v1[1]<<" "<<v1[2]<<endl;
+	v3.push_back(p1.x-real_origin.x);
+	v3.push_back(p1.y-real_origin.y);
+	v3.push_back(p1.z-real_origin.z);
 	vect3D_collection.push_back(v1);
 	vect3D_collection.push_back(v2);
 	vect3D_collection.push_back(v3);
-	vect3D_collection.push_back(v4);
 
 
 	vector<double> NV;
 	vector<vector<double>> normalVector_collection;
 	// collect unit normal vectors between different vectors on the actual laser plane
-	for(int i=1; i<=3; i++)
+	for(int i=1; i<=2; i++)
 	{
 		NV = crossProduct(vect3D_collection[0],vect3D_collection[i]);
 		double d = sqrt(NV[0]*NV[0] + NV[1]*NV[1] + NV[2]*NV[2]);
 		NV[0] = NV[0]/d; NV[1] = NV[1]/d; NV[2] = NV[2]/d;
 		normalVector_collection.push_back(NV);
+		cout<<endl<<"("<<NV[0]<<","<<NV[1]<<","<<NV[2]<<")"<<endl;
 	}
-	for(int i=2; i<=3; i++)
-	{
-		NV = crossProduct(vect3D_collection[1],vect3D_collection[i]);
-		double d = sqrt(NV[0]*NV[0] + NV[1]*NV[1] + NV[2]*NV[2]);
-		NV[0] = NV[0]/d; NV[1] = NV[1]/d; NV[2] = NV[2]/d;
-		normalVector_collection.push_back(NV);
-	}
-	NV = crossProduct(vect3D_collection[2],vect3D_collection[3]);
+
+	NV = crossProduct(vect3D_collection[1],vect3D_collection[2]);
 	double d = sqrt(NV[0]*NV[0] + NV[1]*NV[1] + NV[2]*NV[2]);
 	NV[0] = NV[0]/d; NV[1] = NV[1]/d; NV[2] = NV[2]/d;
 	normalVector_collection.push_back(NV);
+	cout<<endl<<"("<<NV[0]<<","<<NV[1]<<","<<NV[2]<<")"<<endl;
 
 	double xSum = 0; double ySum = 0; double zSum = 0;
 	Point3d norm_avg;
-	for(int i=0; i<6; i++)
+	for(int i=0; i<3; i++)
 	{
 		// cout << endl << "The actual normal vectors: " << normalVector_collection[i][0] << "," << normalVector_collection[i][1] << "," << normalVector_collection[i][2]<< endl;
 		xSum = xSum + normalVector_collection[i][0];
 		ySum = ySum + normalVector_collection[i][1];
 		zSum = zSum + normalVector_collection[i][2];
 	}
-	norm_avg.x = xSum/6;
-	norm_avg.y = ySum/6;
-	norm_avg.z = zSum/6;
+	norm_avg.x = xSum/3;
+	norm_avg.y = ySum/3;
+	norm_avg.z = zSum/3;
 	cout<<endl<<"The real plane normal vector: "<< norm_avg<<endl;
 
 	laser_plane laser_plane;

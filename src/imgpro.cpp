@@ -202,6 +202,8 @@ solvePnP_result getRvecTvec(Mat image_captured, Size patternsize, double squareS
     result.tvec = tvec;
     result.corners_created = corners_created;
     result.corners_found = corners_found;
+    cout<<endl<<"Created corners:"<<endl<<corners_created<<endl;
+    cout<<endl<<"Found corners:"<<endl<<corners_found<<endl;
     return result;
 }
 
@@ -449,9 +451,9 @@ uniformity_data cropImage(Mat image)
                // crop the patches of size MxN
                Mat tiles = image_copy(Range(y, y+M), Range(x, x+N));
                rectWidth.push_back(findSquareWidth(tiles));
-               system("cd /home/lingbo/AG_GUI/images && mkdir -p saved_patches");
+               system("cd /home/lingbo/Documents/GitHub/AssemblyGuidanceTool/images && mkdir -p saved_patches");
                //save each patches into file directory
-               imwrite("/home/lingbo/AG_GUI/images/saved_patches/tile" + a + '_' + b + ".jpg", tiles);
+               imwrite("/home/lingbo/Documents/GitHub/AssemblyGuidanceTool/images/saved_patches/tile" + a + '_' + b + ".jpg", tiles);
                rectangle(image_BGR, Point(x,y), Point(x1,y1), Scalar(0,255,0), 1);
        }
    }
