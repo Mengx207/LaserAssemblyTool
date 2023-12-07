@@ -192,7 +192,7 @@ int main(int argc, char *argv[])
 				// Calculate rotation vector and translation vector by a captured image of a pattern
 				Mat image_captured;
 				Size patternSize(7, 4);
-				double squareSize = 7;
+				double squareSize = 7.044;
 				image_captured = imread("images/pattern_d1.png", IMREAD_GRAYSCALE);
 	
 				if (argc == 5)
@@ -209,8 +209,11 @@ int main(int argc, char *argv[])
 						cout<<endl<<"Invalid Distance"<<endl;
 					}
 				}
-
+				cv::threshold(image_captured, image_captured, 120, 255, cv::THRESH_BINARY);
+				imshow("image_captured", image_captured);
 				solvePnP_result = getRvecTvec(image_captured, patternSize, squareSize);
+				cout<<endl<<"tvec:"<<endl<<solvePnP_result.tvec<<endl;
+				cout<<endl<<"rvec:"<<endl<<solvePnP_result.rvec<<endl;
 
 				// read laser 1
 				ifstream rmatrixL(path_L_rmatrix);
@@ -348,11 +351,12 @@ int main(int argc, char *argv[])
 				{line(line_img, laserlinepoints_projected[i_start], laserlinepoints_projected[i_end], Scalar(0, 0, 250), 3, LINE_AA);}
 				else if(status == 1)
 				{line(line_img, laserlinepoints_projected[i_start], laserlinepoints_projected[i_end], Scalar(0, 250, 0), 3, LINE_AA);} // green line
-
-				cv::circle(line_img, intersection_point_projected[0], 5, cv::Scalar(0, 0, 250), -1, 8, 0); // yellow dot for designed laser dot location
+				// cout<<endl<<"laser line points: "<<endl<<laserlinepoints_projected<<endl;
+				cv::circle(line_img, intersection_point_projected[0], 5, cv::Scalar(0, 0, 250), -1, 8, 0);
+				// cout<<endl<<"intersection point: "<<endl<<intersection_point_projected[0]<<endl;
 
 				// cv::imshow( "Contour and Area", drawing );
-				cv::imshow("threshold",threshold_output);
+				// cv::imshow("threshold",threshold_output);
 				cv::imshow("Laser Plane Alignment GUI Window", line_img);
 				imgs_taken++;
 			}
@@ -382,7 +386,7 @@ int main(int argc, char *argv[])
 				if(rect_find_flag == true)
 				{
 					laserline2Points = extractLaserline2Points(threshold_output);
-					cout << "Pair of end points of actual laser line on image plane: " << laserline2Points.first << ", " << laserline2Points.second << endl;
+					// cout << "Pair of end points of actual laser line on image plane: " << laserline2Points.first << ", " << laserline2Points.second << endl;
 					startCam = locationCam2Target(laserline2Points.first, solvePnP_result, version_V4);
 					endCam = locationCam2Target(laserline2Points.second, solvePnP_result, version_V4);
 				}

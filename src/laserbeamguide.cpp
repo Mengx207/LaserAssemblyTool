@@ -196,8 +196,8 @@ int main(int argc, char *argv[])
 				solvePnP_result solvePnP_result;
 				Mat image_captured;
 				Size patternSize(7, 4);
-				double squareSize = 7;
-				image_captured = imread("images/pattern0.png", IMREAD_GRAYSCALE);
+				double squareSize = 7.044;
+				image_captured = imread("images/pattern_d1.png", IMREAD_GRAYSCALE);
 
 				if (argc == 5)
 				{
@@ -209,27 +209,16 @@ int main(int argc, char *argv[])
 					{
 						image_captured = imread("images/pattern_d2.png", IMREAD_GRAYSCALE);
 					}
-					else if (argv[4] == string("d3"))
-					{
-						image_captured = imread("images/pattern_d3.png", IMREAD_GRAYSCALE);
-					}
-					else if (argv[4] == string("d4"))
-					{
-						image_captured = imread("images/pattern_d4.png", IMREAD_GRAYSCALE);
-					}
-					else if (argv[4] == string("d5"))
-					{
-						image_captured = imread("images/pattern_d5.png", IMREAD_GRAYSCALE);
-					}
 					else{
 						cout<<endl<<"Invalid Distance"<<endl;
 					}
 				}
-				// else {image_captured = imread("images/pattern_d2.png", IMREAD_GRAYSCALE);}
 				else
 				{
 					image_captured = imread("images/pattern_d1.png", IMREAD_GRAYSCALE);
-				}
+				}		
+				cv::threshold(image_captured, image_captured, 120, 255, cv::THRESH_BINARY);
+				imshow("image_captured", image_captured);
 				solvePnP_result = getRvecTvec(image_captured, patternSize, squareSize);
 				cout<<endl<<"tvec:"<<endl<<solvePnP_result.tvec<<endl;
 				cout<<endl<<"rvec:"<<endl<<solvePnP_result.rvec<<endl;	

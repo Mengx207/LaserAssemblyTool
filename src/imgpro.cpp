@@ -156,26 +156,27 @@ solvePnP_result getRvecTvec(Mat image_captured, Size patternsize, double squareS
     {
         cout << "Error opening image" << endl;
     }
-    // Size patternsize(7, 4);
     vector<Point2f> corners_found;
     vector<Point2f> corners_found_refined;
     SimpleBlobDetector::Params params;
     params.maxArea = 10e4;
-    Ptr<FeatureDetector> blobDetector = SimpleBlobDetector::create(params);
-    
+    Ptr<FeatureDetector> blobDetector = SimpleBlobDetector::create(params); 
     bool patternfound = findChessboardCorners(image_captured, patternsize, corners_found, CALIB_CB_ASYMMETRIC_GRID);
+    // bool patternfound = findChessboardCorners(image_captured, patternsize, corners_found, 2);
     if(patternfound)
     {
+        // cout<<endl<<"I found a pattern!"<<endl;
         Size tWinSize  = Size ( 30, 30 );
         Size tZeroZone = Size ( -1, -1 );
         TermCriteria  tCriteria = TermCriteria ( CV_TERMCRIT_EPS + CV_TERMCRIT_ITER, 40, 0.001 );
         cornerSubPix (image_captured, corners_found, tWinSize, tZeroZone, tCriteria );
     }
+    // cout<<endl<<"corners found: "<<endl<<corners_found<<endl;
     // Mat image_corners(image_captured.rows, image_captured.cols, IMREAD_GRAYSCALE);
     // drawChessboardCorners(image_corners, patternsize, Mat(corners_found), patternfound);
     
     vector<Point3f> corners_created = createChessBoardCorners(patternsize, squareSize);
-
+    // cout<<endl<<"corners created: "<<endl<<corners_created<<endl;
     // import camera matrix and distortion coefficients from txt file
     ifstream intrin("/home/lingbo/Documents/GitHub/AssemblyGuidanceTool/values/camera_matrix/intrinsic.txt");
     vector<double> cameraMatrix_values;
@@ -202,8 +203,8 @@ solvePnP_result getRvecTvec(Mat image_captured, Size patternsize, double squareS
     result.tvec = tvec;
     result.corners_created = corners_created;
     result.corners_found = corners_found;
-    cout<<endl<<"Created corners:"<<endl<<corners_created<<endl;
-    cout<<endl<<"Found corners:"<<endl<<corners_found<<endl;
+    // cout<<endl<<"Created corners:"<<endl<<corners_created<<endl;
+    // cout<<endl<<"Found corners:"<<endl<<corners_found<<endl;
     return result;
 }
 

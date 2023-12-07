@@ -211,7 +211,7 @@ Point3d lineEquation(Point3d p1, Point3d p2, vector<double> tvec_laser_values)
     // (x-p2.x)/l = (y-p2.y)/m = (z-p2.z)/n
     // Vector form:
     // (p2.x*i + p2.y*j + p2.z*k) + t*(l*i + m*j + n*k) = (p2.x + t*l)*i + (p2.y + t*m)*j + (p2.z + t*n)*k
-    cout<< "Vector equation from two 3D points: (" << l<<"*t + "<<p2.x<<", "<<m<<"*t + "<<p2.y<<", "<<n<<"*t + "<<p2.z<<")"<<endl;
+    // cout<< "Vector equation from two 3D points: (" << l<<"*t + "<<p2.x<<", "<<m<<"*t + "<<p2.y<<", "<<n<<"*t + "<<p2.z<<")"<<endl;
     Mat tvec_L = Mat(3, 1, CV_64FC1, tvec_laser_values.data());
     double t = (tvec_L.at<double>(2) - p2.z)/n;
     Point3d real_origin = Point3d(p2.x + t*l,p2.y + t*m,p2.z + t*n);
@@ -245,7 +245,7 @@ pair<Point2d, Point2d> extractLaserline2Points(Mat whiteline)
         start_y_total = start_y_total + pt1.y;
         end_x_total = end_x_total + pt2.x;
         end_y_total = end_y_total + pt2.y;
-        cout<<"ends of line: "<<pt1<<", "<<pt2<<endl;
+        // cout<<"ends of line: "<<pt1<<", "<<pt2<<endl;
         // line( findline, pt1, pt2, Scalar(0,0,255), 1, LINE_AA);
         // line( whiteline_color, pt1, pt2, Scalar(150,100,0), 1, LINE_AA);
         // circle( whiteline_color, pt1, 5, cv::Scalar(0,0,255), -1, 8, 0 );

@@ -106,14 +106,14 @@ int main(int argc, char* argv[])
 	double squareSize = 7;
 	solvePnP_result solvePnP_result_d1, solvePnP_result_d2;
 	image_captured = imread("images/pattern_d1.png", IMREAD_GRAYSCALE);
+	cv::threshold(image_captured, image_captured, 120, 255, cv::THRESH_BINARY);
 	solvePnP_result_d1 = getRvecTvec(image_captured, patternSize, squareSize);
 	image_captured = imread("images/pattern_d2.png", IMREAD_GRAYSCALE);
+	cv::threshold(image_captured, image_captured, 120, 255, cv::THRESH_BINARY);
 	solvePnP_result_d2 = getRvecTvec(image_captured, patternSize, squareSize);
-
 	// Intersection point between laser beam and target borad in camera frame
     Point3d point_d1 = locationCam2Target( imgPoint_d1, solvePnP_result_d1, version_V4 ); 
 	Point3d point_d2 = locationCam2Target( imgPoint_d2, solvePnP_result_d2, version_V4 );
-
 	Point3d real_origin = lineEquation(point_d1,point_d2,tvec_laser_values);
 
 	cout<<endl<<"real laser origin: " << real_origin <<endl;
@@ -184,14 +184,14 @@ int main(int argc, char* argv[])
 		double d = sqrt(NV[0]*NV[0] + NV[1]*NV[1] + NV[2]*NV[2]);
 		NV[0] = NV[0]/d; NV[1] = NV[1]/d; NV[2] = NV[2]/d;
 		normalVector_collection.push_back(NV);
-		cout<<endl<<"("<<NV[0]<<","<<NV[1]<<","<<NV[2]<<")"<<endl;
+		// cout<<endl<<"("<<NV[0]<<","<<NV[1]<<","<<NV[2]<<")"<<endl;
 	}
 
 	NV = crossProduct(vect3D_collection[1],vect3D_collection[2]);
 	double d = sqrt(NV[0]*NV[0] + NV[1]*NV[1] + NV[2]*NV[2]);
 	NV[0] = NV[0]/d; NV[1] = NV[1]/d; NV[2] = NV[2]/d;
 	normalVector_collection.push_back(NV);
-	cout<<endl<<"("<<NV[0]<<","<<NV[1]<<","<<NV[2]<<")"<<endl;
+	// cout<<endl<<"("<<NV[0]<<","<<NV[1]<<","<<NV[2]<<")"<<endl;
 
 	double xSum = 0; double ySum = 0; double zSum = 0;
 	Point3d norm_avg;
