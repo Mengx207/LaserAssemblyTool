@@ -67,7 +67,7 @@ int main(int argc, char *argv[])
 		INodeMap &nodemap0 = camera0.GetNodeMap();
 
 		CEnumerationPtr(nodemap0.GetNode("ExposureMode"))->FromString("Timed");
-		CFloatPtr(nodemap0.GetNode("ExposureTime"))->SetValue(30.0);
+		CFloatPtr(nodemap0.GetNode("ExposureTime"))->SetValue(50.0);
 
 		CEnumParameter(nodemap0, "LineSelector").SetValue("Line3");
 		CEnumParameter(nodemap0, "LineMode").SetValue("Output");
@@ -196,7 +196,8 @@ int main(int argc, char *argv[])
 				solvePnP_result solvePnP_result;
 				Mat image_captured;
 				Size patternSize(7, 4);
-				double squareSize = 7.044;
+				// double squareSize = 7.044;
+				double squareSize = 7.107;
 				image_captured = imread("images/pattern_d1.png", IMREAD_GRAYSCALE);
 
 				if (argc == 5)
@@ -217,7 +218,8 @@ int main(int argc, char *argv[])
 				{
 					image_captured = imread("images/pattern_d1.png", IMREAD_GRAYSCALE);
 				}		
-				cv::threshold(image_captured, image_captured, 120, 255, cv::THRESH_BINARY);
+				cv::threshold(image_captured, image_captured, 150, 255, cv::THRESH_BINARY);
+				
 				imshow("image_captured", image_captured);
 				solvePnP_result = getRvecTvec(image_captured, patternSize, squareSize);
 				cout<<endl<<"tvec:"<<endl<<solvePnP_result.tvec<<endl;
@@ -376,7 +378,7 @@ int main(int argc, char *argv[])
 					center_rect_list.clear();
 				}
 
-				if (distance_result.distance <= 2 && distance_result.segment_length <= 100) // Green line if it is good
+				if (distance_result.distance < 3 && distance_result.segment_length <= 25) // Green line if it is good
 				{
 					if (center_rect_count < 10)
 					{

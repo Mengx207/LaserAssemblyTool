@@ -192,7 +192,7 @@ int main(int argc, char *argv[])
 				// Calculate rotation vector and translation vector by a captured image of a pattern
 				Mat image_captured;
 				Size patternSize(7, 4);
-				double squareSize = 7.044;
+				double squareSize = 7.107;
 				image_captured = imread("images/pattern_d1.png", IMREAD_GRAYSCALE);
 	
 				if (argc == 5)

@@ -166,7 +166,7 @@ solvePnP_result getRvecTvec(Mat image_captured, Size patternsize, double squareS
     if(patternfound)
     {
         // cout<<endl<<"I found a pattern!"<<endl;
-        Size tWinSize  = Size ( 30, 30 );
+        Size tWinSize  = Size ( 15, 15 );
         Size tZeroZone = Size ( -1, -1 );
         TermCriteria  tCriteria = TermCriteria ( CV_TERMCRIT_EPS + CV_TERMCRIT_ITER, 40, 0.001 );
         cornerSubPix (image_captured, corners_found, tWinSize, tZeroZone, tCriteria );
