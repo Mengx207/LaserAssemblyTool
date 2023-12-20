@@ -209,7 +209,7 @@ int main(int argc, char *argv[])
 						cout<<endl<<"Invalid Distance"<<endl;
 					}
 				}
-				cv::threshold(image_captured, image_captured, 120, 255, cv::THRESH_BINARY);
+				cv::threshold(image_captured, image_captured, 150, 255, cv::THRESH_BINARY);
 				imshow("image_captured", image_captured);
 				solvePnP_result = getRvecTvec(image_captured, patternSize, squareSize);
 				cout<<endl<<"tvec:"<<endl<<solvePnP_result.tvec<<endl;

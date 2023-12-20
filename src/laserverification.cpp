@@ -103,17 +103,19 @@ int main(int argc, char* argv[])
 
 	Mat image_captured;
 	Size patternSize(7, 4);
-	double squareSize = 7;
+	double squareSize = 7.107;
 	solvePnP_result solvePnP_result_d1, solvePnP_result_d2;
 	image_captured = imread("images/pattern_d1.png", IMREAD_GRAYSCALE);
-	cv::threshold(image_captured, image_captured, 120, 255, cv::THRESH_BINARY);
+	cv::threshold(image_captured, image_captured, 150, 255, cv::THRESH_BINARY);
 	solvePnP_result_d1 = getRvecTvec(image_captured, patternSize, squareSize);
 	image_captured = imread("images/pattern_d2.png", IMREAD_GRAYSCALE);
-	cv::threshold(image_captured, image_captured, 120, 255, cv::THRESH_BINARY);
+	cv::threshold(image_captured, image_captured, 150, 255, cv::THRESH_BINARY);
 	solvePnP_result_d2 = getRvecTvec(image_captured, patternSize, squareSize);
 	// Intersection point between laser beam and target borad in camera frame
-    Point3d point_d1 = locationCam2Target( imgPoint_d1, solvePnP_result_d1, version_V4 ); 
+    Point3d point_d1 = locationCam2Target( imgPoint_d1, solvePnP_result_d1, version_V4 );
+	cout<<endl<<"point d1: "<< point_d1<<endl;
 	Point3d point_d2 = locationCam2Target( imgPoint_d2, solvePnP_result_d2, version_V4 );
+	cout<<"point d2: "<< point_d2<<endl;
 	Point3d real_origin = lineEquation(point_d1,point_d2,tvec_laser_values);
 
 	cout<<endl<<"real laser origin: " << real_origin <<endl;
