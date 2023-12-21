@@ -1,0 +1,4 @@
+The design origin: [34.1346, 38.836, 7.49095]
+The real origin: [34.3439, 37.4626, 7.49095]
+The design NV of laser plane: [0.477987,0.878367,-6.21725e-15]
+The real NV of laser plane: [-0.159618, -0.292631, 0.000618553]
