@@ -35,12 +35,12 @@
 
 .git
 .vscode
-real_laserdot
-real_laserline_ends
-verification
-saved_patches
-saved_laser_beam
-saved_laser_plane
+real_laserdot/
+real_laserline_ends/
+verification/
+saved_patches/
+saved_laser_beam/
+saved_laser_plane/
 
 
 
