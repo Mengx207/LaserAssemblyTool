@@ -334,6 +334,9 @@ int laserlineGUI(vector<RotatedRect> rect_vector, Point2d cal_center, int cal_an
     line(drawing,Point(380,150), Point(800,150), Scalar(0, 250, 0), 1, 16);
     line(drawing,Point(380,0), Point(380,150), Scalar(0, 250, 0), 1, 16);
     line(drawing,Point(800,0), Point(800,150), Scalar(0, 250, 0), 1, 16);
+    putText(drawing, "Save and quit: Click q then s", cv::Point(20, 120), cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(0,250,0),1);
+    putText(drawing, "Quit no save: Double click q", cv::Point(20, 140), cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(0,250,0),1);
+        
     cv::putText(drawing, "Laser Line Angle", cv::Point(20,20), cv::FONT_HERSHEY_SIMPLEX, 0.8, cv::Scalar(0,250,0),1);
     cv::putText(drawing, "Angle Designed: " + cal_angle_print, cv::Point(20,50), cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(0,250,0),1);
     cv::putText(drawing, "Angle Now: " + angle_print, cv::Point(20,80), cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(0,250,0),1);
