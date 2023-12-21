@@ -39,8 +39,8 @@
 
 laserbeamguide
 laserplaneguide
+laserverification
 
 CMakeFiles/laserplaneguide.dir/laserplaneguide.cpp.o
 CMakeFiles/laserbeamguide.dir/laserbeamguide.cpp.o
-laserplaneguide
-laserbeamguide
+
