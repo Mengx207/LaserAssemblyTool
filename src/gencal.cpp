@@ -264,7 +264,7 @@ pair<Point2d, Point2d> extractLaserline2Points(Mat whiteline)
     pair<Point2d, Point2d> laserline2Points;
     laserline2Points.first = start;
     laserline2Points.second = end;
-    cout<<"cvRounded start and end points of the line on image in image frame: "<<start<<", "<<end<<endl;
+    // cout<<"cvRounded start and end points of the line on image in image frame: "<<start<<", "<<end<<endl;
     line( whiteline_color, start, end, Scalar(0,0,255), 1, LINE_AA);
     circle(whiteline_color, start, 2, Scalar(0,0,255),3);
     circle(whiteline_color, end, 2, Scalar(0,0,255),3);
